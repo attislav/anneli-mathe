@@ -87,7 +87,7 @@ function renderExercises() {
     div.innerHTML = `
       <span class="number">${i + 1}.</span>
       <span class="task">${ex.a} ${ex.op} ${ex.b} =</span>
-      <input type="number" id="answer-${i}" autocomplete="off">
+      <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
       <span class="feedback" id="feedback-${i}"></span>
     `;
 
@@ -116,7 +116,7 @@ function renderExercises() {
 
 function checkAnswers() {
   let correctCount = 0;
-  let hasRetry = false;
+  let wrongCount = 0;
 
   exercises.forEach((ex, i) => {
     const input = document.getElementById(`answer-${i}`);
@@ -133,20 +133,20 @@ function checkAnswers() {
     if (userAnswer === "") {
       div.className = "exercise retry";
       feedback.textContent = "?";
-      hasRetry = true;
+      wrongCount++;
       return;
     }
 
     const num = parseInt(userAnswer, 10);
-    if (num === ex.answer) {
+    if (!isNaN(num) && num === ex.answer) {
       div.className = "exercise correct";
-      feedback.textContent = "\u2705";
+      feedback.textContent = "richtig";
       input.readOnly = true;
       correctCount++;
     } else {
       div.className = "exercise wrong";
-      feedback.textContent = "\u274C";
-      hasRetry = true;
+      feedback.textContent = "falsch";
+      wrongCount++;
     }
   });
 
@@ -154,28 +154,89 @@ function checkAnswers() {
   const summary = document.getElementById("result-summary");
   summary.classList.remove("hidden");
 
+  const checkBtn = document.getElementById("btn-check");
+
   if (correctCount === exercises.length) {
     summary.className = "perfect";
-    summary.textContent = `Super! Alle ${exercises.length} Aufgaben richtig! \u2B50`;
-    document.getElementById("btn-check").textContent = "Alles richtig!";
-    document.getElementById("btn-check").disabled = true;
-  } else if (hasRetry) {
-    const wrong = exercises.length - correctCount;
+    summary.textContent = `Super! Alle ${exercises.length} Aufgaben richtig!`;
+    checkBtn.textContent = "Alles richtig!";
+    checkBtn.disabled = true;
+    launchConfetti();
+  } else {
     summary.className = "retry";
     summary.textContent = `${correctCount} von ${exercises.length} richtig. Versuch die anderen nochmal!`;
-    document.getElementById("btn-check").textContent = "Nochmal pruefen";
+    checkBtn.textContent = "Nochmal pruefen";
 
     // Focus first non-correct input
     for (let i = 0; i < exercises.length; i++) {
       const div = document.getElementById(`answer-${i}`).closest(".exercise");
       if (!div.classList.contains("correct")) {
         document.getElementById(`answer-${i}`).focus();
+        document.getElementById(`answer-${i}`).select();
         break;
       }
     }
   }
 
   checked = true;
+}
+
+// Confetti animation
+function launchConfetti() {
+  const canvas = document.createElement("canvas");
+  canvas.id = "confetti-canvas";
+  canvas.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999";
+  document.body.appendChild(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+
+  const colors = ["#e84393", "#74b9ff", "#fd79a8", "#a29bfe", "#ffeaa7", "#55efc4", "#ff7675"];
+  const pieces = [];
+
+  for (let i = 0; i < 150; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: Math.random() * 3 + 2,
+      drift: Math.random() * 2 - 1,
+      rotation: Math.random() * 360,
+      rotSpeed: Math.random() * 6 - 3,
+    });
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let allDone = true;
+
+    pieces.forEach((p) => {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.rotation += p.rotSpeed;
+
+      if (p.y < canvas.height + 20) allDone = false;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+
+    frame++;
+    if (!allDone && frame < 300) {
+      requestAnimationFrame(animate);
+    } else {
+      canvas.remove();
+    }
+  }
+
+  animate();
 }
 
 // Generate on load
