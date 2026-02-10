@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annelis Mathe-Spass</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Annelis Mathe-Spass</h1>
+
+    <div class="settings">
+      <div class="setting-group">
+        <label>Schwierigkeit:</label>
+        <div class="button-group" id="difficulty">
+          <button class="btn-setting active" data-value="leicht">Leicht</button>
+          <button class="btn-setting" data-value="mittel">Mittel</button>
+          <button class="btn-setting" data-value="schwer">Schwer</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <label>Rechenart:</label>
+        <div class="button-group" id="operation">
+          <button class="btn-setting active" data-value="gemischt">Gemischt</button>
+          <button class="btn-setting" data-value="plus">Nur Plus</button>
+          <button class="btn-setting" data-value="minus">Nur Minus</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-new" id="btn-generate">Neue Aufgaben</button>
+
+    <div id="exercises"></div>
+
+    <div id="actions" class="hidden">
+      <button class="btn-check" id="btn-check">Antworten pruefen</button>
+    </div>
+
+    <div id="result-summary" class="hidden"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Comic Sans MS', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: #764ba2;
+  margin-bottom: 24px;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-group label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-setting {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: #f8f8f8;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-setting:hover {
+  border-color: #764ba2;
+  background: #f3eaff;
+}
+
+.btn-setting.active {
+  background: #764ba2;
+  color: white;
+  border-color: #764ba2;
+}
+
+.btn-new {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+  margin-bottom: 24px;
+}
+
+.btn-new:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+}
+
+.btn-new:active {
+  transform: translateY(0);
+}
+
+/* Exercises */
+.exercise {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  background: #f8f7ff;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.exercise .number {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #999;
+  min-width: 28px;
+}
+
+.exercise .task {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+  min-width: 140px;
+}
+
+.exercise input {
+  width: 80px;
+  padding: 10px 14px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  border: 3px solid #ddd;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
+}
+
+.exercise input::-webkit-outer-spin-button,
+.exercise input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.exercise input:focus {
+  border-color: #764ba2;
+}
+
+.exercise .feedback {
+  font-size: 1.5rem;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* Result states */
+.exercise.correct {
+  border-color: #4caf50;
+  background: #e8f5e9;
+}
+
+.exercise.correct input {
+  border-color: #4caf50;
+  color: #2e7d32;
+}
+
+.exercise.wrong {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.exercise.wrong input {
+  border-color: #f44336;
+  color: #c62828;
+}
+
+.exercise.retry {
+  border-color: #ff9800;
+  background: #fff8e1;
+}
+
+.exercise.retry input {
+  border-color: #ff9800;
+}
+
+/* Actions */
+#actions {
+  margin-top: 20px;
+}
+
+.btn-check {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.btn-check:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-check:active {
+  transform: translateY(0);
+}
+
+/* Result summary */
+#result-summary {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+#result-summary.perfect {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  color: #2e7d32;
+}
+
+#result-summary.good {
+  background: linear-gradient(135deg, #fff8e1, #ffecb3);
+  color: #f57f17;
+}
+
+#result-summary.retry {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  color: #c62828;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .exercise .task {
+    font-size: 1.3rem;
+    min-width: 100px;
+  }
+
+  .exercise input {
+    width: 65px;
+    font-size: 1.3rem;
+    padding: 8px 10px;
+  }
+
+  .btn-setting {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
