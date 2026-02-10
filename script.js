@@ -160,15 +160,21 @@ function checkAnswers() {
 
   const checkBtn = document.getElementById("btn-check");
 
+  const percent = correctCount / exercises.length;
+
   if (correctCount === exercises.length) {
     summary.className = "perfect";
-    summary.textContent = `Super! Alle ${exercises.length} Aufgaben richtig!`;
+    summary.innerHTML = `<img src="super.png" class="result-image" alt="Super!"><br>Super! Alle ${exercises.length} Aufgaben richtig!`;
     checkBtn.textContent = "Alles richtig!";
     checkBtn.disabled = true;
     launchConfetti();
+  } else if (percent >= 0.5) {
+    summary.className = "good";
+    summary.innerHTML = `<img src="gut.png" class="result-image" alt="Gut gemacht!"><br>${correctCount} von ${exercises.length} richtig. Gut gemacht! Versuch die anderen nochmal!`;
+    checkBtn.textContent = "Nochmal pruefen";
   } else {
     summary.className = "retry";
-    summary.textContent = `${correctCount} von ${exercises.length} richtig. Versuch die anderen nochmal!`;
+    summary.innerHTML = `<img src="nochmal.png" class="result-image" alt="Nochmal versuchen"><br>${correctCount} von ${exercises.length} richtig. Versuch es nochmal!`;
     checkBtn.textContent = "Nochmal pruefen";
 
     // Focus first non-correct input
@@ -185,7 +191,7 @@ function checkAnswers() {
   checked = true;
 }
 
-// Confetti animation
+// Confetti explosion
 function launchConfetti() {
   const canvas = document.createElement("canvas");
   canvas.id = "confetti-canvas";
@@ -195,49 +201,97 @@ function launchConfetti() {
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext("2d");
 
-  const colors = ["#e84393", "#74b9ff", "#fd79a8", "#a29bfe", "#ffeaa7", "#55efc4", "#ff7675"];
+  const colors = ["#e84393", "#74b9ff", "#fd79a8", "#a29bfe", "#ffeaa7", "#55efc4", "#ff7675", "#f368e0", "#0abde3", "#feca57"];
   const pieces = [];
+  const shapes = ["rect", "circle", "star"];
 
-  for (let i = 0; i < 150; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 6 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      speed: Math.random() * 3 + 2,
-      drift: Math.random() * 2 - 1,
-      rotation: Math.random() * 360,
-      rotSpeed: Math.random() * 6 - 3,
-    });
-  }
+  // Multiple burst points for explosion effect
+  const bursts = [
+    { x: canvas.width * 0.5, y: canvas.height * 0.4 },
+    { x: canvas.width * 0.3, y: canvas.height * 0.3 },
+    { x: canvas.width * 0.7, y: canvas.height * 0.3 },
+    { x: canvas.width * 0.2, y: canvas.height * 0.5 },
+    { x: canvas.width * 0.8, y: canvas.height * 0.5 },
+  ];
+
+  bursts.forEach((burst) => {
+    for (let i = 0; i < 80; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 12 + 4;
+      pieces.push({
+        x: burst.x,
+        y: burst.y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 4,
+        size: Math.random() * 10 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 10 - 5,
+        gravity: 0.15,
+        opacity: 1,
+        fade: Math.random() * 0.005 + 0.002,
+      });
+    }
+  });
 
   let frame = 0;
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let allDone = true;
+    let alive = false;
 
     pieces.forEach((p) => {
-      p.y += p.speed;
-      p.x += p.drift;
+      p.vy += p.gravity;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.99;
       p.rotation += p.rotSpeed;
+      p.opacity -= p.fade;
 
-      if (p.y < canvas.height + 20) allDone = false;
+      if (p.opacity <= 0) return;
+      alive = true;
 
       ctx.save();
+      ctx.globalAlpha = p.opacity;
       ctx.translate(p.x, p.y);
       ctx.rotate((p.rotation * Math.PI) / 180);
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+
+      if (p.shape === "circle") {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (p.shape === "star") {
+        drawStar(ctx, 0, 0, 5, p.size / 2, p.size / 4);
+      } else {
+        ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.6);
+      }
+
       ctx.restore();
     });
 
     frame++;
-    if (!allDone && frame < 300) {
+    if (alive && frame < 400) {
       requestAnimationFrame(animate);
     } else {
       canvas.remove();
     }
+  }
+
+  function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+    let rot = (Math.PI / 2) * 3;
+    const step = Math.PI / spikes;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerR);
+    for (let i = 0; i < spikes; i++) {
+      ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+      rot += step;
+      ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+      rot += step;
+    }
+    ctx.lineTo(cx, cy - outerR);
+    ctx.closePath();
+    ctx.fill();
   }
 
   animate();
