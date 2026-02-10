@@ -75,7 +75,7 @@ function generateExercises() {
   document.getElementById("result-summary").className = "hidden";
 
   const checkBtn = document.getElementById("btn-check");
-  checkBtn.textContent = "Antworten pruefen";
+  checkBtn.textContent = "Antworten prüfen";
   checkBtn.disabled = false;
 }
 
@@ -171,11 +171,11 @@ function checkAnswers() {
   } else if (percent >= 0.5) {
     summary.className = "good";
     summary.innerHTML = `<img src="gut.png" class="result-image" alt="Gut gemacht!"><br>${correctCount} von ${exercises.length} richtig. Gut gemacht! Versuch die anderen nochmal!`;
-    checkBtn.textContent = "Nochmal pruefen";
+    checkBtn.textContent = "Nochmal prüfen";
   } else {
     summary.className = "retry";
     summary.innerHTML = `<img src="nochmal.png" class="result-image" alt="Nochmal versuchen"><br>${correctCount} von ${exercises.length} richtig. Versuch es nochmal!`;
-    checkBtn.textContent = "Nochmal pruefen";
+    checkBtn.textContent = "Nochmal prüfen";
 
     // Focus first non-correct input
     for (let i = 0; i < exercises.length; i++) {
