@@ -26,6 +26,37 @@ body {
   margin-bottom: 24px;
 }
 
+/* Star display */
+.star-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #fff8e1, #ffecb3);
+  border-radius: 14px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f57f17;
+  transition: transform 0.3s;
+}
+
+.star-icon {
+  font-size: 1.8rem;
+}
+
+.star-bounce {
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
 .settings {
   display: flex;
   flex-direction: column;
@@ -146,6 +177,20 @@ body {
 
 .exercise input:focus {
   border-color: #74b9ff;
+}
+
+/* Inline inputs for Lücken and Zehnerzerlegung */
+.inline-input {
+  width: 55px !important;
+  padding: 6px 8px !important;
+  font-size: 1.4rem !important;
+  font-weight: 700;
+  text-align: center;
+  border: 3px solid #e84393;
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  -moz-appearance: textfield;
 }
 
 .exercise .feedback {

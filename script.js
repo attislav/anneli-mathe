@@ -1,7 +1,8 @@
+// ============ CONFIG ============
 const DIFFICULTY = {
-  leicht: { maxNumber: 5, maxResult: 10, count: 5 },
-  mittel: { maxNumber: 10, maxResult: 10, count: 8 },
-  schwer: { maxNumber: 10, maxResult: 20, count: 10 },
+  leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
+  mittel: { maxNumber: 10, maxResult: 10, count: 8, zehnerTargets: [6, 7, 8, 9, 10] },
+  schwer: { maxNumber: 10, maxResult: 20, count: 10, zehnerTargets: [10, 12, 14, 16, 18, 20] },
 };
 
 let currentDifficulty = "leicht";
@@ -9,7 +10,71 @@ let currentOperation = "gemischt";
 let exercises = [];
 let checked = false;
 
-// Setting buttons
+// ============ SOUND SYSTEM (Web Audio API) ============
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, duration, delay, type, volume) {
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || "sine";
+  osc.frequency.value = freq;
+  gain.gain.value = volume || 0.3;
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime + delay);
+  osc.stop(ctx.currentTime + delay + duration);
+}
+
+function soundCorrect() {
+  playTone(523, 0.12, 0, "sine", 0.25);
+  playTone(659, 0.15, 0.1, "sine", 0.25);
+}
+
+function soundWrong() {
+  playTone(220, 0.25, 0, "triangle", 0.15);
+}
+
+function soundPerfect() {
+  const notes = [523, 587, 659, 784, 1047];
+  notes.forEach((freq, i) => {
+    playTone(freq, 0.2, i * 0.12, "sine", 0.25);
+  });
+}
+
+// ============ STARS SYSTEM ============
+let totalStars = parseInt(localStorage.getItem("mathe-sterne") || "0", 10);
+
+function saveStars() {
+  localStorage.setItem("mathe-sterne", totalStars.toString());
+  renderStars();
+}
+
+function renderStars() {
+  const el = document.getElementById("star-count");
+  if (el) el.textContent = totalStars;
+}
+
+function addStars(count) {
+  totalStars += count;
+  saveStars();
+  animateStars();
+}
+
+function animateStars() {
+  const el = document.getElementById("star-display");
+  if (!el) return;
+  el.classList.add("star-bounce");
+  setTimeout(() => el.classList.remove("star-bounce"), 500);
+}
+
+// ============ SETTING BUTTONS ============
 document.querySelectorAll("#difficulty .btn-setting").forEach((btn) => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("#difficulty .btn-setting").forEach((b) => b.classList.remove("active"));
@@ -26,19 +91,43 @@ document.querySelectorAll("#operation .btn-setting").forEach((btn) => {
   });
 });
 
-// Generate exercises
 document.getElementById("btn-generate").addEventListener("click", generateExercises);
 document.getElementById("btn-check").addEventListener("click", checkAnswers);
 
+// ============ HELPERS ============
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ============ EXERCISE GENERATION ============
 function generateExercises() {
   const config = DIFFICULTY[currentDifficulty];
   exercises = [];
   checked = false;
 
+  if (currentOperation === "luecken") {
+    generateLuecken(config);
+  } else if (currentOperation === "zehner") {
+    generateZehner(config);
+  } else {
+    generateNormal(config);
+  }
+
+  renderExercises();
+  document.getElementById("actions").classList.remove("hidden");
+  document.getElementById("result-summary").classList.add("hidden");
+  document.getElementById("result-summary").className = "hidden";
+
+  const checkBtn = document.getElementById("btn-check");
+  checkBtn.textContent = "Antworten prüfen";
+  checkBtn.disabled = false;
+}
+
+function generateNormal(config) {
   for (let i = 0; i < config.count; i++) {
     let op;
     if (currentOperation === "plus") {
@@ -53,32 +142,75 @@ function generateExercises() {
     if (op === "+") {
       a = randomInt(1, config.maxNumber);
       b = randomInt(1, config.maxResult - a);
-      // Ensure b is at least 1
       if (b < 1) b = 1;
     } else {
-      // Subtraction: result must be >= 0
       a = randomInt(2, config.maxResult);
       b = randomInt(1, a);
-      // Limit b to maxNumber
       if (b > config.maxNumber) b = config.maxNumber;
-      // Ensure a > b so result is positive
       if (a <= b) a = b + 1;
       if (a > config.maxResult) a = config.maxResult;
     }
 
-    exercises.push({ a, b, op, answer: op === "+" ? a + b : a - b });
+    exercises.push({
+      type: "normal",
+      a, b, op,
+      answer: op === "+" ? a + b : a - b,
+    });
   }
-
-  renderExercises();
-  document.getElementById("actions").classList.remove("hidden");
-  document.getElementById("result-summary").classList.add("hidden");
-  document.getElementById("result-summary").className = "hidden";
-
-  const checkBtn = document.getElementById("btn-check");
-  checkBtn.textContent = "Antworten prüfen";
-  checkBtn.disabled = false;
 }
 
+function generateLuecken(config) {
+  for (let i = 0; i < config.count; i++) {
+    const op = Math.random() < 0.5 ? "+" : "-";
+    let a, b, result;
+
+    if (op === "+") {
+      a = randomInt(1, config.maxNumber);
+      b = randomInt(1, config.maxResult - a);
+      if (b < 1) b = 1;
+      result = a + b;
+    } else {
+      a = randomInt(2, config.maxResult);
+      b = randomInt(1, a);
+      if (b > config.maxNumber) b = config.maxNumber;
+      if (a <= b) a = b + 1;
+      if (a > config.maxResult) a = config.maxResult;
+      result = a - b;
+    }
+
+    // Randomly choose which position is the gap
+    const gapPositions = ["left", "right"];
+    const gap = pickRandom(gapPositions);
+
+    if (gap === "left") {
+      // ___ + b = result  → answer is a
+      exercises.push({
+        type: "luecke",
+        display: { left: null, op, right: b, result },
+        answer: a,
+      });
+    } else {
+      // a + ___ = result  → answer is b
+      exercises.push({
+        type: "luecke",
+        display: { left: a, op, right: null, result },
+        answer: b,
+      });
+    }
+  }
+}
+
+function generateZehner(config) {
+  for (let i = 0; i < config.count; i++) {
+    const target = pickRandom(config.zehnerTargets);
+    exercises.push({
+      type: "zehner",
+      target,
+    });
+  }
+}
+
+// ============ RENDERING ============
 function renderExercises() {
   const container = document.getElementById("exercises");
   container.innerHTML = "";
@@ -88,26 +220,54 @@ function renderExercises() {
     div.className = "exercise";
     div.dataset.index = i;
 
-    div.innerHTML = `
-      <span class="number">${i + 1}.</span>
-      <span class="task">${ex.a} ${ex.op} ${ex.b} =</span>
-      <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
-      <span class="feedback" id="feedback-${i}"></span>
-    `;
+    if (ex.type === "normal") {
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">${ex.a} ${ex.op} ${ex.b} =</span>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "luecke") {
+      const d = ex.display;
+      const leftPart = d.left === null
+        ? `<input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" class="inline-input" autocomplete="off">`
+        : d.left;
+      const rightPart = d.right === null
+        ? `<input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" class="inline-input" autocomplete="off">`
+        : d.right;
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">${leftPart} ${d.op} ${rightPart} = ${d.result}</span>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "zehner") {
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}-a" class="inline-input" autocomplete="off">
+          +
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}-b" class="inline-input" autocomplete="off">
+          = ${ex.target}
+        </span>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    }
 
     container.appendChild(div);
   });
 
   // Focus first input
-  const firstInput = document.getElementById("answer-0");
+  const firstInput = container.querySelector("input");
   if (firstInput) firstInput.focus();
 
-  // Enter key moves to next input
-  container.querySelectorAll("input").forEach((input, i) => {
+  // Enter key navigation
+  const inputs = container.querySelectorAll("input");
+  inputs.forEach((input, idx) => {
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        const nextInput = document.getElementById(`answer-${i + 1}`);
+        const allInputs = container.querySelectorAll("input");
+        const nextInput = allInputs[idx + 1];
         if (nextInput) {
           nextInput.focus();
         } else {
@@ -118,80 +278,129 @@ function renderExercises() {
   });
 }
 
+// ============ ANSWER CHECKING ============
 function checkAnswers() {
   let correctCount = 0;
+  let newCorrect = 0;
   let wrongCount = 0;
 
   exercises.forEach((ex, i) => {
-    const input = document.getElementById(`answer-${i}`);
+    const div = document.querySelector(`.exercise[data-index="${i}"]`);
     const feedback = document.getElementById(`feedback-${i}`);
-    const div = input.closest(".exercise");
-    const userAnswer = input.value.trim();
 
-    // Skip already correct answers
+    // Skip already correct
     if (div.classList.contains("correct")) {
       correctCount++;
       return;
     }
 
-    if (userAnswer === "") {
-      div.className = "exercise retry";
-      feedback.textContent = "?";
-      wrongCount++;
-      return;
+    let isCorrect = false;
+
+    if (ex.type === "normal" || ex.type === "luecke") {
+      const input = document.getElementById(`answer-${i}`);
+      const val = input.value.trim();
+
+      if (val === "") {
+        div.className = "exercise retry";
+        feedback.textContent = "?";
+        wrongCount++;
+        return;
+      }
+
+      const num = parseInt(val, 10);
+      isCorrect = !isNaN(num) && num === ex.answer;
+
+      if (isCorrect) {
+        input.readOnly = true;
+      }
+    } else if (ex.type === "zehner") {
+      const inputA = document.getElementById(`answer-${i}-a`);
+      const inputB = document.getElementById(`answer-${i}-b`);
+      const valA = inputA.value.trim();
+      const valB = inputB.value.trim();
+
+      if (valA === "" || valB === "") {
+        div.className = "exercise retry";
+        feedback.textContent = "?";
+        wrongCount++;
+        return;
+      }
+
+      const numA = parseInt(valA, 10);
+      const numB = parseInt(valB, 10);
+      isCorrect = !isNaN(numA) && !isNaN(numB) && numA > 0 && numB > 0 && numA + numB === ex.target;
+
+      if (isCorrect) {
+        inputA.readOnly = true;
+        inputB.readOnly = true;
+      }
     }
 
-    const num = parseInt(userAnswer, 10);
-    if (!isNaN(num) && num === ex.answer) {
+    if (isCorrect) {
       div.className = "exercise correct";
       feedback.textContent = "richtig";
-      input.readOnly = true;
       correctCount++;
+      newCorrect++;
+      soundCorrect();
     } else {
       div.className = "exercise wrong";
       feedback.textContent = "falsch";
       wrongCount++;
+      soundWrong();
     }
   });
+
+  // Stars
+  if (newCorrect > 0) {
+    addStars(newCorrect);
+  }
 
   // Show summary
   const summary = document.getElementById("result-summary");
   summary.classList.remove("hidden");
-
   const checkBtn = document.getElementById("btn-check");
-
   const percent = correctCount / exercises.length;
 
   if (correctCount === exercises.length) {
+    // Bonus stars for perfect round
+    addStars(3);
     summary.className = "perfect";
     summary.innerHTML = `<img src="super.png" class="result-image" alt="Super!"><br>Super! Alle ${exercises.length} Aufgaben richtig!`;
     checkBtn.textContent = "Alles richtig!";
     checkBtn.disabled = true;
+    soundPerfect();
     launchConfetti();
   } else if (percent >= 0.5) {
     summary.className = "good";
     summary.innerHTML = `<img src="gut.png" class="result-image" alt="Gut gemacht!"><br>${correctCount} von ${exercises.length} richtig. Gut gemacht! Versuch die anderen nochmal!`;
     checkBtn.textContent = "Nochmal prüfen";
+    focusFirstWrong();
   } else {
     summary.className = "retry";
     summary.innerHTML = `<img src="nochmal.png" class="result-image" alt="Nochmal versuchen"><br>${correctCount} von ${exercises.length} richtig. Versuch es nochmal!`;
     checkBtn.textContent = "Nochmal prüfen";
-
-    // Focus first non-correct input
-    for (let i = 0; i < exercises.length; i++) {
-      const div = document.getElementById(`answer-${i}`).closest(".exercise");
-      if (!div.classList.contains("correct")) {
-        document.getElementById(`answer-${i}`).focus();
-        document.getElementById(`answer-${i}`).select();
-        break;
-      }
-    }
+    focusFirstWrong();
   }
 
   checked = true;
 }
 
-// Confetti explosion
+function focusFirstWrong() {
+  const container = document.getElementById("exercises");
+  for (let i = 0; i < exercises.length; i++) {
+    const div = container.querySelector(`.exercise[data-index="${i}"]`);
+    if (!div.classList.contains("correct")) {
+      const input = div.querySelector("input");
+      if (input) {
+        input.focus();
+        input.select();
+      }
+      break;
+    }
+  }
+}
+
+// ============ CONFETTI ============
 function launchConfetti() {
   const canvas = document.createElement("canvas");
   canvas.id = "confetti-canvas";
@@ -205,7 +414,6 @@ function launchConfetti() {
   const pieces = [];
   const shapes = ["rect", "circle", "star"];
 
-  // Multiple burst points for explosion effect
   const bursts = [
     { x: canvas.width * 0.5, y: canvas.height * 0.4 },
     { x: canvas.width * 0.3, y: canvas.height * 0.3 },
@@ -219,8 +427,7 @@ function launchConfetti() {
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 12 + 4;
       pieces.push({
-        x: burst.x,
-        y: burst.y,
+        x: burst.x, y: burst.y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 4,
         size: Math.random() * 10 + 4,
@@ -228,8 +435,7 @@ function launchConfetti() {
         shape: shapes[Math.floor(Math.random() * shapes.length)],
         rotation: Math.random() * 360,
         rotSpeed: Math.random() * 10 - 5,
-        gravity: 0.15,
-        opacity: 1,
+        gravity: 0.15, opacity: 1,
         fade: Math.random() * 0.005 + 0.002,
       });
     }
@@ -247,7 +453,6 @@ function launchConfetti() {
       p.vx *= 0.99;
       p.rotation += p.rotSpeed;
       p.opacity -= p.fade;
-
       if (p.opacity <= 0) return;
       alive = true;
 
@@ -266,7 +471,6 @@ function launchConfetti() {
       } else {
         ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.6);
       }
-
       ctx.restore();
     });
 
@@ -297,5 +501,6 @@ function launchConfetti() {
   animate();
 }
 
-// Generate on load
+// ============ INIT ============
+renderStars();
 generateExercises();
