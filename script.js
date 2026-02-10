@@ -73,6 +73,10 @@ function generateExercises() {
   document.getElementById("actions").classList.remove("hidden");
   document.getElementById("result-summary").classList.add("hidden");
   document.getElementById("result-summary").className = "hidden";
+
+  const checkBtn = document.getElementById("btn-check");
+  checkBtn.textContent = "Antworten pruefen";
+  checkBtn.disabled = false;
 }
 
 function renderExercises() {
