@@ -375,6 +375,11 @@ function checkAnswers() {
     summary.innerHTML = `<img src="gut.png" class="result-image" alt="Gut gemacht!"><br>${correctCount} von ${exercises.length} richtig. Gut gemacht! Versuch die anderen nochmal!`;
     checkBtn.textContent = "Nochmal prüfen";
     focusFirstWrong();
+  } else if (correctCount === 0) {
+    summary.className = "retry";
+    summary.innerHTML = `<video src="pizza-falsch.mp4" class="result-video" autoplay playsinline></video><br>Noch keine richtig. Versuch es nochmal!`;
+    checkBtn.textContent = "Nochmal prüfen";
+    focusFirstWrong();
   } else {
     summary.className = "retry";
     summary.innerHTML = `<img src="nochmal.png" class="result-image" alt="Nochmal versuchen"><br>${correctCount} von ${exercises.length} richtig. Versuch es nochmal!`;
