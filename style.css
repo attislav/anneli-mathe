@@ -506,6 +506,12 @@ body {
   color: white;
 }
 
+.correct-hint {
+  color: #fff59d;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
 /* Result states */
 .exercise.correct {
   border-color: #4caf50;

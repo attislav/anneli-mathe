@@ -1046,7 +1046,16 @@ function checkAnswers() {
       removeFromErrorPool(ex);
     } else {
       div.className = "exercise wrong";
-      feedback.textContent = "falsch";
+      // Show correct answer next to "falsch"
+      let correctText = "";
+      if (ex.type === "normal" || ex.type === "luecke") {
+        correctText = ` → ${ex.answer}`;
+      } else if (ex.type === "zehner") {
+        const exampleA = Math.floor(ex.target / 2);
+        const exampleB = ex.target - exampleA;
+        correctText = ` → z.B. ${exampleA}+${exampleB}`;
+      }
+      feedback.innerHTML = `falsch<span class="correct-hint">${correctText}</span>`;
       wrongCount++;
       hadWrong = true;
       soundWrong();
