@@ -48,7 +48,20 @@
       </div>
     </div>
 
-    <div class="settings">
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+      <button class="btn-mode active" id="btn-mode-path">Lernpfad</button>
+      <button class="btn-mode" id="btn-mode-free">Freies &Uuml;ben</button>
+    </div>
+
+    <!-- Learning Path -->
+    <div id="learning-path">
+      <div class="path-container" id="path-stages"></div>
+      <div class="path-hint" id="path-hint"></div>
+    </div>
+
+    <!-- Free Practice Settings (hidden in Lernpfad mode) -->
+    <div class="settings hidden" id="settings-panel">
       <div class="setting-group">
         <label>Schwierigkeit:</label>
         <div class="button-group" id="difficulty">
@@ -69,6 +82,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Adaptive Suggestion -->
+    <div class="adaptive-suggestion hidden" id="adaptive-suggestion"></div>
 
     <button class="btn-new" id="btn-generate">Neue Aufgaben</button>
 
