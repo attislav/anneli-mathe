@@ -10,9 +10,42 @@
   <div class="container">
     <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
 
-    <div class="star-display" id="star-display">
-      <span class="star-icon">&#11088;</span>
-      <span id="star-count">0</span>
+    <!-- Gamification Bar: Stars, Level, Streak, Achievements -->
+    <div class="gamification-bar">
+      <div class="star-display" id="star-display">
+        <span class="star-icon">&#11088;</span>
+        <span id="star-count">0</span>
+      </div>
+
+      <div class="level-display" id="level-display">
+        <div class="level-info">
+          <span class="level-mascot" id="level-mascot">🐣</span>
+          <span class="level-name" id="level-name">Mathe-Anfänger</span>
+        </div>
+        <div class="xp-bar">
+          <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
+        </div>
+        <span class="xp-text" id="xp-text">0 / 20 XP</span>
+      </div>
+
+      <div class="streak-display hidden" id="streak-display">
+        <span class="streak-flame">🔥</span>
+        <span class="streak-count" id="streak-count">0</span>
+        <span class="streak-label">Streak!</span>
+      </div>
+    </div>
+
+    <button class="btn-achievements" id="btn-achievements">🏆 Abzeichen</button>
+
+    <!-- Achievements Modal -->
+    <div class="modal-overlay hidden" id="achievements-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>🏆 Meine Abzeichen</h2>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
     </div>
 
     <div class="settings">
