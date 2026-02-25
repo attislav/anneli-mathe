@@ -323,7 +323,39 @@ function selectStage(stageId) {
   currentDifficulty = stage.diff;
   currentOperation = stage.op;
   renderLearningPath();
+
+  if (currentMode === "lernpfad") {
+    showExerciseView(stage);
+  } else {
+    generateExercises();
+  }
+}
+
+function showMapView() {
+  document.getElementById("learning-path").classList.remove("hidden");
+  document.getElementById("exercise-area").classList.add("hidden");
+  currentStage = null;
+  renderLearningPath();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showExerciseView(stage) {
+  document.getElementById("learning-path").classList.add("hidden");
+  document.getElementById("exercise-area").classList.remove("hidden");
+
+  // Show stage header
+  const header = document.getElementById("stage-header");
+  header.innerHTML = `
+    <span class="stage-header-icon">${stage.icon}</span>
+    <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name}</span>
+    <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig zum Weiterkommen</span>
+  `;
+
+  // Show back button only in lernpfad mode
+  document.getElementById("btn-back-to-map").classList.toggle("hidden", currentMode !== "lernpfad");
+
   generateExercises();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function completeStage(stageId, score) {
@@ -440,12 +472,7 @@ function renderLearningPath() {
   }, 100);
 
   if (hint) {
-    if (currentStage !== null) {
-      const stage = LEARNING_PATH[currentStage];
-      hint.textContent = `Stufe ${currentStage + 1}: ${stage.name} — Schaffe ${Math.round(stage.passScore * 100)}% richtig zum Weiterkommen!`;
-    } else {
-      hint.textContent = "Wähle eine Stufe zum Üben!";
-    }
+    hint.textContent = "Tippe auf eine Stufe, um zu üben!";
   }
 }
 
@@ -840,10 +867,12 @@ function showToast(icon, title, name) {
 // ============ MODE TOGGLE ============
 document.getElementById("btn-mode-path").addEventListener("click", () => {
   currentMode = "lernpfad";
+  currentStage = null;
   document.getElementById("btn-mode-path").classList.add("active");
   document.getElementById("btn-mode-free").classList.remove("active");
   document.getElementById("learning-path").classList.remove("hidden");
   document.getElementById("settings-panel").classList.add("hidden");
+  document.getElementById("exercise-area").classList.add("hidden");
   renderLearningPath();
 });
 
@@ -854,7 +883,13 @@ document.getElementById("btn-mode-free").addEventListener("click", () => {
   document.getElementById("btn-mode-path").classList.remove("active");
   document.getElementById("learning-path").classList.add("hidden");
   document.getElementById("settings-panel").classList.remove("hidden");
+  document.getElementById("exercise-area").classList.remove("hidden");
+  document.getElementById("btn-back-to-map").classList.add("hidden");
+  document.getElementById("stage-header").innerHTML = "";
 });
+
+// Back to map button
+document.getElementById("btn-back-to-map").addEventListener("click", showMapView);
 
 // ============ SETTING BUTTONS ============
 document.querySelectorAll("#difficulty .btn-setting").forEach((btn) => {
@@ -1445,6 +1480,15 @@ function showAdaptiveSuggestion(correctCount, total) {
         el.innerHTML = `
           ${next.icon} Gut gemacht! Du hast die Stufe geschafft! Bereit für <strong>${next.name}</strong>?
           <br><button class="suggest-btn" onclick="selectStage(${nextId})">Weiter zur nächsten Stufe!</button>
+          <button class="suggest-btn suggest-btn-secondary" onclick="showMapView()">Zur Karte</button>
+        `;
+        el.classList.remove("hidden");
+        return;
+      } else {
+        el.className = "adaptive-suggestion suggest-up";
+        el.innerHTML = `
+          Gut gemacht! Stufe geschafft!
+          <br><button class="suggest-btn" onclick="showMapView()">Zurück zur Karte</button>
         `;
         el.classList.remove("hidden");
         return;
@@ -1453,6 +1497,7 @@ function showAdaptiveSuggestion(correctCount, total) {
       el.className = "adaptive-suggestion suggest-stay";
       el.innerHTML = `
         Du brauchst ${Math.round(stage.passScore * 100)}% richtig zum Weiterkommen. Versuche es nochmal!
+        <br><button class="suggest-btn suggest-btn-secondary" onclick="showMapView()">Zur Karte</button>
       `;
       el.classList.remove("hidden");
       return;
@@ -1808,15 +1853,9 @@ function initApp() {
   renderLevel();
   renderStreak();
   renderLearningPath();
-  // Auto-select first unlocked non-mastered stage
-  const firstAvailable = LEARNING_PATH.find((s) =>
-    unlockedStages.includes(s.id) && !masteredStages.includes(s.id)
-  );
-  if (firstAvailable) {
-    selectStage(firstAvailable.id);
-  } else if (unlockedStages.length > 0) {
-    selectStage(unlockedStages[unlockedStages.length - 1]);
-  }
+  // Show map view initially (don't auto-start exercises)
+  document.getElementById("learning-path").classList.remove("hidden");
+  document.getElementById("exercise-area").classList.add("hidden");
 }
 
 // Check for auto-login (last used profile)
