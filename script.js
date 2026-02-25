@@ -136,6 +136,143 @@ document.getElementById("btn-create-profile").addEventListener("click", () => {
 
 document.getElementById("btn-switch-profile").addEventListener("click", switchProfile);
 
+// Login with existing name (typed)
+document.getElementById("btn-login-existing").addEventListener("click", () => {
+  const input = document.getElementById("login-name-input");
+  const hint = document.getElementById("login-hint");
+  const name = input.value.trim();
+
+  if (!name) {
+    hint.textContent = "Bitte gib deinen Namen ein!";
+    hint.className = "login-hint error";
+    return;
+  }
+
+  // Check if profile exists on this device
+  const profiles = getAllProfiles();
+  const exists = profiles.some((p) => p.name === name);
+
+  if (exists) {
+    loginAs(name);
+  } else {
+    // Create new profile with this name (new device)
+    createProfile(name);
+    hint.textContent = "Willkommen! Profil wurde erstellt.";
+    hint.className = "login-hint success";
+    loginAs(name);
+  }
+});
+
+document.getElementById("login-name-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    document.getElementById("btn-login-existing").click();
+  }
+});
+
+// ============ EXPORT / IMPORT ============
+function exportProfileData() {
+  if (!currentProfile) return null;
+  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors"];
+  const data = { name: currentProfile, version: 1 };
+  keys.forEach((key) => {
+    const val = localStorage.getItem(profileKey(key));
+    if (val !== null) data[key] = val;
+  });
+  return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
+
+function importProfileData(code) {
+  try {
+    const json = decodeURIComponent(escape(atob(code.trim())));
+    const data = JSON.parse(json);
+    if (!data.name) throw new Error("Kein Name im Code");
+
+    // Create profile if it doesn't exist
+    const profiles = getAllProfiles();
+    if (!profiles.some((p) => p.name === data.name)) {
+      createProfile(data.name);
+    }
+
+    // Restore data
+    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors"];
+    keys.forEach((key) => {
+      if (data[key] !== undefined) {
+        localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
+      }
+    });
+
+    return data.name;
+  } catch (e) {
+    return null;
+  }
+}
+
+document.getElementById("btn-export").addEventListener("click", () => {
+  const code = exportProfileData();
+  if (!code) return;
+
+  // Show modal with code
+  const modal = document.getElementById("achievements-modal");
+  const grid = document.getElementById("achievements-grid");
+  const header = modal.querySelector(".modal-header h2");
+  header.textContent = "Fortschritt sichern";
+  grid.innerHTML = `
+    <div style="grid-column: 1/-1;">
+      <p class="transfer-info">Kopiere diesen Code und fuege ihn auf dem anderen Geraet ein:</p>
+      <textarea class="transfer-code" id="export-code" readonly>${code}</textarea>
+      <div class="transfer-actions">
+        <button class="btn-copy" id="btn-copy-code">Kopieren</button>
+      </div>
+      <p class="transfer-info" id="copy-feedback"></p>
+    </div>
+  `;
+  modal.classList.remove("hidden");
+
+  document.getElementById("btn-copy-code").addEventListener("click", () => {
+    const textarea = document.getElementById("export-code");
+    textarea.select();
+    navigator.clipboard.writeText(textarea.value).then(() => {
+      document.getElementById("copy-feedback").textContent = "Kopiert!";
+    }).catch(() => {
+      document.getElementById("copy-feedback").textContent = "Bitte manuell kopieren (Strg+C)";
+    });
+  });
+});
+
+document.getElementById("btn-import").addEventListener("click", () => {
+  const modal = document.getElementById("achievements-modal");
+  const grid = document.getElementById("achievements-grid");
+  const header = modal.querySelector(".modal-header h2");
+  header.textContent = "Fortschritt importieren";
+  grid.innerHTML = `
+    <div style="grid-column: 1/-1;">
+      <p class="transfer-info">Fuege den Code vom anderen Geraet hier ein:</p>
+      <textarea class="transfer-code" id="import-code" placeholder="Code hier einfuegen..."></textarea>
+      <div class="transfer-actions">
+        <button class="btn-import-go" id="btn-import-go">Importieren</button>
+      </div>
+      <p class="transfer-info" id="import-feedback"></p>
+    </div>
+  `;
+  modal.classList.remove("hidden");
+
+  document.getElementById("btn-import-go").addEventListener("click", () => {
+    const code = document.getElementById("import-code").value;
+    const name = importProfileData(code);
+    if (name) {
+      document.getElementById("import-feedback").textContent = `Profil "${name}" erfolgreich importiert!`;
+      document.getElementById("import-feedback").style.color = "#4caf50";
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        loginAs(name);
+      }, 1500);
+    } else {
+      document.getElementById("import-feedback").textContent = "Ungueltiger Code! Bitte pruefe die Eingabe.";
+      document.getElementById("import-feedback").style.color = "#f44336";
+    }
+  });
+});
+
 // ============ CONFIG ============
 const DIFFICULTY = {
   leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
@@ -669,6 +806,8 @@ function renderAchievements() {
 
 // Achievement modal
 document.getElementById("btn-achievements").addEventListener("click", () => {
+  const header = document.querySelector("#achievements-modal .modal-header h2");
+  header.textContent = "🏆 Meine Abzeichen";
   renderAchievements();
   document.getElementById("achievements-modal").classList.remove("hidden");
 });
