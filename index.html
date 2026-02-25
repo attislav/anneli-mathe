@@ -14,8 +14,20 @@
       <div class="login-box">
         <h2>Wer bist du?</h2>
 
-        <!-- Existing profiles -->
+        <!-- Existing profiles on this device -->
         <div class="profile-list" id="profile-list"></div>
+
+        <!-- Login with existing name (cross-device) -->
+        <div class="login-existing">
+          <p class="new-profile-label">Mit bestehendem Namen einloggen:</p>
+          <div class="login-input-row">
+            <input type="text" id="login-name-input" class="login-input" placeholder="z.B. SchlauFuchs42" autocomplete="off">
+            <button class="btn-login-go" id="btn-login-existing">Einloggen</button>
+          </div>
+          <p class="login-hint" id="login-hint"></p>
+        </div>
+
+        <div class="login-divider"><span>oder</span></div>
 
         <!-- New profile creation -->
         <div class="new-profile" id="new-profile-section">
@@ -23,6 +35,13 @@
           <div class="generated-name" id="generated-name"></div>
           <button class="btn-reroll" id="btn-reroll">&#x1F3B2; Neuer Name</button>
           <button class="btn-login" id="btn-create-profile">Los geht's!</button>
+        </div>
+
+        <div class="login-divider"><span>Fortschritt mitnehmen</span></div>
+
+        <!-- Import/Export -->
+        <div class="transfer-section">
+          <button class="btn-transfer" id="btn-import">&#128229; Fortschritt importieren</button>
         </div>
       </div>
     </div>
@@ -32,6 +51,7 @@
     <div class="profile-bar">
       <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
       <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
+      <button class="btn-profile-export" id="btn-export">&#128228; Fortschritt sichern</button>
     </div>
 
     <!-- Gamification Bar: Stars, Level, Streak, Achievements -->

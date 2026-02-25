@@ -168,6 +168,189 @@ body {
   box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
 }
 
+/* Login with existing name */
+.login-existing {
+  margin-bottom: 8px;
+}
+
+.login-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.login-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: 3px solid #ddd;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+
+.login-input:focus {
+  border-color: #e84393;
+}
+
+.btn-login-go {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background: #e84393;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn-login-go:hover {
+  transform: scale(1.05);
+}
+
+.login-hint {
+  font-size: 0.85rem;
+  color: #999;
+  min-height: 1.2em;
+  margin-top: 4px;
+}
+
+.login-hint.error {
+  color: #f44336;
+}
+
+.login-hint.success {
+  color: #4caf50;
+}
+
+/* Login divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: #ccc;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.login-divider span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #999;
+  white-space: nowrap;
+}
+
+/* Transfer section */
+.transfer-section {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-transfer {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-transfer:hover {
+  border-color: #e84393;
+  background: #fde8f0;
+}
+
+/* Export button in app */
+.btn-profile-export {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 5;
+}
+
+.btn-profile-export:hover {
+  background: rgba(0,0,0,0.6);
+}
+
+/* Transfer modal content */
+.transfer-code {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  font-size: 0.85rem;
+  font-family: monospace;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  resize: vertical;
+  word-break: break-all;
+}
+
+.transfer-code:focus {
+  border-color: #e84393;
+  outline: none;
+}
+
+.transfer-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.transfer-actions button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.transfer-actions .btn-copy {
+  background: #74b9ff;
+  color: white;
+}
+
+.transfer-actions .btn-import-go {
+  background: #4caf50;
+  color: white;
+}
+
+.transfer-actions button:hover {
+  transform: scale(1.05);
+}
+
+.transfer-info {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #777;
+}
+
 /* Profile Bar (in app) */
 .profile-bar {
   position: relative;
