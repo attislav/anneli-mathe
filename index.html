@@ -131,18 +131,24 @@
       </div>
     </div>
 
-    <!-- Adaptive Suggestion -->
-    <div class="adaptive-suggestion hidden" id="adaptive-suggestion"></div>
+    <!-- Exercise Area (separate view from map in Lernpfad mode) -->
+    <div id="exercise-area" class="hidden">
+      <button class="btn-back-to-map" id="btn-back-to-map">&larr; Zur&uuml;ck zur Karte</button>
+      <div class="stage-header" id="stage-header"></div>
 
-    <button class="btn-new" id="btn-generate">Neue Aufgaben</button>
+      <!-- Adaptive Suggestion -->
+      <div class="adaptive-suggestion hidden" id="adaptive-suggestion"></div>
 
-    <div id="exercises"></div>
+      <button class="btn-new" id="btn-generate">Neue Aufgaben</button>
 
-    <div id="actions" class="hidden">
-      <button class="btn-check" id="btn-check">Antworten pr&#252;fen</button>
+      <div id="exercises"></div>
+
+      <div id="actions" class="hidden">
+        <button class="btn-check" id="btn-check">Antworten pr&#252;fen</button>
+      </div>
+
+      <div id="result-summary" class="hidden"></div>
     </div>
-
-    <div id="result-summary" class="hidden"></div>
   </div> <!-- /app-container -->
 
   <script src="script.js"></script>
