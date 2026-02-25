@@ -20,10 +20,221 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
 }
 
+.container.hidden {
+  display: none;
+}
+
 .title-image {
   width: 100%;
   border-radius: 16px;
   margin-bottom: 24px;
+}
+
+/* ============ LOGIN SCREEN ============ */
+.login-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 40px);
+}
+
+.login-screen.hidden {
+  display: none;
+}
+
+.login-container {
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.login-box {
+  text-align: center;
+}
+
+.login-box h2 {
+  font-size: 1.5rem;
+  color: #e84393;
+  margin-bottom: 20px;
+}
+
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+  border: 2px solid #ce93d8;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(156, 39, 176, 0.2);
+}
+
+.profile-card .profile-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #6a1b9a;
+}
+
+.profile-card .profile-stars {
+  font-size: 1rem;
+  color: #f57f17;
+  font-weight: 600;
+}
+
+.profile-card .profile-delete {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.profile-card .profile-delete:hover {
+  color: #f44336;
+}
+
+.new-profile-label {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.generated-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6a1b9a;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff8e1, #ffecb3);
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.btn-reroll {
+  display: inline-block;
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 12px;
+}
+
+.btn-reroll:hover {
+  border-color: #e84393;
+  background: #fde8f0;
+}
+
+.btn-login {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #74b9ff 0%, #e84393 100%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+}
+
+/* Profile Bar (in app) */
+.profile-bar {
+  position: relative;
+}
+
+.btn-profile-switch {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 5;
+}
+
+.btn-profile-switch:hover {
+  background: rgba(0,0,0,0.6);
+}
+
+/* ============ NEW EXERCISE TYPES ============ */
+
+/* Vergleichen: button group for >, <, = */
+.compare-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.compare-buttons button {
+  width: 44px;
+  height: 44px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #333;
+}
+
+.compare-buttons button:hover {
+  border-color: #e84393;
+  background: #fde8f0;
+}
+
+.compare-buttons button.selected {
+  border-color: #74b9ff;
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.compare-buttons button.correct-btn {
+  border-color: #4caf50;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.compare-buttons button.wrong-btn {
+  border-color: #f44336;
+  background: #ffebee;
+  color: #c62828;
 }
 
 /* Gamification Bar */

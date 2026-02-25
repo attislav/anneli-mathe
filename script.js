@@ -1,3 +1,141 @@
+// ============ ACCOUNT SYSTEM ============
+const ADJEKTIVE = [
+  "Schlau", "Mutig", "Schnell", "Lustig", "Stark", "Klug",
+  "Wild", "Cool", "Flink", "Tapfer", "Frech", "Lieb",
+  "Bunt", "Gross", "Klein", "Witzig", "Pfiffig", "Flott",
+  "Sanft", "Froh", "Stolz", "Wach", "Zart", "Fix",
+];
+const WESEN = [
+  "Fuchs", "Drache", "Einhorn", "Tiger", "Adler", "Panda",
+  "Delfin", "Loewe", "Katze", "Hund", "Baer", "Hase",
+  "Eule", "Wolf", "Frosch", "Pinguin", "Affe", "Otter",
+  "Igel", "Falke", "Rabe", "Dachs", "Luchs", "Biber",
+];
+
+let currentProfile = null;
+
+function generateUsername() {
+  const adj = ADJEKTIVE[Math.floor(Math.random() * ADJEKTIVE.length)];
+  const wesen = WESEN[Math.floor(Math.random() * WESEN.length)];
+  const zahl = Math.floor(Math.random() * 100);
+  return `${adj}${wesen}${zahl}`;
+}
+
+function getAllProfiles() {
+  return JSON.parse(localStorage.getItem("mathe-profiles") || "[]");
+}
+
+function saveProfiles(profiles) {
+  localStorage.setItem("mathe-profiles", JSON.stringify(profiles));
+}
+
+function generateUniqueName() {
+  const profiles = getAllProfiles();
+  const existing = new Set(profiles.map((p) => p.name));
+  let name;
+  let attempts = 0;
+  do {
+    name = generateUsername();
+    attempts++;
+  } while (existing.has(name) && attempts < 100);
+  return name;
+}
+
+function createProfile(name) {
+  const profiles = getAllProfiles();
+  const profile = { name, createdAt: Date.now() };
+  profiles.push(profile);
+  saveProfiles(profiles);
+  return profile;
+}
+
+function deleteProfile(name) {
+  let profiles = getAllProfiles();
+  profiles = profiles.filter((p) => p.name !== name);
+  saveProfiles(profiles);
+  // Remove all localStorage data for this profile
+  const prefix = `mathe-${name}-`;
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(prefix)) keysToRemove.push(key);
+  }
+  keysToRemove.forEach((k) => localStorage.removeItem(k));
+}
+
+function profileKey(key) {
+  if (!currentProfile) return `mathe-${key}`;
+  return `mathe-${currentProfile}-${key}`;
+}
+
+function loginAs(name) {
+  currentProfile = name;
+  localStorage.setItem("mathe-last-profile", name);
+  document.getElementById("login-screen").classList.add("hidden");
+  document.getElementById("app-container").classList.remove("hidden");
+  loadProfileData();
+  initApp();
+}
+
+function switchProfile() {
+  document.getElementById("app-container").classList.add("hidden");
+  document.getElementById("login-screen").classList.remove("hidden");
+  showLoginScreen();
+}
+
+function loadProfileData() {
+  totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
+  totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
+  unlockedStages = JSON.parse(localStorage.getItem(profileKey("stages")) || "[0]");
+  masteredStages = JSON.parse(localStorage.getItem(profileKey("mastered")) || "[]");
+  unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
+  perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
+  errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
+}
+
+function showLoginScreen() {
+  const profileList = document.getElementById("profile-list");
+  const profiles = getAllProfiles();
+  profileList.innerHTML = "";
+
+  profiles.forEach((p) => {
+    const stars = parseInt(localStorage.getItem(`mathe-${p.name}-sterne`) || "0", 10);
+    const card = document.createElement("div");
+    card.className = "profile-card";
+    card.innerHTML = `
+      <span class="profile-name">${p.name}</span>
+      <span class="profile-stars">⭐ ${stars}</span>
+      <button class="profile-delete" title="Profil löschen">&times;</button>
+    `;
+    card.querySelector(".profile-name").addEventListener("click", () => loginAs(p.name));
+    card.querySelector(".profile-stars").addEventListener("click", () => loginAs(p.name));
+    card.querySelector(".profile-delete").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (confirm(`Profil "${p.name}" wirklich löschen?`)) {
+        deleteProfile(p.name);
+        showLoginScreen();
+      }
+    });
+    profileList.appendChild(card);
+  });
+
+  // Generate a new name
+  const nameEl = document.getElementById("generated-name");
+  nameEl.textContent = generateUniqueName();
+}
+
+document.getElementById("btn-reroll").addEventListener("click", () => {
+  document.getElementById("generated-name").textContent = generateUniqueName();
+});
+
+document.getElementById("btn-create-profile").addEventListener("click", () => {
+  const name = document.getElementById("generated-name").textContent;
+  createProfile(name);
+  loginAs(name);
+});
+
+document.getElementById("btn-switch-profile").addEventListener("click", switchProfile);
+
 // ============ CONFIG ============
 const DIFFICULTY = {
   leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
@@ -12,29 +150,33 @@ let checked = false;
 
 // ============ LEARNING PATH ============
 const LEARNING_PATH = [
-  { id: 0,  name: "Plus bis 5",       icon: "🌱", diff: "leicht", op: "plus",     passScore: 0.8 },
-  { id: 1,  name: "Minus bis 5",      icon: "🍃", diff: "leicht", op: "minus",    passScore: 0.8 },
-  { id: 2,  name: "Gemischt bis 10",  icon: "🌻", diff: "leicht", op: "gemischt", passScore: 0.8 },
-  { id: 3,  name: "Plus bis 10",      icon: "🌿", diff: "mittel", op: "plus",     passScore: 0.8 },
-  { id: 4,  name: "Minus bis 10",     icon: "🌲", diff: "mittel", op: "minus",    passScore: 0.8 },
-  { id: 5,  name: "Gemischt bis 10",  icon: "🔥", diff: "mittel", op: "gemischt", passScore: 0.8 },
-  { id: 6,  name: "Lücken leicht",    icon: "🧩", diff: "leicht", op: "luecken",  passScore: 0.8 },
-  { id: 7,  name: "Plus bis 20",      icon: "💪", diff: "schwer", op: "plus",     passScore: 0.8 },
-  { id: 8,  name: "Minus bis 20",     icon: "🧗", diff: "schwer", op: "minus",    passScore: 0.8 },
-  { id: 9,  name: "Gemischt bis 20",  icon: "🏔️", diff: "schwer", op: "gemischt", passScore: 0.8 },
-  { id: 10, name: "Lücken schwer",    icon: "🔮", diff: "schwer", op: "luecken",  passScore: 0.8 },
-  { id: 11, name: "Zehnerzerlegung",  icon: "🎯", diff: "mittel", op: "zehner",   passScore: 0.8 },
-  { id: 12, name: "Meister-Prüfung",  icon: "👑", diff: "schwer", op: "gemischt", passScore: 0.9 },
+  { id: 0,  name: "Plus bis 5",       icon: "🌱", diff: "leicht", op: "plus",        passScore: 0.8 },
+  { id: 1,  name: "Minus bis 5",      icon: "🍃", diff: "leicht", op: "minus",       passScore: 0.8 },
+  { id: 2,  name: "Nachbarzahlen",    icon: "🏠", diff: "leicht", op: "nachbarn",    passScore: 0.8 },
+  { id: 3,  name: "Gemischt bis 10",  icon: "🌻", diff: "leicht", op: "gemischt",    passScore: 0.8 },
+  { id: 4,  name: "Verdoppeln",       icon: "🪞", diff: "leicht", op: "verdoppeln",  passScore: 0.8 },
+  { id: 5,  name: "Plus bis 10",      icon: "🌿", diff: "mittel", op: "plus",        passScore: 0.8 },
+  { id: 6,  name: "Minus bis 10",     icon: "🌲", diff: "mittel", op: "minus",       passScore: 0.8 },
+  { id: 7,  name: "Vergleichen",      icon: "⚖️", diff: "leicht", op: "vergleichen", passScore: 0.8 },
+  { id: 8,  name: "Gemischt bis 10",  icon: "🔥", diff: "mittel", op: "gemischt",    passScore: 0.8 },
+  { id: 9,  name: "Lücken leicht",    icon: "🧩", diff: "leicht", op: "luecken",     passScore: 0.8 },
+  { id: 10, name: "Zahlenreihen",     icon: "🔢", diff: "leicht", op: "reihen",      passScore: 0.8 },
+  { id: 11, name: "Plus bis 20",      icon: "💪", diff: "schwer", op: "plus",        passScore: 0.8 },
+  { id: 12, name: "Minus bis 20",     icon: "🧗", diff: "schwer", op: "minus",       passScore: 0.8 },
+  { id: 13, name: "Gemischt bis 20",  icon: "🏔️", diff: "schwer", op: "gemischt",   passScore: 0.8 },
+  { id: 14, name: "Lücken schwer",    icon: "🔮", diff: "schwer", op: "luecken",     passScore: 0.8 },
+  { id: 15, name: "Zehnerzerlegung",  icon: "🎯", diff: "mittel", op: "zehner",      passScore: 0.8 },
+  { id: 16, name: "Meister-Prüfung",  icon: "👑", diff: "schwer", op: "gemischt",    passScore: 0.9 },
 ];
 
-let unlockedStages = JSON.parse(localStorage.getItem("mathe-stages") || "[0]");
-let masteredStages = JSON.parse(localStorage.getItem("mathe-mastered") || "[]");
+let unlockedStages = [0];
+let masteredStages = [];
 let currentStage = null;
 let currentMode = "lernpfad";
 
 function savePathProgress() {
-  localStorage.setItem("mathe-stages", JSON.stringify(unlockedStages));
-  localStorage.setItem("mathe-mastered", JSON.stringify(masteredStages));
+  localStorage.setItem(profileKey("stages"), JSON.stringify(unlockedStages));
+  localStorage.setItem(profileKey("mastered"), JSON.stringify(masteredStages));
 }
 
 function selectStage(stageId) {
@@ -110,7 +252,7 @@ function renderLearningPath() {
 }
 
 // ============ ERROR POOL (Fehler-Wiederholung) ============
-let errorPool = JSON.parse(localStorage.getItem("mathe-errors") || "[]");
+let errorPool = [];
 
 function addToErrorPool(exercise) {
   // Only store normal and luecke exercises (not zehner)
@@ -132,7 +274,7 @@ function addToErrorPool(exercise) {
   }
   // Keep only last 30
   if (errorPool.length > 30) errorPool = errorPool.slice(-30);
-  localStorage.setItem("mathe-errors", JSON.stringify(errorPool));
+  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
 }
 
 function removeFromErrorPool(exercise) {
@@ -142,7 +284,7 @@ function removeFromErrorPool(exercise) {
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
   errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
-  localStorage.setItem("mathe-errors", JSON.stringify(errorPool));
+  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
@@ -221,10 +363,10 @@ function soundPerfect() {
 }
 
 // ============ STARS SYSTEM ============
-let totalStars = parseInt(localStorage.getItem("mathe-sterne") || "0", 10);
+let totalStars = 0;
 
 function saveStars() {
-  localStorage.setItem("mathe-sterne", totalStars.toString());
+  localStorage.setItem(profileKey("sterne"), totalStars.toString());
   renderStars();
 }
 
@@ -312,7 +454,7 @@ const LEVELS = [
   { name: "Mathe-Genie", mascot: "👑", xpNeeded: 500 },
 ];
 
-let totalXP = parseInt(localStorage.getItem("mathe-xp") || "0", 10);
+let totalXP = 0;
 
 function getCurrentLevel() {
   let lvl = 0;
@@ -328,7 +470,7 @@ function getCurrentLevel() {
 function addXP(amount) {
   const oldLevel = getCurrentLevel();
   totalXP += amount;
-  localStorage.setItem("mathe-xp", totalXP.toString());
+  localStorage.setItem(profileKey("xp"), totalXP.toString());
   const newLevel = getCurrentLevel();
   renderLevel();
 
@@ -402,13 +544,13 @@ const ACHIEVEMENTS = [
   { id: "path_complete", icon: "🏁", name: "Lernpfad komplett", desc: "Meistere alle Stufen" },
 ];
 
-let unlockedAchievements = JSON.parse(localStorage.getItem("mathe-achievements") || "[]");
-let perfectRounds = parseInt(localStorage.getItem("mathe-perfect-rounds") || "0", 10);
+let unlockedAchievements = [];
+let perfectRounds = 0;
 
 function unlockAchievement(id) {
   if (unlockedAchievements.includes(id)) return;
   unlockedAchievements.push(id);
-  localStorage.setItem("mathe-achievements", JSON.stringify(unlockedAchievements));
+  localStorage.setItem(profileKey("achievements"), JSON.stringify(unlockedAchievements));
 
   const achievement = ACHIEVEMENTS.find((a) => a.id === id);
   if (achievement) {
@@ -555,6 +697,14 @@ function generateExercises() {
     generateLuecken(config);
   } else if (currentOperation === "zehner") {
     generateZehner(config);
+  } else if (currentOperation === "vergleichen") {
+    generateVergleichen(config);
+  } else if (currentOperation === "verdoppeln") {
+    generateVerdoppeln(config);
+  } else if (currentOperation === "nachbarn") {
+    generateNachbarn(config);
+  } else if (currentOperation === "reihen") {
+    generateReihen(config);
   } else {
     // Mix in error repeat exercises (up to 30% of the round)
     const repeatCount = Math.floor(config.count * 0.3);
@@ -669,6 +819,115 @@ function generateZehner(config) {
   }
 }
 
+// ============ NEW EXERCISE TYPES ============
+
+function generateVergleichen(config) {
+  for (let i = 0; i < config.count; i++) {
+    // Generate two expressions and compare them
+    const op1 = Math.random() < 0.5 ? "+" : "-";
+    const op2 = Math.random() < 0.5 ? "+" : "-";
+    let a1, b1, a2, b2;
+
+    if (op1 === "+") {
+      a1 = randomInt(1, config.maxNumber);
+      b1 = randomInt(0, Math.min(config.maxNumber, config.maxResult - a1));
+    } else {
+      a1 = randomInt(2, config.maxResult);
+      b1 = randomInt(0, Math.min(config.maxNumber, a1));
+    }
+
+    if (op2 === "+") {
+      a2 = randomInt(1, config.maxNumber);
+      b2 = randomInt(0, Math.min(config.maxNumber, config.maxResult - a2));
+    } else {
+      a2 = randomInt(2, config.maxResult);
+      b2 = randomInt(0, Math.min(config.maxNumber, a2));
+    }
+
+    const result1 = op1 === "+" ? a1 + b1 : a1 - b1;
+    const result2 = op2 === "+" ? a2 + b2 : a2 - b2;
+
+    let answer;
+    if (result1 > result2) answer = ">";
+    else if (result1 < result2) answer = "<";
+    else answer = "=";
+
+    exercises.push({
+      type: "vergleichen",
+      left: { a: a1, op: op1, b: b1, result: result1 },
+      right: { a: a2, op: op2, b: b2, result: result2 },
+      answer,
+    });
+  }
+}
+
+function generateVerdoppeln(config) {
+  for (let i = 0; i < config.count; i++) {
+    const isDoppelt = Math.random() < 0.5;
+    if (isDoppelt) {
+      const num = randomInt(1, Math.floor(config.maxResult / 2));
+      exercises.push({
+        type: "verdoppeln",
+        mode: "doppelt",
+        num,
+        answer: num * 2,
+      });
+    } else {
+      const half = randomInt(1, Math.floor(config.maxResult / 2));
+      const num = half * 2; // ensure even number
+      exercises.push({
+        type: "verdoppeln",
+        mode: "halb",
+        num,
+        answer: half,
+      });
+    }
+  }
+}
+
+function generateNachbarn(config) {
+  for (let i = 0; i < config.count; i++) {
+    const num = randomInt(1, config.maxResult - 1);
+    exercises.push({
+      type: "nachbarn",
+      num,
+      answerBefore: num - 1,
+      answerAfter: num + 1,
+    });
+  }
+}
+
+function generateReihen(config) {
+  // Patterns: +1, +2, +3, +5, +10, *2
+  const patterns = [
+    { step: 1, name: "+1" },
+    { step: 2, name: "+2" },
+    { step: 3, name: "+3" },
+    { step: 5, name: "+5" },
+  ];
+  if (config.maxResult >= 20) {
+    patterns.push({ step: 10, name: "+10" });
+  }
+
+  for (let i = 0; i < config.count; i++) {
+    const pattern = pickRandom(patterns);
+    const maxStart = Math.max(1, config.maxResult - pattern.step * 5);
+    const start = randomInt(0, maxStart);
+    const sequence = [];
+    for (let j = 0; j < 5; j++) {
+      sequence.push(start + j * pattern.step);
+    }
+    const answer = start + 5 * pattern.step;
+
+    exercises.push({
+      type: "reihen",
+      sequence,
+      answer,
+      step: pattern.step,
+    });
+  }
+}
+
 // ============ RENDERING ============
 function renderExercises() {
   const container = document.getElementById("exercises");
@@ -713,6 +972,46 @@ function renderExercises() {
         </span>
         <span class="feedback" id="feedback-${i}"></span>
       `;
+    } else if (ex.type === "vergleichen") {
+      const leftStr = `${ex.left.a} ${ex.left.op} ${ex.left.b}`;
+      const rightStr = `${ex.right.a} ${ex.right.op} ${ex.right.b}`;
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">${leftStr}</span>
+        <div class="compare-buttons" id="compare-${i}">
+          <button data-value="<">&lt;</button>
+          <button data-value="=">=</button>
+          <button data-value=">">&gt;</button>
+        </div>
+        <span class="task">${rightStr}</span>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "verdoppeln") {
+      const label = ex.mode === "doppelt" ? "Doppelt" : "Halb";
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">${label}: ${ex.num} =</span>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "nachbarn") {
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}-a" class="inline-input" autocomplete="off">
+          _ <strong>${ex.num}</strong> _
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}-b" class="inline-input" autocomplete="off">
+        </span>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "reihen") {
+      const seqStr = ex.sequence.join(", ");
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <span class="task">${seqStr}, </span>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
     }
 
     container.appendChild(div);
@@ -736,6 +1035,16 @@ function renderExercises() {
           checkAnswers();
         }
       }
+    });
+  });
+
+  // Vergleichen button listeners
+  container.querySelectorAll(".compare-buttons").forEach((group) => {
+    group.querySelectorAll("button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        group.querySelectorAll("button").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
     });
   });
 }
@@ -993,7 +1302,7 @@ function checkAnswers() {
 
     let isCorrect = false;
 
-    if (ex.type === "normal" || ex.type === "luecke") {
+    if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
       const input = document.getElementById(`answer-${i}`);
       const val = input.value.trim();
 
@@ -1033,6 +1342,49 @@ function checkAnswers() {
         inputA.readOnly = true;
         inputB.readOnly = true;
       }
+    } else if (ex.type === "vergleichen") {
+      const group = document.getElementById(`compare-${i}`);
+      const selected = group.querySelector(".selected");
+
+      if (!selected) {
+        div.className = "exercise retry";
+        feedback.textContent = "?";
+        wrongCount++;
+        hadWrong = true;
+        return;
+      }
+
+      const val = selected.dataset.value;
+      isCorrect = val === ex.answer;
+
+      if (isCorrect) {
+        selected.classList.add("correct-btn");
+        group.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+      } else {
+        selected.classList.add("wrong-btn");
+      }
+    } else if (ex.type === "nachbarn") {
+      const inputA = document.getElementById(`answer-${i}-a`);
+      const inputB = document.getElementById(`answer-${i}-b`);
+      const valA = inputA.value.trim();
+      const valB = inputB.value.trim();
+
+      if (valA === "" || valB === "") {
+        div.className = "exercise retry";
+        feedback.textContent = "?";
+        wrongCount++;
+        hadWrong = true;
+        return;
+      }
+
+      const numA = parseInt(valA, 10);
+      const numB = parseInt(valB, 10);
+      isCorrect = !isNaN(numA) && !isNaN(numB) && numA === ex.answerBefore && numB === ex.answerAfter;
+
+      if (isCorrect) {
+        inputA.readOnly = true;
+        inputB.readOnly = true;
+      }
     }
 
     if (isCorrect) {
@@ -1048,12 +1400,16 @@ function checkAnswers() {
       div.className = "exercise wrong";
       // Show correct answer next to "falsch"
       let correctText = "";
-      if (ex.type === "normal" || ex.type === "luecke") {
+      if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
         correctText = ` → ${ex.answer}`;
       } else if (ex.type === "zehner") {
         const exampleA = Math.floor(ex.target / 2);
         const exampleB = ex.target - exampleA;
         correctText = ` → z.B. ${exampleA}+${exampleB}`;
+      } else if (ex.type === "vergleichen") {
+        correctText = ` → ${ex.answer}`;
+      } else if (ex.type === "nachbarn") {
+        correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
       }
       feedback.innerHTML = `falsch<span class="correct-hint">${correctText}</span>`;
       wrongCount++;
@@ -1089,7 +1445,7 @@ function checkAnswers() {
     addStars(3);
     addXP(5);
     perfectRounds++;
-    localStorage.setItem("mathe-perfect-rounds", perfectRounds.toString());
+    localStorage.setItem(profileKey("perfect-rounds"), perfectRounds.toString());
     summary.className = "perfect";
     summary.innerHTML = `<img src="super.png" class="result-image" alt="Super!"><br>Super! Alle ${exercises.length} Aufgaben richtig!`;
     checkBtn.textContent = "Alles richtig!";
@@ -1247,16 +1603,29 @@ function launchConfetti() {
 }
 
 // ============ INIT ============
-renderStars();
-renderLevel();
-renderStreak();
-renderLearningPath();
-// Auto-select first unlocked non-mastered stage
-const firstAvailable = LEARNING_PATH.find((s) =>
-  unlockedStages.includes(s.id) && !masteredStages.includes(s.id)
-);
-if (firstAvailable) {
-  selectStage(firstAvailable.id);
-} else if (unlockedStages.length > 0) {
-  selectStage(unlockedStages[unlockedStages.length - 1]);
+function initApp() {
+  renderStars();
+  renderLevel();
+  renderStreak();
+  renderLearningPath();
+  // Auto-select first unlocked non-mastered stage
+  const firstAvailable = LEARNING_PATH.find((s) =>
+    unlockedStages.includes(s.id) && !masteredStages.includes(s.id)
+  );
+  if (firstAvailable) {
+    selectStage(firstAvailable.id);
+  } else if (unlockedStages.length > 0) {
+    selectStage(unlockedStages[unlockedStages.length - 1]);
+  }
 }
+
+// Check for auto-login (last used profile)
+(function () {
+  const lastProfile = localStorage.getItem("mathe-last-profile");
+  const profiles = getAllProfiles();
+  if (lastProfile && profiles.some((p) => p.name === lastProfile)) {
+    loginAs(lastProfile);
+  } else {
+    showLoginScreen();
+  }
+})();

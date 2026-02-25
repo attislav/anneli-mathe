@@ -7,8 +7,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
+  <!-- Login Screen -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-container">
+      <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
+      <div class="login-box">
+        <h2>Wer bist du?</h2>
+
+        <!-- Existing profiles -->
+        <div class="profile-list" id="profile-list"></div>
+
+        <!-- New profile creation -->
+        <div class="new-profile" id="new-profile-section">
+          <p class="new-profile-label">Neues Profil erstellen:</p>
+          <div class="generated-name" id="generated-name"></div>
+          <button class="btn-reroll" id="btn-reroll">&#x1F3B2; Neuer Name</button>
+          <button class="btn-login" id="btn-create-profile">Los geht's!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container hidden" id="app-container">
+    <div class="profile-bar">
+      <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
+      <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
+    </div>
 
     <!-- Gamification Bar: Stars, Level, Streak, Achievements -->
     <div class="gamification-bar">
@@ -79,6 +103,10 @@
           <button class="btn-setting" data-value="minus">Nur Minus</button>
           <button class="btn-setting" data-value="luecken">L&#252;cken</button>
           <button class="btn-setting" data-value="zehner">Zehnerzerlegung</button>
+          <button class="btn-setting" data-value="vergleichen">Vergleichen</button>
+          <button class="btn-setting" data-value="verdoppeln">Verdoppeln</button>
+          <button class="btn-setting" data-value="nachbarn">Nachbarzahlen</button>
+          <button class="btn-setting" data-value="reihen">Zahlenreihen</button>
         </div>
       </div>
     </div>
@@ -95,7 +123,7 @@
     </div>
 
     <div id="result-summary" class="hidden"></div>
-  </div>
+  </div> <!-- /app-container -->
 
   <script src="script.js"></script>
 </body>
