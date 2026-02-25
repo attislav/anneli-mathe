@@ -848,92 +848,231 @@ body {
   color: white;
 }
 
-/* Learning Path */
+/* ============ DUOLINGO-STYLE LEARNING PATH ============ */
 #learning-path {
   margin-bottom: 16px;
+  padding: 20px 0;
 }
 
 .path-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 10px 0;
 }
 
+.path-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+/* The connecting line between nodes */
+.path-connector {
+  position: absolute;
+  width: 3px;
+  height: 30px;
+  background: #e0e0e0;
+  left: 50%;
+  bottom: -19px;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.path-connector.active-line {
+  background: linear-gradient(180deg, #66bb6a, #43a047);
+}
+
+/* Individual stage node */
 .path-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 10px 8px;
-  border-radius: 14px;
   cursor: pointer;
-  transition: all 0.2s;
-  width: 80px;
-  text-align: center;
+  transition: transform 0.2s;
   position: relative;
+  z-index: 1;
 }
 
-.path-stage.unlocked {
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-  border: 2px solid #66bb6a;
-}
-
-.path-stage.unlocked:hover {
+.path-stage:hover {
   transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
-}
-
-.path-stage.active {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  border: 3px solid #42a5f5;
-  box-shadow: 0 0 12px rgba(66, 165, 245, 0.4);
 }
 
 .path-stage.locked {
-  background: #f5f5f5;
-  border: 2px solid #e0e0e0;
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.path-stage.mastered {
-  background: linear-gradient(135deg, #fff8e1, #ffecb3);
-  border: 2px solid #ffd54f;
+.path-stage.locked:hover {
+  transform: none;
 }
 
-.path-stage .stage-icon {
-  font-size: 1.5rem;
+.path-node {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  position: relative;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.path-stage.locked .stage-icon {
+/* Locked node */
+.path-stage.locked .path-node {
+  background: #e0e0e0;
+  border: 3px solid #bdbdbd;
   filter: grayscale(1);
+  opacity: 0.5;
 }
 
+/* Unlocked (available) node */
+.path-stage.unlocked .path-node {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border: 3px solid #64b5f6;
+}
+
+/* Active (currently selected) node */
+.path-stage.active .path-node {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  border: 4px solid #0d47a1;
+  box-shadow: 0 0 0 4px rgba(66,165,245,0.3), 0 6px 20px rgba(33,150,243,0.4);
+  animation: activePulse 2s ease infinite;
+}
+
+.path-stage.active .path-node .stage-icon {
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.8));
+}
+
+/* Mastered node */
+.path-stage.mastered .path-node {
+  background: linear-gradient(135deg, #ffd54f, #ffb300);
+  border: 3px solid #ff8f00;
+  box-shadow: 0 4px 15px rgba(255,179,0,0.3);
+}
+
+@keyframes activePulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(66,165,245,0.3), 0 6px 20px rgba(33,150,243,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(66,165,245,0.15), 0 6px 20px rgba(33,150,243,0.4); }
+}
+
+/* Crown badge for mastered stages */
+.path-crown {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 1rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+/* Stage name below node */
 .path-stage .stage-name {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #333;
+  color: #555;
   line-height: 1.2;
+  text-align: center;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .path-stage.locked .stage-name {
-  color: #999;
+  color: #bbb;
 }
 
-.path-stage .stage-check {
+.path-stage.active .stage-name {
+  color: #1565c0;
+  font-weight: 800;
+}
+
+.path-stage.mastered .stage-name {
+  color: #e65100;
+}
+
+/* Winding layout: alternating offset */
+.path-row.offset-left {
+  padding-right: 120px;
+}
+
+.path-row.offset-right {
+  padding-left: 120px;
+}
+
+/* Curved connector between offset rows */
+.path-curve {
+  width: 60px;
+  height: 30px;
+  border: 3px solid #e0e0e0;
+  border-top: none;
   position: absolute;
-  top: -4px;
-  right: -4px;
-  font-size: 0.9rem;
+  bottom: -19px;
+  z-index: 0;
+}
+
+.path-curve.curve-left {
+  border-right: none;
+  border-bottom-left-radius: 30px;
+  left: calc(50% - 90px);
+}
+
+.path-curve.curve-right {
+  border-left: none;
+  border-bottom-right-radius: 30px;
+  right: calc(50% - 90px);
+}
+
+.path-curve.active-line {
+  border-color: #66bb6a;
 }
 
 .path-hint {
   text-align: center;
   font-size: 0.9rem;
   color: #777;
-  margin-top: 10px;
+  margin-top: 14px;
   font-style: italic;
+}
+
+/* Progress overview bar */
+.path-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+  border-radius: 12px;
+}
+
+.path-progress-bar {
+  flex: 1;
+  max-width: 200px;
+  height: 10px;
+  background: #ce93d8;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.path-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ab47bc, #7b1fa2);
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+.path-progress-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6a1b9a;
 }
 
 /* Adaptive Suggestion */

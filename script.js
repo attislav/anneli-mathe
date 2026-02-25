@@ -214,11 +214,48 @@ function renderLearningPath() {
   if (!container) return;
   container.innerHTML = "";
 
-  LEARNING_PATH.forEach((stage) => {
+  // Progress overview
+  const masteredCount = masteredStages.length;
+  const totalCount = LEARNING_PATH.length;
+  const progressPercent = Math.round((masteredCount / totalCount) * 100);
+
+  const progressBar = document.createElement("div");
+  progressBar.className = "path-progress";
+  progressBar.innerHTML = `
+    <span class="path-progress-text">${masteredCount}/${totalCount}</span>
+    <div class="path-progress-bar">
+      <div class="path-progress-fill" style="width: ${progressPercent}%"></div>
+    </div>
+    <span class="path-progress-text">${progressPercent}%</span>
+  `;
+  container.appendChild(progressBar);
+
+  // Build winding path: groups of 1 node per row, alternating left/right
+  const groupSize = 3; // Change direction every 3 nodes
+  let direction = "center"; // start centered, then alternate
+  let groupIndex = 0;
+
+  LEARNING_PATH.forEach((stage, i) => {
     const unlocked = unlockedStages.includes(stage.id);
     const mastered = masteredStages.includes(stage.id);
     const active = currentStage === stage.id;
 
+    // Determine offset direction
+    const groupNum = Math.floor(i / groupSize);
+    if (groupNum === 0) {
+      direction = "center";
+    } else if (groupNum % 2 === 1) {
+      direction = "left";
+    } else {
+      direction = "right";
+    }
+
+    const row = document.createElement("div");
+    row.className = "path-row";
+    if (direction === "left") row.classList.add("offset-left");
+    else if (direction === "right") row.classList.add("offset-right");
+
+    // Stage node
     const el = document.createElement("div");
     let cls = "path-stage";
     if (active) cls += " active";
@@ -227,19 +264,43 @@ function renderLearningPath() {
     else cls += " locked";
     el.className = cls;
 
+    const crownHTML = mastered ? '<span class="path-crown">👑</span>' : "";
+
     el.innerHTML = `
-      <span class="stage-icon">${stage.icon}</span>
+      <div class="path-node">
+        <span class="stage-icon">${stage.icon}</span>
+        ${crownHTML}
+      </div>
       <span class="stage-name">${stage.name}</span>
-      ${mastered ? '<span class="stage-check">✅</span>' : ""}
     `;
-    el.title = unlocked ? stage.name : "Noch gesperrt";
+    el.title = unlocked ? `${stage.name} — Klick zum Starten` : "Noch gesperrt";
 
     if (unlocked) {
       el.addEventListener("click", () => selectStage(stage.id));
     }
 
-    container.appendChild(el);
+    row.appendChild(el);
+
+    // Add connector line to next node (if not last)
+    if (i < LEARNING_PATH.length - 1) {
+      const nextMastered = masteredStages.includes(LEARNING_PATH[i + 1].id) ||
+                           unlockedStages.includes(LEARNING_PATH[i + 1].id);
+      const connector = document.createElement("div");
+      connector.className = "path-connector";
+      if (mastered && nextMastered) connector.classList.add("active-line");
+      row.appendChild(connector);
+    }
+
+    container.appendChild(row);
   });
+
+  // Scroll active stage into view
+  setTimeout(() => {
+    const activeNode = container.querySelector(".path-stage.active");
+    if (activeNode) {
+      activeNode.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, 100);
 
   if (hint) {
     if (currentStage !== null) {
