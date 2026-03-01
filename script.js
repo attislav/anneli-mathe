@@ -286,7 +286,7 @@ let exercises = [];
 let checked = false;
 
 // ============ LEARNING PATH ============
-const LEARNING_PATH = [
+let LEARNING_PATH = [
   { id: 0,  name: "Plus bis 5",       icon: "🌱", diff: "leicht", op: "plus",        passScore: 0.8 },
   { id: 1,  name: "Minus bis 5",      icon: "🍃", diff: "leicht", op: "minus",       passScore: 0.8 },
   { id: 2,  name: "Nachbarzahlen",    icon: "🏠", diff: "leicht", op: "nachbarn",    passScore: 0.8 },
@@ -305,6 +305,80 @@ const LEARNING_PATH = [
   { id: 15, name: "Zehnerzerlegung",  icon: "🎯", diff: "mittel", op: "zehner",      passScore: 0.8 },
   { id: 16, name: "Meister-Prüfung",  icon: "👑", diff: "schwer", op: "gemischt",    passScore: 0.9 },
 ];
+
+// Load learning path (skilltree) from JSON (data-driven). Falls back to the hardcoded path above.
+// Current format: content/<locale>/<subject>/<grade>/skilltree.json
+function inferStageConfigFromSkillId(skillId) {
+  // Heuristic mapping (small, safe default). We can extend the JSON later to be explicit.
+  const id = (skillId || "").toLowerCase();
+
+  if (id.includes("compare") || id.includes("vergleich")) {
+    return { icon: "⚖️", diff: "leicht", op: "vergleichen" };
+  }
+  if (id.includes("numbers") || id.includes("zahlen")) {
+    return { icon: "🔢", diff: "leicht", op: "reihen" };
+  }
+  if (id.includes("add") || id.includes("plus")) {
+    const diff = id.includes("20") ? "schwer" : "leicht";
+    return { icon: diff === "schwer" ? "💪" : "🌱", diff, op: "plus" };
+  }
+  if (id.includes("sub") || id.includes("minus")) {
+    const diff = id.includes("20") ? "schwer" : "leicht";
+    return { icon: diff === "schwer" ? "🧗" : "🍃", diff, op: "minus" };
+  }
+
+  return { icon: "⭐", diff: "leicht", op: "gemischt" };
+}
+
+function skilltreeToLearningPath(skilltreeJson) {
+  if (!skilltreeJson || !Array.isArray(skilltreeJson.skills)) return null;
+
+  const path = skilltreeJson.skills.map((skill, idx) => {
+    const inferred = inferStageConfigFromSkillId(skill.id);
+    const passScore = skill?.mastery?.passScore ?? 0.85;
+
+    return {
+      id: idx,
+      skillId: skill.id,
+      name: skill.title || skill.id || `Skill ${idx + 1}`,
+      icon: inferred.icon,
+      diff: inferred.diff,
+      op: inferred.op,
+      passScore,
+      description: skill.description || "",
+      prerequisites: Array.isArray(skill.prerequisites) ? skill.prerequisites : [],
+    };
+  });
+
+  return path;
+}
+
+function loadSkilltreeFromJson() {
+  const url = "content/de/mathe/grade-1/skilltree.json";
+
+  return fetch(url)
+    .then((res) => {
+      if (!res.ok) throw new Error(`skilltree fetch failed: ${res.status}`);
+      return res.json();
+    })
+    .then((json) => {
+      const parsed = skilltreeToLearningPath(json);
+      if (!parsed || parsed.length === 0) throw new Error("skilltree parse failed");
+
+      LEARNING_PATH = parsed;
+
+      // Clamp progress arrays if the path length changed
+      unlockedStages = unlockedStages.filter((id) => id >= 0 && id < LEARNING_PATH.length);
+      masteredStages = masteredStages.filter((id) => id >= 0 && id < LEARNING_PATH.length);
+      if (unlockedStages.length === 0) unlockedStages = [0];
+
+      savePathProgress();
+      renderLearningPath();
+    })
+    .catch(() => {
+      // Silent fallback: app still works with the hardcoded path.
+    });
+}
 
 let unlockedStages = [0];
 let masteredStages = [];
@@ -1853,6 +1927,10 @@ function initApp() {
   renderLevel();
   renderStreak();
   renderLearningPath();
+
+  // Try to load a data-driven skilltree (non-blocking)
+  loadSkilltreeFromJson();
+
   // Show map view initially (don't auto-start exercises)
   document.getElementById("learning-path").classList.remove("hidden");
   document.getElementById("exercise-area").classList.add("hidden");
