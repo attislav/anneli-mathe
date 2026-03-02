@@ -1239,6 +1239,17 @@ body {
   text-overflow: ellipsis;
 }
 
+/* Small repetition counter (e.g. 2/4) */
+.path-stage .stage-reps {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1565c0;
+  background: rgba(116, 185, 255, 0.2);
+  border: 1px solid rgba(116, 185, 255, 0.45);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
 .path-stage.locked .stage-name {
   color: #bbb;
 }
