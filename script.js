@@ -311,20 +311,25 @@ let LEARNING_PATH = [
 
 // Load learning path (skilltree) from JSON (data-driven). Falls back to the hardcoded path above.
 // Current format: content/<locale>/<subject>/<grade>/skilltree.json
+//
+// JSON schema (per skill):
+// {
+//   id, title, description, prerequisites, mastery: {passScore, repetitions},
+//   icon?: string, difficulty?: "leicht"|"mittel"|"schwer", operation?: string
+// }
+//
+// We still keep a tiny inference fallback so older skilltrees continue to work.
 function inferStageConfigFromSkillId(skillId) {
-  // Heuristic mapping (small, safe default). We can extend the JSON later to be explicit.
   const id = (skillId || "").toLowerCase();
 
-  if (id.includes("compare") || id.includes("vergleich")) {
-    return { icon: "⚖️", diff: "leicht", op: "vergleichen" };
-  }
-  if (id.includes("numbers") || id.includes("zahlen")) {
-    return { icon: "🔢", diff: "leicht", op: "reihen" };
-  }
+  if (id.includes("compare") || id.includes("vergleich")) return { icon: "⚖️", diff: "leicht", op: "vergleichen" };
+  if (id.includes("numbers") || id.includes("zahlen")) return { icon: "🔢", diff: "leicht", op: "reihen" };
+
   if (id.includes("add") || id.includes("plus")) {
     const diff = id.includes("20") ? "schwer" : "leicht";
     return { icon: diff === "schwer" ? "💪" : "🌱", diff, op: "plus" };
   }
+
   if (id.includes("sub") || id.includes("minus")) {
     const diff = id.includes("20") ? "schwer" : "leicht";
     return { icon: diff === "schwer" ? "🧗" : "🍃", diff, op: "minus" };
@@ -338,6 +343,11 @@ function skilltreeToLearningPath(skilltreeJson) {
 
   const path = skilltreeJson.skills.map((skill, idx) => {
     const inferred = inferStageConfigFromSkillId(skill.id);
+
+    const icon = typeof skill.icon === "string" && skill.icon.trim() ? skill.icon.trim() : inferred.icon;
+    const diff = typeof skill.difficulty === "string" && skill.difficulty.trim() ? skill.difficulty.trim() : inferred.diff;
+    const op = typeof skill.operation === "string" && skill.operation.trim() ? skill.operation.trim() : inferred.op;
+
     const passScore = skill?.mastery?.passScore ?? 0.85;
     const repetitions = skill?.mastery?.repetitions ?? 1;
 
@@ -345,9 +355,9 @@ function skilltreeToLearningPath(skilltreeJson) {
       id: idx,
       skillId: skill.id,
       name: skill.title || skill.id || `Skill ${idx + 1}`,
-      icon: inferred.icon,
-      diff: inferred.diff,
-      op: inferred.op,
+      icon,
+      diff,
+      op,
       passScore,
       repetitions,
       description: skill.description || "",
