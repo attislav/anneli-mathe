@@ -999,6 +999,7 @@ function generateExercises() {
   const config = DIFFICULTY[currentDifficulty];
   exercises = [];
   checked = false;
+  attempts = [];
   resetStreak();
   hideAdaptiveSuggestion();
 
@@ -1029,6 +1030,10 @@ function generateExercises() {
   }
 
   renderExercises();
+
+  // Initialize attempt counters (used for multiple-choice rescue on retry)
+  attempts = new Array(exercises.length).fill(0);
+
   document.getElementById("actions").classList.remove("hidden");
   document.getElementById("result-summary").classList.add("hidden");
   document.getElementById("result-summary").className = "hidden";
@@ -1038,6 +1043,79 @@ function generateExercises() {
   checkBtn.disabled = false;
 
   checkAchievements();
+}
+
+
+// ============ MULTIPLE-CHOICE RESCUE (attempt 2) ============
+
+function isRescueSupported(ex) {
+  // Only numeric single-answer types for now
+  return ex && (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen");
+}
+
+function buildRescueChoices(correct, config) {
+  // Build 3 choices: 1 correct + 2 plausible distractors
+  const max = Math.max(5, config?.maxResult ?? 20);
+  const choices = new Set([correct]);
+
+  // Prefer small deltas (kid-friendly)
+  const deltas = [1, 2, 3, 4, 5];
+  while (choices.size < 3) {
+    const delta = pickRandom(deltas);
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    let cand = correct + sign * delta;
+    if (cand < 0) cand = correct + delta;
+    if (cand > max) cand = correct - delta;
+    if (cand < 0) cand = 0;
+    if (cand > max) cand = max;
+    choices.add(cand);
+  }
+
+  // Shuffle
+  const arr = Array.from(choices);
+  shuffleArray(arr);
+  return arr;
+}
+
+function attachRescueChoices(exerciseIndex) {
+  const ex = exercises[exerciseIndex];
+  if (!isRescueSupported(ex)) return;
+
+  const div = document.querySelector(`.exercise[data-index="${exerciseIndex}"]`);
+  if (!div) return;
+
+  // Don't duplicate
+  if (div.querySelector(".mc-rescue")) return;
+
+  const input = document.getElementById(`answer-${exerciseIndex}`);
+  if (!input) return;
+
+  const config = DIFFICULTY[currentDifficulty];
+  const choices = buildRescueChoices(ex.answer, config);
+
+  const wrap = document.createElement("div");
+  wrap.className = "mc-rescue";
+  wrap.innerHTML = `<span class="mc-rescue-label">Hilfe:</span>`;
+
+  const btnRow = document.createElement("div");
+  btnRow.className = "mc-rescue-buttons";
+
+  choices.forEach((val) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "mc-rescue-btn";
+    btn.textContent = val;
+    btn.addEventListener("click", () => {
+      btnRow.querySelectorAll("button").forEach((b) => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      input.value = String(val);
+      input.focus();
+    });
+    btnRow.appendChild(btn);
+  });
+
+  wrap.appendChild(btnRow);
+  div.appendChild(wrap);
 }
 
 function shuffleArray(arr) {
@@ -1716,28 +1794,46 @@ function checkAnswers() {
       // Remove from error pool if it was a repeat
       removeFromErrorPool(ex);
     } else {
-      div.className = "exercise wrong";
-      // Show correct answer next to "falsch"
-      let correctText = "";
-      if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
-        correctText = ` → ${ex.answer}`;
-      } else if (ex.type === "zehner") {
-        const exampleA = Math.floor(ex.target / 2);
-        const exampleB = ex.target - exampleA;
-        correctText = ` → z.B. ${exampleA}+${exampleB}`;
-      } else if (ex.type === "vergleichen") {
-        correctText = ` → ${ex.answer}`;
-      } else if (ex.type === "nachbarn") {
-        correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
+      // Attempt tracking for retry UX
+      const supportsRescue = isRescueSupported(ex);
+      const hasAnswerInput = supportsRescue && document.getElementById(`answer-${i}`)?.value.trim() !== "";
+
+      if (supportsRescue && attempts[i] === 0 && hasAnswerInput) {
+        // 1st wrong attempt: give a multiple-choice rescue for attempt 2
+        attempts[i] = 1;
+        div.className = "exercise retry";
+        feedback.textContent = "Nochmal!";
+        wrongCount++;
+        hadWrong = true;
+        soundWrong();
+        attachRescueChoices(i);
+      } else {
+        // 2nd wrong (or non-supported types): show solution hint as before
+        if (supportsRescue && attempts[i] === 1 && hasAnswerInput) attempts[i] = 2;
+
+        div.className = "exercise wrong";
+        // Show correct answer next to "falsch"
+        let correctText = "";
+        if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
+          correctText = ` → ${ex.answer}`;
+        } else if (ex.type === "zehner") {
+          const exampleA = Math.floor(ex.target / 2);
+          const exampleB = ex.target - exampleA;
+          correctText = ` → z.B. ${exampleA}+${exampleB}`;
+        } else if (ex.type === "vergleichen") {
+          correctText = ` → ${ex.answer}`;
+        } else if (ex.type === "nachbarn") {
+          correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
+        }
+        feedback.innerHTML = `falsch<span class="correct-hint">${correctText}</span>`;
+        wrongCount++;
+        hadWrong = true;
+        soundWrong();
+        // Add to error pool for future repetition
+        addToErrorPool(ex);
+        // Show number line help
+        showNumberLineHelp(i);
       }
-      feedback.innerHTML = `falsch<span class="correct-hint">${correctText}</span>`;
-      wrongCount++;
-      hadWrong = true;
-      soundWrong();
-      // Add to error pool for future repetition
-      addToErrorPool(ex);
-      // Show number line help
-      showNumberLineHelp(i);
     }
   });
 
