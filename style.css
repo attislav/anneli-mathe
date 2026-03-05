@@ -936,6 +936,51 @@ body {
   border-color: #ff9800;
 }
 
+/* Multiple-choice rescue (attempt 2) */
+.mc-rescue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.mc-rescue-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1565c0;
+}
+
+.mc-rescue-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mc-rescue-btn {
+  min-width: 54px;
+  padding: 8px 12px;
+  border: 2px solid #bbdefb;
+  border-radius: 12px;
+  background: #e3f2fd;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.12s;
+}
+
+.mc-rescue-btn:hover {
+  transform: translateY(-1px);
+  border-color: #42a5f5;
+}
+
+.mc-rescue-btn.selected {
+  border-color: #4caf50;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
 /* Actions */
 #actions {
   margin-top: 20px;
