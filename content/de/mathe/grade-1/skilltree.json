@@ -9,6 +9,9 @@
       "title": "Zahlen 0–10",
       "description": "Zahlen erkennen, benennen und ordnen (0 bis 10).",
       "prerequisites": [],
+      "icon": "🔢",
+      "difficulty": "leicht",
+      "operation": "reihen",
       "mastery": { "passScore": 0.85, "repetitions": 3 }
     },
     {
@@ -16,6 +19,9 @@
       "title": "Größer / kleiner (0–10)",
       "description": "Zahlen bis 10 vergleichen (>, <, =).",
       "prerequisites": ["m1-numbers-0-10"],
+      "icon": "⚖️",
+      "difficulty": "leicht",
+      "operation": "vergleichen",
       "mastery": { "passScore": 0.85, "repetitions": 3 }
     },
     {
@@ -23,6 +29,9 @@
       "title": "Plus rechnen bis 10",
       "description": "Einfache Additionen mit Ergebnissen bis 10.",
       "prerequisites": ["m1-numbers-0-10"],
+      "icon": "🌱",
+      "difficulty": "leicht",
+      "operation": "plus",
       "mastery": { "passScore": 0.9, "repetitions": 4 }
     },
     {
@@ -30,6 +39,9 @@
       "title": "Minus rechnen bis 10",
       "description": "Einfache Subtraktionen mit Ergebnissen bis 10.",
       "prerequisites": ["m1-add-within-10"],
+      "icon": "🍃",
+      "difficulty": "leicht",
+      "operation": "minus",
       "mastery": { "passScore": 0.9, "repetitions": 4 }
     },
     {
@@ -37,6 +49,9 @@
       "title": "Plus rechnen bis 20",
       "description": "Additionen mit Ergebnissen bis 20 (ohne/mit Zehnerübergang später).",
       "prerequisites": ["m1-add-within-10"],
+      "icon": "💪",
+      "difficulty": "schwer",
+      "operation": "plus",
       "mastery": { "passScore": 0.85, "repetitions": 4 }
     },
     {
@@ -44,6 +59,9 @@
       "title": "Minus rechnen bis 20",
       "description": "Subtraktionen bis 20.",
       "prerequisites": ["m1-sub-within-10", "m1-add-within-20"],
+      "icon": "🧗",
+      "difficulty": "schwer",
+      "operation": "minus",
       "mastery": { "passScore": 0.85, "repetitions": 4 }
     }
   ]

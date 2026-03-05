@@ -83,6 +83,8 @@ function switchProfile() {
   showLoginScreen();
 }
 
+let skillMasteryProgress = {}; // { [skillId]: { passes: number } }
+
 function loadProfileData() {
   totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
   totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
@@ -91,6 +93,7 @@ function loadProfileData() {
   unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
   perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
   errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
+  skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
 }
 
 function showLoginScreen() {
@@ -172,7 +175,7 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 // ============ EXPORT / IMPORT ============
 function exportProfileData() {
   if (!currentProfile) return null;
-  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors"];
+  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
   const data = { name: currentProfile, version: 1 };
   keys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
@@ -194,7 +197,7 @@ function importProfileData(code) {
     }
 
     // Restore data
-    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors"];
+    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
     keys.forEach((key) => {
       if (data[key] !== undefined) {
         localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
@@ -308,20 +311,25 @@ let LEARNING_PATH = [
 
 // Load learning path (skilltree) from JSON (data-driven). Falls back to the hardcoded path above.
 // Current format: content/<locale>/<subject>/<grade>/skilltree.json
+//
+// JSON schema (per skill):
+// {
+//   id, title, description, prerequisites, mastery: {passScore, repetitions},
+//   icon?: string, difficulty?: "leicht"|"mittel"|"schwer", operation?: string
+// }
+//
+// We still keep a tiny inference fallback so older skilltrees continue to work.
 function inferStageConfigFromSkillId(skillId) {
-  // Heuristic mapping (small, safe default). We can extend the JSON later to be explicit.
   const id = (skillId || "").toLowerCase();
 
-  if (id.includes("compare") || id.includes("vergleich")) {
-    return { icon: "⚖️", diff: "leicht", op: "vergleichen" };
-  }
-  if (id.includes("numbers") || id.includes("zahlen")) {
-    return { icon: "🔢", diff: "leicht", op: "reihen" };
-  }
+  if (id.includes("compare") || id.includes("vergleich")) return { icon: "⚖️", diff: "leicht", op: "vergleichen" };
+  if (id.includes("numbers") || id.includes("zahlen")) return { icon: "🔢", diff: "leicht", op: "reihen" };
+
   if (id.includes("add") || id.includes("plus")) {
     const diff = id.includes("20") ? "schwer" : "leicht";
     return { icon: diff === "schwer" ? "💪" : "🌱", diff, op: "plus" };
   }
+
   if (id.includes("sub") || id.includes("minus")) {
     const diff = id.includes("20") ? "schwer" : "leicht";
     return { icon: diff === "schwer" ? "🧗" : "🍃", diff, op: "minus" };
@@ -335,22 +343,46 @@ function skilltreeToLearningPath(skilltreeJson) {
 
   const path = skilltreeJson.skills.map((skill, idx) => {
     const inferred = inferStageConfigFromSkillId(skill.id);
+
+    const icon = typeof skill.icon === "string" && skill.icon.trim() ? skill.icon.trim() : inferred.icon;
+    const diff = typeof skill.difficulty === "string" && skill.difficulty.trim() ? skill.difficulty.trim() : inferred.diff;
+    const op = typeof skill.operation === "string" && skill.operation.trim() ? skill.operation.trim() : inferred.op;
+
     const passScore = skill?.mastery?.passScore ?? 0.85;
+    const repetitions = skill?.mastery?.repetitions ?? 1;
 
     return {
       id: idx,
       skillId: skill.id,
       name: skill.title || skill.id || `Skill ${idx + 1}`,
-      icon: inferred.icon,
-      diff: inferred.diff,
-      op: inferred.op,
+      icon,
+      diff,
+      op,
       passScore,
+      repetitions,
       description: skill.description || "",
       prerequisites: Array.isArray(skill.prerequisites) ? skill.prerequisites : [],
     };
   });
 
   return path;
+}
+
+function migrateMasteryProgressFromOldMasteredStages() {
+  if (!Array.isArray(masteredStages) || masteredStages.length === 0) return;
+  if (!skillMasteryProgress) skillMasteryProgress = {};
+
+  masteredStages.forEach((stageId) => {
+    const stage = LEARNING_PATH[stageId];
+    if (!stage?.skillId) return;
+    const reps = getRequiredRepetitions(stage);
+    const passes = getSkillPasses(stage);
+    if (passes < reps) {
+      skillMasteryProgress[stage.skillId] = { passes: reps };
+    }
+  });
+
+  saveSkillMasteryProgress();
 }
 
 function loadSkilltreeFromJson() {
@@ -372,6 +404,7 @@ function loadSkilltreeFromJson() {
       masteredStages = masteredStages.filter((id) => id >= 0 && id < LEARNING_PATH.length);
       if (unlockedStages.length === 0) unlockedStages = [0];
 
+      migrateMasteryProgressFromOldMasteredStages();
       savePathProgress();
       renderLearningPath();
     })
@@ -417,12 +450,16 @@ function showExerciseView(stage) {
   document.getElementById("learning-path").classList.add("hidden");
   document.getElementById("exercise-area").classList.remove("hidden");
 
+  const passes = stage?.skillId ? (skillMasteryProgress?.[stage.skillId]?.passes || 0) : 0;
+  const reps = stage?.repetitions || 1;
+  const repsText = reps > 1 ? ` • ${passes}/${reps} geschafft` : "";
+
   // Show stage header
   const header = document.getElementById("stage-header");
   header.innerHTML = `
     <span class="stage-header-icon">${stage.icon}</span>
     <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name}</span>
-    <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig zum Weiterkommen</span>
+    <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig${repsText}</span>
   `;
 
   // Show back button only in lernpfad mode
@@ -432,13 +469,57 @@ function showExerciseView(stage) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function saveSkillMasteryProgress() {
+  localStorage.setItem(profileKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
+}
+
+function getRequiredRepetitions(stage) {
+  const reps = parseInt(stage?.repetitions || 1, 10);
+  return Number.isFinite(reps) && reps > 0 ? reps : 1;
+}
+
+function getSkillPasses(stage) {
+  if (!stage?.skillId) return 0;
+  return parseInt(skillMasteryProgress?.[stage.skillId]?.passes || 0, 10) || 0;
+}
+
+function incrementSkillPass(stage) {
+  if (!stage?.skillId) return 0;
+  const current = getSkillPasses(stage);
+  const next = current + 1;
+  if (!skillMasteryProgress) skillMasteryProgress = {};
+  skillMasteryProgress[stage.skillId] = { passes: next };
+  saveSkillMasteryProgress();
+  return next;
+}
+
+function ensureStageMasteredIfComplete(stageId) {
+  const stage = LEARNING_PATH[stageId];
+  if (!stage) return false;
+  const reps = getRequiredRepetitions(stage);
+  const passes = getSkillPasses(stage);
+  if (passes >= reps && !masteredStages.includes(stageId)) {
+    masteredStages.push(stageId);
+    return true;
+  }
+  return false;
+}
+
 function completeStage(stageId, score) {
   const stage = LEARNING_PATH[stageId];
-  if (score >= stage.passScore) {
-    // Mark as mastered
+  if (!stage) return;
+
+  if (score < stage.passScore) return;
+
+  const reps = getRequiredRepetitions(stage);
+  const passes = incrementSkillPass(stage);
+
+  // Master only after N successful passes
+  if (passes >= reps) {
     if (!masteredStages.includes(stageId)) {
       masteredStages.push(stageId);
     }
+
     // Unlock next stage
     const nextId = stageId + 1;
     if (nextId < LEARNING_PATH.length && !unlockedStages.includes(nextId)) {
@@ -446,9 +527,13 @@ function completeStage(stageId, score) {
       const next = LEARNING_PATH[nextId];
       showToast(next.icon, "Neue Stufe freigeschaltet!", next.name);
     }
-    savePathProgress();
-    renderLearningPath();
+  } else {
+    const left = Math.max(0, reps - passes);
+    showToast(stage.icon, "Fast!", `${left}× noch schaffen`);
   }
+
+  savePathProgress();
+  renderLearningPath();
 }
 
 function renderLearningPath() {
@@ -456,6 +541,13 @@ function renderLearningPath() {
   const hint = document.getElementById("path-hint");
   if (!container) return;
   container.innerHTML = "";
+
+  // Sync mastered stages from skill mastery progress (in case the required repetitions were met)
+  let masteryChanged = false;
+  for (let i = 0; i < LEARNING_PATH.length; i++) {
+    if (ensureStageMasteredIfComplete(i)) masteryChanged = true;
+  }
+  if (masteryChanged) savePathProgress();
 
   // Progress overview
   const masteredCount = masteredStages.length;
@@ -509,12 +601,19 @@ function renderLearningPath() {
 
     const crownHTML = mastered ? '<span class="path-crown">👑</span>' : "";
 
+    const reps = getRequiredRepetitions(stage);
+    const passes = getSkillPasses(stage);
+    const repHTML = (!mastered && reps > 1)
+      ? `<span class="stage-reps">${passes}/${reps}</span>`
+      : "";
+
     el.innerHTML = `
       <div class="path-node">
         <span class="stage-icon">${stage.icon}</span>
         ${crownHTML}
       </div>
       <span class="stage-name">${stage.name}</span>
+      ${repHTML}
     `;
     el.title = unlocked ? `${stage.name} — Klick zum Starten` : "Noch gesperrt";
 
