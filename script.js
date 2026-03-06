@@ -1895,10 +1895,10 @@ function checkAnswers() {
     } else {
       // Attempt tracking for retry UX
       const supportsRescue = isRescueSupported(ex);
-      const hasAnswerInput = supportsRescue && document.getElementById(`answer-${i}`)?.value.trim() !== "";
 
-      if (supportsRescue && attempts[i] === 0 && hasAnswerInput) {
-        // 1st wrong attempt: give a multiple-choice rescue for attempt 2
+      if (supportsRescue && attempts[i] === 0) {
+        // 1st wrong attempt: always give a retry + multiple-choice rescue
+        // (even if the input was empty) so we consistently have 2 attempts.
         attempts[i] = 1;
         div.className = "exercise retry";
         feedback.textContent = "Nochmal!";
@@ -1908,7 +1908,7 @@ function checkAnswers() {
         attachRescueChoices(i);
       } else {
         // 2nd wrong (or non-supported types): show solution hint as before
-        if (supportsRescue && attempts[i] === 1 && hasAnswerInput) attempts[i] = 2;
+        if (supportsRescue && attempts[i] === 1) attempts[i] = 2;
 
         div.className = "exercise wrong";
         // Show correct answer next to "falsch"
