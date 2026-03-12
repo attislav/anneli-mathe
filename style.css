@@ -792,9 +792,14 @@ body {
   border-color: #e84393;
 }
 
+.exercise-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
 .btn-new {
-  display: block;
-  width: 100%;
+  flex: 1;
   padding: 16px;
   font-size: 1.3rem;
   font-weight: 700;
@@ -805,15 +810,30 @@ body {
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
   box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
-  margin-bottom: 24px;
 }
 
-.btn-new:hover {
+.btn-lesson {
+  flex: 1;
+  padding: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.25);
+}
+
+.btn-new:hover,
+.btn-lesson:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
 }
 
-.btn-new:active {
+.btn-new:active,
+.btn-lesson:active {
   transform: translateY(0);
 }
 
@@ -1127,6 +1147,17 @@ body {
   font-size: 1.2rem;
   font-weight: 800;
   color: #1565c0;
+}
+
+.stage-header-lesson {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: white;
+  background: #6c5ce7;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
 .stage-header-goal {
@@ -1468,6 +1499,20 @@ body {
   border-radius: 6px;
   font-weight: 700;
 }
+
+/* Lesson session tag badge */
+.exercise .lesson-tag {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.exercise .lesson-tag-aktuell { background: #6c5ce7; }
+.exercise .lesson-tag-wdh { background: #00b894; }
+.exercise .lesson-tag-fehler { background: #d63031; }
 
 .hidden {
   display: none;

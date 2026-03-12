@@ -94,6 +94,7 @@ function loadProfileData() {
   perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
   errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
   skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
+  recentStageHistory = JSON.parse(localStorage.getItem(profileKey("recent-stages")) || "[]");
 }
 
 function showLoginScreen() {
@@ -175,7 +176,7 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 // ============ EXPORT / IMPORT ============
 function exportProfileData() {
   if (!currentProfile) return null;
-  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
+  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery", "recent-stages"];
   const data = { name: currentProfile, version: 1 };
   keys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
@@ -197,7 +198,7 @@ function importProfileData(code) {
     }
 
     // Restore data
-    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
+    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery", "recent-stages"];
     keys.forEach((key) => {
       if (data[key] !== undefined) {
         localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
@@ -287,6 +288,8 @@ let currentDifficulty = "leicht";
 let currentOperation = "gemischt";
 let exercises = [];
 let checked = false;
+let isLessonSession = false;
+let lessonPrimaryStageId = null;
 
 // ============ LEARNING PATH ============
 let LEARNING_PATH = [
@@ -415,6 +418,7 @@ function loadSkilltreeFromJson() {
 
 let unlockedStages = [0];
 let masteredStages = [];
+let recentStageHistory = []; // stageIds, most recent last
 let currentStage = null;
 let currentMode = "lernpfad";
 
@@ -423,10 +427,26 @@ function savePathProgress() {
   localStorage.setItem(profileKey("mastered"), JSON.stringify(masteredStages));
 }
 
+function saveRecentStages() {
+  localStorage.setItem(profileKey("recent-stages"), JSON.stringify(recentStageHistory || []));
+}
+
+function recordRecentStage(stageId) {
+  if (stageId === null || stageId === undefined) return;
+  if (!Array.isArray(recentStageHistory)) recentStageHistory = [];
+  // Keep unique, most-recent-last
+  recentStageHistory = recentStageHistory.filter((id) => id !== stageId);
+  recentStageHistory.push(stageId);
+  // Keep last 12
+  if (recentStageHistory.length > 12) recentStageHistory = recentStageHistory.slice(-12);
+  saveRecentStages();
+}
+
 function selectStage(stageId) {
   if (!unlockedStages.includes(stageId)) return;
   const stage = LEARNING_PATH[stageId];
   currentStage = stageId;
+  recordRecentStage(stageId);
   currentDifficulty = stage.diff;
   currentOperation = stage.op;
   renderLearningPath();
@@ -456,14 +476,19 @@ function showExerciseView(stage) {
 
   // Show stage header
   const header = document.getElementById("stage-header");
+  const lessonLabel = (isLessonSession && lessonPrimaryStageId === stage.id)
+    ? `<span class="stage-header-lesson">10‑Min Lektion</span>`
+    : "";
+
   header.innerHTML = `
     <span class="stage-header-icon">${stage.icon}</span>
-    <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name}</span>
+    <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name} ${lessonLabel}</span>
     <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig${repsText}</span>
   `;
 
   // Show back button only in lernpfad mode
   document.getElementById("btn-back-to-map").classList.toggle("hidden", currentMode !== "lernpfad");
+  document.getElementById("btn-lesson").classList.toggle("hidden", currentMode !== "lernpfad");
 
   generateExercises();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1058,6 +1083,7 @@ document.getElementById("btn-mode-free").addEventListener("click", () => {
   document.getElementById("settings-panel").classList.remove("hidden");
   document.getElementById("exercise-area").classList.remove("hidden");
   document.getElementById("btn-back-to-map").classList.add("hidden");
+  document.getElementById("btn-lesson").classList.add("hidden");
   document.getElementById("stage-header").innerHTML = "";
 });
 
@@ -1081,7 +1107,12 @@ document.querySelectorAll("#operation .btn-setting").forEach((btn) => {
   });
 });
 
-document.getElementById("btn-generate").addEventListener("click", generateExercises);
+document.getElementById("btn-generate").addEventListener("click", () => {
+  isLessonSession = false;
+  generateExercises();
+});
+
+document.getElementById("btn-lesson").addEventListener("click", startLessonSession);
 document.getElementById("btn-check").addEventListener("click", checkAnswers);
 
 // ============ HELPERS ============
@@ -1144,6 +1175,151 @@ function generateExercises() {
   checkAchievements();
 }
 
+// ============ LESSON SESSION (10 min) ============
+
+function pickDefaultLessonStageId() {
+  // Prefer current stage; else first unlocked that isn't mastered; else last unlocked.
+  if (currentStage !== null && currentStage !== undefined) return currentStage;
+
+  const unlocked = Array.isArray(unlockedStages) ? unlockedStages.slice().sort((a, b) => a - b) : [0];
+  const firstNotMastered = unlocked.find((id) => !masteredStages.includes(id));
+  return firstNotMastered !== undefined ? firstNotMastered : unlocked[unlocked.length - 1] ?? 0;
+}
+
+function pickReviewStageId(primaryStageId) {
+  const unlockedSet = new Set(unlockedStages || []);
+
+  // 1) recent history (most recent last)
+  const recent = Array.isArray(recentStageHistory) ? recentStageHistory.slice().reverse() : [];
+  for (const id of recent) {
+    if (id === primaryStageId) continue;
+    if (unlockedSet.has(id)) return id;
+  }
+
+  // 2) already mastered (use latest)
+  const mastered = Array.isArray(masteredStages) ? masteredStages.slice().reverse() : [];
+  for (const id of mastered) {
+    if (id === primaryStageId) continue;
+    if (unlockedSet.has(id)) return id;
+  }
+
+  // 3) previous stage as fallback
+  if (primaryStageId > 0 && unlockedSet.has(primaryStageId - 1)) return primaryStageId - 1;
+
+  return null;
+}
+
+function pushExercisesForStage(stage, count, sessionTag) {
+  if (!stage || !count || count <= 0) return;
+
+  const savedDiff = currentDifficulty;
+  const savedOp = currentOperation;
+
+  currentDifficulty = stage.diff;
+  currentOperation = stage.op;
+
+  const config = DIFFICULTY[currentDifficulty];
+  const before = exercises.length;
+
+  if (currentOperation === "luecken") {
+    generateLuecken(config, count);
+  } else if (currentOperation === "zehner") {
+    generateZehner(config, count);
+  } else if (currentOperation === "vergleichen") {
+    generateVergleichen(config, count);
+  } else if (currentOperation === "verdoppeln") {
+    generateVerdoppeln(config, count);
+  } else if (currentOperation === "nachbarn") {
+    generateNachbarn(config, count);
+  } else if (currentOperation === "reihen") {
+    generateReihen(config, count);
+  } else {
+    generateNormal(config, count);
+  }
+
+  for (let i = before; i < exercises.length; i++) {
+    exercises[i].sessionTag = sessionTag;
+  }
+
+  currentDifficulty = savedDiff;
+  currentOperation = savedOp;
+}
+
+function startLessonSession() {
+  if (currentMode !== "lernpfad") return;
+
+  const primaryId = pickDefaultLessonStageId();
+  const primary = LEARNING_PATH[primaryId];
+  if (!primary) return;
+
+  // Mark + update header
+  isLessonSession = true;
+  lessonPrimaryStageId = primaryId;
+  // Re-render header label
+  showExerciseView(primary);
+
+  // Overwrite the auto-generated round with lesson content
+  generateLessonExercises(primaryId);
+}
+
+function generateLessonExercises(primaryStageId) {
+  const primary = LEARNING_PATH[primaryStageId];
+  if (!primary) return;
+
+  const total = 10;
+  let mistakesCount = 1;
+  let reviewCount = 3;
+  let currentCount = 6;
+
+  exercises = [];
+  checked = false;
+  attempts = [];
+  resetStreak();
+  hideAdaptiveSuggestion();
+
+  // 10% mistakes
+  const primaryConfig = DIFFICULTY[primary.diff];
+  const mistakes = getErrorRepeatExercises(primaryConfig, mistakesCount);
+  if (mistakes.length > 0) {
+    mistakes.forEach((ex) => { ex.sessionTag = "fehler"; exercises.push(ex); });
+  } else {
+    // no mistakes available → shift budget to review
+    mistakesCount = 0;
+    reviewCount += 1;
+    currentCount = total - reviewCount;
+  }
+
+  // 30% review
+  const reviewId = pickReviewStageId(primaryStageId);
+  if (reviewId !== null && reviewId !== undefined) {
+    const reviewStage = LEARNING_PATH[reviewId];
+    pushExercisesForStage(reviewStage, reviewCount, "wdh");
+  } else {
+    // no review candidate → shift to current
+    currentCount += reviewCount;
+    reviewCount = 0;
+  }
+
+  // 60% current
+  pushExercisesForStage(primary, currentCount, "aktuell");
+
+  // Shuffle so it's interleaved
+  shuffleArray(exercises);
+
+  // Render
+  renderExercises();
+  attempts = new Array(exercises.length).fill(0);
+
+  document.getElementById("actions").classList.remove("hidden");
+  document.getElementById("result-summary").classList.add("hidden");
+  document.getElementById("result-summary").className = "hidden";
+
+  const checkBtn = document.getElementById("btn-check");
+  checkBtn.textContent = "Antworten prüfen";
+  checkBtn.disabled = false;
+
+  checkAchievements();
+}
 
 // ============ MULTIPLE-CHOICE RESCUE (attempt 2) ============
 
@@ -1257,8 +1433,9 @@ function generateNormal(config, count) {
   }
 }
 
-function generateLuecken(config) {
-  for (let i = 0; i < config.count; i++) {
+function generateLuecken(config, count) {
+  if (count === undefined) count = config.count;
+  for (let i = 0; i < count; i++) {
     const op = Math.random() < 0.5 ? "+" : "-";
     let a, b, result;
 
@@ -1295,8 +1472,9 @@ function generateLuecken(config) {
   }
 }
 
-function generateZehner(config) {
-  for (let i = 0; i < config.count; i++) {
+function generateZehner(config, count) {
+  if (count === undefined) count = config.count;
+  for (let i = 0; i < count; i++) {
     const target = pickRandom(config.zehnerTargets);
     exercises.push({
       type: "zehner",
@@ -1307,8 +1485,9 @@ function generateZehner(config) {
 
 // ============ NEW EXERCISE TYPES ============
 
-function generateVergleichen(config) {
-  for (let i = 0; i < config.count; i++) {
+function generateVergleichen(config, count) {
+  if (count === undefined) count = config.count;
+  for (let i = 0; i < count; i++) {
     // Generate two expressions and compare them
     const op1 = Math.random() < 0.5 ? "+" : "-";
     const op2 = Math.random() < 0.5 ? "+" : "-";
@@ -1347,8 +1526,9 @@ function generateVergleichen(config) {
   }
 }
 
-function generateVerdoppeln(config) {
-  for (let i = 0; i < config.count; i++) {
+function generateVerdoppeln(config, count) {
+  if (count === undefined) count = config.count;
+  for (let i = 0; i < count; i++) {
     const isDoppelt = Math.random() < 0.5;
     if (isDoppelt) {
       const num = randomInt(1, Math.floor(config.maxResult / 2));
@@ -1371,8 +1551,9 @@ function generateVerdoppeln(config) {
   }
 }
 
-function generateNachbarn(config) {
-  for (let i = 0; i < config.count; i++) {
+function generateNachbarn(config, count) {
+  if (count === undefined) count = config.count;
+  for (let i = 0; i < count; i++) {
     const num = randomInt(1, config.maxResult - 1);
     exercises.push({
       type: "nachbarn",
@@ -1383,7 +1564,8 @@ function generateNachbarn(config) {
   }
 }
 
-function generateReihen(config) {
+function generateReihen(config, count) {
+  if (count === undefined) count = config.count;
   // Patterns: +1, +2, +3, +5, +10, *2
   const patterns = [
     { step: 1, name: "+1" },
@@ -1395,7 +1577,7 @@ function generateReihen(config) {
     patterns.push({ step: 10, name: "+10" });
   }
 
-  for (let i = 0; i < config.count; i++) {
+  for (let i = 0; i < count; i++) {
     const pattern = pickRandom(patterns);
     const maxStart = Math.max(1, config.maxResult - pattern.step * 5);
     const start = randomInt(0, maxStart);
@@ -1425,6 +1607,11 @@ function renderExercises() {
     div.dataset.index = i;
 
     const repeatBadge = ex.isRepeat ? '<span class="error-repeat-badge">Üben!</span>' : "";
+
+    // Lesson tag badge (for interleaving sessions)
+    const lessonTagLabel = ex.sessionTag === "aktuell" ? "Aktuell" :
+      (ex.sessionTag === "wdh" ? "Wdh" :
+        (ex.sessionTag === "fehler" ? "Fehler" : ""));
 
     if (ex.type === "normal") {
       div.innerHTML = `
@@ -1498,6 +1685,13 @@ function renderExercises() {
         <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
         <span class="feedback" id="feedback-${i}"></span>
       `;
+    }
+
+    if (lessonTagLabel) {
+      const badge = document.createElement("span");
+      badge.className = `lesson-tag lesson-tag-${ex.sessionTag}`;
+      badge.textContent = lessonTagLabel;
+      div.appendChild(badge);
     }
 
     container.appendChild(div);
