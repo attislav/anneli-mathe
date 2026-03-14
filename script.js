@@ -84,6 +84,7 @@ function switchProfile() {
 }
 
 let skillMasteryProgress = {}; // { [skillId]: { passes: number } }
+let practiceLog = []; // [{ts, durationSec, correct, total, mode, skillId?}]
 
 function loadProfileData() {
   totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
@@ -94,6 +95,7 @@ function loadProfileData() {
   perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
   errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
   skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
+  practiceLog = JSON.parse(localStorage.getItem(profileKey("practice-log")) || "[]");
 }
 
 function showLoginScreen() {
@@ -175,7 +177,7 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 // ============ EXPORT / IMPORT ============
 function exportProfileData() {
   if (!currentProfile) return null;
-  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
+  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery", "practice-log"];
   const data = { name: currentProfile, version: 1 };
   keys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
@@ -197,7 +199,7 @@ function importProfileData(code) {
     }
 
     // Restore data
-    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
+    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery", "practice-log"];
     keys.forEach((key) => {
       if (data[key] !== undefined) {
         localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
@@ -1022,6 +1024,95 @@ document.getElementById("achievements-modal").addEventListener("click", (e) => {
   }
 });
 
+// ============ PARENT VIEW (simple dashboard) ============
+function getNextStage() {
+  for (let i = 0; i < LEARNING_PATH.length; i++) {
+    if (unlockedStages.includes(i) && !masteredStages.includes(i)) return LEARNING_PATH[i];
+  }
+  return null;
+}
+
+function formatMistake(entry) {
+  if (!entry) return "";
+  const op = entry.op || entry.display?.op || "";
+  const a = entry.a ?? entry.display?.left;
+  const b = entry.b ?? entry.display?.right;
+  if (a === undefined || b === undefined || !op) return "";
+  return `${a} ${op} ${b}`;
+}
+
+function renderParentView() {
+  const modal = document.getElementById("achievements-modal");
+  const grid = document.getElementById("achievements-grid");
+  const header = modal.querySelector(".modal-header h2");
+
+  header.textContent = "👨‍👩‍👧 Eltern-Ansicht";
+
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const secToday = sumPracticeSecondsSince(todayStart.getTime());
+  const sec7d = sumPracticeSecondsSince(now - 7 * day);
+
+  const masteredCount = masteredStages.length;
+  const totalCount = LEARNING_PATH.length;
+  const progressPercent = totalCount ? Math.round((masteredCount / totalCount) * 100) : 0;
+
+  const strengths = masteredStages
+    .slice(-5)
+    .map((id) => LEARNING_PATH[id]?.name)
+    .filter(Boolean)
+    .reverse();
+
+  const weaknesses = (errorPool || [])
+    .slice(-10)
+    .map(formatMistake)
+    .filter(Boolean)
+    .slice(0, 6)
+    .reverse();
+
+  const next = getNextStage();
+
+  grid.innerHTML = `
+    <div class="parent-grid" style="grid-column: 1/-1;">
+      <div class="parent-card">
+        <h3>⏱️ Zeit</h3>
+        <div class="parent-metric"><span class="label">Heute</span><span class="value">${formatMinutes(secToday)}</span></div>
+        <div class="parent-metric"><span class="label">Letzte 7 Tage</span><span class="value">${formatMinutes(sec7d)}</span></div>
+      </div>
+
+      <div class="parent-card">
+        <h3>🗺️ Lernpfad</h3>
+        <div class="parent-metric"><span class="label">Fortschritt</span><span class="value">${masteredCount}/${totalCount} (${progressPercent}%)</span></div>
+        <div class="parent-metric"><span class="label">Nächste Stufe</span><span class="value">${next ? `${next.icon} ${next.name}` : "—"}</span></div>
+      </div>
+
+      <div class="parent-card">
+        <h3>💪 Stärken (zuletzt gemeistert)</h3>
+        ${strengths.length ? `<ul class="parent-list">${strengths.map((s) => `<li>${s}</li>`).join("")}</ul>` : `<div style="color:#777;font-weight:600;">Noch keine Stufe gemeistert.</div>`}
+      </div>
+
+      <div class="parent-card">
+        <h3>🧠 Üben (aus Fehlern)</h3>
+        <div class="parent-metric"><span class="label">Fehler-Pool</span><span class="value">${(errorPool || []).length}</span></div>
+        ${weaknesses.length ? `<ul class="parent-list">${weaknesses.map((m) => `<li>${m}</li>`).join("")}</ul>` : `<div style="color:#777;font-weight:600;">Keine aktuellen Fehler gespeichert.</div>`}
+      </div>
+
+      <div class="parent-card">
+        <h3>⭐ Motivation</h3>
+        <div class="parent-metric"><span class="label">Sterne</span><span class="value">${totalStars}</span></div>
+        <div class="parent-metric"><span class="label">XP</span><span class="value">${totalXP}</span></div>
+      </div>
+    </div>
+  `;
+
+  modal.classList.remove("hidden");
+}
+
+document.getElementById("btn-parent").addEventListener("click", renderParentView);
+
 // ============ TOAST NOTIFICATION ============
 function showToast(icon, title, name) {
   const toast = document.createElement("div");
@@ -1101,6 +1192,7 @@ function generateExercises() {
   attempts = [];
   resetStreak();
   hideAdaptiveSuggestion();
+  startRoundTimer();
 
   if (currentOperation === "luecken") {
     generateLuecken(config);
@@ -1779,6 +1871,64 @@ function hideAdaptiveSuggestion() {
   if (el) el.classList.add("hidden");
 }
 
+// ============ PRACTICE LOG (time spent) ============
+let roundStartAt = null;
+let roundContext = { mode: null, skillId: null };
+
+function savePracticeLog() {
+  localStorage.setItem(profileKey("practice-log"), JSON.stringify(practiceLog || []));
+}
+
+function startRoundTimer() {
+  roundStartAt = Date.now();
+  roundContext = {
+    mode: currentMode,
+    skillId: (currentMode === "lernpfad" && currentStage !== null) ? (LEARNING_PATH?.[currentStage]?.skillId || null) : null,
+  };
+}
+
+function logRoundIfNeeded(correct, total) {
+  if (!roundStartAt) return;
+
+  let durationSec = Math.round((Date.now() - roundStartAt) / 1000);
+  // Keep this robust against tab sleeps / weird values
+  durationSec = Math.max(5, Math.min(durationSec, 60 * 30));
+
+  const entry = {
+    ts: Date.now(),
+    durationSec,
+    correct: Number.isFinite(correct) ? correct : 0,
+    total: Number.isFinite(total) ? total : 0,
+    mode: roundContext?.mode || currentMode,
+    skillId: roundContext?.skillId || null,
+  };
+
+  if (!Array.isArray(practiceLog)) practiceLog = [];
+  practiceLog.push(entry);
+  // keep last ~200 sessions
+  if (practiceLog.length > 200) practiceLog = practiceLog.slice(-200);
+  savePracticeLog();
+
+  roundStartAt = null;
+  roundContext = { mode: null, skillId: null };
+}
+
+function sumPracticeSecondsSince(sinceTs) {
+  if (!Array.isArray(practiceLog) || practiceLog.length === 0) return 0;
+  return practiceLog
+    .filter((e) => (e?.ts || 0) >= sinceTs)
+    .reduce((acc, e) => acc + (parseInt(e?.durationSec || 0, 10) || 0), 0);
+}
+
+function formatMinutes(sec) {
+  const m = Math.round(sec / 60);
+  if (m <= 0) return "0 min";
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60);
+  const rest = m % 60;
+  return rest ? `${h}h ${rest}m` : `${h}h`;
+}
+
 // ============ ANSWER CHECKING ============
 function checkAnswers() {
   let correctCount = 0;
@@ -1997,6 +2147,12 @@ function checkAnswers() {
   showAdaptiveSuggestion(correctCount, exercises.length);
 
   checkAchievements();
+
+  // Log time spent once per round (first check click)
+  if (!checked) {
+    logRoundIfNeeded(correctCount, exercises.length);
+  }
+
   checked = true;
 }
 
