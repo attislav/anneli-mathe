@@ -86,6 +86,7 @@
     <div class="subject-toggle">
       <button class="btn-subject active" id="btn-subject-mathe">Mathe</button>
       <button class="btn-subject" id="btn-subject-deutsch">Deutsch</button>
+      <button class="btn-subject" id="btn-subject-sachkunde">Sachkunde</button>
     </div>
 
     <!-- Achievements Modal -->
@@ -176,6 +177,27 @@
       </div>
 
       <div id="deutsch-result" class="hidden"></div>
+    </div>
+
+    <!-- Sachkunde: Topic cards + quiz -->
+    <div id="sachkunde-area" class="hidden">
+      <div class="sachkunde-header">
+        <h2 class="sachkunde-title">🌍 Sachkunde</h2>
+        <p class="sachkunde-subtitle">Lies die Karte und beantworte die Fragen.</p>
+      </div>
+
+      <div class="sachkunde-card">
+        <div class="sachkunde-topic" id="sachkunde-topic"></div>
+      </div>
+
+      <div class="sachkunde-questions" id="sachkunde-questions"></div>
+
+      <div class="sachkunde-actions">
+        <button class="btn-new" id="btn-sachkunde-new">Neue Karte</button>
+        <button class="btn-check" id="btn-sachkunde-check">Antworten pr&#252;fen</button>
+      </div>
+
+      <div id="sachkunde-result" class="hidden"></div>
     </div>
   </div> <!-- /app-container -->
 

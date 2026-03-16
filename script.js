@@ -1040,8 +1040,10 @@ function showToast(icon, title, name) {
 // ============ SUBJECT TOGGLE UI ============
 const btnSubjectMathe = document.getElementById("btn-subject-mathe");
 const btnSubjectDeutsch = document.getElementById("btn-subject-deutsch");
+const btnSubjectSachkunde = document.getElementById("btn-subject-sachkunde");
 if (btnSubjectMathe) btnSubjectMathe.addEventListener("click", () => setSubject("mathe"));
 if (btnSubjectDeutsch) btnSubjectDeutsch.addEventListener("click", () => setSubject("deutsch"));
+if (btnSubjectSachkunde) btnSubjectSachkunde.addEventListener("click", () => setSubject("sachkunde"));
 
 const btnDeutschNew = document.getElementById("btn-deutsch-new");
 const btnDeutschCheck = document.getElementById("btn-deutsch-check");
@@ -1049,6 +1051,13 @@ if (btnDeutschNew) btnDeutschNew.addEventListener("click", () => {
   loadDeutschReadingContent().then(() => newDeutschReading());
 });
 if (btnDeutschCheck) btnDeutschCheck.addEventListener("click", checkDeutschReading);
+
+const btnSachkundeNew = document.getElementById("btn-sachkunde-new");
+const btnSachkundeCheck = document.getElementById("btn-sachkunde-check");
+if (btnSachkundeNew) btnSachkundeNew.addEventListener("click", () => {
+  loadSachkundeContent().then(() => newSachkundeRound());
+});
+if (btnSachkundeCheck) btnSachkundeCheck.addEventListener("click", checkSachkunde);
 
 // ============ MODE TOGGLE ============
 document.getElementById("btn-mode-path").addEventListener("click", () => {
@@ -2129,20 +2138,18 @@ function launchConfetti() {
   animate();
 }
 
-// ============ SUBJECTS (Mathe / Deutsch) ============
-let currentSubject = "mathe"; // "mathe" | "deutsch"
+// ============ SUBJECTS (Mathe / Deutsch / Sachkunde) ============
+let currentSubject = "mathe"; // "mathe" | "deutsch" | "sachkunde"
 
 function setSubject(subject) {
   currentSubject = subject;
 
   const btnMathe = document.getElementById("btn-subject-mathe");
   const btnDeutsch = document.getElementById("btn-subject-deutsch");
+  const btnSachkunde = document.getElementById("btn-subject-sachkunde");
   if (btnMathe) btnMathe.classList.toggle("active", subject === "mathe");
   if (btnDeutsch) btnDeutsch.classList.toggle("active", subject === "deutsch");
-
-  const matheEls = [
-    document.getElementById("mode-toggle"),
-  ];
+  if (btnSachkunde) btnSachkunde.classList.toggle("active", subject === "sachkunde");
 
   // Mathe sections
   const modeToggle = document.querySelector(".mode-toggle");
@@ -2150,12 +2157,14 @@ function setSubject(subject) {
   const settings = document.getElementById("settings-panel");
   const exerciseArea = document.getElementById("exercise-area");
 
-  // Deutsch section
+  // Other subject sections
   const deutschArea = document.getElementById("deutsch-area");
+  const sachkundeArea = document.getElementById("sachkunde-area");
 
   if (subject === "mathe") {
     if (modeToggle) modeToggle.classList.remove("hidden");
     if (deutschArea) deutschArea.classList.add("hidden");
+    if (sachkundeArea) sachkundeArea.classList.add("hidden");
 
     // Restore correct mathe view depending on mode
     if (currentMode === "lernpfad") {
@@ -2167,18 +2176,59 @@ function setSubject(subject) {
       if (settings) settings.classList.remove("hidden");
       if (exerciseArea) exerciseArea.classList.remove("hidden");
     }
-  } else {
-    if (modeToggle) modeToggle.classList.add("hidden");
-    if (learningPath) learningPath.classList.add("hidden");
-    if (settings) settings.classList.add("hidden");
-    if (exerciseArea) exerciseArea.classList.add("hidden");
+    return;
+  }
+
+  // Hide all mathe UI for non-mathe subjects
+  if (modeToggle) modeToggle.classList.add("hidden");
+  if (learningPath) learningPath.classList.add("hidden");
+  if (settings) settings.classList.add("hidden");
+  if (exerciseArea) exerciseArea.classList.add("hidden");
+
+  if (subject === "deutsch") {
     if (deutschArea) deutschArea.classList.remove("hidden");
+    if (sachkundeArea) sachkundeArea.classList.add("hidden");
 
     // Start a deutsch round if none loaded yet
     if (!currentReadingItem) {
       loadDeutschReadingContent().then(() => newDeutschReading());
     }
+    return;
   }
+
+  // Sachkunde
+  if (deutschArea) deutschArea.classList.add("hidden");
+  if (sachkundeArea) sachkundeArea.classList.remove("hidden");
+
+  if (!currentSachkundeItem) {
+    loadSachkundeContent().then(() => newSachkundeRound());
+  }
+}
+
+// Simple round logging (used by Deutsch/Sachkunde; keeps app from breaking even if parent view evolves later)
+let roundStartAt = null;
+let roundLogged = false;
+let roundContext = null; // { mode, skillId }
+
+function logRoundIfNeeded(correct, total) {
+  if (!roundStartAt || roundLogged) return;
+  const durationMs = Math.max(0, Date.now() - roundStartAt);
+  const entry = {
+    ts: Date.now(),
+    durationMs,
+    mode: roundContext?.mode || "unknown",
+    skillId: roundContext?.skillId || null,
+    correct: Math.max(0, parseInt(correct || 0, 10) || 0),
+    total: Math.max(1, parseInt(total || 1, 10) || 1),
+  };
+
+  const key = profileKey("round-history");
+  const history = JSON.parse(localStorage.getItem(key) || "[]");
+  history.push(entry);
+  // Keep last 200 entries
+  const trimmed = history.length > 200 ? history.slice(-200) : history;
+  localStorage.setItem(key, JSON.stringify(trimmed));
+  roundLogged = true;
 }
 
 const DEUTSCH_READING_URL = "content/de/deutsch/grade-1/reading.json";
@@ -2232,6 +2282,7 @@ function newDeutschReading() {
 
   // Start practice timer for deutsch
   roundStartAt = Date.now();
+  roundLogged = false;
   roundContext = { mode: "deutsch", skillId: "deutsch.reading.v1" };
 
   const passageEl = document.getElementById("deutsch-passage");
@@ -2328,6 +2379,159 @@ function checkDeutschReading() {
     } else {
       resultEl.className = "retry";
       resultEl.textContent = `${correct}/${qs.length} richtig. Schau nochmal in den Text!`;
+    }
+  }
+}
+
+// ============ SACHKUNDE (Topic cards + quiz) ============
+const SACHKUNDE_TOPICS_URL = "content/de/sachkunde/grade-1/topics.json";
+let sachkundeData = null;
+let currentSachkundeItem = null;
+
+function loadSachkundeContent() {
+  if (sachkundeData) return Promise.resolve(sachkundeData);
+
+  return fetch(SACHKUNDE_TOPICS_URL)
+    .then((res) => {
+      if (!res.ok) throw new Error(`sachkunde fetch failed: ${res.status}`);
+      return res.json();
+    })
+    .then((json) => {
+      sachkundeData = json;
+      return sachkundeData;
+    })
+    .catch(() => {
+      // Tiny fallback so the app never breaks.
+      sachkundeData = {
+        version: 1,
+        items: [
+          {
+            id: "fallback",
+            title: "Der Igel",
+            card: "Ein Igel ist ein Tier mit Stacheln. Er lebt oft im Garten und frisst zum Beispiel Insekten.",
+            facts: ["Igel haben Stacheln.", "Sie sind Tiere.", "Sie fressen oft Insekten."],
+            questions: [
+              { prompt: "Was hat ein Igel?", choices: ["Stacheln", "Flossen", "Federn"], answerIndex: 0 },
+              { prompt: "Was frisst ein Igel oft?", choices: ["Insekten", "Autos", "Steine"], answerIndex: 0 }
+            ]
+          }
+        ]
+      };
+      return sachkundeData;
+    });
+}
+
+function pickRandomSachkundeItem() {
+  const items = sachkundeData?.items;
+  if (!Array.isArray(items) || items.length === 0) return null;
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function newSachkundeRound() {
+  if (!sachkundeData) return;
+
+  currentSachkundeItem = pickRandomSachkundeItem();
+  if (!currentSachkundeItem) return;
+
+  roundStartAt = Date.now();
+  roundLogged = false;
+  roundContext = { mode: "sachkunde", skillId: "sachkunde.topiccards.v1" };
+
+  const topicEl = document.getElementById("sachkunde-topic");
+  const questionsEl = document.getElementById("sachkunde-questions");
+  const resultEl = document.getElementById("sachkunde-result");
+
+  if (resultEl) {
+    resultEl.classList.add("hidden");
+    resultEl.className = "hidden";
+    resultEl.textContent = "";
+  }
+
+  if (topicEl) {
+    const title = currentSachkundeItem.title ? `<div style="font-weight:900;margin-bottom:8px;">${currentSachkundeItem.title}</div>` : "";
+    const card = (currentSachkundeItem.card || "").replace(/\n/g, "<br>");
+    const facts = Array.isArray(currentSachkundeItem.facts) && currentSachkundeItem.facts.length
+      ? `<ul style="margin:10px 0 0 18px;">${currentSachkundeItem.facts.map((f) => `<li>${f}</li>`).join("")}</ul>`
+      : "";
+    topicEl.innerHTML = `${title}${card}${facts}`;
+  }
+
+  if (!questionsEl) return;
+  questionsEl.innerHTML = "";
+
+  (currentSachkundeItem.questions || []).forEach((q, idx) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "sachkunde-q";
+    qDiv.dataset.index = String(idx);
+
+    const title = document.createElement("div");
+    title.className = "sachkunde-q-title";
+    title.textContent = `${idx + 1}. ${q.prompt}`;
+    qDiv.appendChild(title);
+
+    const name = `sachkunde-q-${idx}`;
+    (q.choices || []).forEach((choice, cIdx) => {
+      const label = document.createElement("label");
+      label.className = "sachkunde-choice";
+      label.innerHTML = `
+        <input type="radio" name="${name}" value="${cIdx}">
+        <span>${choice}</span>
+      `;
+      qDiv.appendChild(label);
+    });
+
+    questionsEl.appendChild(qDiv);
+  });
+
+  const area = document.getElementById("sachkunde-area");
+  if (area) area.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function checkSachkunde() {
+  const questionsEl = document.getElementById("sachkunde-questions");
+  const resultEl = document.getElementById("sachkunde-result");
+  if (!questionsEl || !currentSachkundeItem) return;
+
+  const qs = currentSachkundeItem.questions || [];
+  let correct = 0;
+
+  qs.forEach((q, idx) => {
+    const qDiv = questionsEl.querySelector(`.sachkunde-q[data-index="${idx}"]`);
+    if (!qDiv) return;
+
+    const selected = qDiv.querySelector("input[type=radio]:checked");
+    const picked = selected ? parseInt(selected.value, 10) : -1;
+
+    qDiv.classList.remove("correct", "wrong");
+    if (picked === q.answerIndex) {
+      qDiv.classList.add("correct");
+      correct++;
+    } else {
+      qDiv.classList.add("wrong");
+    }
+  });
+
+  if (correct > 0) {
+    addStars(correct);
+    addXP(correct);
+  }
+  if (correct === qs.length && qs.length > 0) {
+    addStars(2);
+    addXP(3);
+    soundPerfect();
+    launchConfetti();
+  }
+
+  logRoundIfNeeded(correct, Math.max(1, qs.length));
+
+  if (resultEl) {
+    resultEl.classList.remove("hidden");
+    if (correct === qs.length) {
+      resultEl.className = "good";
+      resultEl.textContent = `Super! ${correct}/${qs.length} richtig.`;
+    } else {
+      resultEl.className = "retry";
+      resultEl.textContent = `${correct}/${qs.length} richtig. Lies die Karte nochmal!`;
     }
   }
 }
