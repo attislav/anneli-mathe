@@ -40,6 +40,16 @@ Only include what is needed for the subject/grade; missing files are OK.
 
 Example file: `content/de/mathe/grade-1/skilltree.json`
 
+### Quick validation (recommended)
+
+Run:
+
+```bash
+node tools/validate-skilltrees.js
+```
+
+This checks JSON shape, duplicate IDs, and broken prerequisite references.
+
 ## Data principles
 
 - **No hardcoded content** in `script.js` once migrated.
