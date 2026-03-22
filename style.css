@@ -1138,6 +1138,15 @@ body {
   border-radius: 10px;
 }
 
+.stage-header-desc {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e88e5;
+  opacity: 0.95;
+}
+
 /* Secondary suggest button */
 .suggest-btn-secondary {
   background: #bdbdbd !important;
@@ -1278,7 +1287,19 @@ body {
   color: #555;
   line-height: 1.2;
   text-align: center;
-  max-width: 80px;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.path-stage .stage-desc {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #777;
+  line-height: 1.1;
+  text-align: center;
+  max-width: 110px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
