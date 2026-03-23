@@ -63,9 +63,22 @@ function deleteProfile(name) {
   keysToRemove.forEach((k) => localStorage.removeItem(k));
 }
 
-function profileKey(key) {
+function profileKeyBase(key) {
   if (!currentProfile) return `mathe-${key}`;
   return `mathe-${currentProfile}-${key}`;
+}
+
+function getCurrentGrade() {
+  // Stored per profile (not grade-scoped)
+  if (!currentProfile) return "grade-1";
+  return localStorage.getItem(profileKeyBase("grade")) || "grade-1";
+}
+
+function profileKey(key) {
+  // Grade-scoped progress keys (so Klasse 1/2 can have separate progress)
+  if (!currentProfile) return `mathe-${key}`;
+  const grade = getCurrentGrade();
+  return `mathe-${currentProfile}-${grade}-${key}`;
 }
 
 function loginAs(name) {
@@ -85,15 +98,35 @@ function switchProfile() {
 
 let skillMasteryProgress = {}; // { [skillId]: { passes: number } }
 
+function getScopedOrLegacyRaw(key) {
+  // First try grade-scoped key, then fall back to legacy (pre-grade) storage.
+  const scopedKey = profileKey(key);
+  let val = localStorage.getItem(scopedKey);
+  if (val !== null) return val;
+
+  const legacyKey = profileKeyBase(key);
+  val = localStorage.getItem(legacyKey);
+  if (val !== null) {
+    // Migrate forward (best-effort) so future loads are consistent.
+    localStorage.setItem(scopedKey, val);
+    return val;
+  }
+  return null;
+}
+
 function loadProfileData() {
-  totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
-  totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
-  unlockedStages = JSON.parse(localStorage.getItem(profileKey("stages")) || "[0]");
-  masteredStages = JSON.parse(localStorage.getItem(profileKey("mastered")) || "[]");
-  unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
-  perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
-  errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
-  skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
+  // Ensure UI reflects stored grade
+  const gradeSelect = document.getElementById("grade-select");
+  if (gradeSelect) gradeSelect.value = getCurrentGrade();
+
+  totalStars = parseInt(getScopedOrLegacyRaw("sterne") || "0", 10);
+  totalXP = parseInt(getScopedOrLegacyRaw("xp") || "0", 10);
+  unlockedStages = JSON.parse(getScopedOrLegacyRaw("stages") || "[0]");
+  masteredStages = JSON.parse(getScopedOrLegacyRaw("mastered") || "[]");
+  unlockedAchievements = JSON.parse(getScopedOrLegacyRaw("achievements") || "[]");
+  perfectRounds = parseInt(getScopedOrLegacyRaw("perfect-rounds") || "0", 10);
+  errorPool = JSON.parse(getScopedOrLegacyRaw("errors") || "[]");
+  skillMasteryProgress = JSON.parse(getScopedOrLegacyRaw("skill-mastery") || "{}");
 }
 
 function showLoginScreen() {
@@ -102,7 +135,10 @@ function showLoginScreen() {
   profileList.innerHTML = "";
 
   profiles.forEach((p) => {
-    const stars = parseInt(localStorage.getItem(`mathe-${p.name}-sterne`) || "0", 10);
+    // Login screen shows Klasse 1 stars by default (fallback to legacy pre-grade storage)
+    const scoped = localStorage.getItem(`mathe-${p.name}-grade-1-sterne`);
+    const legacy = localStorage.getItem(`mathe-${p.name}-sterne`);
+    const stars = parseInt(scoped ?? legacy ?? "0", 10);
     const card = document.createElement("div");
     card.className = "profile-card";
     card.innerHTML = `
@@ -138,6 +174,18 @@ document.getElementById("btn-create-profile").addEventListener("click", () => {
 });
 
 document.getElementById("btn-switch-profile").addEventListener("click", switchProfile);
+
+// Grade picker (separate progress per grade)
+const gradeSelectEl = document.getElementById("grade-select");
+if (gradeSelectEl) {
+  gradeSelectEl.addEventListener("change", (e) => {
+    if (!currentProfile) return;
+    const grade = e.target.value || "grade-1";
+    localStorage.setItem(profileKeyBase("grade"), grade);
+    loadProfileData();
+    initApp();
+  });
+}
 
 // Login with existing name (typed)
 document.getElementById("btn-login-existing").addEventListener("click", () => {
@@ -176,7 +224,8 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 function exportProfileData() {
   if (!currentProfile) return null;
   const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
-  const data = { name: currentProfile, version: 1 };
+  const grade = getCurrentGrade();
+  const data = { name: currentProfile, version: 2, grade };
   keys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
     if (val !== null) data[key] = val;
@@ -196,11 +245,14 @@ function importProfileData(code) {
       createProfile(data.name);
     }
 
-    // Restore data
+    const grade = data.grade || "grade-1";
+    localStorage.setItem(`mathe-${data.name}-grade`, grade);
+
+    // Restore (grade-scoped) data
     const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
     keys.forEach((key) => {
       if (data[key] !== undefined) {
-        localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
+        localStorage.setItem(`mathe-${data.name}-${grade}-${key}`, data[key]);
       }
     });
 
@@ -386,7 +438,8 @@ function migrateMasteryProgressFromOldMasteredStages() {
 }
 
 function loadSkilltreeFromJson() {
-  const url = "content/de/mathe/grade-1/skilltree.json";
+  const grade = getCurrentGrade();
+  const url = `content/de/mathe/${grade}/skilltree.json`;
 
   return fetch(url)
     .then((res) => {
