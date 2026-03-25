@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "locale": "de",
+  "subject": "mathe",
+  "grade": "grade-2",
+  "skills": [
+    {
+      "id": "m2-numbers-0-100",
+      "title": "Zahlen 0–100",
+      "description": "Zahlen bis 100 erkennen, benennen und ordnen (inkl. Zehner/Einer).",
+      "prerequisites": [],
+      "icon": "🔢",
+      "difficulty": "leicht",
+      "operation": "reihen",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+    {
+      "id": "m2-compare-0-100",
+      "title": "Größer / kleiner (0–100)",
+      "description": "Zahlen bis 100 vergleichen (>, <, =).",
+      "prerequisites": ["m2-numbers-0-100"],
+      "icon": "⚖️",
+      "difficulty": "leicht",
+      "operation": "vergleichen",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+
+    {
+      "id": "m2-add-within-20",
+      "title": "Plus bis 20 (Wiederholung)",
+      "description": "Sichere Additionen im Zahlenraum bis 20 als Warm-up.",
+      "prerequisites": ["m2-numbers-0-100"],
+      "icon": "💪",
+      "difficulty": "leicht",
+      "operation": "plus",
+      "mastery": { "passScore": 0.85, "repetitions": 2 }
+    },
+    {
+      "id": "m2-sub-within-20",
+      "title": "Minus bis 20 (Wiederholung)",
+      "description": "Sichere Subtraktionen im Zahlenraum bis 20.",
+      "prerequisites": ["m2-add-within-20"],
+      "icon": "🧗",
+      "difficulty": "leicht",
+      "operation": "minus",
+      "mastery": { "passScore": 0.85, "repetitions": 2 }
+    },
+
+    {
+      "id": "m2-ten-decomposition",
+      "title": "Zehner ergänzen",
+      "description": "Zahlen zu einem vollen Zehner ergänzen (z.B. 37 + ? = 40).",
+      "prerequisites": ["m2-add-within-20"],
+      "icon": "🎯",
+      "difficulty": "mittel",
+      "operation": "zehner",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+    {
+      "id": "m2-doubles-0-50",
+      "title": "Verdoppeln / Halbieren",
+      "description": "Verdoppeln und Halbieren im Zahlenraum bis 100 (mit geraden Zahlen).",
+      "prerequisites": ["m2-add-within-20"],
+      "icon": "🪞",
+      "difficulty": "mittel",
+      "operation": "verdoppeln",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+
+    {
+      "id": "m2-add-within-100",
+      "title": "Plus bis 100",
+      "description": "Additionen im Zahlenraum bis 100.",
+      "prerequisites": ["m2-ten-decomposition", "m2-compare-0-100"],
+      "icon": "🌿",
+      "difficulty": "mittel",
+      "operation": "plus",
+      "mastery": { "passScore": 0.85, "repetitions": 4 }
+    },
+    {
+      "id": "m2-sub-within-100",
+      "title": "Minus bis 100",
+      "description": "Subtraktionen im Zahlenraum bis 100.",
+      "prerequisites": ["m2-add-within-100", "m2-sub-within-20"],
+      "icon": "🌲",
+      "difficulty": "schwer",
+      "operation": "minus",
+      "mastery": { "passScore": 0.85, "repetitions": 4 }
+    },
+    {
+      "id": "m2-mixed-within-100",
+      "title": "Gemischt bis 100",
+      "description": "Plus und Minus gemischt im Zahlenraum bis 100.",
+      "prerequisites": ["m2-add-within-100", "m2-sub-within-100"],
+      "icon": "🏔️",
+      "difficulty": "schwer",
+      "operation": "gemischt",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+    {
+      "id": "m2-gaps-within-100",
+      "title": "Lücken bis 100",
+      "description": "Fehlende Zahl finden (Lückenaufgaben im Zahlenraum bis 100).",
+      "prerequisites": ["m2-mixed-within-100"],
+      "icon": "🧩",
+      "difficulty": "schwer",
+      "operation": "luecken",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+    {
+      "id": "m2-master-check",
+      "title": "Meister-Prüfung (bis 100)",
+      "description": "Gemischte Aufgaben als Abschluss (bis 100).",
+      "prerequisites": ["m2-gaps-within-100"],
+      "icon": "👑",
+      "difficulty": "schwer",
+      "operation": "gemischt",
+      "mastery": { "passScore": 0.9, "repetitions": 2 }
+    }
+  ]
+}

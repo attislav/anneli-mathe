@@ -88,12 +88,16 @@ let skillMasteryProgress = {}; // { [skillId]: { passes: number } }
 function loadProfileData() {
   totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
   totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
-  unlockedStages = JSON.parse(localStorage.getItem(profileKey("stages")) || "[0]");
-  masteredStages = JSON.parse(localStorage.getItem(profileKey("mastered")) || "[]");
+
+  // Grade-scoped progress
+  unlockedStages = JSON.parse(localStorage.getItem(gradeScopedKey("stages")) || "[0]");
+  masteredStages = JSON.parse(localStorage.getItem(gradeScopedKey("mastered")) || "[]");
+  errorPool = JSON.parse(localStorage.getItem(gradeScopedKey("errors")) || "[]");
+  skillMasteryProgress = JSON.parse(localStorage.getItem(gradeScopedKey("skill-mastery")) || "{}");
+
+  // Shared (not grade-scoped)
   unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
   perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
-  errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
-  skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
 }
 
 function showLoginScreen() {
@@ -175,12 +179,23 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 // ============ EXPORT / IMPORT ============
 function exportProfileData() {
   if (!currentProfile) return null;
-  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
-  const data = { name: currentProfile, version: 1 };
-  keys.forEach((key) => {
+
+  const grade = getCurrentGrade();
+  const sharedKeys = ["sterne", "xp", "achievements", "perfect-rounds"];
+  const gradeKeys = ["stages", "mastered", "errors", "skill-mastery"];
+
+  const data = { name: currentProfile, version: 2, grade };
+
+  sharedKeys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
     if (val !== null) data[key] = val;
   });
+
+  gradeKeys.forEach((key) => {
+    const val = localStorage.getItem(gradeScopedKey(key));
+    if (val !== null) data[key] = val;
+  });
+
   return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
 }
 
@@ -197,12 +212,25 @@ function importProfileData(code) {
     }
 
     // Restore data
-    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
-    keys.forEach((key) => {
+    const grade = (data.grade === "grade-2") ? "grade-2" : "grade-1";
+
+    const sharedKeys = ["sterne", "xp", "achievements", "perfect-rounds"]; // not grade-scoped
+    sharedKeys.forEach((key) => {
       if (data[key] !== undefined) {
         localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
       }
     });
+
+    // Grade-scoped progress
+    const gradeKeys = ["stages", "mastered", "errors", "skill-mastery"];
+    gradeKeys.forEach((key) => {
+      if (data[key] !== undefined) {
+        localStorage.setItem(`mathe-${data.name}-${grade}-${key}`, data[key]);
+      }
+    });
+
+    // Store selected grade
+    localStorage.setItem(`mathe-${data.name}-grade`, grade);
 
     return data.name;
   } catch (e) {
@@ -277,11 +305,45 @@ document.getElementById("btn-import").addEventListener("click", () => {
 });
 
 // ============ CONFIG ============
-const DIFFICULTY = {
-  leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
-  mittel: { maxNumber: 10, maxResult: 10, count: 8, zehnerTargets: [6, 7, 8, 9, 10] },
-  schwer: { maxNumber: 10, maxResult: 20, count: 10, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+// Grade selection is stored per profile (so siblings can be in different grades).
+const DEFAULT_GRADE = "grade-1";
+
+function getCurrentGrade() {
+  const g = localStorage.getItem(profileKey("grade"));
+  return g || DEFAULT_GRADE;
+}
+
+function setCurrentGrade(grade) {
+  const g = (grade === "grade-2") ? "grade-2" : "grade-1";
+  localStorage.setItem(profileKey("grade"), g);
+}
+
+function gradeScopedKey(key) {
+  // For grade-specific progress (learning path + mistakes + mastery)
+  return profileKey(`${getCurrentGrade()}-${key}`);
+}
+
+// Grade-aware number ranges.
+// Klasse 1 stays in 0–20; Klasse 2 ramps up to 0–100.
+const DIFFICULTY_BY_GRADE = {
+  "grade-1": {
+    leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
+    mittel: { maxNumber: 10, maxResult: 10, count: 8, zehnerTargets: [6, 7, 8, 9, 10] },
+    schwer: { maxNumber: 10, maxResult: 20, count: 10, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+  },
+  "grade-2": {
+    leicht: { maxNumber: 20, maxResult: 20, count: 6, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+    mittel: { maxNumber: 50, maxResult: 50, count: 8, zehnerTargets: [20, 30, 40, 50] },
+    schwer: { maxNumber: 100, maxResult: 100, count: 10, zehnerTargets: [50, 60, 70, 80, 90, 100] },
+  },
 };
+
+let DIFFICULTY = DIFFICULTY_BY_GRADE[DEFAULT_GRADE];
+
+function applyDifficultyForGrade() {
+  const grade = getCurrentGrade();
+  DIFFICULTY = DIFFICULTY_BY_GRADE[grade] || DIFFICULTY_BY_GRADE[DEFAULT_GRADE];
+}
 
 let currentDifficulty = "leicht";
 let currentOperation = "gemischt";
@@ -386,7 +448,8 @@ function migrateMasteryProgressFromOldMasteredStages() {
 }
 
 function loadSkilltreeFromJson() {
-  const url = "content/de/mathe/grade-1/skilltree.json";
+  const grade = getCurrentGrade();
+  const url = `content/de/mathe/${grade}/skilltree.json`;
 
   return fetch(url)
     .then((res) => {
@@ -419,8 +482,8 @@ let currentStage = null;
 let currentMode = "lernpfad";
 
 function savePathProgress() {
-  localStorage.setItem(profileKey("stages"), JSON.stringify(unlockedStages));
-  localStorage.setItem(profileKey("mastered"), JSON.stringify(masteredStages));
+  localStorage.setItem(gradeScopedKey("stages"), JSON.stringify(unlockedStages));
+  localStorage.setItem(gradeScopedKey("mastered"), JSON.stringify(masteredStages));
 }
 
 function selectStage(stageId) {
@@ -470,7 +533,7 @@ function showExerciseView(stage) {
 }
 
 function saveSkillMasteryProgress() {
-  localStorage.setItem(profileKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
+  localStorage.setItem(gradeScopedKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
 }
 
 function getRequiredRepetitions(stage) {
@@ -672,7 +735,7 @@ function addToErrorPool(exercise) {
   }
   // Keep only last 30
   if (errorPool.length > 30) errorPool = errorPool.slice(-30);
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function removeFromErrorPool(exercise) {
@@ -682,7 +745,7 @@ function removeFromErrorPool(exercise) {
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
   errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
@@ -1059,6 +1122,35 @@ document.getElementById("btn-mode-free").addEventListener("click", () => {
   document.getElementById("exercise-area").classList.remove("hidden");
   document.getElementById("btn-back-to-map").classList.add("hidden");
   document.getElementById("stage-header").innerHTML = "";
+});
+
+// Grade toggle (Klasse 1/2)
+function renderGradeToggle() {
+  const wrap = document.getElementById("grade-toggle");
+  if (!wrap) return;
+  const grade = getCurrentGrade();
+  wrap.querySelectorAll(".btn-grade").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.grade === grade);
+  });
+}
+
+document.querySelectorAll("#grade-toggle .btn-grade").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const next = btn.dataset.grade;
+    if (!next) return;
+
+    setCurrentGrade(next);
+    applyDifficultyForGrade();
+
+    // Reload grade-scoped progress + skilltree
+    loadProfileData();
+    renderGradeToggle();
+    renderLearningPath();
+    loadSkilltreeFromJson();
+
+    // If we were inside a stage, return to map for clarity
+    showMapView();
+  });
 });
 
 // Back to map button
@@ -2118,6 +2210,9 @@ function launchConfetti() {
 
 // ============ INIT ============
 function initApp() {
+  applyDifficultyForGrade();
+  renderGradeToggle();
+
   renderStars();
   renderLevel();
   renderStreak();
