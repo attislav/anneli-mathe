@@ -40,6 +40,16 @@ Only include what is needed for the subject/grade; missing files are OK.
 
 Example file: `content/de/mathe/grade-1/skilltree.json`
 
+## Validation
+
+Run a quick sanity check over all `content/**/skilltree.json` files:
+
+```bash
+node scripts/validate-skilltree.js
+```
+
+It checks duplicate IDs, broken prerequisites, cycles, and a few enum/range constraints.
+
 ## Data principles
 
 - **No hardcoded content** in `script.js` once migrated.
