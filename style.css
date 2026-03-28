@@ -1049,6 +1049,36 @@ body {
   color: #c62828;
 }
 
+/* Grade Toggle */
+.grade-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px;
+}
+
+.grade-label {
+  font-weight: 800;
+  color: #444;
+}
+
+.btn-grade {
+  background: #fff;
+  border: 2px solid #e84393;
+  color: #e84393;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-grade.active {
+  background: #e84393;
+  color: #fff;
+}
+
 /* Mode Toggle */
 .mode-toggle {
   display: flex;
