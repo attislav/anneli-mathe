@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "locale": "de",
+  "subject": "SUBJECT_SLUG",
+  "grade": "grade-1",
+  "items": [
+    {
+      "id": "subject-item-1",
+      "skillId": "subject-skill-1",
+      "type": "multiple-choice",
+      "prompt": "Beispielfrage?",
+      "choices": ["Antwort A", "Antwort B", "Antwort C"],
+      "answer": "Antwort B",
+      "explanation": "Kurze Erklärung für Eltern/Kinder.",
+      "tags": ["starter"]
+    },
+    {
+      "id": "subject-item-2",
+      "skillId": "subject-skill-2",
+      "type": "text",
+      "prompt": "Kurze offene Aufgabe",
+      "answer": "Beispielantwort",
+      "explanation": "Optional: worauf beim Lösen geachtet wird.",
+      "tags": ["practice"]
+    }
+  ]
+}

@@ -30,6 +30,16 @@ exercises.json       // raw exercise pool or generator config
 
 Only include what is needed for the subject/grade; missing files are OK.
 
+## Starter templates
+
+Copy these when adding a new subject or grade:
+
+- `content/templates/skilltree.template.json`
+- `content/templates/exercises.template.json`
+- `content/templates/content-checklist.md`
+
+They are intentionally tiny and human-editable. The goal is to make new content creation boring instead of magical.
+
 ### `skilltree.json` (minimal shape)
 
 - `skills[]`: each skill has
@@ -45,3 +55,5 @@ Example file: `content/de/mathe/grade-1/skilltree.json`
 - **No hardcoded content** in `script.js` once migrated.
 - Content files are **small** and **human-editable**.
 - Prefer **stable IDs** (e.g. `m1-add-10`) for skills/levels to allow tracking.
+- Write descriptions so a parent instantly understands what the child is practicing.
+- Prefer a few clean skills/items over giant mixed files.
