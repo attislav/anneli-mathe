@@ -405,6 +405,7 @@ function loadSkilltreeFromJson() {
       if (unlockedStages.length === 0) unlockedStages = [0];
 
       migrateMasteryProgressFromOldMasteredStages();
+      unlockAvailableStages();
       savePathProgress();
       renderLearningPath();
     })
@@ -505,6 +506,42 @@ function ensureStageMasteredIfComplete(stageId) {
   return false;
 }
 
+function getMasteredSkillIds() {
+  return new Set(
+    masteredStages
+      .map((stageId) => LEARNING_PATH[stageId]?.skillId)
+      .filter(Boolean)
+  );
+}
+
+function getLockedPrerequisiteNames(stage) {
+  if (!stage || !Array.isArray(stage.prerequisites) || stage.prerequisites.length === 0) return [];
+
+  const masteredSkillIds = getMasteredSkillIds();
+  return stage.prerequisites
+    .filter((skillId) => !masteredSkillIds.has(skillId))
+    .map((skillId) => {
+      const prereqStage = LEARNING_PATH.find((entry) => entry.skillId === skillId);
+      return prereqStage?.name || skillId;
+    });
+}
+
+function unlockAvailableStages() {
+  const newlyUnlocked = [];
+
+  LEARNING_PATH.forEach((stage) => {
+    if (!stage || unlockedStages.includes(stage.id)) return;
+
+    const lockedPrereqs = getLockedPrerequisiteNames(stage);
+    if (lockedPrereqs.length === 0) {
+      unlockedStages.push(stage.id);
+      newlyUnlocked.push(stage);
+    }
+  });
+
+  return newlyUnlocked;
+}
+
 function completeStage(stageId, score) {
   const stage = LEARNING_PATH[stageId];
   if (!stage) return;
@@ -520,13 +557,10 @@ function completeStage(stageId, score) {
       masteredStages.push(stageId);
     }
 
-    // Unlock next stage
-    const nextId = stageId + 1;
-    if (nextId < LEARNING_PATH.length && !unlockedStages.includes(nextId)) {
-      unlockedStages.push(nextId);
-      const next = LEARNING_PATH[nextId];
-      showToast(next.icon, "Neue Stufe freigeschaltet!", next.name);
-    }
+    const newlyUnlocked = unlockAvailableStages();
+    newlyUnlocked.forEach((nextStage) => {
+      showToast(nextStage.icon, "Neue Stufe freigeschaltet!", nextStage.name);
+    });
   } else {
     const left = Math.max(0, reps - passes);
     showToast(stage.icon, "Fast!", `${left}× noch schaffen`);
@@ -547,7 +581,10 @@ function renderLearningPath() {
   for (let i = 0; i < LEARNING_PATH.length; i++) {
     if (ensureStageMasteredIfComplete(i)) masteryChanged = true;
   }
-  if (masteryChanged) savePathProgress();
+  if (masteryChanged) {
+    unlockAvailableStages();
+    savePathProgress();
+  }
 
   // Progress overview
   const masteredCount = masteredStages.length;
@@ -615,7 +652,12 @@ function renderLearningPath() {
       <span class="stage-name">${stage.name}</span>
       ${repHTML}
     `;
-    el.title = unlocked ? `${stage.name} — Klick zum Starten` : "Noch gesperrt";
+    const lockedPrereqs = getLockedPrerequisiteNames(stage);
+    el.title = unlocked
+      ? `${stage.name} — Klick zum Starten`
+      : lockedPrereqs.length > 0
+        ? `Noch gesperrt — zuerst: ${lockedPrereqs.join(", ")}`
+        : "Noch gesperrt";
 
     if (unlocked) {
       el.addEventListener("click", () => selectStage(stage.id));
