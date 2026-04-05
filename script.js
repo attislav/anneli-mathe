@@ -13,6 +13,7 @@ const WESEN = [
 ];
 
 let currentProfile = null;
+let currentGrade = "grade-1";
 
 function generateUsername() {
   const adj = ADJEKTIVE[Math.floor(Math.random() * ADJEKTIVE.length)];
@@ -68,6 +69,10 @@ function profileKey(key) {
   return `mathe-${currentProfile}-${key}`;
 }
 
+function gradeScopedKey(key) {
+  return profileKey(`${currentGrade}-${key}`);
+}
+
 function loginAs(name) {
   currentProfile = name;
   localStorage.setItem("mathe-last-profile", name);
@@ -89,13 +94,35 @@ let practiceLog = []; // [{ts, durationSec, correct, total, mode, skillId?}]
 function loadProfileData() {
   totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
   totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
-  unlockedStages = JSON.parse(localStorage.getItem(profileKey("stages")) || "[0]");
-  masteredStages = JSON.parse(localStorage.getItem(profileKey("mastered")) || "[]");
+  currentGrade = localStorage.getItem(profileKey("selected-grade")) || "grade-1";
+  unlockedStages = JSON.parse(localStorage.getItem(gradeScopedKey("stages")) || "[0]");
+  masteredStages = JSON.parse(localStorage.getItem(gradeScopedKey("mastered")) || "[]");
   unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
   perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
-  errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
-  skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
-  practiceLog = JSON.parse(localStorage.getItem(profileKey("practice-log")) || "[]");
+  errorPool = JSON.parse(localStorage.getItem(gradeScopedKey("errors")) || "[]");
+  skillMasteryProgress = JSON.parse(localStorage.getItem(gradeScopedKey("skill-mastery")) || "{}");
+  practiceLog = JSON.parse(localStorage.getItem(gradeScopedKey("practice-log")) || "[]");
+}
+
+function renderGradeToggle() {
+  document.querySelectorAll(".btn-grade").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.grade === currentGrade);
+  });
+}
+
+function switchGrade(nextGrade) {
+  if (!nextGrade || nextGrade === currentGrade) return;
+  currentGrade = nextGrade;
+  localStorage.setItem(profileKey("selected-grade"), currentGrade);
+  loadProfileData();
+  currentStage = null;
+  renderGradeToggle();
+  renderStars();
+  renderLevel();
+  renderStreak();
+  renderLearningPath();
+  loadSkilltreeFromJson();
+  showMapView();
 }
 
 function showLoginScreen() {
@@ -388,7 +415,7 @@ function migrateMasteryProgressFromOldMasteredStages() {
 }
 
 function loadSkilltreeFromJson() {
-  const url = "content/de/mathe/grade-1/skilltree.json";
+  const url = `content/de/mathe/${currentGrade}/skilltree.json`;
 
   return fetch(url)
     .then((res) => {
@@ -421,8 +448,8 @@ let currentStage = null;
 let currentMode = "lernpfad";
 
 function savePathProgress() {
-  localStorage.setItem(profileKey("stages"), JSON.stringify(unlockedStages));
-  localStorage.setItem(profileKey("mastered"), JSON.stringify(masteredStages));
+  localStorage.setItem(gradeScopedKey("stages"), JSON.stringify(unlockedStages));
+  localStorage.setItem(gradeScopedKey("mastered"), JSON.stringify(masteredStages));
 }
 
 function selectStage(stageId) {
@@ -472,7 +499,7 @@ function showExerciseView(stage) {
 }
 
 function saveSkillMasteryProgress() {
-  localStorage.setItem(profileKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
+  localStorage.setItem(gradeScopedKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
 }
 
 function getRequiredRepetitions(stage) {
@@ -708,7 +735,7 @@ function addToErrorPool(exercise) {
   }
   // Keep only last 30
   if (errorPool.length > 30) errorPool = errorPool.slice(-30);
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function removeFromErrorPool(exercise) {
@@ -719,7 +746,7 @@ function removeFromErrorPool(exercise) {
 
   // Remove across stages (a+b uniquely identifies the exercise for our purposes)
   errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
@@ -1991,7 +2018,7 @@ let roundStartAt = null;
 let roundContext = { mode: null, skillId: null };
 
 function savePracticeLog() {
-  localStorage.setItem(profileKey("practice-log"), JSON.stringify(practiceLog || []));
+  localStorage.setItem(gradeScopedKey("practice-log"), JSON.stringify(practiceLog || []));
 }
 
 function startRoundTimer() {
@@ -2389,6 +2416,7 @@ function launchConfetti() {
 
 // ============ INIT ============
 function initApp() {
+  renderGradeToggle();
   renderStars();
   renderLevel();
   renderStreak();
@@ -2401,6 +2429,10 @@ function initApp() {
   document.getElementById("learning-path").classList.remove("hidden");
   document.getElementById("exercise-area").classList.add("hidden");
 }
+
+document.querySelectorAll(".btn-grade").forEach((btn) => {
+  btn.addEventListener("click", () => switchGrade(btn.dataset.grade));
+});
 
 // Check for auto-login (last used profile)
 (function () {
