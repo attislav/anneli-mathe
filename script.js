@@ -353,6 +353,7 @@ function applyDifficultyForGrade() {
 
 let currentDifficulty = "leicht";
 let currentOperation = "gemischt";
+let lastFreeOperation = "gemischt";
 let exercises = [];
 let checked = false;
 
@@ -1177,11 +1178,19 @@ if (btnDeutschNew) btnDeutschNew.addEventListener("click", () => {
 if (btnDeutschCheck) btnDeutschCheck.addEventListener("click", checkDeutschReading);
 
 // ============ MODE TOGGLE ============
+function setActiveModeButton(activeId) {
+  ["btn-mode-path", "btn-mode-free", "btn-mode-mistakes"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (id === activeId) el.classList.add("active");
+    else el.classList.remove("active");
+  });
+}
+
 document.getElementById("btn-mode-path").addEventListener("click", () => {
   currentMode = "lernpfad";
   currentStage = null;
-  document.getElementById("btn-mode-path").classList.add("active");
-  document.getElementById("btn-mode-free").classList.remove("active");
+  setActiveModeButton("btn-mode-path");
   document.getElementById("learning-path").classList.remove("hidden");
   document.getElementById("settings-panel").classList.add("hidden");
   document.getElementById("exercise-area").classList.add("hidden");
@@ -1191,13 +1200,36 @@ document.getElementById("btn-mode-path").addEventListener("click", () => {
 document.getElementById("btn-mode-free").addEventListener("click", () => {
   currentMode = "frei";
   currentStage = null;
-  document.getElementById("btn-mode-free").classList.add("active");
-  document.getElementById("btn-mode-path").classList.remove("active");
+  setActiveModeButton("btn-mode-free");
   document.getElementById("learning-path").classList.add("hidden");
   document.getElementById("settings-panel").classList.remove("hidden");
   document.getElementById("exercise-area").classList.remove("hidden");
   document.getElementById("btn-back-to-map").classList.add("hidden");
   document.getElementById("stage-header").innerHTML = "";
+
+  // Restore operation selection if we came from mistakes mode
+  document.getElementById("operation-group")?.classList.remove("hidden");
+  if (currentOperation === "mistakes") {
+    currentOperation = lastFreeOperation || "gemischt";
+  }
+});
+
+document.getElementById("btn-mode-mistakes").addEventListener("click", () => {
+  currentMode = "mistakes";
+  currentStage = null;
+  setActiveModeButton("btn-mode-mistakes");
+  document.getElementById("learning-path").classList.add("hidden");
+  document.getElementById("settings-panel").classList.remove("hidden");
+  document.getElementById("exercise-area").classList.remove("hidden");
+  document.getElementById("btn-back-to-map").classList.add("hidden");
+  document.getElementById("stage-header").innerHTML = "🩹 Fehler üben";
+
+  // Remember current free-operation and switch to mistakes
+  if (currentOperation !== "mistakes") lastFreeOperation = currentOperation;
+  currentOperation = "mistakes";
+  document.getElementById("operation-group")?.classList.add("hidden");
+
+  generateExercises();
 });
 
 // Back to map button
@@ -1217,6 +1249,7 @@ document.querySelectorAll("#operation .btn-setting").forEach((btn) => {
     document.querySelectorAll("#operation .btn-setting").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentOperation = btn.dataset.value;
+    lastFreeOperation = currentOperation;
   });
 });
 
@@ -1241,7 +1274,9 @@ function generateExercises() {
   resetStreak();
   hideAdaptiveSuggestion();
 
-  if (currentOperation === "luecken") {
+  if (currentOperation === "mistakes") {
+    exercises = getErrorRepeatExercises(config, config.count);
+  } else if (currentOperation === "luecken") {
     generateLuecken(config);
   } else if (currentOperation === "zehner") {
     generateZehner(config);
@@ -1557,6 +1592,12 @@ function generateReihen(config) {
 function renderExercises() {
   const container = document.getElementById("exercises");
   container.innerHTML = "";
+
+  if (!exercises || exercises.length === 0) {
+    container.innerHTML = `<div class="exercise" style="text-align:center;">Noch keine Fehler gespeichert. Mach erst ein paar Aufgaben, dann kannst du hier deine Fehler üben.</div>`;
+    document.getElementById("actions")?.classList.add("hidden");
+    return;
+  }
 
   exercises.forEach((ex, i) => {
     const div = document.createElement("div");
@@ -2034,10 +2075,10 @@ function checkAnswers() {
     } else {
       // Attempt tracking for retry UX
       const supportsRescue = isRescueSupported(ex);
-      const hasAnswerInput = supportsRescue && document.getElementById(`answer-${i}`)?.value.trim() !== "";
 
-      if (supportsRescue && attempts[i] === 0 && hasAnswerInput) {
-        // 1st wrong attempt: give a multiple-choice rescue for attempt 2
+      if (supportsRescue && attempts[i] === 0) {
+        // 1st wrong attempt: always give a retry + multiple-choice rescue
+        // (even if the input was empty) so we consistently have 2 attempts.
         attempts[i] = 1;
         div.className = "exercise retry";
         feedback.textContent = "Nochmal!";
@@ -2047,7 +2088,7 @@ function checkAnswers() {
         attachRescueChoices(i);
       } else {
         // 2nd wrong (or non-supported types): show solution hint as before
-        if (supportsRescue && attempts[i] === 1 && hasAnswerInput) attempts[i] = 2;
+        if (supportsRescue && attempts[i] === 1) attempts[i] = 2;
 
         div.className = "exercise wrong";
         // Show correct answer next to "falsch"
