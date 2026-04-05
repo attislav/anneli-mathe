@@ -974,19 +974,23 @@ const ACHIEVEMENTS = [
 
 let unlockedAchievements = [];
 let perfectRounds = 0;
+let newlyUnlocked = []; // tracks achievements earned this round
 
 function unlockAchievement(id) {
-  if (unlockedAchievements.includes(id)) return;
+  if (unlockedAchievements.includes(id)) return false;
   unlockedAchievements.push(id);
   localStorage.setItem(profileKey("achievements"), JSON.stringify(unlockedAchievements));
 
   const achievement = ACHIEVEMENTS.find((a) => a.id === id);
   if (achievement) {
-    showToast(achievement.icon, "Abzeichen freigeschaltet!", achievement.name);
+    newlyUnlocked.push(achievement);
   }
+  return true;
 }
 
 function checkAchievements() {
+  newlyUnlocked = [];
+
   if (totalStars >= 1) unlockAchievement("first_star");
   if (totalStars >= 10) unlockAchievement("ten_stars");
   if (totalStars >= 50) unlockAchievement("fifty_stars");
@@ -1014,6 +1018,8 @@ function checkAchievements() {
   const halfPath = Math.floor(LEARNING_PATH.length / 2);
   if (masteredStages.length >= halfPath) unlockAchievement("path_half");
   if (masteredStages.length >= LEARNING_PATH.length) unlockAchievement("path_complete");
+
+  return newlyUnlocked;
 }
 
 function renderAchievements() {
@@ -2023,10 +2029,53 @@ function checkAnswers() {
     focusFirstWrong();
   }
 
-  // Show adaptive suggestion
-  showAdaptiveSuggestion(correctCount, exercises.length);
+  // Check achievements and collect newly earned ones
+  const earned = checkAchievements();
 
-  checkAchievements();
+  // Build achievements + back-to-map section in the summary
+  let extraHTML = "";
+
+  // Show newly earned achievements
+  if (earned.length > 0) {
+    const badgesHTML = earned.map((a) => `
+      <div class="earned-badge">
+        <span class="earned-badge-icon">${a.icon}</span>
+        <span class="earned-badge-name">${a.name}</span>
+      </div>
+    `).join("");
+    extraHTML += `
+      <div class="earned-achievements">
+        <p class="earned-title">Neue Abzeichen!</p>
+        <div class="earned-badges">${badgesHTML}</div>
+      </div>
+    `;
+  }
+
+  // Back to map button (in lernpfad mode)
+  if (currentMode === "lernpfad" && currentStage !== null) {
+    const stage = LEARNING_PATH[currentStage];
+    const passed = percent >= stage.passScore;
+    const nextId = currentStage + 1;
+    const hasNext = nextId < LEARNING_PATH.length && unlockedStages.includes(nextId);
+
+    extraHTML += '<div class="result-nav">';
+    if (passed && hasNext) {
+      const next = LEARNING_PATH[nextId];
+      extraHTML += `<button class="result-nav-btn result-nav-next" onclick="selectStage(${nextId})">${next.icon} Weiter: ${next.name}</button>`;
+    }
+    extraHTML += `<button class="result-nav-btn result-nav-map" onclick="showMapView()">Zur&uuml;ck zur Karte</button>`;
+    extraHTML += '</div>';
+  }
+
+  if (extraHTML) {
+    summary.innerHTML += extraHTML;
+  }
+
+  // Show adaptive suggestion (only for non-lernpfad, since lernpfad now has buttons in summary)
+  if (currentMode !== "lernpfad") {
+    showAdaptiveSuggestion(correctCount, exercises.length);
+  }
+
   checked = true;
 }
 
