@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "locale": "de",
+  "subject": "deutsch",
+  "grade": "grade-1",
+  "skills": [
+    {
+      "id": "d1-lesen-einfach",
+      "title": "Einfache Texte lesen",
+      "description": "Kurze Geschichten lesen und verstehen",
+      "prerequisites": [],
+      "icon": "📖",
+      "difficulty": "leicht",
+      "operation": "lesen",
+      "mastery": { "passScore": 0.7, "repetitions": 2 }
+    },
+    {
+      "id": "d1-lesen-details",
+      "title": "Details verstehen",
+      "description": "Fragen zum Text richtig beantworten",
+      "prerequisites": ["d1-lesen-einfach"],
+      "icon": "🔍",
+      "difficulty": "mittel",
+      "operation": "lesen",
+      "mastery": { "passScore": 0.8, "repetitions": 2 }
+    },
+    {
+      "id": "d1-lesen-fortgeschritten",
+      "title": "Texte meistern",
+      "description": "Alle Fragen zu schwierigeren Texten beantworten",
+      "prerequisites": ["d1-lesen-details"],
+      "icon": "🏆",
+      "difficulty": "schwer",
+      "operation": "lesen",
+      "mastery": { "passScore": 0.85, "repetitions": 3 }
+    }
+  ]
+}

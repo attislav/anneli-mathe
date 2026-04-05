@@ -233,6 +233,19 @@ document.getElementById("achievements-modal").addEventListener("click", (e) => {
 // Parent view
 document.getElementById("btn-parent").addEventListener("click", renderParentView);
 
+// Subject toggle
+document.querySelectorAll(".btn-subject").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const subject = btn.dataset.subject;
+    if (subject === state.currentSubject) return;
+    document.querySelectorAll(".btn-subject").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.currentSubject = subject;
+    loadSkilltreeFromJson(state.currentGrade, subject);
+    showMapView();
+  });
+});
+
 // Grade toggle
 document.querySelectorAll(".btn-grade").forEach((btn) => {
   btn.addEventListener("click", () => {

@@ -33,6 +33,8 @@ const ALLOWED_OPERATION = new Set([
   "verdoppeln",
   "nachbarn",
   "reihen",
+  "lesen",
+  "thema",
 ]);
 
 function walk(dir) {

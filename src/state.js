@@ -93,6 +93,7 @@ export const state = {
   currentProfile: null,
   currentDifficulty: "leicht",
   currentOperation: "gemischt",
+  currentSubject: "mathe",
   currentGrade: "grade-1",
   currentMode: "lernpfad",
   currentStage: null,
@@ -115,6 +116,7 @@ export const state = {
   errorPool: [],
   practiceLog: [],
 
+  readingData: null,
   audioCtx: null,
   roundStartAt: null,
   roundContext: { mode: null, skillId: null },
