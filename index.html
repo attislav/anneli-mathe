@@ -86,6 +86,13 @@
     </div>
 
     <button class="btn-achievements" id="btn-achievements">🏆 Abzeichen</button>
+    <button class="btn-parent" id="btn-parent">👨‍👩‍👧 Eltern-Ansicht</button>
+
+    <!-- Subject Toggle -->
+    <div class="subject-toggle">
+      <button class="btn-subject active" id="btn-subject-mathe">Mathe</button>
+      <button class="btn-subject" id="btn-subject-deutsch">Deutsch</button>
+    </div>
 
     <!-- Achievements Modal -->
     <div class="modal-overlay hidden" id="achievements-modal">
@@ -154,6 +161,27 @@
       </div>
 
       <div id="result-summary" class="hidden"></div>
+    </div>
+
+    <!-- Deutsch: Reading mini-loop -->
+    <div id="deutsch-area" class="hidden">
+      <div class="deutsch-header">
+        <h2 class="deutsch-title">📖 Lesen & Verstehen</h2>
+        <p class="deutsch-subtitle">Lies den Text und beantworte die Fragen.</p>
+      </div>
+
+      <div class="deutsch-card">
+        <div class="deutsch-passage" id="deutsch-passage"></div>
+      </div>
+
+      <div class="deutsch-questions" id="deutsch-questions"></div>
+
+      <div class="deutsch-actions">
+        <button class="btn-new" id="btn-deutsch-new">Neuer Text</button>
+        <button class="btn-check" id="btn-deutsch-check">Antworten pr&#252;fen</button>
+      </div>
+
+      <div id="deutsch-result" class="hidden"></div>
     </div>
   </div> <!-- /app-container -->
 

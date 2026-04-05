@@ -1659,3 +1659,132 @@ body {
     font-size: 0.9rem;
   }
 }
+
+/* ============ SUBJECT TOGGLE ============ */
+.subject-toggle {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 14px 0 18px;
+}
+
+.btn-subject {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: #f1f3f5;
+  color: #444;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.btn-subject.active {
+  background: linear-gradient(135deg, #74b9ff, #a29bfe);
+  color: white;
+}
+
+/* ============ DEUTSCH READING ============ */
+.deutsch-header {
+  margin: 6px 0 14px;
+  text-align: center;
+}
+
+.deutsch-title {
+  font-size: 1.5rem;
+  color: #2d3436;
+  margin-bottom: 6px;
+}
+
+.deutsch-subtitle {
+  color: #666;
+  font-weight: 600;
+}
+
+.deutsch-card {
+  background: linear-gradient(135deg, #fff7e6, #ffeaa7);
+  border: 2px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 0 16px;
+}
+
+.deutsch-passage {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #2d3436;
+  font-weight: 650;
+}
+
+.deutsch-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deutsch-q {
+  background: #f8f9fa;
+  border: 2px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.deutsch-q-title {
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.deutsch-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.deutsch-choice:hover {
+  background: rgba(116, 185, 255, 0.12);
+}
+
+.deutsch-choice input {
+  transform: scale(1.2);
+}
+
+.deutsch-q.correct {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.deutsch-q.wrong {
+  border-color: rgba(244, 67, 54, 0.45);
+  background: rgba(244, 67, 54, 0.06);
+}
+
+.deutsch-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+#deutsch-result {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 900;
+  text-align: center;
+}
+
+#deutsch-result.good {
+  background: rgba(76, 175, 80, 0.12);
+  color: #1b5e20;
+}
+
+#deutsch-result.retry {
+  background: rgba(244, 67, 54, 0.10);
+  color: #b71c1c;
+}

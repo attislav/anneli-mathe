@@ -1073,6 +1073,19 @@ function showToast(icon, title, name) {
   setTimeout(() => toast.remove(), 3500);
 }
 
+// ============ SUBJECT TOGGLE UI ============
+const btnSubjectMathe = document.getElementById("btn-subject-mathe");
+const btnSubjectDeutsch = document.getElementById("btn-subject-deutsch");
+if (btnSubjectMathe) btnSubjectMathe.addEventListener("click", () => setSubject("mathe"));
+if (btnSubjectDeutsch) btnSubjectDeutsch.addEventListener("click", () => setSubject("deutsch"));
+
+const btnDeutschNew = document.getElementById("btn-deutsch-new");
+const btnDeutschCheck = document.getElementById("btn-deutsch-check");
+if (btnDeutschNew) btnDeutschNew.addEventListener("click", () => {
+  loadDeutschReadingContent().then(() => newDeutschReading());
+});
+if (btnDeutschCheck) btnDeutschCheck.addEventListener("click", checkDeutschReading);
+
 // ============ MODE TOGGLE ============
 document.getElementById("btn-mode-path").addEventListener("click", () => {
   currentMode = "lernpfad";
@@ -2195,6 +2208,209 @@ function launchConfetti() {
   animate();
 }
 
+// ============ SUBJECTS (Mathe / Deutsch) ============
+let currentSubject = "mathe"; // "mathe" | "deutsch"
+
+function setSubject(subject) {
+  currentSubject = subject;
+
+  const btnMathe = document.getElementById("btn-subject-mathe");
+  const btnDeutsch = document.getElementById("btn-subject-deutsch");
+  if (btnMathe) btnMathe.classList.toggle("active", subject === "mathe");
+  if (btnDeutsch) btnDeutsch.classList.toggle("active", subject === "deutsch");
+
+  const matheEls = [
+    document.getElementById("mode-toggle"),
+  ];
+
+  // Mathe sections
+  const modeToggle = document.querySelector(".mode-toggle");
+  const learningPath = document.getElementById("learning-path");
+  const settings = document.getElementById("settings-panel");
+  const exerciseArea = document.getElementById("exercise-area");
+
+  // Deutsch section
+  const deutschArea = document.getElementById("deutsch-area");
+
+  if (subject === "mathe") {
+    if (modeToggle) modeToggle.classList.remove("hidden");
+    if (deutschArea) deutschArea.classList.add("hidden");
+
+    // Restore correct mathe view depending on mode
+    if (currentMode === "lernpfad") {
+      if (learningPath) learningPath.classList.remove("hidden");
+      if (settings) settings.classList.add("hidden");
+      if (exerciseArea) exerciseArea.classList.add("hidden");
+    } else {
+      if (learningPath) learningPath.classList.add("hidden");
+      if (settings) settings.classList.remove("hidden");
+      if (exerciseArea) exerciseArea.classList.remove("hidden");
+    }
+  } else {
+    if (modeToggle) modeToggle.classList.add("hidden");
+    if (learningPath) learningPath.classList.add("hidden");
+    if (settings) settings.classList.add("hidden");
+    if (exerciseArea) exerciseArea.classList.add("hidden");
+    if (deutschArea) deutschArea.classList.remove("hidden");
+
+    // Start a deutsch round if none loaded yet
+    if (!currentReadingItem) {
+      loadDeutschReadingContent().then(() => newDeutschReading());
+    }
+  }
+}
+
+const DEUTSCH_READING_URL = "content/de/deutsch/grade-1/reading.json";
+let deutschReadingData = null;
+let currentReadingItem = null;
+
+function loadDeutschReadingContent() {
+  if (deutschReadingData) return Promise.resolve(deutschReadingData);
+
+  return fetch(DEUTSCH_READING_URL)
+    .then((res) => {
+      if (!res.ok) throw new Error(`reading fetch failed: ${res.status}`);
+      return res.json();
+    })
+    .then((json) => {
+      deutschReadingData = json;
+      return deutschReadingData;
+    })
+    .catch(() => {
+      // Tiny fallback so the app never breaks.
+      deutschReadingData = {
+        version: 1,
+        items: [
+          {
+            id: "fallback",
+            title: "Kurztext",
+            passage: "Lina hat einen roten Ball. Sie wirft ihn hoch. Dann faengt sie ihn wieder.",
+            questions: [
+              { prompt: "Welche Farbe hat der Ball?", choices: ["Rot", "Blau", "Gruen"], answerIndex: 0 },
+              { prompt: "Was macht Lina?", choices: ["Sie schlaeft", "Sie wirft den Ball", "Sie schwimmt"], answerIndex: 1 },
+              { prompt: "Was passiert am Ende?", choices: ["Sie faengt den Ball", "Der Ball verschwindet", "Der Ball wird nass"], answerIndex: 0 },
+            ],
+          },
+        ],
+      };
+      return deutschReadingData;
+    });
+}
+
+function pickRandomReadingItem() {
+  const items = deutschReadingData?.items;
+  if (!Array.isArray(items) || items.length === 0) return null;
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function newDeutschReading() {
+  if (!deutschReadingData) return;
+
+  currentReadingItem = pickRandomReadingItem();
+  if (!currentReadingItem) return;
+
+  // Start practice timer for deutsch
+  roundStartAt = Date.now();
+  roundContext = { mode: "deutsch", skillId: "deutsch.reading.v1" };
+
+  const passageEl = document.getElementById("deutsch-passage");
+  const questionsEl = document.getElementById("deutsch-questions");
+  const resultEl = document.getElementById("deutsch-result");
+
+  if (resultEl) {
+    resultEl.classList.add("hidden");
+    resultEl.className = "hidden";
+    resultEl.textContent = "";
+  }
+
+  if (passageEl) {
+    const title = currentReadingItem.title ? `<div style="font-weight:900;margin-bottom:8px;">${currentReadingItem.title}</div>` : "";
+    passageEl.innerHTML = `${title}${(currentReadingItem.passage || "").replace(/\n/g, "<br>")}`;
+  }
+
+  if (!questionsEl) return;
+  questionsEl.innerHTML = "";
+
+  (currentReadingItem.questions || []).forEach((q, idx) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "deutsch-q";
+    qDiv.dataset.index = String(idx);
+
+    const title = document.createElement("div");
+    title.className = "deutsch-q-title";
+    title.textContent = `${idx + 1}. ${q.prompt}`;
+    qDiv.appendChild(title);
+
+    const name = `deutsch-q-${idx}`;
+    (q.choices || []).forEach((choice, cIdx) => {
+      const label = document.createElement("label");
+      label.className = "deutsch-choice";
+      label.innerHTML = `
+        <input type="radio" name="${name}" value="${cIdx}">
+        <span>${choice}</span>
+      `;
+      qDiv.appendChild(label);
+    });
+
+    questionsEl.appendChild(qDiv);
+  });
+
+  // Scroll to top of deutsch area
+  const deutschArea = document.getElementById("deutsch-area");
+  if (deutschArea) deutschArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function checkDeutschReading() {
+  const questionsEl = document.getElementById("deutsch-questions");
+  const resultEl = document.getElementById("deutsch-result");
+  if (!questionsEl || !currentReadingItem) return;
+
+  const qs = currentReadingItem.questions || [];
+  let correct = 0;
+
+  qs.forEach((q, idx) => {
+    const qDiv = questionsEl.querySelector(`.deutsch-q[data-index="${idx}"]`);
+    if (!qDiv) return;
+
+    const selected = qDiv.querySelector("input[type=radio]:checked");
+    const picked = selected ? parseInt(selected.value, 10) : -1;
+
+    qDiv.classList.remove("correct", "wrong");
+    if (picked === q.answerIndex) {
+      qDiv.classList.add("correct");
+      correct++;
+    } else {
+      qDiv.classList.add("wrong");
+    }
+  });
+
+  // Reward: 1 star per correct + bonus if all correct
+  if (correct > 0) {
+    addStars(correct);
+    addXP(correct);
+  }
+  if (correct === qs.length && qs.length > 0) {
+    addStars(2);
+    addXP(3);
+    soundPerfect();
+    launchConfetti();
+  }
+
+  // Log the round once
+  logRoundIfNeeded(correct, Math.max(1, qs.length));
+
+  if (resultEl) {
+    resultEl.classList.remove("hidden");
+    if (correct === qs.length) {
+      resultEl.className = "good";
+      resultEl.textContent = `Super! ${correct}/${qs.length} richtig.`;
+    } else {
+      resultEl.className = "retry";
+      resultEl.textContent = `${correct}/${qs.length} richtig. Schau nochmal in den Text!`;
+    }
+  }
+}
+
 // ============ INIT ============
 function initApp() {
   renderStars();
@@ -2208,9 +2424,8 @@ function initApp() {
   // Try to load a data-driven skilltree (non-blocking)
   loadSkilltreeFromJson();
 
-  // Show map view initially (don't auto-start exercises)
-  document.getElementById("learning-path").classList.remove("hidden");
-  document.getElementById("exercise-area").classList.add("hidden");
+  // Default subject is Mathe
+  setSubject("mathe");
 }
 
 // Check for auto-login (last used profile)

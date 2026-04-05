@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "park-enten",
+      "title": "Im Park",
+      "passage": "Mia geht mit Papa in den Park. Am Teich schwimmen drei Enten. Mia zaehlt: eins, zwei, drei. Dann sieht sie noch eine Ente hinter den Bueschen. Mia freut sich und winkt.",
+      "questions": [
+        {
+          "prompt": "Wohin geht Mia?",
+          "choices": ["In den Zoo", "In den Park", "In die Schule"],
+          "answerIndex": 1
+        },
+        {
+          "prompt": "Wo schwimmen die Enten?",
+          "choices": ["Im Teich", "Im Haus", "Auf dem Baum"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Wie viele Enten sieht Mia am Ende insgesamt?",
+          "choices": ["Drei", "Vier", "Fuenf"],
+          "answerIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "brot-backen",
+      "title": "Das Brot",
+      "passage": "Oma backt Brot. Der Teig ist weich und klebt ein bisschen. Oma streut Mehl auf den Tisch. Dann formt sie ein rundes Brot. Im Ofen duftet es lecker.",
+      "questions": [
+        {
+          "prompt": "Was macht Oma?",
+          "choices": ["Sie backt Brot", "Sie malt ein Bild", "Sie pflanzt Blumen"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Was streut Oma auf den Tisch?",
+          "choices": ["Zucker", "Mehl", "Salz"],
+          "answerIndex": 1
+        },
+        {
+          "prompt": "Wie ist der Teig?",
+          "choices": ["Hart", "Weich", "Eisig"],
+          "answerIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "katze-schnur",
+      "title": "Die Katze",
+      "passage": "Leo hat eine Katze. Sie heisst Nala. Nala spielt gern mit einer Schnur. Plötzlich rollt die Schnur unter das Sofa. Nala schaut lange. Dann holt Leo die Schnur wieder hervor.",
+      "questions": [
+        {
+          "prompt": "Wie heisst die Katze?",
+          "choices": ["Nala", "Lina", "Nina"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Womit spielt Nala gern?",
+          "choices": ["Mit einem Ball", "Mit einer Schnur", "Mit einem Buch"],
+          "answerIndex": 1
+        },
+        {
+          "prompt": "Wohin rollt die Schnur?",
+          "choices": ["Unter das Sofa", "In den Schrank", "Auf den Tisch"],
+          "answerIndex": 0
+        }
+      ]
+    }
+  ]
+}
