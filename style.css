@@ -277,6 +277,9 @@ body {
 
 /* Export button in app */
 .btn-profile-export {
+  position: absolute;
+  top: 8px;
+  left: 8px;
   padding: 6px 12px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -286,6 +289,7 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s;
+  z-index: 5;
 }
 
 .btn-profile-export:hover {
@@ -349,43 +353,13 @@ body {
 
 /* Profile Bar (in app) */
 .profile-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.profile-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.grade-picker {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.35);
-  color: white;
-  font-weight: 600;
-}
-
-.grade-picker label {
-  font-size: 0.85rem;
-}
-
-.grade-select {
-  border: none;
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
+  position: relative;
 }
 
 .btn-profile-switch {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   padding: 6px 12px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -395,50 +369,11 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s;
+  z-index: 5;
 }
 
 .btn-profile-switch:hover {
   background: rgba(0,0,0,0.6);
-}
-
-/* Non-blocking app banner (e.g. skilltree.json load issues) */
-.app-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 10px 0 18px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 2px solid #ffd54f;
-  background: #fff8e1;
-  color: #5d4037;
-}
-
-.app-banner.hidden {
-  display: none;
-}
-
-.app-banner-text {
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.app-banner-close {
-  border: none;
-  background: rgba(0,0,0,0.05);
-  color: #5d4037;
-  font-size: 1.2rem;
-  font-weight: 900;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.app-banner-close:hover {
-  background: rgba(0,0,0,0.10);
 }
 
 /* ============ NEW EXERCISE TYPES ============ */
@@ -1114,103 +1049,34 @@ body {
   color: #c62828;
 }
 
-/* Earned Achievements in Result Summary */
-.earned-achievements {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 2px dashed rgba(0, 0, 0, 0.1);
-}
-
-.earned-title {
-  font-size: 1rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  color: #6a1b9a;
-}
-
-.earned-badges {
+/* Grade Toggle */
+.grade-toggle {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.earned-badge {
-  display: flex;
-  flex-direction: column;
+  gap: 8px;
   align-items: center;
-  gap: 4px;
-  padding: 10px 14px;
-  background: linear-gradient(135deg, #fff8e1, #ffecb3);
-  border: 2px solid #ffd54f;
-  border-radius: 14px;
-  animation: badgePop 0.5s ease backwards;
+  justify-content: center;
+  margin: 0 0 10px;
 }
 
-.earned-badge:nth-child(2) { animation-delay: 0.15s; }
-.earned-badge:nth-child(3) { animation-delay: 0.3s; }
-.earned-badge:nth-child(4) { animation-delay: 0.45s; }
-
-@keyframes badgePop {
-  0% { transform: scale(0); opacity: 0; }
-  60% { transform: scale(1.2); }
-  100% { transform: scale(1); opacity: 1; }
+.grade-label {
+  font-weight: 800;
+  color: #444;
 }
 
-.earned-badge-icon {
-  font-size: 2rem;
-}
-
-.earned-badge-name {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #f57f17;
-}
-
-/* Result Navigation (back to map, next stage) */
-.result-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 2px dashed rgba(0, 0, 0, 0.1);
-}
-
-.result-nav-btn {
-  display: block;
-  width: 100%;
-  padding: 14px 20px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 14px;
+.btn-grade {
+  background: #fff;
+  border: 2px solid #e84393;
+  color: #e84393;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 800;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-.result-nav-btn:hover {
-  transform: translateY(-2px);
-}
-
-.result-nav-next {
-  background: linear-gradient(135deg, #66bb6a, #43a047);
-  color: white;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-}
-
-.result-nav-next:hover {
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-}
-
-.result-nav-map {
-  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
-  color: #6a1b9a;
-  box-shadow: 0 4px 15px rgba(106, 27, 154, 0.15);
-}
-
-.result-nav-map:hover {
-  box-shadow: 0 6px 20px rgba(106, 27, 154, 0.25);
+.btn-grade.active {
+  background: #e84393;
+  color: #fff;
 }
 
 /* Mode Toggle */
@@ -1221,38 +1087,6 @@ body {
   border-radius: 14px;
   overflow: hidden;
   border: 2px solid #e84393;
-  background: white;
-}
-
-/* Grade selector (small, non-intrusive) */
-.grade-toggle {
-  display: flex;
-  gap: 6px;
-  padding: 6px;
-  border-left: 2px solid #e84393;
-  align-items: center;
-}
-
-.btn-grade {
-  padding: 8px 10px;
-  font-size: 0.95rem;
-  font-weight: 800;
-  border: 2px solid #e84393;
-  border-radius: 12px;
-  background: white;
-  color: #e84393;
-  cursor: pointer;
-  transition: transform 0.12s, background 0.12s, color 0.12s;
-  white-space: nowrap;
-}
-
-.btn-grade:hover {
-  transform: translateY(-1px);
-}
-
-.btn-grade.active {
-  background: #e84393;
-  color: white;
 }
 
 .btn-mode {
@@ -1332,15 +1166,6 @@ body {
   background: rgba(255, 255, 255, 0.7);
   padding: 4px 12px;
   border-radius: 10px;
-}
-
-.stage-header-desc {
-  flex-basis: 100%;
-  text-align: center;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1e88e5;
-  opacity: 0.95;
 }
 
 /* Secondary suggest button */
@@ -1483,19 +1308,7 @@ body {
   color: #555;
   line-height: 1.2;
   text-align: center;
-  max-width: 110px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.path-stage .stage-desc {
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: #777;
-  line-height: 1.1;
-  text-align: center;
-  max-width: 110px;
+  max-width: 80px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1715,237 +1528,4 @@ body {
     padding: 8px 14px;
     font-size: 0.9rem;
   }
-}
-
-/* ============ SUBJECT TOGGLE ============ */
-.subject-toggle {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 14px 0 18px;
-}
-
-.btn-subject {
-  border: none;
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 1rem;
-  font-weight: 800;
-  cursor: pointer;
-  background: #f1f3f5;
-  color: #444;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-
-.btn-subject.active {
-  background: linear-gradient(135deg, #74b9ff, #a29bfe);
-  color: white;
-}
-
-/* ============ DEUTSCH READING ============ */
-.deutsch-header {
-  margin: 6px 0 14px;
-  text-align: center;
-}
-
-.deutsch-title {
-  font-size: 1.5rem;
-  color: #2d3436;
-  margin-bottom: 6px;
-}
-
-.deutsch-subtitle {
-  color: #666;
-  font-weight: 600;
-}
-
-.deutsch-card {
-  background: linear-gradient(135deg, #fff7e6, #ffeaa7);
-  border: 2px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 16px;
-  margin: 12px 0 16px;
-}
-
-.deutsch-passage {
-  font-size: 1.05rem;
-  line-height: 1.55;
-  color: #2d3436;
-  font-weight: 650;
-}
-
-.deutsch-questions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.deutsch-q {
-  background: #f8f9fa;
-  border: 2px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 14px;
-}
-
-.deutsch-q-title {
-  font-weight: 900;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.deutsch-choice {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.deutsch-choice:hover {
-  background: rgba(116, 185, 255, 0.12);
-}
-
-.deutsch-choice input {
-  transform: scale(1.2);
-}
-
-.deutsch-q.correct {
-  border-color: rgba(76, 175, 80, 0.5);
-  background: rgba(76, 175, 80, 0.08);
-}
-
-.deutsch-q.wrong {
-  border-color: rgba(244, 67, 54, 0.45);
-  background: rgba(244, 67, 54, 0.06);
-}
-
-.deutsch-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 14px;
-}
-
-#deutsch-result {
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 14px;
-  font-weight: 900;
-  text-align: center;
-}
-
-#deutsch-result.good {
-  background: rgba(76, 175, 80, 0.12);
-  color: #1b5e20;
-}
-
-#deutsch-result.retry {
-  background: rgba(244, 67, 54, 0.10);
-  color: #b71c1c;
-}
-
-/* ============ SACHKUNDE TOPIC CARDS ============ */
-.sachkunde-header {
-  margin: 6px 0 14px;
-  text-align: center;
-}
-
-.sachkunde-title {
-  font-size: 1.5rem;
-  color: #2d3436;
-  margin-bottom: 6px;
-}
-
-.sachkunde-subtitle {
-  color: #666;
-  font-weight: 600;
-}
-
-.sachkunde-card {
-  background: linear-gradient(135deg, #e8fff1, #b8f7d4);
-  border: 2px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 16px;
-  margin: 12px 0 16px;
-}
-
-.sachkunde-topic {
-  font-size: 1.05rem;
-  line-height: 1.55;
-  color: #2d3436;
-  font-weight: 650;
-}
-
-.sachkunde-questions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sachkunde-q {
-  background: #f8f9fa;
-  border: 2px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 14px;
-}
-
-.sachkunde-q-title {
-  font-weight: 900;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.sachkunde-choice {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.sachkunde-choice:hover {
-  background: rgba(85, 239, 196, 0.14);
-}
-
-.sachkunde-choice input {
-  transform: scale(1.2);
-}
-
-.sachkunde-q.correct {
-  border-color: rgba(76, 175, 80, 0.5);
-  background: rgba(76, 175, 80, 0.08);
-}
-
-.sachkunde-q.wrong {
-  border-color: rgba(244, 67, 54, 0.45);
-  background: rgba(244, 67, 54, 0.06);
-}
-
-.sachkunde-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 14px;
-}
-
-#sachkunde-result {
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 14px;
-  font-weight: 900;
-  text-align: center;
-}
-
-#sachkunde-result.good {
-  background: rgba(76, 175, 80, 0.12);
-  color: #1b5e20;
-}
-
-#sachkunde-result.retry {
-  background: rgba(244, 67, 54, 0.10);
-  color: #b71c1c;
 }
