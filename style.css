@@ -570,8 +570,9 @@ body {
   to { transform: rotate(8deg) scale(1.15); }
 }
 
-/* Achievements Button */
-.btn-achievements {
+/* Achievements + Parent View Buttons */
+.btn-achievements,
+.btn-parent {
   display: block;
   width: 100%;
   padding: 12px;
@@ -583,12 +584,20 @@ body {
   border-radius: 14px;
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
-  margin-bottom: 20px;
 }
 
-.btn-achievements:hover {
+.btn-achievements:hover,
+.btn-parent:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(106, 27, 154, 0.2);
+}
+
+.btn-achievements {
+  margin-bottom: 10px;
+}
+
+.btn-parent {
+  margin-bottom: 20px;
 }
 
 /* Achievement Modal */
@@ -652,6 +661,55 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 12px;
+}
+
+/* Parent view (simple dashboard) */
+.parent-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.parent-card {
+  padding: 14px 14px;
+  border-radius: 14px;
+  border: 2px solid #e0e0e0;
+  background: #fafafa;
+}
+
+.parent-card h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #6a1b9a;
+}
+
+.parent-metric {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.parent-metric:last-child {
+  border-bottom: none;
+}
+
+.parent-metric .label {
+  color: #666;
+  font-weight: 700;
+}
+
+.parent-metric .value {
+  color: #333;
+  font-weight: 800;
+}
+
+.parent-list {
+  margin-top: 6px;
+  padding-left: 18px;
+  color: #333;
+  font-weight: 600;
 }
 
 .achievement-card {
