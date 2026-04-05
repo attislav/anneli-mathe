@@ -50,6 +50,16 @@ They are intentionally tiny and human-editable. The goal is to make new content 
 
 Example file: `content/de/mathe/grade-1/skilltree.json`
 
+### Quick validation (recommended)
+
+Run:
+
+```bash
+node tools/validate-skilltrees.js
+```
+
+This checks JSON shape, duplicate IDs, and broken prerequisite references.
+
 ## Data principles
 
 - **No hardcoded content** in `script.js` once migrated.

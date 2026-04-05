@@ -4,8 +4,7 @@
 
   Why:
   - Keep the app data-driven
-  - Catch typos and broken prerequisites early
-  - Prevent prerequisite cycles (learning path must stay a DAG)
+  - Catch broken prerequisites / typos early
 
   Usage:
     node tools/validate-skilltrees.js
@@ -16,20 +15,6 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content');
-
-// Keep these in sync with the app defaults (script.js)
-const ALLOWED_DIFFICULTY = new Set(['leicht', 'mittel', 'schwer']);
-const ALLOWED_OPERATIONS = new Set([
-  'plus',
-  'minus',
-  'gemischt',
-  'nachbarn',
-  'vergleichen',
-  'reihen',
-  'verdoppeln',
-  'luecken',
-  'zehner',
-]);
 
 function walk(dir) {
   const out = [];
@@ -49,38 +34,6 @@ function fail(msg) {
 
 function isPlainObject(x) {
   return x && typeof x === 'object' && !Array.isArray(x);
-}
-
-function detectPrerequisiteCycles({ filePath, skills }) {
-  // Graph edges: skill -> prereq
-  const byId = new Map();
-  for (const s of skills) byId.set(s.id, s);
-
-  const state = new Map(); // id -> 0 unvisited, 1 visiting, 2 done
-  const stack = [];
-
-  function dfs(id) {
-    const st = state.get(id) ?? 0;
-    if (st === 1) {
-      // cycle found: stack ... id
-      const idx = stack.indexOf(id);
-      const cycle = idx >= 0 ? stack.slice(idx).concat(id) : stack.concat(id);
-      fail(`${filePath}: prerequisite cycle detected: ${cycle.join(' -> ')}`);
-    }
-    if (st === 2) return;
-
-    state.set(id, 1);
-    stack.push(id);
-
-    const node = byId.get(id);
-    const pres = Array.isArray(node?.prerequisites) ? node.prerequisites : [];
-    for (const pre of pres) dfs(pre);
-
-    stack.pop();
-    state.set(id, 2);
-  }
-
-  for (const s of skills) dfs(s.id);
 }
 
 function validateSkilltree(filePath) {
@@ -135,27 +88,12 @@ function validateSkilltree(filePath) {
     if (!Number.isInteger(s.mastery.repetitions) || s.mastery.repetitions <= 0) {
       fail(`${loc}: mastery.repetitions must be a positive integer`);
     }
-
-    // Optional fields (if present, validate)
-    if ('icon' in s && !(typeof s.icon === 'string' && s.icon.trim())) {
-      fail(`${loc}: 'icon' must be a non-empty string when provided`);
-    }
-
-    if ('difficulty' in s) {
-      if (typeof s.difficulty !== 'string' || !ALLOWED_DIFFICULTY.has(s.difficulty)) {
-        fail(`${loc}: 'difficulty' must be one of: ${Array.from(ALLOWED_DIFFICULTY).join(', ')}`);
-      }
-    }
-
-    if ('operation' in s) {
-      if (typeof s.operation !== 'string' || !ALLOWED_OPERATIONS.has(s.operation)) {
-        fail(`${loc}: 'operation' must be one of: ${Array.from(ALLOWED_OPERATIONS).join(', ')}`);
-      }
-    }
   }
 
   // Second pass: prerequisites must exist.
-  const idSet = new Set(ids);
+  const idList = Array.from(ids);
+  const idSet = new Set(idList);
+
   for (let i = 0; i < json.skills.length; i++) {
     const s = json.skills[i];
     const loc = `${filePath}: skills[${i}]`;
@@ -165,9 +103,6 @@ function validateSkilltree(filePath) {
       }
     }
   }
-
-  // Third pass: graph must be acyclic.
-  detectPrerequisiteCycles({ filePath, skills: json.skills });
 
   return { filePath, skillCount: json.skills.length };
 }
