@@ -233,6 +233,18 @@ document.getElementById("achievements-modal").addEventListener("click", (e) => {
 // Parent view
 document.getElementById("btn-parent").addEventListener("click", renderParentView);
 
+// Grade toggle
+document.querySelectorAll(".btn-grade").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const grade = btn.dataset.grade;
+    if (grade === state.currentGrade) return;
+    document.querySelectorAll(".btn-grade").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    loadSkilltreeFromJson(grade);
+    showMapView();
+  });
+});
+
 // Mode toggle
 document.getElementById("btn-mode-path").addEventListener("click", () => {
   state.currentMode = "lernpfad";

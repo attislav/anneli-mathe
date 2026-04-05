@@ -70,8 +70,10 @@ function migrateMasteryProgressFromOldMasteredStages() {
   saveSkillMasteryProgress();
 }
 
-export function loadSkilltreeFromJson() {
-  const url = "content/de/mathe/grade-1/skilltree.json";
+export function loadSkilltreeFromJson(grade) {
+  grade = grade || "grade-1";
+  state.currentGrade = grade;
+  const url = `content/de/mathe/${grade}/skilltree.json`;
 
   return fetch(url)
     .then((res) => {

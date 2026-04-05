@@ -1,6 +1,6 @@
 // ============ ANSWER CHECKING ============
 import { state, DIFFICULTY } from "./state.js";
-import { profileKey } from "./storage.js";
+import { profileKey, safeSave } from "./storage.js";
 import { incrementStreak, breakStreak, getStreakMultiplier, addStars, addXP, checkAchievements } from "./gamification.js";
 import { soundCorrect, soundWrong, soundPerfect } from "./audio.js";
 import { addToErrorPool, removeFromErrorPool } from "./error-pool.js";
@@ -220,7 +220,7 @@ export function checkAnswers() {
     addStars(3);
     addXP(5);
     state.perfectRounds++;
-    localStorage.setItem(profileKey("perfect-rounds"), state.perfectRounds.toString());
+    safeSave(profileKey("perfect-rounds"), state.perfectRounds.toString());
     summary.className = "perfect";
     summary.innerHTML = `<img src="super.png" class="result-image" alt="Super!"><br>Super! Alle ${state.exercises.length} Aufgaben richtig!`;
     checkBtn.textContent = "Alles richtig!";

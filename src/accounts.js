@@ -1,6 +1,6 @@
 // ============ ACCOUNT / PROFILE SYSTEM ============
 import { state, ADJEKTIVE, WESEN, events } from "./state.js";
-import { getAllProfiles, saveProfiles, loadProfileData, profileKey } from "./storage.js";
+import { getAllProfiles, saveProfiles, loadProfileData, profileKey, safeSave } from "./storage.js";
 
 function generateUsername() {
   const adj = ADJEKTIVE[Math.floor(Math.random() * ADJEKTIVE.length)];
@@ -44,7 +44,7 @@ export function deleteProfile(name) {
 
 export function loginAs(name) {
   state.currentProfile = name;
-  localStorage.setItem("mathe-last-profile", name);
+  safeSave("mathe-last-profile", name);
   document.getElementById("login-screen").classList.add("hidden");
   document.getElementById("app-container").classList.remove("hidden");
   loadProfileData();
@@ -112,7 +112,7 @@ export function importProfileData(code) {
     const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery", "practice-log"];
     keys.forEach((key) => {
       if (data[key] !== undefined) {
-        localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
+        safeSave(`mathe-${data.name}-${key}`, data[key]);
       }
     });
 

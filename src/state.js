@@ -93,6 +93,7 @@ export const state = {
   currentProfile: null,
   currentDifficulty: "leicht",
   currentOperation: "gemischt",
+  currentGrade: "grade-1",
   currentMode: "lernpfad",
   currentStage: null,
   currentStreak: 0,

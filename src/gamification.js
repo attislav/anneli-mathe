@@ -1,12 +1,12 @@
 // ============ GAMIFICATION: Stars, XP, Streaks, Levels, Achievements ============
 import { state, LEVELS, ACHIEVEMENTS, events } from "./state.js";
-import { profileKey } from "./storage.js";
+import { profileKey, safeSave } from "./storage.js";
 import { soundStreak, soundLevelUp } from "./audio.js";
 
 // ============ STARS ============
 
 export function saveStars() {
-  localStorage.setItem(profileKey("sterne"), state.totalStars.toString());
+  safeSave(profileKey("sterne"), state.totalStars.toString());
   renderStars();
 }
 
@@ -92,7 +92,7 @@ export function getCurrentLevel() {
 export function addXP(amount) {
   const oldLevel = getCurrentLevel();
   state.totalXP += amount;
-  localStorage.setItem(profileKey("xp"), state.totalXP.toString());
+  safeSave(profileKey("xp"), state.totalXP.toString());
   const newLevel = getCurrentLevel();
   renderLevel();
 
@@ -144,7 +144,7 @@ function celebrateLevelUp(lvl) {
 export function unlockAchievement(id) {
   if (state.unlockedAchievements.includes(id)) return;
   state.unlockedAchievements.push(id);
-  localStorage.setItem(profileKey("achievements"), JSON.stringify(state.unlockedAchievements));
+  safeSave(profileKey("achievements"), JSON.stringify(state.unlockedAchievements));
 
   const achievement = ACHIEVEMENTS.find((a) => a.id === id);
   if (achievement) {

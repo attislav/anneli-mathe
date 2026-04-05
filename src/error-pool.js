@@ -1,6 +1,6 @@
 // ============ ERROR POOL (Fehler-Wiederholung) + WEAKNESS SCORING ============
 import { state } from "./state.js";
-import { profileKey } from "./storage.js";
+import { profileKey, safeSave } from "./storage.js";
 
 export function addToErrorPool(exercise) {
   if (exercise.type === "zehner") return;
@@ -25,7 +25,7 @@ export function addToErrorPool(exercise) {
     state.errorPool.push(entry);
   }
   if (state.errorPool.length > 30) state.errorPool = state.errorPool.slice(-30);
-  localStorage.setItem(profileKey("errors"), JSON.stringify(state.errorPool));
+  safeSave(profileKey("errors"), JSON.stringify(state.errorPool));
 }
 
 export function removeFromErrorPool(exercise) {
@@ -35,7 +35,7 @@ export function removeFromErrorPool(exercise) {
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
   state.errorPool = state.errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
-  localStorage.setItem(profileKey("errors"), JSON.stringify(state.errorPool));
+  safeSave(profileKey("errors"), JSON.stringify(state.errorPool));
 }
 
 export function getErrorRepeatExercises(config, count) {

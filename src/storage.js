@@ -6,25 +6,33 @@ export function profileKey(key) {
   return `mathe-${state.currentProfile}-${key}`;
 }
 
+export function safeSave(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    console.warn("localStorage write failed:", key, e.name);
+  }
+}
+
 export function getAllProfiles() {
   return JSON.parse(localStorage.getItem("mathe-profiles") || "[]");
 }
 
 export function saveProfiles(profiles) {
-  localStorage.setItem("mathe-profiles", JSON.stringify(profiles));
+  safeSave("mathe-profiles", JSON.stringify(profiles));
 }
 
 export function savePathProgress() {
-  localStorage.setItem(profileKey("stages"), JSON.stringify(state.unlockedStages));
-  localStorage.setItem(profileKey("mastered"), JSON.stringify(state.masteredStages));
+  safeSave(profileKey("stages"), JSON.stringify(state.unlockedStages));
+  safeSave(profileKey("mastered"), JSON.stringify(state.masteredStages));
 }
 
 export function saveSkillMasteryProgress() {
-  localStorage.setItem(profileKey("skill-mastery"), JSON.stringify(state.skillMasteryProgress || {}));
+  safeSave(profileKey("skill-mastery"), JSON.stringify(state.skillMasteryProgress || {}));
 }
 
 export function savePracticeLog() {
-  localStorage.setItem(profileKey("practice-log"), JSON.stringify(state.practiceLog || []));
+  safeSave(profileKey("practice-log"), JSON.stringify(state.practiceLog || []));
 }
 
 export function loadProfileData() {
