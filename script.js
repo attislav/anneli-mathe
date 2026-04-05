@@ -682,11 +682,20 @@ function renderLearningPath() {
 // ============ ERROR POOL (Fehler-Wiederholung) ============
 let errorPool = [];
 
+function getCurrentSkillIdForErrorPool() {
+  // If we're inside the learning path, errors should belong to the current skill.
+  if (currentMode === "lernpfad" && currentStage !== null && LEARNING_PATH?.[currentStage]?.skillId) {
+    return LEARNING_PATH[currentStage].skillId;
+  }
+  return null;
+}
+
 function addToErrorPool(exercise) {
   // Only store normal and luecke exercises (not zehner)
   if (exercise.type === "zehner") return;
 
   const entry = {
+    skillId: getCurrentSkillIdForErrorPool(),
     type: exercise.type,
     op: exercise.type === "normal" ? exercise.op : exercise.display.op,
     a: exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer),
@@ -696,7 +705,7 @@ function addToErrorPool(exercise) {
   };
 
   // Avoid duplicates
-  const isDupe = errorPool.some((e) => e.op === entry.op && e.a === entry.a && e.b === entry.b);
+  const isDupe = errorPool.some((e) => (e.skillId || null) === (entry.skillId || null) && e.op === entry.op && e.a === entry.a && e.b === entry.b);
   if (!isDupe) {
     errorPool.push(entry);
   }
@@ -707,21 +716,33 @@ function addToErrorPool(exercise) {
 
 function removeFromErrorPool(exercise) {
   if (exercise.type === "zehner") return;
+  const skillId = getCurrentSkillIdForErrorPool();
   const op = exercise.type === "normal" ? exercise.op : exercise.display.op;
   const a = exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer);
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
-  errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
+  errorPool = errorPool.filter((e) => !((e.skillId || null) === (skillId || null) && e.op === op && e.a === a && e.b === b));
   localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
-  // Find error pool entries that fit the current config
+  const desiredSkillId = getCurrentSkillIdForErrorPool();
+  const desiredOp = (currentOperation === "plus") ? "+" : (currentOperation === "minus") ? "-" : null;
+
+  // Find error pool entries that fit the current config (and the current skill if we're in the skilltree)
   const matching = errorPool.filter((e) => {
+    // Scope by skill in lernpfad mode.
+    if (desiredSkillId) {
+      const sameSkill = (e.skillId || null) === desiredSkillId;
+      const legacySameOp = (e.skillId == null) && (desiredOp ? e.op === desiredOp : true);
+      if (!sameSkill && !legacySameOp) return false;
+    }
+
     if (e.type === "normal") {
       const result = e.op === "+" ? e.a + e.b : e.a - e.b;
       return result <= config.maxResult && e.a <= config.maxResult && e.b <= config.maxNumber;
     }
+
     return true;
   });
 
