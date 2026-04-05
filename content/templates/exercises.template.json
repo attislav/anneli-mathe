@@ -1,44 +1,27 @@
 {
   "version": 1,
   "locale": "de",
-  "subject": "mathe",
+  "subject": "SUBJECT_SLUG",
   "grade": "grade-1",
-  "notes": "Copy this file into content/<locale>/<subject>/<grade>/exercises.json and keep only the blocks your subject actually uses.",
-  "mathGenerators": [
+  "items": [
     {
-      "skillId": "m1-add-within-10",
-      "type": "normal",
-      "operation": "plus",
-      "count": 8,
-      "maxNumber": 10,
-      "maxResult": 10
+      "id": "subject-item-1",
+      "skillId": "subject-skill-1",
+      "type": "multiple-choice",
+      "prompt": "Beispielfrage?",
+      "choices": ["Antwort A", "Antwort B", "Antwort C"],
+      "answer": "Antwort B",
+      "explanation": "Kurze Erklärung für Eltern/Kinder.",
+      "tags": ["starter"]
     },
     {
-      "skillId": "m1-gaps-easy",
-      "type": "luecke",
-      "count": 6,
-      "maxNumber": 10,
-      "maxResult": 10
-    }
-  ],
-  "readingItems": [
-    {
-      "skillId": "d1-short-text-questions",
-      "prompt": "Lies den kurzen Text.",
-      "text": "Mila nimmt einen roten Ball mit in den Garten. Dort spielt sie mit ihrem Bruder Ben.",
-      "question": "Welche Farbe hat der Ball?",
-      "choices": ["Rot", "Blau", "Gelb"],
-      "answer": "Rot"
-    }
-  ],
-  "topicCards": [
-    {
-      "skillId": "s1-seasons-basics",
-      "title": "Frühling",
-      "body": "Im Frühling werden die Tage wärmer. Viele Pflanzen beginnen zu wachsen.",
-      "question": "Was passiert oft im Frühling?",
-      "choices": ["Blätter fallen von den Bäumen", "Pflanzen beginnen zu wachsen", "Es ist immer Schnee"],
-      "answer": "Pflanzen beginnen zu wachsen"
+      "id": "subject-item-2",
+      "skillId": "subject-skill-2",
+      "type": "text",
+      "prompt": "Kurze offene Aufgabe",
+      "answer": "Beispielantwort",
+      "explanation": "Optional: worauf beim Lösen geachtet wird.",
+      "tags": ["practice"]
     }
   ]
 }
