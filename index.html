@@ -50,8 +50,19 @@
   <div class="container hidden" id="app-container">
     <div class="profile-bar">
       <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
-      <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
-      <button class="btn-profile-export" id="btn-export">&#128228; Fortschritt sichern</button>
+
+      <div class="profile-bar-right">
+        <div class="grade-picker" title="Wähle die Klassenstufe (eigener Fortschritt pro Klasse)">
+          <label for="grade-select">Klasse:</label>
+          <select id="grade-select" class="grade-select">
+            <option value="grade-1">1</option>
+            <option value="grade-2">2</option>
+          </select>
+        </div>
+
+        <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
+        <button class="btn-profile-export" id="btn-export">&#128228; Fortschritt sichern</button>
+      </div>
     </div>
 
     <!-- Non-blocking banner for data/content load issues (e.g. skilltree.json) -->
