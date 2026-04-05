@@ -338,6 +338,24 @@ function inferStageConfigFromSkillId(skillId) {
   return { icon: "⭐", diff: "leicht", op: "gemischt" };
 }
 
+let appBannerDismissed = false;
+
+function showAppBanner(message) {
+  if (appBannerDismissed) return;
+  const banner = document.getElementById("app-banner");
+  const textEl = document.getElementById("app-banner-text");
+  if (!banner || !textEl) return;
+  textEl.textContent = message;
+  banner.classList.remove("hidden");
+}
+
+function hideAppBanner() {
+  const banner = document.getElementById("app-banner");
+  if (!banner) return;
+  banner.classList.add("hidden");
+  appBannerDismissed = true;
+}
+
 function skilltreeToLearningPath(skilltreeJson) {
   if (!skilltreeJson || !Array.isArray(skilltreeJson.skills)) return null;
 
@@ -408,8 +426,10 @@ function loadSkilltreeFromJson() {
       savePathProgress();
       renderLearningPath();
     })
-    .catch(() => {
-      // Silent fallback: app still works with the hardcoded path.
+    .catch((err) => {
+      // Fallback: app still works with the hardcoded path.
+      console.warn("Skilltree JSON konnte nicht geladen werden – Fallback aktiv.", err);
+      showAppBanner("⚠️ Lernpfad konnte nicht geladen werden (skilltree.json). Ich nutze den eingebauten Lernpfad.");
     });
 }
 
@@ -2122,6 +2142,9 @@ function initApp() {
   renderLevel();
   renderStreak();
   renderLearningPath();
+
+  const closeBtn = document.getElementById("app-banner-close");
+  if (closeBtn) closeBtn.addEventListener("click", hideAppBanner);
 
   // Try to load a data-driven skilltree (non-blocking)
   loadSkilltreeFromJson();

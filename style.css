@@ -376,6 +376,46 @@ body {
   background: rgba(0,0,0,0.6);
 }
 
+/* Non-blocking app banner (e.g. skilltree.json load issues) */
+.app-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0 18px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid #ffd54f;
+  background: #fff8e1;
+  color: #5d4037;
+}
+
+.app-banner.hidden {
+  display: none;
+}
+
+.app-banner-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.app-banner-close {
+  border: none;
+  background: rgba(0,0,0,0.05);
+  color: #5d4037;
+  font-size: 1.2rem;
+  font-weight: 900;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.app-banner-close:hover {
+  background: rgba(0,0,0,0.10);
+}
+
 /* ============ NEW EXERCISE TYPES ============ */
 
 /* Vergleichen: button group for >, <, = */
