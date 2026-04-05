@@ -476,10 +476,14 @@ function showExerciseView(stage) {
 
   // Show stage header
   const header = document.getElementById("stage-header");
+  const desc = (stage?.description || "").trim();
+  const descHTML = desc ? `<div class="stage-header-desc">${desc}</div>` : "";
+
   header.innerHTML = `
     <span class="stage-header-icon">${stage.icon}</span>
     <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name}</span>
     <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig${repsText}</span>
+    ${descHTML}
   `;
 
   // Show back button only in lernpfad mode
@@ -627,12 +631,18 @@ function renderLearningPath() {
       ? `<span class="stage-reps">${passes}/${reps}</span>`
       : "";
 
+    const desc = (stage?.description || "").trim();
+    const descHTML = (desc && (unlocked || mastered))
+      ? `<span class="stage-desc">${desc}</span>`
+      : "";
+
     el.innerHTML = `
       <div class="path-node">
         <span class="stage-icon">${stage.icon}</span>
         ${crownHTML}
       </div>
       <span class="stage-name">${stage.name}</span>
+      ${descHTML}
       ${repHTML}
     `;
     el.title = unlocked ? `${stage.name} — Klick zum Starten` : "Noch gesperrt";
