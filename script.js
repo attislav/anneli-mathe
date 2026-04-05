@@ -277,11 +277,27 @@ document.getElementById("btn-import").addEventListener("click", () => {
 });
 
 // ============ CONFIG ============
-const DIFFICULTY = {
-  leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
-  mittel: { maxNumber: 10, maxResult: 10, count: 8, zehnerTargets: [6, 7, 8, 9, 10] },
-  schwer: { maxNumber: 10, maxResult: 20, count: 10, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+// Grade-aware number ranges.
+// Klasse 1 stays in 0–20; Klasse 2 ramps up to 0–100.
+const DIFFICULTY_BY_GRADE = {
+  "grade-1": {
+    leicht: { maxNumber: 5, maxResult: 10, count: 5, zehnerTargets: [5, 6, 7, 8] },
+    mittel: { maxNumber: 10, maxResult: 10, count: 8, zehnerTargets: [6, 7, 8, 9, 10] },
+    schwer: { maxNumber: 10, maxResult: 20, count: 10, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+  },
+  "grade-2": {
+    leicht: { maxNumber: 20, maxResult: 20, count: 6, zehnerTargets: [10, 12, 14, 16, 18, 20] },
+    mittel: { maxNumber: 50, maxResult: 50, count: 8, zehnerTargets: [20, 30, 40, 50] },
+    schwer: { maxNumber: 100, maxResult: 100, count: 10, zehnerTargets: [50, 60, 70, 80, 90, 100] },
+  },
 };
+
+let DIFFICULTY = DIFFICULTY_BY_GRADE["grade-1"];
+
+function applyDifficultyForGrade() {
+  const grade = getCurrentGrade();
+  DIFFICULTY = DIFFICULTY_BY_GRADE[grade] || DIFFICULTY_BY_GRADE["grade-1"];
+}
 
 let currentDifficulty = "leicht";
 let currentOperation = "gemischt";
@@ -2434,6 +2450,8 @@ function checkDeutschReading() {
 
 // ============ INIT ============
 function initApp() {
+  applyDifficultyForGrade();
+
   renderStars();
   renderLevel();
   renderStreak();
