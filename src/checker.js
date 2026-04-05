@@ -68,7 +68,7 @@ export function checkAnswers() {
 
     let isCorrect = false;
 
-    if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
+    if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen" || ex.type === "textaufgabe" || ex.type === "geld") {
       const input = document.getElementById(`answer-${i}`);
       const val = input.value.trim();
 
@@ -107,6 +107,23 @@ export function checkAnswers() {
       if (isCorrect) {
         inputA.readOnly = true;
         inputB.readOnly = true;
+      }
+    } else if (ex.type === "uhrzeit") {
+      const input = document.getElementById(`answer-${i}`);
+      const val = input.value.trim().toLowerCase();
+
+      if (val === "") {
+        div.className = "exercise retry";
+        feedback.textContent = "?";
+        wrongCount++;
+        hadWrong = true;
+        return;
+      }
+
+      isCorrect = val === ex.answer || val === ex.displayText;
+
+      if (isCorrect) {
+        input.readOnly = true;
       }
     } else if (ex.type === "vergleichen") {
       const group = document.getElementById(`compare-${i}`);
@@ -222,6 +239,8 @@ export function checkAnswers() {
           correctText = ` → ${ex.answer}`;
         } else if (ex.type === "nachbarn") {
           correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
+        } else if (ex.type === "uhrzeit") {
+          correctText = ` → ${ex.answer}`;
         } else if (ex.type === "lesen" || ex.type === "thema") {
           correctText = "";
         }

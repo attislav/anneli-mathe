@@ -35,6 +35,9 @@ const ALLOWED_OPERATION = new Set([
   "reihen",
   "lesen",
   "thema",
+  "textaufgaben",
+  "uhrzeit",
+  "geld",
 ]);
 
 function walk(dir) {

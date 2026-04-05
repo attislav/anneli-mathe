@@ -158,6 +158,36 @@
       "mastery": { "passScore": 0.85, "repetitions": 3 }
     },
     {
+      "id": "m1-textaufgaben",
+      "title": "Textaufgaben",
+      "description": "Einfache Sachaufgaben mit Plus und Minus lösen.",
+      "prerequisites": ["m1-mixed-within-10"],
+      "icon": "📝",
+      "difficulty": "mittel",
+      "operation": "textaufgaben",
+      "mastery": { "passScore": 0.8, "repetitions": 2 }
+    },
+    {
+      "id": "m1-uhrzeit",
+      "title": "Uhrzeit lesen",
+      "description": "Volle und halbe Stunden auf der Uhr ablesen.",
+      "prerequisites": ["m1-numbers-0-10"],
+      "icon": "🕐",
+      "difficulty": "leicht",
+      "operation": "uhrzeit",
+      "mastery": { "passScore": 0.8, "repetitions": 2 }
+    },
+    {
+      "id": "m1-geld",
+      "title": "Geld rechnen",
+      "description": "Mit Euro und Cent rechnen.",
+      "prerequisites": ["m1-add-within-10"],
+      "icon": "💰",
+      "difficulty": "mittel",
+      "operation": "geld",
+      "mastery": { "passScore": 0.8, "repetitions": 2 }
+    },
+    {
       "id": "m1-master-check",
       "title": "Meister-Prüfung",
       "description": "Gemischte Aufgaben als Abschluss (bis 20).",

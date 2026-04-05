@@ -246,6 +246,104 @@ function generateThema() {
   });
 }
 
+// ============ WORD PROBLEMS (Textaufgaben) ============
+
+const WORD_PROBLEM_TEMPLATES = [
+  { text: (a, b) => `Anna hat ${a} Äpfel. Sie bekommt ${b} dazu. Wie viele hat sie jetzt?`, op: "+" },
+  { text: (a, b) => `Tom hat ${a} Bonbons. Er gibt ${b} davon ab. Wie viele hat er noch?`, op: "-" },
+  { text: (a, b) => `Im Bus sitzen ${a} Kinder. An der Haltestelle steigen ${b} ein. Wie viele sitzen jetzt im Bus?`, op: "+" },
+  { text: (a, b) => `Mama kauft ${a} Brötchen. Die Familie isst ${b} davon. Wie viele sind noch da?`, op: "-" },
+  { text: (a, b) => `${a} Vögel sitzen auf dem Baum. ${b} fliegen dazu. Wie viele sind es insgesamt?`, op: "+" },
+  { text: (a, b) => `Lisa hat ${a} Buntstifte. ${b} sind kaputt. Wie viele gute Stifte hat sie?`, op: "-" },
+  { text: (a, b) => `Im Garten wachsen ${a} Blumen. Papa pflanzt ${b} neue. Wie viele sind es jetzt?`, op: "+" },
+  { text: (a, b) => `Es liegen ${a} Bücher auf dem Tisch. ${b} werden weggeräumt. Wie viele liegen noch da?`, op: "-" },
+  { text: (a, b) => `${a} Schmetterlinge fliegen im Garten. ${b} kommen noch dazu. Wie viele sind es?`, op: "+" },
+  { text: (a, b) => `Tim hat ${a} Murmeln. Er verliert ${b}. Wie viele hat er noch?`, op: "-" },
+];
+
+function generateTextaufgaben(config) {
+  for (let i = 0; i < config.count; i++) {
+    const template = pickRandom(WORD_PROBLEM_TEMPLATES);
+    let a, b;
+    if (template.op === "+") {
+      a = randomInt(1, config.maxNumber);
+      b = randomInt(1, config.maxResult - a);
+      if (b < 1) b = 1;
+    } else {
+      a = randomInt(2, config.maxResult);
+      b = randomInt(1, Math.min(a - 1, config.maxNumber));
+    }
+    const answer = template.op === "+" ? a + b : a - b;
+    state.exercises.push({
+      type: "textaufgabe",
+      text: template.text(a, b),
+      answer,
+      op: template.op,
+      a, b,
+    });
+  }
+}
+
+// ============ CLOCK READING (Uhrzeit) ============
+
+function generateUhrzeit(config) {
+  const count = config.count;
+  for (let i = 0; i < count; i++) {
+    const mode = Math.random() < 0.5 ? "voll" : "halb";
+    const hour = randomInt(1, 12);
+    let displayText, answer;
+
+    if (mode === "voll") {
+      displayText = `${hour}:00`;
+      answer = `${hour} uhr`;
+    } else {
+      displayText = `${hour}:30`;
+      answer = `halb ${(hour % 12) + 1}`;
+    }
+
+    state.exercises.push({
+      type: "uhrzeit",
+      hour,
+      minute: mode === "voll" ? 0 : 30,
+      displayText,
+      answer,
+      mode,
+    });
+  }
+}
+
+// ============ MONEY (Geld rechnen) ============
+
+function generateGeld(config) {
+  const count = config.count;
+  for (let i = 0; i < count; i++) {
+    const mode = pickRandom(["zusammenzaehlen", "rueckgeld"]);
+    if (mode === "zusammenzaehlen") {
+      const cents1 = randomInt(1, 5) * 10; // 10-50 cent
+      const cents2 = randomInt(1, 5) * 10;
+      const total = cents1 + cents2;
+      const displayEuros = total >= 100;
+      state.exercises.push({
+        type: "geld",
+        mode: "zusammenzaehlen",
+        text: `${cents1} Cent + ${cents2} Cent = ?`,
+        answer: total,
+        unit: "cent",
+      });
+    } else {
+      const price = randomInt(1, Math.min(config.maxNumber, 9));
+      const paid = randomInt(price + 1, 10);
+      state.exercises.push({
+        type: "geld",
+        mode: "rueckgeld",
+        text: `Du kaufst etwas für ${price} €. Du zahlst mit ${paid} €. Wie viel bekommst du zurück?`,
+        answer: paid - price,
+        unit: "euro",
+      });
+    }
+  }
+}
+
 // ============ MAIN GENERATE ============
 
 export function generateExercises() {
@@ -258,6 +356,12 @@ export function generateExercises() {
     generateLesen();
   } else if (state.currentOperation === "thema") {
     generateThema();
+  } else if (state.currentOperation === "textaufgaben") {
+    generateTextaufgaben(config);
+  } else if (state.currentOperation === "uhrzeit") {
+    generateUhrzeit(config);
+  } else if (state.currentOperation === "geld") {
+    generateGeld(config);
   } else if (state.currentOperation === "luecken") {
     generateLuecken(config);
   } else if (state.currentOperation === "zehner") {
@@ -287,7 +391,7 @@ export function generateExercises() {
 // ============ MULTIPLE-CHOICE RESCUE ============
 
 export function isRescueSupported(ex) {
-  return ex && (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen");
+  return ex && (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen" || ex.type === "textaufgabe" || ex.type === "geld");
 }
 
 export function buildRescueChoices(correct, config) {

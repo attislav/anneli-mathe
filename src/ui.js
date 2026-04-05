@@ -255,6 +255,40 @@ export function renderExercises() {
         <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
         <span class="feedback" id="feedback-${i}"></span>
       `;
+    } else if (ex.type === "textaufgabe") {
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="word-problem">
+          <p class="word-problem-text">${ex.text}</p>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "uhrzeit") {
+      const h = ex.hour;
+      const m = ex.minute;
+      // Simple clock face using CSS
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="clock-exercise">
+          <div class="clock-face" data-hour="${h}" data-minute="${m}">
+            <div class="clock-display">${ex.displayText}</div>
+          </div>
+          <p class="clock-prompt">Wie spät ist es?</p>
+          <input type="text" id="answer-${i}" placeholder="z.B. 3 uhr" autocomplete="off">
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "geld") {
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="geld-exercise">
+          <p class="geld-text">${ex.text}</p>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
+          <span class="geld-unit">${ex.unit === "cent" ? "Cent" : "€"}</span>
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
     } else if (ex.type === "lesen") {
       div.className = "exercise reading-exercise";
       div.innerHTML = `
