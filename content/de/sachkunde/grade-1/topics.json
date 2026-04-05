@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "bienen",
+      "title": "Bienen",
+      "card": "Bienen sind Insekten. Sie sammeln Nektar aus Blumen und machen daraus Honig. Wenn eine Biene von Blume zu Blume fliegt, hilft sie dabei, dass Pflanzen Samen machen (Bestaeubung).",
+      "facts": [
+        "Bienen leben oft in einem Bienenstock.",
+        "Sie sammeln Nektar und Pollen.",
+        "Bienen helfen Blumen und Obstbaeumen."
+      ],
+      "questions": [
+        {
+          "prompt": "Was machen Bienen aus Nektar?",
+          "choices": ["Honig", "Kakao", "Milch"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Wobei helfen Bienen den Pflanzen?",
+          "choices": ["Beim Schlafen", "Bei der Bestaeubung", "Beim Schwimmen"],
+          "answerIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "wasser",
+      "title": "Wasser",
+      "card": "Wasser kann drei Formen haben: fluessig, fest (Eis) und gasfoermig (Wasserdampf). Wenn es kalt ist, kann Wasser gefrieren. Wenn es warm wird, kann Eis wieder schmelzen.",
+      "facts": [
+        "Fluessig: im Glas oder im See.",
+        "Fest: Eiswuerfel.",
+        "Gas: Wasserdampf (z.B. beim Kochen)."
+      ],
+      "questions": [
+        {
+          "prompt": "Wie heisst Wasser, wenn es fest ist?",
+          "choices": ["Eis", "Saft", "Sand"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Was passiert mit Eis, wenn es warm wird?",
+          "choices": ["Es schmilzt", "Es wird lauter", "Es wird zu Stein"],
+          "answerIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "wald",
+      "title": "Der Wald",
+      "card": "Im Wald leben viele Tiere und Pflanzen. Baeume machen aus Luft und Sonnenlicht Sauerstoff. Viele Tiere finden im Wald Nahrung und Schutz.",
+      "facts": [
+        "Im Wald gibt es Baeume, Straeucher und Pilze.",
+        "Tiere wie Rehe, Fuechse und Eulen leben dort.",
+        "Baeume helfen der Luft (Sauerstoff)."
+      ],
+      "questions": [
+        {
+          "prompt": "Was machen Baeume fuer die Luft?",
+          "choices": ["Sie machen Sauerstoff", "Sie machen Schnee", "Sie machen Spielzeug"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Welche Tiere koennen im Wald leben?",
+          "choices": ["Rehe", "Haie", "Kamele"],
+          "answerIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "wetter",
+      "title": "Wetter",
+      "card": "Wetter kann sonnig, wolkig, regnerisch oder windig sein. Regen entsteht, wenn Wolken voller Wasser sind. Wind ist bewegte Luft.",
+      "facts": [
+        "Sonne waermt die Erde.",
+        "Wolken bestehen aus vielen kleinen Wassertropfen.",
+        "Wind ist Luft, die sich bewegt."
+      ],
+      "questions": [
+        {
+          "prompt": "Woraus bestehen Wolken?",
+          "choices": ["Aus Wassertropfen", "Aus Kieselsteinen", "Aus Holz"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Was ist Wind?",
+          "choices": ["Bewegte Luft", "Kalter Saft", "Warmersand"],
+          "answerIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "koerper",
+      "title": "Unser Koerper",
+      "card": "Unser Koerper hat viele Teile: Herz, Lunge, Knochen und Muskeln. Das Herz pumpt Blut durch den Koerper. Die Lunge hilft beim Atmen.",
+      "facts": [
+        "Das Herz pumpt Blut.",
+        "Die Lunge hilft beim Atmen.",
+        "Knochen geben dem Koerper Halt."
+      ],
+      "questions": [
+        {
+          "prompt": "Was macht das Herz?",
+          "choices": ["Es pumpt Blut", "Es malt Bilder", "Es macht Regen"],
+          "answerIndex": 0
+        },
+        {
+          "prompt": "Wobei hilft die Lunge?",
+          "choices": ["Beim Atmen", "Beim Rechnen", "Beim Singen von Liedern"],
+          "answerIndex": 0
+        }
+      ]
+    }
+  ]
+}
