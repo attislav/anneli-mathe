@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "validate": "node scripts/validate-skilltree.js"
+    "validate": "node scripts/validate-skilltree.cjs",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "vite": "^6.0.0"
