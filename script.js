@@ -567,6 +567,33 @@ function renderLearningPath() {
   `;
   container.appendChild(progressBar);
 
+  // Recommendation (weakness-based)
+  const recId = pickRecommendedStageId();
+  const recStage = LEARNING_PATH[recId];
+  if (recStage) {
+    const errs = getErrorsForStage(recStage).length;
+    const mastered = masteredStages.includes(recStage.id);
+
+    const card = document.createElement("div");
+    card.className = "recommendation-card";
+    card.innerHTML = `
+      <div class="recommendation-title">Empfohlen heute</div>
+      <div class="recommendation-body">
+        <span class="recommendation-icon">${recStage.icon}</span>
+        <span class="recommendation-text">
+          <strong>${recStage.name}</strong>
+          <span class="recommendation-meta">${mastered ? "(Wiederholung)" : ""}${errs > 0 ? ` • ${errs} Fehler offen` : ""}</span>
+        </span>
+      </div>
+      <div class="recommendation-actions">
+        <button class="recommendation-btn" data-stage="${recStage.id}">Üben</button>
+      </div>
+    `;
+
+    card.querySelector(".recommendation-btn")?.addEventListener("click", () => selectStage(recStage.id));
+    container.appendChild(card);
+  }
+
   // Build winding path: groups of 1 node per row, alternating left/right
   const groupSize = 3; // Change direction every 3 nodes
   let direction = "center"; // start centered, then alternate
@@ -658,6 +685,10 @@ function addToErrorPool(exercise) {
   // Only store normal and luecke exercises (not zehner)
   if (exercise.type === "zehner") return;
 
+  const stage = (currentMode === "lernpfad" && currentStage !== null && currentStage !== undefined)
+    ? LEARNING_PATH[currentStage]
+    : null;
+
   const entry = {
     type: exercise.type,
     op: exercise.type === "normal" ? exercise.op : exercise.display.op,
@@ -665,6 +696,9 @@ function addToErrorPool(exercise) {
     b: exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer),
     answer: exercise.answer,
     timestamp: Date.now(),
+    // For weakness scoring / recommendations (optional, for backward compatibility)
+    stageId: stage ? stage.id : null,
+    skillId: stage?.skillId || null,
   };
 
   // Avoid duplicates
@@ -683,13 +717,14 @@ function removeFromErrorPool(exercise) {
   const a = exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer);
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
+  // Remove across stages (a+b uniquely identifies the exercise for our purposes)
   errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
   localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
   // Find error pool entries that fit the current config
-  const matching = errorPool.filter((e) => {
+  const matching = (errorPool || []).filter((e) => {
     if (e.type === "normal") {
       const result = e.op === "+" ? e.a + e.b : e.a - e.b;
       return result <= config.maxResult && e.a <= config.maxResult && e.b <= config.maxNumber;
@@ -722,6 +757,86 @@ function getErrorRepeatExercises(config, count) {
     }
   }
   return result;
+}
+
+// ============ WEAKNESS SCORING + RECOMMENDATIONS ============
+
+function getErrorsForStage(stage) {
+  if (!stage) return [];
+
+  const sid = stage.id;
+  const skillId = stage.skillId;
+
+  return (errorPool || []).filter((e) => {
+    // Prefer explicit stageId/skillId when available.
+    if (e.stageId !== undefined && e.stageId !== null) return e.stageId === sid;
+    if (e.skillId && skillId) return e.skillId === skillId;
+    return false;
+  });
+}
+
+function computeWeaknessScore(stage) {
+  // Higher means "practice this".
+  const errors = getErrorsForStage(stage);
+  const errorCount = errors.length;
+
+  const mastered = masteredStages.includes(stage.id);
+  const reps = getRequiredRepetitions(stage);
+  const passes = getSkillPasses(stage);
+  const repsLeft = Math.max(0, reps - passes);
+
+  // Recency: newer errors count slightly more.
+  const now = Date.now();
+  const recentBoost = errors.reduce((acc, e) => {
+    const ageDays = (now - (e.timestamp || now)) / (1000 * 60 * 60 * 24);
+    if (ageDays <= 2) return acc + 1.0;
+    if (ageDays <= 7) return acc + 0.5;
+    return acc + 0.2;
+  }, 0);
+
+  // Score weights tuned for "tiny" data (no server):
+  // - errors dominate
+  // - unfinished repetition progress nudges toward current stage
+  // - mastered stages usually not recommended unless they have active errors
+  let score = 0;
+  score += errorCount * 3;
+  score += recentBoost;
+  if (!mastered) score += 0.5;
+  score += repsLeft * 0.25;
+
+  return score;
+}
+
+function pickRecommendedStageId() {
+  const unlocked = Array.isArray(unlockedStages) ? unlockedStages.slice() : [0];
+  const candidates = unlocked
+    .map((id) => LEARNING_PATH[id])
+    .filter(Boolean);
+
+  if (candidates.length === 0) return 0;
+
+  // If we have any stage-tagged errors, recommend based on weakness score.
+  const hasTaggedErrors = (errorPool || []).some((e) => (e.stageId !== null && e.stageId !== undefined) || !!e.skillId);
+
+  if (hasTaggedErrors) {
+    const ranked = candidates
+      .map((stage) => ({ id: stage.id, score: computeWeaknessScore(stage) }))
+      .sort((a, b) => b.score - a.score);
+
+    // Avoid recommending a fully mastered stage unless it actually has errors.
+    for (const item of ranked) {
+      const stage = LEARNING_PATH[item.id];
+      const mastered = masteredStages.includes(stage.id);
+      const errs = getErrorsForStage(stage).length;
+      if (!mastered || errs > 0) return item.id;
+    }
+
+    return ranked[0].id;
+  }
+
+  // Fallback: first unlocked stage that isn't mastered.
+  const firstNotMastered = unlocked.find((id) => !masteredStages.includes(id));
+  return firstNotMastered !== undefined ? firstNotMastered : (unlocked.sort((a, b) => a - b).slice(-1)[0] ?? 0);
 }
 
 // ============ SOUND SYSTEM (Web Audio API) ============
