@@ -1221,6 +1221,38 @@ body {
   border-radius: 14px;
   overflow: hidden;
   border: 2px solid #e84393;
+  background: white;
+}
+
+/* Grade selector (small, non-intrusive) */
+.grade-toggle {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-left: 2px solid #e84393;
+  align-items: center;
+}
+
+.btn-grade {
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border: 2px solid #e84393;
+  border-radius: 12px;
+  background: white;
+  color: #e84393;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.btn-grade:hover {
+  transform: translateY(-1px);
+}
+
+.btn-grade.active {
+  background: #e84393;
+  color: white;
 }
 
 .btn-mode {

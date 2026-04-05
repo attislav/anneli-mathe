@@ -50,25 +50,8 @@
   <div class="container hidden" id="app-container">
     <div class="profile-bar">
       <img src="titelbild.png" alt="Annelis Mathe-Spass" class="title-image">
-
-      <div class="profile-bar-right">
-        <div class="grade-picker" title="Wähle die Klassenstufe (eigener Fortschritt pro Klasse)">
-          <label for="grade-select">Klasse:</label>
-          <select id="grade-select" class="grade-select">
-            <option value="grade-1">1</option>
-            <option value="grade-2">2</option>
-          </select>
-        </div>
-
-        <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
-        <button class="btn-profile-export" id="btn-export">&#128228; Fortschritt sichern</button>
-      </div>
-    </div>
-
-    <!-- Non-blocking banner for data/content load issues (e.g. skilltree.json) -->
-    <div class="app-banner hidden" id="app-banner">
-      <div class="app-banner-text" id="app-banner-text"></div>
-      <button class="app-banner-close" id="app-banner-close" aria-label="Banner schließen">&times;</button>
+      <button class="btn-profile-switch" id="btn-switch-profile">&#x1F464; Profil wechseln</button>
+      <button class="btn-profile-export" id="btn-export">&#128228; Fortschritt sichern</button>
     </div>
 
     <!-- Gamification Bar: Stars, Level, Streak, Achievements -->
@@ -97,14 +80,6 @@
     </div>
 
     <button class="btn-achievements" id="btn-achievements">🏆 Abzeichen</button>
-    <button class="btn-parent" id="btn-parent">👨‍👩‍👧 Eltern-Ansicht</button>
-
-    <!-- Subject Toggle -->
-    <div class="subject-toggle">
-      <button class="btn-subject active" id="btn-subject-mathe">Mathe</button>
-      <button class="btn-subject" id="btn-subject-deutsch">Deutsch</button>
-      <button class="btn-subject" id="btn-subject-sachkunde">Sachkunde</button>
-    </div>
 
     <!-- Achievements Modal -->
     <div class="modal-overlay hidden" id="achievements-modal">
@@ -117,11 +92,15 @@
       </div>
     </div>
 
-    <!-- Mode Toggle -->
+    <!-- Mode Toggle + Grade Selector -->
     <div class="mode-toggle">
       <button class="btn-mode active" id="btn-mode-path">Lernpfad</button>
       <button class="btn-mode" id="btn-mode-free">Freies &Uuml;ben</button>
-      <button class="btn-mode" id="btn-mode-mistakes">Fehler &uuml;ben</button>
+
+      <div class="grade-toggle" id="grade-toggle">
+        <button class="btn-grade active" data-grade="grade-1">Klasse 1</button>
+        <button class="btn-grade" data-grade="grade-2">Klasse 2</button>
+      </div>
     </div>
 
     <!-- Learning Path -->
@@ -141,7 +120,7 @@
         </div>
       </div>
 
-      <div class="setting-group" id="operation-group">
+      <div class="setting-group">
         <label>Rechenart:</label>
         <div class="button-group" id="operation">
           <button class="btn-setting active" data-value="gemischt">Gemischt</button>
@@ -174,48 +153,6 @@
       </div>
 
       <div id="result-summary" class="hidden"></div>
-    </div>
-
-    <!-- Deutsch: Reading mini-loop -->
-    <div id="deutsch-area" class="hidden">
-      <div class="deutsch-header">
-        <h2 class="deutsch-title">📖 Lesen & Verstehen</h2>
-        <p class="deutsch-subtitle">Lies den Text und beantworte die Fragen.</p>
-      </div>
-
-      <div class="deutsch-card">
-        <div class="deutsch-passage" id="deutsch-passage"></div>
-      </div>
-
-      <div class="deutsch-questions" id="deutsch-questions"></div>
-
-      <div class="deutsch-actions">
-        <button class="btn-new" id="btn-deutsch-new">Neuer Text</button>
-        <button class="btn-check" id="btn-deutsch-check">Antworten pr&#252;fen</button>
-      </div>
-
-      <div id="deutsch-result" class="hidden"></div>
-    </div>
-
-    <!-- Sachkunde: Topic cards + quiz -->
-    <div id="sachkunde-area" class="hidden">
-      <div class="sachkunde-header">
-        <h2 class="sachkunde-title">🌍 Sachkunde</h2>
-        <p class="sachkunde-subtitle">Lies die Karte und beantworte die Fragen.</p>
-      </div>
-
-      <div class="sachkunde-card">
-        <div class="sachkunde-topic" id="sachkunde-topic"></div>
-      </div>
-
-      <div class="sachkunde-questions" id="sachkunde-questions"></div>
-
-      <div class="sachkunde-actions">
-        <button class="btn-new" id="btn-sachkunde-new">Neue Karte</button>
-        <button class="btn-check" id="btn-sachkunde-check">Antworten pr&#252;fen</button>
-      </div>
-
-      <div id="sachkunde-result" class="hidden"></div>
     </div>
   </div> <!-- /app-container -->
 

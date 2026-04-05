@@ -63,22 +63,9 @@ function deleteProfile(name) {
   keysToRemove.forEach((k) => localStorage.removeItem(k));
 }
 
-function profileKeyBase(key) {
+function profileKey(key) {
   if (!currentProfile) return `mathe-${key}`;
   return `mathe-${currentProfile}-${key}`;
-}
-
-function getCurrentGrade() {
-  // Stored per profile (not grade-scoped)
-  if (!currentProfile) return "grade-1";
-  return localStorage.getItem(profileKeyBase("grade")) || "grade-1";
-}
-
-function profileKey(key) {
-  // Grade-scoped progress keys (so Klasse 1/2 can have separate progress)
-  if (!currentProfile) return `mathe-${key}`;
-  const grade = getCurrentGrade();
-  return `mathe-${currentProfile}-${grade}-${key}`;
 }
 
 function loginAs(name) {
@@ -98,35 +85,19 @@ function switchProfile() {
 
 let skillMasteryProgress = {}; // { [skillId]: { passes: number } }
 
-function getScopedOrLegacyRaw(key) {
-  // First try grade-scoped key, then fall back to legacy (pre-grade) storage.
-  const scopedKey = profileKey(key);
-  let val = localStorage.getItem(scopedKey);
-  if (val !== null) return val;
-
-  const legacyKey = profileKeyBase(key);
-  val = localStorage.getItem(legacyKey);
-  if (val !== null) {
-    // Migrate forward (best-effort) so future loads are consistent.
-    localStorage.setItem(scopedKey, val);
-    return val;
-  }
-  return null;
-}
-
 function loadProfileData() {
-  // Ensure UI reflects stored grade
-  const gradeSelect = document.getElementById("grade-select");
-  if (gradeSelect) gradeSelect.value = getCurrentGrade();
+  totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
+  totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
 
-  totalStars = parseInt(getScopedOrLegacyRaw("sterne") || "0", 10);
-  totalXP = parseInt(getScopedOrLegacyRaw("xp") || "0", 10);
-  unlockedStages = JSON.parse(getScopedOrLegacyRaw("stages") || "[0]");
-  masteredStages = JSON.parse(getScopedOrLegacyRaw("mastered") || "[]");
-  unlockedAchievements = JSON.parse(getScopedOrLegacyRaw("achievements") || "[]");
-  perfectRounds = parseInt(getScopedOrLegacyRaw("perfect-rounds") || "0", 10);
-  errorPool = JSON.parse(getScopedOrLegacyRaw("errors") || "[]");
-  skillMasteryProgress = JSON.parse(getScopedOrLegacyRaw("skill-mastery") || "{}");
+  // Grade-scoped progress
+  unlockedStages = JSON.parse(localStorage.getItem(gradeScopedKey("stages")) || "[0]");
+  masteredStages = JSON.parse(localStorage.getItem(gradeScopedKey("mastered")) || "[]");
+  errorPool = JSON.parse(localStorage.getItem(gradeScopedKey("errors")) || "[]");
+  skillMasteryProgress = JSON.parse(localStorage.getItem(gradeScopedKey("skill-mastery")) || "{}");
+
+  // Shared (not grade-scoped)
+  unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
+  perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
 }
 
 function showLoginScreen() {
@@ -135,10 +106,7 @@ function showLoginScreen() {
   profileList.innerHTML = "";
 
   profiles.forEach((p) => {
-    // Login screen shows Klasse 1 stars by default (fallback to legacy pre-grade storage)
-    const scoped = localStorage.getItem(`mathe-${p.name}-grade-1-sterne`);
-    const legacy = localStorage.getItem(`mathe-${p.name}-sterne`);
-    const stars = parseInt(scoped ?? legacy ?? "0", 10);
+    const stars = parseInt(localStorage.getItem(`mathe-${p.name}-sterne`) || "0", 10);
     const card = document.createElement("div");
     card.className = "profile-card";
     card.innerHTML = `
@@ -174,18 +142,6 @@ document.getElementById("btn-create-profile").addEventListener("click", () => {
 });
 
 document.getElementById("btn-switch-profile").addEventListener("click", switchProfile);
-
-// Grade picker (separate progress per grade)
-const gradeSelectEl = document.getElementById("grade-select");
-if (gradeSelectEl) {
-  gradeSelectEl.addEventListener("change", (e) => {
-    if (!currentProfile) return;
-    const grade = e.target.value || "grade-1";
-    localStorage.setItem(profileKeyBase("grade"), grade);
-    loadProfileData();
-    initApp();
-  });
-}
 
 // Login with existing name (typed)
 document.getElementById("btn-login-existing").addEventListener("click", () => {
@@ -223,13 +179,23 @@ document.getElementById("login-name-input").addEventListener("keydown", (e) => {
 // ============ EXPORT / IMPORT ============
 function exportProfileData() {
   if (!currentProfile) return null;
-  const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
+
   const grade = getCurrentGrade();
+  const sharedKeys = ["sterne", "xp", "achievements", "perfect-rounds"];
+  const gradeKeys = ["stages", "mastered", "errors", "skill-mastery"];
+
   const data = { name: currentProfile, version: 2, grade };
-  keys.forEach((key) => {
+
+  sharedKeys.forEach((key) => {
     const val = localStorage.getItem(profileKey(key));
     if (val !== null) data[key] = val;
   });
+
+  gradeKeys.forEach((key) => {
+    const val = localStorage.getItem(gradeScopedKey(key));
+    if (val !== null) data[key] = val;
+  });
+
   return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
 }
 
@@ -245,16 +211,26 @@ function importProfileData(code) {
       createProfile(data.name);
     }
 
-    const grade = data.grade || "grade-1";
-    localStorage.setItem(`mathe-${data.name}-grade`, grade);
+    // Restore data
+    const grade = (data.grade === "grade-2") ? "grade-2" : "grade-1";
 
-    // Restore (grade-scoped) data
-    const keys = ["sterne", "xp", "stages", "mastered", "achievements", "perfect-rounds", "errors", "skill-mastery"];
-    keys.forEach((key) => {
+    const sharedKeys = ["sterne", "xp", "achievements", "perfect-rounds"]; // not grade-scoped
+    sharedKeys.forEach((key) => {
+      if (data[key] !== undefined) {
+        localStorage.setItem(`mathe-${data.name}-${key}`, data[key]);
+      }
+    });
+
+    // Grade-scoped progress
+    const gradeKeys = ["stages", "mastered", "errors", "skill-mastery"];
+    gradeKeys.forEach((key) => {
       if (data[key] !== undefined) {
         localStorage.setItem(`mathe-${data.name}-${grade}-${key}`, data[key]);
       }
     });
+
+    // Store selected grade
+    localStorage.setItem(`mathe-${data.name}-grade`, grade);
 
     return data.name;
   } catch (e) {
@@ -329,6 +305,24 @@ document.getElementById("btn-import").addEventListener("click", () => {
 });
 
 // ============ CONFIG ============
+// Grade selection is stored per profile (so siblings can be in different grades).
+const DEFAULT_GRADE = "grade-1";
+
+function getCurrentGrade() {
+  const g = localStorage.getItem(profileKey("grade"));
+  return g || DEFAULT_GRADE;
+}
+
+function setCurrentGrade(grade) {
+  const g = (grade === "grade-2") ? "grade-2" : "grade-1";
+  localStorage.setItem(profileKey("grade"), g);
+}
+
+function gradeScopedKey(key) {
+  // For grade-specific progress (learning path + mistakes + mastery)
+  return profileKey(`${getCurrentGrade()}-${key}`);
+}
+
 // Grade-aware number ranges.
 // Klasse 1 stays in 0–20; Klasse 2 ramps up to 0–100.
 const DIFFICULTY_BY_GRADE = {
@@ -344,16 +338,15 @@ const DIFFICULTY_BY_GRADE = {
   },
 };
 
-let DIFFICULTY = DIFFICULTY_BY_GRADE["grade-1"];
+let DIFFICULTY = DIFFICULTY_BY_GRADE[DEFAULT_GRADE];
 
 function applyDifficultyForGrade() {
   const grade = getCurrentGrade();
-  DIFFICULTY = DIFFICULTY_BY_GRADE[grade] || DIFFICULTY_BY_GRADE["grade-1"];
+  DIFFICULTY = DIFFICULTY_BY_GRADE[grade] || DIFFICULTY_BY_GRADE[DEFAULT_GRADE];
 }
 
 let currentDifficulty = "leicht";
 let currentOperation = "gemischt";
-let lastFreeOperation = "gemischt";
 let exercises = [];
 let checked = false;
 
@@ -405,24 +398,6 @@ function inferStageConfigFromSkillId(skillId) {
   }
 
   return { icon: "⭐", diff: "leicht", op: "gemischt" };
-}
-
-let appBannerDismissed = false;
-
-function showAppBanner(message) {
-  if (appBannerDismissed) return;
-  const banner = document.getElementById("app-banner");
-  const textEl = document.getElementById("app-banner-text");
-  if (!banner || !textEl) return;
-  textEl.textContent = message;
-  banner.classList.remove("hidden");
-}
-
-function hideAppBanner() {
-  const banner = document.getElementById("app-banner");
-  if (!banner) return;
-  banner.classList.add("hidden");
-  appBannerDismissed = true;
 }
 
 function skilltreeToLearningPath(skilltreeJson) {
@@ -493,14 +468,11 @@ function loadSkilltreeFromJson() {
       if (unlockedStages.length === 0) unlockedStages = [0];
 
       migrateMasteryProgressFromOldMasteredStages();
-      unlockAvailableStages();
       savePathProgress();
       renderLearningPath();
     })
-    .catch((err) => {
-      // Fallback: app still works with the hardcoded path.
-      console.warn("Skilltree JSON konnte nicht geladen werden – Fallback aktiv.", err);
-      showAppBanner("⚠️ Lernpfad konnte nicht geladen werden (skilltree.json). Ich nutze den eingebauten Lernpfad.");
+    .catch(() => {
+      // Silent fallback: app still works with the hardcoded path.
     });
 }
 
@@ -510,8 +482,8 @@ let currentStage = null;
 let currentMode = "lernpfad";
 
 function savePathProgress() {
-  localStorage.setItem(profileKey("stages"), JSON.stringify(unlockedStages));
-  localStorage.setItem(profileKey("mastered"), JSON.stringify(masteredStages));
+  localStorage.setItem(gradeScopedKey("stages"), JSON.stringify(unlockedStages));
+  localStorage.setItem(gradeScopedKey("mastered"), JSON.stringify(masteredStages));
 }
 
 function selectStage(stageId) {
@@ -547,14 +519,10 @@ function showExerciseView(stage) {
 
   // Show stage header
   const header = document.getElementById("stage-header");
-  const desc = (stage?.description || "").trim();
-  const descHTML = desc ? `<div class="stage-header-desc">${desc}</div>` : "";
-
   header.innerHTML = `
     <span class="stage-header-icon">${stage.icon}</span>
     <span class="stage-header-name">Stufe ${stage.id + 1}: ${stage.name}</span>
     <span class="stage-header-goal">${Math.round(stage.passScore * 100)}% richtig${repsText}</span>
-    ${descHTML}
   `;
 
   // Show back button only in lernpfad mode
@@ -565,7 +533,7 @@ function showExerciseView(stage) {
 }
 
 function saveSkillMasteryProgress() {
-  localStorage.setItem(profileKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
+  localStorage.setItem(gradeScopedKey("skill-mastery"), JSON.stringify(skillMasteryProgress || {}));
 }
 
 function getRequiredRepetitions(stage) {
@@ -600,42 +568,6 @@ function ensureStageMasteredIfComplete(stageId) {
   return false;
 }
 
-function getMasteredSkillIds() {
-  return new Set(
-    masteredStages
-      .map((stageId) => LEARNING_PATH[stageId]?.skillId)
-      .filter(Boolean)
-  );
-}
-
-function getLockedPrerequisiteNames(stage) {
-  if (!stage || !Array.isArray(stage.prerequisites) || stage.prerequisites.length === 0) return [];
-
-  const masteredSkillIds = getMasteredSkillIds();
-  return stage.prerequisites
-    .filter((skillId) => !masteredSkillIds.has(skillId))
-    .map((skillId) => {
-      const prereqStage = LEARNING_PATH.find((entry) => entry.skillId === skillId);
-      return prereqStage?.name || skillId;
-    });
-}
-
-function unlockAvailableStages() {
-  const newlyUnlocked = [];
-
-  LEARNING_PATH.forEach((stage) => {
-    if (!stage || unlockedStages.includes(stage.id)) return;
-
-    const lockedPrereqs = getLockedPrerequisiteNames(stage);
-    if (lockedPrereqs.length === 0) {
-      unlockedStages.push(stage.id);
-      newlyUnlocked.push(stage);
-    }
-  });
-
-  return newlyUnlocked;
-}
-
 function completeStage(stageId, score) {
   const stage = LEARNING_PATH[stageId];
   if (!stage) return;
@@ -651,10 +583,13 @@ function completeStage(stageId, score) {
       masteredStages.push(stageId);
     }
 
-    const newlyUnlocked = unlockAvailableStages();
-    newlyUnlocked.forEach((nextStage) => {
-      showToast(nextStage.icon, "Neue Stufe freigeschaltet!", nextStage.name);
-    });
+    // Unlock next stage
+    const nextId = stageId + 1;
+    if (nextId < LEARNING_PATH.length && !unlockedStages.includes(nextId)) {
+      unlockedStages.push(nextId);
+      const next = LEARNING_PATH[nextId];
+      showToast(next.icon, "Neue Stufe freigeschaltet!", next.name);
+    }
   } else {
     const left = Math.max(0, reps - passes);
     showToast(stage.icon, "Fast!", `${left}× noch schaffen`);
@@ -675,10 +610,7 @@ function renderLearningPath() {
   for (let i = 0; i < LEARNING_PATH.length; i++) {
     if (ensureStageMasteredIfComplete(i)) masteryChanged = true;
   }
-  if (masteryChanged) {
-    unlockAvailableStages();
-    savePathProgress();
-  }
+  if (masteryChanged) savePathProgress();
 
   // Progress overview
   const masteredCount = masteredStages.length;
@@ -738,26 +670,15 @@ function renderLearningPath() {
       ? `<span class="stage-reps">${passes}/${reps}</span>`
       : "";
 
-    const desc = (stage?.description || "").trim();
-    const descHTML = (desc && (unlocked || mastered))
-      ? `<span class="stage-desc">${desc}</span>`
-      : "";
-
     el.innerHTML = `
       <div class="path-node">
         <span class="stage-icon">${stage.icon}</span>
         ${crownHTML}
       </div>
       <span class="stage-name">${stage.name}</span>
-      ${descHTML}
       ${repHTML}
     `;
-    const lockedPrereqs = getLockedPrerequisiteNames(stage);
-    el.title = unlocked
-      ? `${stage.name} — Klick zum Starten`
-      : lockedPrereqs.length > 0
-        ? `Noch gesperrt — zuerst: ${lockedPrereqs.join(", ")}`
-        : "Noch gesperrt";
+    el.title = unlocked ? `${stage.name} — Klick zum Starten` : "Noch gesperrt";
 
     if (unlocked) {
       el.addEventListener("click", () => selectStage(stage.id));
@@ -794,20 +715,11 @@ function renderLearningPath() {
 // ============ ERROR POOL (Fehler-Wiederholung) ============
 let errorPool = [];
 
-function getCurrentSkillIdForErrorPool() {
-  // If we're inside the learning path, errors should belong to the current skill.
-  if (currentMode === "lernpfad" && currentStage !== null && LEARNING_PATH?.[currentStage]?.skillId) {
-    return LEARNING_PATH[currentStage].skillId;
-  }
-  return null;
-}
-
 function addToErrorPool(exercise) {
   // Only store normal and luecke exercises (not zehner)
   if (exercise.type === "zehner") return;
 
   const entry = {
-    skillId: getCurrentSkillIdForErrorPool(),
     type: exercise.type,
     op: exercise.type === "normal" ? exercise.op : exercise.display.op,
     a: exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer),
@@ -817,44 +729,32 @@ function addToErrorPool(exercise) {
   };
 
   // Avoid duplicates
-  const isDupe = errorPool.some((e) => (e.skillId || null) === (entry.skillId || null) && e.op === entry.op && e.a === entry.a && e.b === entry.b);
+  const isDupe = errorPool.some((e) => e.op === entry.op && e.a === entry.a && e.b === entry.b);
   if (!isDupe) {
     errorPool.push(entry);
   }
   // Keep only last 30
   if (errorPool.length > 30) errorPool = errorPool.slice(-30);
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function removeFromErrorPool(exercise) {
   if (exercise.type === "zehner") return;
-  const skillId = getCurrentSkillIdForErrorPool();
   const op = exercise.type === "normal" ? exercise.op : exercise.display.op;
   const a = exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer);
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
-  errorPool = errorPool.filter((e) => !((e.skillId || null) === (skillId || null) && e.op === op && e.a === a && e.b === b));
-  localStorage.setItem(profileKey("errors"), JSON.stringify(errorPool));
+  errorPool = errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
+  localStorage.setItem(gradeScopedKey("errors"), JSON.stringify(errorPool));
 }
 
 function getErrorRepeatExercises(config, count) {
-  const desiredSkillId = getCurrentSkillIdForErrorPool();
-  const desiredOp = (currentOperation === "plus") ? "+" : (currentOperation === "minus") ? "-" : null;
-
-  // Find error pool entries that fit the current config (and the current skill if we're in the skilltree)
+  // Find error pool entries that fit the current config
   const matching = errorPool.filter((e) => {
-    // Scope by skill in lernpfad mode.
-    if (desiredSkillId) {
-      const sameSkill = (e.skillId || null) === desiredSkillId;
-      const legacySameOp = (e.skillId == null) && (desiredOp ? e.op === desiredOp : true);
-      if (!sameSkill && !legacySameOp) return false;
-    }
-
     if (e.type === "normal") {
       const result = e.op === "+" ? e.a + e.b : e.a - e.b;
       return result <= config.maxResult && e.a <= config.maxResult && e.b <= config.maxNumber;
     }
-
     return true;
   });
 
@@ -1107,23 +1007,19 @@ const ACHIEVEMENTS = [
 
 let unlockedAchievements = [];
 let perfectRounds = 0;
-let newlyUnlocked = []; // tracks achievements earned this round
 
 function unlockAchievement(id) {
-  if (unlockedAchievements.includes(id)) return false;
+  if (unlockedAchievements.includes(id)) return;
   unlockedAchievements.push(id);
   localStorage.setItem(profileKey("achievements"), JSON.stringify(unlockedAchievements));
 
   const achievement = ACHIEVEMENTS.find((a) => a.id === id);
   if (achievement) {
-    newlyUnlocked.push(achievement);
+    showToast(achievement.icon, "Abzeichen freigeschaltet!", achievement.name);
   }
-  return true;
 }
 
 function checkAchievements() {
-  newlyUnlocked = [];
-
   if (totalStars >= 1) unlockAchievement("first_star");
   if (totalStars >= 10) unlockAchievement("ten_stars");
   if (totalStars >= 50) unlockAchievement("fifty_stars");
@@ -1151,8 +1047,6 @@ function checkAchievements() {
   const halfPath = Math.floor(LEARNING_PATH.length / 2);
   if (masteredStages.length >= halfPath) unlockAchievement("path_half");
   if (masteredStages.length >= LEARNING_PATH.length) unlockAchievement("path_complete");
-
-  return newlyUnlocked;
 }
 
 function renderAchievements() {
@@ -1206,42 +1100,12 @@ function showToast(icon, title, name) {
   setTimeout(() => toast.remove(), 3500);
 }
 
-// ============ SUBJECT TOGGLE UI ============
-const btnSubjectMathe = document.getElementById("btn-subject-mathe");
-const btnSubjectDeutsch = document.getElementById("btn-subject-deutsch");
-const btnSubjectSachkunde = document.getElementById("btn-subject-sachkunde");
-if (btnSubjectMathe) btnSubjectMathe.addEventListener("click", () => setSubject("mathe"));
-if (btnSubjectDeutsch) btnSubjectDeutsch.addEventListener("click", () => setSubject("deutsch"));
-if (btnSubjectSachkunde) btnSubjectSachkunde.addEventListener("click", () => setSubject("sachkunde"));
-
-const btnDeutschNew = document.getElementById("btn-deutsch-new");
-const btnDeutschCheck = document.getElementById("btn-deutsch-check");
-if (btnDeutschNew) btnDeutschNew.addEventListener("click", () => {
-  loadDeutschReadingContent().then(() => newDeutschReading());
-});
-if (btnDeutschCheck) btnDeutschCheck.addEventListener("click", checkDeutschReading);
-
-const btnSachkundeNew = document.getElementById("btn-sachkunde-new");
-const btnSachkundeCheck = document.getElementById("btn-sachkunde-check");
-if (btnSachkundeNew) btnSachkundeNew.addEventListener("click", () => {
-  loadSachkundeContent().then(() => newSachkundeRound());
-});
-if (btnSachkundeCheck) btnSachkundeCheck.addEventListener("click", checkSachkunde);
-
 // ============ MODE TOGGLE ============
-function setActiveModeButton(activeId) {
-  ["btn-mode-path", "btn-mode-free", "btn-mode-mistakes"].forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (id === activeId) el.classList.add("active");
-    else el.classList.remove("active");
-  });
-}
-
 document.getElementById("btn-mode-path").addEventListener("click", () => {
   currentMode = "lernpfad";
   currentStage = null;
-  setActiveModeButton("btn-mode-path");
+  document.getElementById("btn-mode-path").classList.add("active");
+  document.getElementById("btn-mode-free").classList.remove("active");
   document.getElementById("learning-path").classList.remove("hidden");
   document.getElementById("settings-panel").classList.add("hidden");
   document.getElementById("exercise-area").classList.add("hidden");
@@ -1251,36 +1115,42 @@ document.getElementById("btn-mode-path").addEventListener("click", () => {
 document.getElementById("btn-mode-free").addEventListener("click", () => {
   currentMode = "frei";
   currentStage = null;
-  setActiveModeButton("btn-mode-free");
+  document.getElementById("btn-mode-free").classList.add("active");
+  document.getElementById("btn-mode-path").classList.remove("active");
   document.getElementById("learning-path").classList.add("hidden");
   document.getElementById("settings-panel").classList.remove("hidden");
   document.getElementById("exercise-area").classList.remove("hidden");
   document.getElementById("btn-back-to-map").classList.add("hidden");
   document.getElementById("stage-header").innerHTML = "";
-
-  // Restore operation selection if we came from mistakes mode
-  document.getElementById("operation-group")?.classList.remove("hidden");
-  if (currentOperation === "mistakes") {
-    currentOperation = lastFreeOperation || "gemischt";
-  }
 });
 
-document.getElementById("btn-mode-mistakes").addEventListener("click", () => {
-  currentMode = "mistakes";
-  currentStage = null;
-  setActiveModeButton("btn-mode-mistakes");
-  document.getElementById("learning-path").classList.add("hidden");
-  document.getElementById("settings-panel").classList.remove("hidden");
-  document.getElementById("exercise-area").classList.remove("hidden");
-  document.getElementById("btn-back-to-map").classList.add("hidden");
-  document.getElementById("stage-header").innerHTML = "🩹 Fehler üben";
+// Grade toggle (Klasse 1/2)
+function renderGradeToggle() {
+  const wrap = document.getElementById("grade-toggle");
+  if (!wrap) return;
+  const grade = getCurrentGrade();
+  wrap.querySelectorAll(".btn-grade").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.grade === grade);
+  });
+}
 
-  // Remember current free-operation and switch to mistakes
-  if (currentOperation !== "mistakes") lastFreeOperation = currentOperation;
-  currentOperation = "mistakes";
-  document.getElementById("operation-group")?.classList.add("hidden");
+document.querySelectorAll("#grade-toggle .btn-grade").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const next = btn.dataset.grade;
+    if (!next) return;
 
-  generateExercises();
+    setCurrentGrade(next);
+    applyDifficultyForGrade();
+
+    // Reload grade-scoped progress + skilltree
+    loadProfileData();
+    renderGradeToggle();
+    renderLearningPath();
+    loadSkilltreeFromJson();
+
+    // If we were inside a stage, return to map for clarity
+    showMapView();
+  });
 });
 
 // Back to map button
@@ -1300,7 +1170,6 @@ document.querySelectorAll("#operation .btn-setting").forEach((btn) => {
     document.querySelectorAll("#operation .btn-setting").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentOperation = btn.dataset.value;
-    lastFreeOperation = currentOperation;
   });
 });
 
@@ -1325,9 +1194,7 @@ function generateExercises() {
   resetStreak();
   hideAdaptiveSuggestion();
 
-  if (currentOperation === "mistakes") {
-    exercises = getErrorRepeatExercises(config, config.count);
-  } else if (currentOperation === "luecken") {
+  if (currentOperation === "luecken") {
     generateLuecken(config);
   } else if (currentOperation === "zehner") {
     generateZehner(config);
@@ -1643,12 +1510,6 @@ function generateReihen(config) {
 function renderExercises() {
   const container = document.getElementById("exercises");
   container.innerHTML = "";
-
-  if (!exercises || exercises.length === 0) {
-    container.innerHTML = `<div class="exercise" style="text-align:center;">Noch keine Fehler gespeichert. Mach erst ein paar Aufgaben, dann kannst du hier deine Fehler üben.</div>`;
-    document.getElementById("actions")?.classList.add("hidden");
-    return;
-  }
 
   exercises.forEach((ex, i) => {
     const div = document.createElement("div");
@@ -2126,10 +1987,10 @@ function checkAnswers() {
     } else {
       // Attempt tracking for retry UX
       const supportsRescue = isRescueSupported(ex);
+      const hasAnswerInput = supportsRescue && document.getElementById(`answer-${i}`)?.value.trim() !== "";
 
-      if (supportsRescue && attempts[i] === 0) {
-        // 1st wrong attempt: always give a retry + multiple-choice rescue
-        // (even if the input was empty) so we consistently have 2 attempts.
+      if (supportsRescue && attempts[i] === 0 && hasAnswerInput) {
+        // 1st wrong attempt: give a multiple-choice rescue for attempt 2
         attempts[i] = 1;
         div.className = "exercise retry";
         feedback.textContent = "Nochmal!";
@@ -2139,7 +2000,7 @@ function checkAnswers() {
         attachRescueChoices(i);
       } else {
         // 2nd wrong (or non-supported types): show solution hint as before
-        if (supportsRescue && attempts[i] === 1) attempts[i] = 2;
+        if (supportsRescue && attempts[i] === 1 && hasAnswerInput) attempts[i] = 2;
 
         div.className = "exercise wrong";
         // Show correct answer next to "falsch"
@@ -2224,53 +2085,10 @@ function checkAnswers() {
     focusFirstWrong();
   }
 
-  // Check achievements and collect newly earned ones
-  const earned = checkAchievements();
+  // Show adaptive suggestion
+  showAdaptiveSuggestion(correctCount, exercises.length);
 
-  // Build achievements + back-to-map section in the summary
-  let extraHTML = "";
-
-  // Show newly earned achievements
-  if (earned.length > 0) {
-    const badgesHTML = earned.map((a) => `
-      <div class="earned-badge">
-        <span class="earned-badge-icon">${a.icon}</span>
-        <span class="earned-badge-name">${a.name}</span>
-      </div>
-    `).join("");
-    extraHTML += `
-      <div class="earned-achievements">
-        <p class="earned-title">Neue Abzeichen!</p>
-        <div class="earned-badges">${badgesHTML}</div>
-      </div>
-    `;
-  }
-
-  // Back to map button (in lernpfad mode)
-  if (currentMode === "lernpfad" && currentStage !== null) {
-    const stage = LEARNING_PATH[currentStage];
-    const passed = percent >= stage.passScore;
-    const nextId = currentStage + 1;
-    const hasNext = nextId < LEARNING_PATH.length && unlockedStages.includes(nextId);
-
-    extraHTML += '<div class="result-nav">';
-    if (passed && hasNext) {
-      const next = LEARNING_PATH[nextId];
-      extraHTML += `<button class="result-nav-btn result-nav-next" onclick="selectStage(${nextId})">${next.icon} Weiter: ${next.name}</button>`;
-    }
-    extraHTML += `<button class="result-nav-btn result-nav-map" onclick="showMapView()">Zur&uuml;ck zur Karte</button>`;
-    extraHTML += '</div>';
-  }
-
-  if (extraHTML) {
-    summary.innerHTML += extraHTML;
-  }
-
-  // Show adaptive suggestion (only for non-lernpfad, since lernpfad now has buttons in summary)
-  if (currentMode !== "lernpfad") {
-    showAdaptiveSuggestion(correctCount, exercises.length);
-  }
-
+  checkAchievements();
   checked = true;
 }
 
@@ -2390,421 +2208,22 @@ function launchConfetti() {
   animate();
 }
 
-// ============ SUBJECTS (Mathe / Deutsch / Sachkunde) ============
-let currentSubject = "mathe"; // "mathe" | "deutsch" | "sachkunde"
-
-function setSubject(subject) {
-  currentSubject = subject;
-
-  const btnMathe = document.getElementById("btn-subject-mathe");
-  const btnDeutsch = document.getElementById("btn-subject-deutsch");
-  const btnSachkunde = document.getElementById("btn-subject-sachkunde");
-  if (btnMathe) btnMathe.classList.toggle("active", subject === "mathe");
-  if (btnDeutsch) btnDeutsch.classList.toggle("active", subject === "deutsch");
-  if (btnSachkunde) btnSachkunde.classList.toggle("active", subject === "sachkunde");
-
-  // Mathe sections
-  const modeToggle = document.querySelector(".mode-toggle");
-  const learningPath = document.getElementById("learning-path");
-  const settings = document.getElementById("settings-panel");
-  const exerciseArea = document.getElementById("exercise-area");
-
-  // Other subject sections
-  const deutschArea = document.getElementById("deutsch-area");
-  const sachkundeArea = document.getElementById("sachkunde-area");
-
-  if (subject === "mathe") {
-    if (modeToggle) modeToggle.classList.remove("hidden");
-    if (deutschArea) deutschArea.classList.add("hidden");
-    if (sachkundeArea) sachkundeArea.classList.add("hidden");
-
-    // Restore correct mathe view depending on mode
-    if (currentMode === "lernpfad") {
-      if (learningPath) learningPath.classList.remove("hidden");
-      if (settings) settings.classList.add("hidden");
-      if (exerciseArea) exerciseArea.classList.add("hidden");
-    } else {
-      if (learningPath) learningPath.classList.add("hidden");
-      if (settings) settings.classList.remove("hidden");
-      if (exerciseArea) exerciseArea.classList.remove("hidden");
-    }
-    return;
-  }
-
-  // Hide all mathe UI for non-mathe subjects
-  if (modeToggle) modeToggle.classList.add("hidden");
-  if (learningPath) learningPath.classList.add("hidden");
-  if (settings) settings.classList.add("hidden");
-  if (exerciseArea) exerciseArea.classList.add("hidden");
-
-  if (subject === "deutsch") {
-    if (deutschArea) deutschArea.classList.remove("hidden");
-    if (sachkundeArea) sachkundeArea.classList.add("hidden");
-
-    // Start a deutsch round if none loaded yet
-    if (!currentReadingItem) {
-      loadDeutschReadingContent().then(() => newDeutschReading());
-    }
-    return;
-  }
-
-  // Sachkunde
-  if (deutschArea) deutschArea.classList.add("hidden");
-  if (sachkundeArea) sachkundeArea.classList.remove("hidden");
-
-  if (!currentSachkundeItem) {
-    loadSachkundeContent().then(() => newSachkundeRound());
-  }
-}
-
-// Simple round logging (used by Deutsch/Sachkunde; keeps app from breaking even if parent view evolves later)
-let roundStartAt = null;
-let roundLogged = false;
-let roundContext = null; // { mode, skillId }
-
-function logRoundIfNeeded(correct, total) {
-  if (!roundStartAt || roundLogged) return;
-  const durationMs = Math.max(0, Date.now() - roundStartAt);
-  const entry = {
-    ts: Date.now(),
-    durationMs,
-    mode: roundContext?.mode || "unknown",
-    skillId: roundContext?.skillId || null,
-    correct: Math.max(0, parseInt(correct || 0, 10) || 0),
-    total: Math.max(1, parseInt(total || 1, 10) || 1),
-  };
-
-  const key = profileKey("round-history");
-  const history = JSON.parse(localStorage.getItem(key) || "[]");
-  history.push(entry);
-  // Keep last 200 entries
-  const trimmed = history.length > 200 ? history.slice(-200) : history;
-  localStorage.setItem(key, JSON.stringify(trimmed));
-  roundLogged = true;
-}
-
-const DEUTSCH_READING_URL = "content/de/deutsch/grade-1/reading.json";
-let deutschReadingData = null;
-let currentReadingItem = null;
-
-function loadDeutschReadingContent() {
-  if (deutschReadingData) return Promise.resolve(deutschReadingData);
-
-  return fetch(DEUTSCH_READING_URL)
-    .then((res) => {
-      if (!res.ok) throw new Error(`reading fetch failed: ${res.status}`);
-      return res.json();
-    })
-    .then((json) => {
-      deutschReadingData = json;
-      return deutschReadingData;
-    })
-    .catch(() => {
-      // Tiny fallback so the app never breaks.
-      deutschReadingData = {
-        version: 1,
-        items: [
-          {
-            id: "fallback",
-            title: "Kurztext",
-            passage: "Lina hat einen roten Ball. Sie wirft ihn hoch. Dann faengt sie ihn wieder.",
-            questions: [
-              { prompt: "Welche Farbe hat der Ball?", choices: ["Rot", "Blau", "Gruen"], answerIndex: 0 },
-              { prompt: "Was macht Lina?", choices: ["Sie schlaeft", "Sie wirft den Ball", "Sie schwimmt"], answerIndex: 1 },
-              { prompt: "Was passiert am Ende?", choices: ["Sie faengt den Ball", "Der Ball verschwindet", "Der Ball wird nass"], answerIndex: 0 },
-            ],
-          },
-        ],
-      };
-      return deutschReadingData;
-    });
-}
-
-function pickRandomReadingItem() {
-  const items = deutschReadingData?.items;
-  if (!Array.isArray(items) || items.length === 0) return null;
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function newDeutschReading() {
-  if (!deutschReadingData) return;
-
-  currentReadingItem = pickRandomReadingItem();
-  if (!currentReadingItem) return;
-
-  // Start practice timer for deutsch
-  roundStartAt = Date.now();
-  roundLogged = false;
-  roundContext = { mode: "deutsch", skillId: "deutsch.reading.v1" };
-
-  const passageEl = document.getElementById("deutsch-passage");
-  const questionsEl = document.getElementById("deutsch-questions");
-  const resultEl = document.getElementById("deutsch-result");
-
-  if (resultEl) {
-    resultEl.classList.add("hidden");
-    resultEl.className = "hidden";
-    resultEl.textContent = "";
-  }
-
-  if (passageEl) {
-    const title = currentReadingItem.title ? `<div style="font-weight:900;margin-bottom:8px;">${currentReadingItem.title}</div>` : "";
-    passageEl.innerHTML = `${title}${(currentReadingItem.passage || "").replace(/\n/g, "<br>")}`;
-  }
-
-  if (!questionsEl) return;
-  questionsEl.innerHTML = "";
-
-  (currentReadingItem.questions || []).forEach((q, idx) => {
-    const qDiv = document.createElement("div");
-    qDiv.className = "deutsch-q";
-    qDiv.dataset.index = String(idx);
-
-    const title = document.createElement("div");
-    title.className = "deutsch-q-title";
-    title.textContent = `${idx + 1}. ${q.prompt}`;
-    qDiv.appendChild(title);
-
-    const name = `deutsch-q-${idx}`;
-    (q.choices || []).forEach((choice, cIdx) => {
-      const label = document.createElement("label");
-      label.className = "deutsch-choice";
-      label.innerHTML = `
-        <input type="radio" name="${name}" value="${cIdx}">
-        <span>${choice}</span>
-      `;
-      qDiv.appendChild(label);
-    });
-
-    questionsEl.appendChild(qDiv);
-  });
-
-  // Scroll to top of deutsch area
-  const deutschArea = document.getElementById("deutsch-area");
-  if (deutschArea) deutschArea.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function checkDeutschReading() {
-  const questionsEl = document.getElementById("deutsch-questions");
-  const resultEl = document.getElementById("deutsch-result");
-  if (!questionsEl || !currentReadingItem) return;
-
-  const qs = currentReadingItem.questions || [];
-  let correct = 0;
-
-  qs.forEach((q, idx) => {
-    const qDiv = questionsEl.querySelector(`.deutsch-q[data-index="${idx}"]`);
-    if (!qDiv) return;
-
-    const selected = qDiv.querySelector("input[type=radio]:checked");
-    const picked = selected ? parseInt(selected.value, 10) : -1;
-
-    qDiv.classList.remove("correct", "wrong");
-    if (picked === q.answerIndex) {
-      qDiv.classList.add("correct");
-      correct++;
-    } else {
-      qDiv.classList.add("wrong");
-    }
-  });
-
-  // Reward: 1 star per correct + bonus if all correct
-  if (correct > 0) {
-    addStars(correct);
-    addXP(correct);
-  }
-  if (correct === qs.length && qs.length > 0) {
-    addStars(2);
-    addXP(3);
-    soundPerfect();
-    launchConfetti();
-  }
-
-  // Log the round once
-  logRoundIfNeeded(correct, Math.max(1, qs.length));
-
-  if (resultEl) {
-    resultEl.classList.remove("hidden");
-    if (correct === qs.length) {
-      resultEl.className = "good";
-      resultEl.textContent = `Super! ${correct}/${qs.length} richtig.`;
-    } else {
-      resultEl.className = "retry";
-      resultEl.textContent = `${correct}/${qs.length} richtig. Schau nochmal in den Text!`;
-    }
-  }
-}
-
-// ============ SACHKUNDE (Topic cards + quiz) ============
-const SACHKUNDE_TOPICS_URL = "content/de/sachkunde/grade-1/topics.json";
-let sachkundeData = null;
-let currentSachkundeItem = null;
-
-function loadSachkundeContent() {
-  if (sachkundeData) return Promise.resolve(sachkundeData);
-
-  return fetch(SACHKUNDE_TOPICS_URL)
-    .then((res) => {
-      if (!res.ok) throw new Error(`sachkunde fetch failed: ${res.status}`);
-      return res.json();
-    })
-    .then((json) => {
-      sachkundeData = json;
-      return sachkundeData;
-    })
-    .catch(() => {
-      // Tiny fallback so the app never breaks.
-      sachkundeData = {
-        version: 1,
-        items: [
-          {
-            id: "fallback",
-            title: "Der Igel",
-            card: "Ein Igel ist ein Tier mit Stacheln. Er lebt oft im Garten und frisst zum Beispiel Insekten.",
-            facts: ["Igel haben Stacheln.", "Sie sind Tiere.", "Sie fressen oft Insekten."],
-            questions: [
-              { prompt: "Was hat ein Igel?", choices: ["Stacheln", "Flossen", "Federn"], answerIndex: 0 },
-              { prompt: "Was frisst ein Igel oft?", choices: ["Insekten", "Autos", "Steine"], answerIndex: 0 }
-            ]
-          }
-        ]
-      };
-      return sachkundeData;
-    });
-}
-
-function pickRandomSachkundeItem() {
-  const items = sachkundeData?.items;
-  if (!Array.isArray(items) || items.length === 0) return null;
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function newSachkundeRound() {
-  if (!sachkundeData) return;
-
-  currentSachkundeItem = pickRandomSachkundeItem();
-  if (!currentSachkundeItem) return;
-
-  roundStartAt = Date.now();
-  roundLogged = false;
-  roundContext = { mode: "sachkunde", skillId: "sachkunde.topiccards.v1" };
-
-  const topicEl = document.getElementById("sachkunde-topic");
-  const questionsEl = document.getElementById("sachkunde-questions");
-  const resultEl = document.getElementById("sachkunde-result");
-
-  if (resultEl) {
-    resultEl.classList.add("hidden");
-    resultEl.className = "hidden";
-    resultEl.textContent = "";
-  }
-
-  if (topicEl) {
-    const title = currentSachkundeItem.title ? `<div style="font-weight:900;margin-bottom:8px;">${currentSachkundeItem.title}</div>` : "";
-    const card = (currentSachkundeItem.card || "").replace(/\n/g, "<br>");
-    const facts = Array.isArray(currentSachkundeItem.facts) && currentSachkundeItem.facts.length
-      ? `<ul style="margin:10px 0 0 18px;">${currentSachkundeItem.facts.map((f) => `<li>${f}</li>`).join("")}</ul>`
-      : "";
-    topicEl.innerHTML = `${title}${card}${facts}`;
-  }
-
-  if (!questionsEl) return;
-  questionsEl.innerHTML = "";
-
-  (currentSachkundeItem.questions || []).forEach((q, idx) => {
-    const qDiv = document.createElement("div");
-    qDiv.className = "sachkunde-q";
-    qDiv.dataset.index = String(idx);
-
-    const title = document.createElement("div");
-    title.className = "sachkunde-q-title";
-    title.textContent = `${idx + 1}. ${q.prompt}`;
-    qDiv.appendChild(title);
-
-    const name = `sachkunde-q-${idx}`;
-    (q.choices || []).forEach((choice, cIdx) => {
-      const label = document.createElement("label");
-      label.className = "sachkunde-choice";
-      label.innerHTML = `
-        <input type="radio" name="${name}" value="${cIdx}">
-        <span>${choice}</span>
-      `;
-      qDiv.appendChild(label);
-    });
-
-    questionsEl.appendChild(qDiv);
-  });
-
-  const area = document.getElementById("sachkunde-area");
-  if (area) area.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function checkSachkunde() {
-  const questionsEl = document.getElementById("sachkunde-questions");
-  const resultEl = document.getElementById("sachkunde-result");
-  if (!questionsEl || !currentSachkundeItem) return;
-
-  const qs = currentSachkundeItem.questions || [];
-  let correct = 0;
-
-  qs.forEach((q, idx) => {
-    const qDiv = questionsEl.querySelector(`.sachkunde-q[data-index="${idx}"]`);
-    if (!qDiv) return;
-
-    const selected = qDiv.querySelector("input[type=radio]:checked");
-    const picked = selected ? parseInt(selected.value, 10) : -1;
-
-    qDiv.classList.remove("correct", "wrong");
-    if (picked === q.answerIndex) {
-      qDiv.classList.add("correct");
-      correct++;
-    } else {
-      qDiv.classList.add("wrong");
-    }
-  });
-
-  if (correct > 0) {
-    addStars(correct);
-    addXP(correct);
-  }
-  if (correct === qs.length && qs.length > 0) {
-    addStars(2);
-    addXP(3);
-    soundPerfect();
-    launchConfetti();
-  }
-
-  logRoundIfNeeded(correct, Math.max(1, qs.length));
-
-  if (resultEl) {
-    resultEl.classList.remove("hidden");
-    if (correct === qs.length) {
-      resultEl.className = "good";
-      resultEl.textContent = `Super! ${correct}/${qs.length} richtig.`;
-    } else {
-      resultEl.className = "retry";
-      resultEl.textContent = `${correct}/${qs.length} richtig. Lies die Karte nochmal!`;
-    }
-  }
-}
-
 // ============ INIT ============
 function initApp() {
   applyDifficultyForGrade();
+  renderGradeToggle();
 
   renderStars();
   renderLevel();
   renderStreak();
   renderLearningPath();
 
-  const closeBtn = document.getElementById("app-banner-close");
-  if (closeBtn) closeBtn.addEventListener("click", hideAppBanner);
-
   // Try to load a data-driven skilltree (non-blocking)
   loadSkilltreeFromJson();
 
-  // Default subject is Mathe
-  setSubject("mathe");
+  // Show map view initially (don't auto-start exercises)
+  document.getElementById("learning-path").classList.remove("hidden");
+  document.getElementById("exercise-area").classList.add("hidden");
 }
 
 // Check for auto-login (last used profile)
