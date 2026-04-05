@@ -255,6 +255,45 @@ export function renderExercises() {
         <input type="text" inputmode="numeric" pattern="[0-9]*" id="answer-${i}" autocomplete="off">
         <span class="feedback" id="feedback-${i}"></span>
       `;
+    } else if (ex.type === "lesen") {
+      div.className = "exercise reading-exercise";
+      div.innerHTML = `
+        <div class="reading-passage">
+          <h3 class="reading-title">${ex.title}</h3>
+          <p class="reading-text">${ex.passage}</p>
+        </div>
+        <div class="reading-questions">
+          ${ex.questions.map((q, qi) => `
+            <div class="reading-question" data-qi="${qi}">
+              <p class="reading-prompt">${qi + 1}. ${q.prompt}</p>
+              <div class="mc-choices" id="mc-${i}-${qi}">
+                ${q.choices.map((c, ci) => `<button class="mc-choice" data-ci="${ci}">${c}</button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "thema") {
+      div.className = "exercise topic-exercise";
+      div.innerHTML = `
+        <div class="topic-card-content">
+          <h3 class="topic-title">${ex.title}</h3>
+          <p class="topic-text">${ex.card}</p>
+          <ul class="topic-facts">${ex.facts.map((f) => `<li>${f}</li>`).join("")}</ul>
+        </div>
+        <div class="topic-questions">
+          ${ex.questions.map((q, qi) => `
+            <div class="reading-question" data-qi="${qi}">
+              <p class="reading-prompt">${qi + 1}. ${q.prompt}</p>
+              <div class="mc-choices" id="mc-${i}-${qi}">
+                ${q.choices.map((c, ci) => `<button class="mc-choice" data-ci="${ci}">${c}</button>`).join("")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
     }
 
     container.appendChild(div);
@@ -286,6 +325,16 @@ export function renderExercises() {
     group.querySelectorAll("button").forEach((btn) => {
       btn.addEventListener("click", () => {
         group.querySelectorAll("button").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+    });
+  });
+
+  // MC choice listeners (lesen / thema)
+  container.querySelectorAll(".mc-choices").forEach((group) => {
+    group.querySelectorAll(".mc-choice").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        group.querySelectorAll(".mc-choice").forEach((b) => b.classList.remove("selected"));
         btn.classList.add("selected");
       });
     });
@@ -387,6 +436,9 @@ export function renderParentView() {
 
   header.textContent = "👨‍👩‍👧 Eltern-Ansicht";
 
+  const subjectLabels = { mathe: "🔢 Mathe", deutsch: "📖 Deutsch", sachkunde: "🌍 Sachkunde" };
+  const currentLabel = subjectLabels[state.currentSubject] || state.currentSubject;
+
   const now = Date.now();
   const day = 24 * 60 * 60 * 1000;
   const todayStart = new Date();
@@ -416,6 +468,11 @@ export function renderParentView() {
 
   grid.innerHTML = `
     <div class="parent-grid" style="grid-column: 1/-1;">
+      <div class="parent-card parent-card-subject">
+        <h3>${currentLabel}</h3>
+        <div class="parent-metric"><span class="label">Aktuelles Fach</span></div>
+      </div>
+
       <div class="parent-card">
         <h3>⏱️ Zeit</h3>
         <div class="parent-metric"><span class="label">Heute</span><span class="value">${formatMinutes(secToday)}</span></div>
@@ -423,7 +480,7 @@ export function renderParentView() {
       </div>
 
       <div class="parent-card">
-        <h3>🗺️ Lernpfad</h3>
+        <h3>🗺️ Lernpfad (${currentLabel})</h3>
         <div class="parent-metric"><span class="label">Fortschritt</span><span class="value">${masteredCount}/${totalCount} (${progressPercent}%)</span></div>
         <div class="parent-metric"><span class="label">Nächste Stufe</span><span class="value">${next ? `${next.icon} ${next.name}` : "—"}</span></div>
       </div>

@@ -117,6 +117,7 @@ export const state = {
   practiceLog: [],
 
   readingData: null,
+  topicsData: null,
   audioCtx: null,
   roundStartAt: null,
   roundContext: { mode: null, skillId: null },

@@ -6,6 +6,11 @@ export function profileKey(key) {
   return `mathe-${state.currentProfile}-${key}`;
 }
 
+export function subjectKey(key) {
+  const subject = state.currentSubject || "mathe";
+  return profileKey(`${subject}-${key}`);
+}
+
 export function safeSave(key, value) {
   try {
     localStorage.setItem(key, value);
@@ -23,12 +28,19 @@ export function saveProfiles(profiles) {
 }
 
 export function savePathProgress() {
-  safeSave(profileKey("stages"), JSON.stringify(state.unlockedStages));
-  safeSave(profileKey("mastered"), JSON.stringify(state.masteredStages));
+  safeSave(subjectKey("stages"), JSON.stringify(state.unlockedStages));
+  safeSave(subjectKey("mastered"), JSON.stringify(state.masteredStages));
 }
 
 export function saveSkillMasteryProgress() {
-  safeSave(profileKey("skill-mastery"), JSON.stringify(state.skillMasteryProgress || {}));
+  safeSave(subjectKey("skill-mastery"), JSON.stringify(state.skillMasteryProgress || {}));
+}
+
+export function loadSubjectProgress() {
+  state.unlockedStages = JSON.parse(localStorage.getItem(subjectKey("stages")) || "[0]");
+  state.masteredStages = JSON.parse(localStorage.getItem(subjectKey("mastered")) || "[]");
+  state.skillMasteryProgress = JSON.parse(localStorage.getItem(subjectKey("skill-mastery")) || "{}");
+  state.errorPool = JSON.parse(localStorage.getItem(subjectKey("errors")) || "[]");
 }
 
 export function savePracticeLog() {
@@ -38,11 +50,13 @@ export function savePracticeLog() {
 export function loadProfileData() {
   state.totalStars = parseInt(localStorage.getItem(profileKey("sterne")) || "0", 10);
   state.totalXP = parseInt(localStorage.getItem(profileKey("xp")) || "0", 10);
-  state.unlockedStages = JSON.parse(localStorage.getItem(profileKey("stages")) || "[0]");
-  state.masteredStages = JSON.parse(localStorage.getItem(profileKey("mastered")) || "[]");
   state.unlockedAchievements = JSON.parse(localStorage.getItem(profileKey("achievements")) || "[]");
   state.perfectRounds = parseInt(localStorage.getItem(profileKey("perfect-rounds")) || "0", 10);
-  state.errorPool = JSON.parse(localStorage.getItem(profileKey("errors")) || "[]");
-  state.skillMasteryProgress = JSON.parse(localStorage.getItem(profileKey("skill-mastery")) || "{}");
   state.practiceLog = JSON.parse(localStorage.getItem(profileKey("practice-log")) || "[]");
+
+  // Load subject-specific progress
+  state.unlockedStages = JSON.parse(localStorage.getItem(subjectKey("stages")) || "[0]");
+  state.masteredStages = JSON.parse(localStorage.getItem(subjectKey("mastered")) || "[]");
+  state.skillMasteryProgress = JSON.parse(localStorage.getItem(subjectKey("skill-mastery")) || "{}");
+  state.errorPool = JSON.parse(localStorage.getItem(subjectKey("errors")) || "[]");
 }

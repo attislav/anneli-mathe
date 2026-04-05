@@ -1,6 +1,6 @@
 // ============ LEARNING PATH / SKILLTREE ============
 import { state, DEFAULT_LEARNING_PATH, events } from "./state.js";
-import { savePathProgress, saveSkillMasteryProgress } from "./storage.js";
+import { savePathProgress, saveSkillMasteryProgress, loadSubjectProgress } from "./storage.js";
 
 // ============ SKILLTREE LOADING ============
 
@@ -70,6 +70,21 @@ function migrateMasteryProgressFromOldMasteredStages() {
   saveSkillMasteryProgress();
 }
 
+function loadSubjectContent(grade, subject) {
+  if (subject === "deutsch") {
+    return fetch(`content/de/deutsch/${grade}/reading.json`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((json) => { state.readingData = json; })
+      .catch(() => { state.readingData = null; });
+  } else if (subject === "sachkunde") {
+    return fetch(`content/de/sachkunde/${grade}/topics.json`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((json) => { state.topicsData = json; })
+      .catch(() => { state.topicsData = null; });
+  }
+  return Promise.resolve();
+}
+
 export function loadSkilltreeFromJson(grade, subject) {
   grade = grade || state.currentGrade || "grade-1";
   subject = subject || state.currentSubject || "mathe";
@@ -77,7 +92,7 @@ export function loadSkilltreeFromJson(grade, subject) {
   state.currentSubject = subject;
   const url = `content/de/${subject}/${grade}/skilltree.json`;
 
-  return fetch(url)
+  const skilltreeFetch = fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error(`skilltree fetch failed: ${res.status}`);
       return res.json();
@@ -88,8 +103,7 @@ export function loadSkilltreeFromJson(grade, subject) {
 
       state.LEARNING_PATH = parsed;
 
-      state.unlockedStages = state.unlockedStages.filter((id) => id >= 0 && id < state.LEARNING_PATH.length);
-      state.masteredStages = state.masteredStages.filter((id) => id >= 0 && id < state.LEARNING_PATH.length);
+      loadSubjectProgress();
       if (state.unlockedStages.length === 0) state.unlockedStages = [0];
 
       migrateMasteryProgressFromOldMasteredStages();
@@ -99,6 +113,10 @@ export function loadSkilltreeFromJson(grade, subject) {
     .catch(() => {
       // Silent fallback: app still works with the hardcoded path.
     });
+
+  const contentFetch = loadSubjectContent(grade, subject);
+
+  return Promise.all([skilltreeFetch, contentFetch]);
 }
 
 // ============ STAGE MANAGEMENT ============

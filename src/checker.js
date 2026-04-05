@@ -151,10 +151,43 @@ export function checkAnswers() {
         inputA.readOnly = true;
         inputB.readOnly = true;
       }
+    } else if (ex.type === "lesen" || ex.type === "thema") {
+      let allAnswered = true;
+      let qCorrect = 0;
+
+      ex.questions.forEach((q, qi) => {
+        const group = document.getElementById(`mc-${i}-${qi}`);
+        const selected = group?.querySelector(".mc-choice.selected");
+        if (!selected) {
+          allAnswered = false;
+          return;
+        }
+        const ci = parseInt(selected.dataset.ci, 10);
+        if (ci === q.answerIndex) {
+          qCorrect++;
+          selected.classList.add("mc-correct");
+        } else {
+          selected.classList.add("mc-wrong");
+          const correctBtn = group.querySelectorAll(".mc-choice")[q.answerIndex];
+          if (correctBtn) correctBtn.classList.add("mc-correct");
+        }
+        group.querySelectorAll(".mc-choice").forEach((b) => { b.disabled = true; });
+      });
+
+      if (!allAnswered) {
+        div.className = `exercise ${ex.type === "lesen" ? "reading-exercise" : "topic-exercise"} retry`;
+        feedback.textContent = "Bitte alle Fragen beantworten!";
+        wrongCount++;
+        hadWrong = true;
+        return;
+      }
+
+      isCorrect = qCorrect === ex.questions.length;
     }
 
     if (isCorrect) {
-      div.className = "exercise correct";
+      const extraClass = ex.type === "lesen" ? " reading-exercise" : ex.type === "thema" ? " topic-exercise" : "";
+      div.className = `exercise correct${extraClass}`;
       feedback.textContent = "richtig";
       correctCount++;
       newCorrect++;
@@ -176,7 +209,8 @@ export function checkAnswers() {
       } else {
         if (supportsRescue && state.attempts[i] === 1 && hasAnswerInput) state.attempts[i] = 2;
 
-        div.className = "exercise wrong";
+        const wrongExtra = ex.type === "lesen" ? " reading-exercise" : ex.type === "thema" ? " topic-exercise" : "";
+        div.className = `exercise wrong${wrongExtra}`;
         let correctText = "";
         if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
           correctText = ` → ${ex.answer}`;
@@ -188,13 +222,15 @@ export function checkAnswers() {
           correctText = ` → ${ex.answer}`;
         } else if (ex.type === "nachbarn") {
           correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
+        } else if (ex.type === "lesen" || ex.type === "thema") {
+          correctText = "";
         }
-        feedback.innerHTML = `falsch<span class="correct-hint">${correctText}</span>`;
+        feedback.innerHTML = correctText ? `falsch<span class="correct-hint">${correctText}</span>` : "Nicht alle richtig";
         wrongCount++;
         hadWrong = true;
         soundWrong();
         addToErrorPool(ex);
-        showNumberLineHelp(i);
+        if (ex.type !== "lesen" && ex.type !== "thema") showNumberLineHelp(i);
       }
     }
   });

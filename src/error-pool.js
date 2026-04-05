@@ -1,9 +1,9 @@
 // ============ ERROR POOL (Fehler-Wiederholung) + WEAKNESS SCORING ============
 import { state } from "./state.js";
-import { profileKey, safeSave } from "./storage.js";
+import { subjectKey, safeSave } from "./storage.js";
 
 export function addToErrorPool(exercise) {
-  if (exercise.type === "zehner") return;
+  if (exercise.type === "zehner" || exercise.type === "lesen" || exercise.type === "thema") return;
 
   const stage = (state.currentMode === "lernpfad" && state.currentStage !== null && state.currentStage !== undefined)
     ? state.LEARNING_PATH[state.currentStage]
@@ -25,17 +25,17 @@ export function addToErrorPool(exercise) {
     state.errorPool.push(entry);
   }
   if (state.errorPool.length > 30) state.errorPool = state.errorPool.slice(-30);
-  safeSave(profileKey("errors"), JSON.stringify(state.errorPool));
+  safeSave(subjectKey("errors"), JSON.stringify(state.errorPool));
 }
 
 export function removeFromErrorPool(exercise) {
-  if (exercise.type === "zehner") return;
+  if (exercise.type === "zehner" || exercise.type === "lesen" || exercise.type === "thema") return;
   const op = exercise.type === "normal" ? exercise.op : exercise.display.op;
   const a = exercise.type === "normal" ? exercise.a : (exercise.display.left || exercise.answer);
   const b = exercise.type === "normal" ? exercise.b : (exercise.display.right || exercise.answer);
 
   state.errorPool = state.errorPool.filter((e) => !(e.op === op && e.a === a && e.b === b));
-  safeSave(profileKey("errors"), JSON.stringify(state.errorPool));
+  safeSave(subjectKey("errors"), JSON.stringify(state.errorPool));
 }
 
 export function getErrorRepeatExercises(config, count) {

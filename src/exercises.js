@@ -207,6 +207,45 @@ function generateReihen(config) {
   }
 }
 
+// ============ READING / TOPIC CONTENT GENERATORS ============
+
+function generateLesen() {
+  const data = state.readingData;
+  if (!data || !Array.isArray(data.items) || data.items.length === 0) return;
+
+  const item = pickRandom(data.items);
+  state.exercises.push({
+    type: "lesen",
+    passage: item.passage,
+    title: item.title,
+    questions: item.questions.map((q) => ({
+      prompt: q.prompt,
+      choices: [...q.choices],
+      answerIndex: q.answerIndex,
+      selected: null,
+    })),
+  });
+}
+
+function generateThema() {
+  const data = state.topicsData;
+  if (!data || !Array.isArray(data.items) || data.items.length === 0) return;
+
+  const item = pickRandom(data.items);
+  state.exercises.push({
+    type: "thema",
+    card: item.card,
+    title: item.title,
+    facts: item.facts || [],
+    questions: item.questions.map((q) => ({
+      prompt: q.prompt,
+      choices: [...q.choices],
+      answerIndex: q.answerIndex,
+      selected: null,
+    })),
+  });
+}
+
 // ============ MAIN GENERATE ============
 
 export function generateExercises() {
@@ -215,7 +254,11 @@ export function generateExercises() {
   state.checked = false;
   state.attempts = [];
 
-  if (state.currentOperation === "luecken") {
+  if (state.currentOperation === "lesen") {
+    generateLesen();
+  } else if (state.currentOperation === "thema") {
+    generateThema();
+  } else if (state.currentOperation === "luecken") {
     generateLuecken(config);
   } else if (state.currentOperation === "zehner") {
     generateZehner(config);
