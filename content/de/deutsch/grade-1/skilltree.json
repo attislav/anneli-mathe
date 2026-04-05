@@ -33,6 +33,36 @@
       "difficulty": "schwer",
       "operation": "lesen",
       "mastery": { "passScore": 0.85, "repetitions": 3 }
+    },
+    {
+      "id": "d1-rechtschreibung",
+      "title": "Wörter richtig schreiben",
+      "description": "Häufige Wörter richtig schreiben und ie/ei, sch/ch unterscheiden",
+      "prerequisites": ["d1-lesen-einfach"],
+      "icon": "✏️",
+      "difficulty": "leicht",
+      "operation": "rechtschreibung",
+      "mastery": { "passScore": 0.7, "repetitions": 2 }
+    },
+    {
+      "id": "d1-lueckentexte",
+      "title": "Lückentexte ergänzen",
+      "description": "Das fehlende Wort in einem Satz finden und einsetzen",
+      "prerequisites": ["d1-lesen-details"],
+      "icon": "🧩",
+      "difficulty": "mittel",
+      "operation": "lueckentexte",
+      "mastery": { "passScore": 0.75, "repetitions": 2 }
+    },
+    {
+      "id": "d1-silben",
+      "title": "Silben-Klatschen",
+      "description": "Wörter in Silben zerlegen und Silben zählen",
+      "prerequisites": ["d1-lesen-einfach"],
+      "icon": "👏",
+      "difficulty": "leicht",
+      "operation": "silben",
+      "mastery": { "passScore": 0.75, "repetitions": 2 }
     }
   ]
 }

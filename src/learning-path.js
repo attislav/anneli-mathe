@@ -72,10 +72,23 @@ function migrateMasteryProgressFromOldMasteredStages() {
 
 function loadSubjectContent(grade, subject) {
   if (subject === "deutsch") {
-    return fetch(`content/de/deutsch/${grade}/reading.json`)
+    const readingFetch = fetch(`content/de/deutsch/${grade}/reading.json`)
       .then((res) => res.ok ? res.json() : null)
       .then((json) => { state.readingData = json; })
       .catch(() => { state.readingData = null; });
+    const rechtschreibungFetch = fetch(`content/de/deutsch/${grade}/rechtschreibung.json`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((json) => { state.rechtschreibungData = json; })
+      .catch(() => { state.rechtschreibungData = null; });
+    const lueckentexteFetch = fetch(`content/de/deutsch/${grade}/lueckentexte.json`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((json) => { state.lueckentexteData = json; })
+      .catch(() => { state.lueckentexteData = null; });
+    const silbenFetch = fetch(`content/de/deutsch/${grade}/silben.json`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((json) => { state.silbenData = json; })
+      .catch(() => { state.silbenData = null; });
+    return Promise.all([readingFetch, rechtschreibungFetch, lueckentexteFetch, silbenFetch]);
   } else if (subject === "sachkunde") {
     return fetch(`content/de/sachkunde/${grade}/topics.json`)
       .then((res) => res.ok ? res.json() : null)

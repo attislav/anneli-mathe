@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "si-01",
+      "word": "Hase",
+      "syllables": ["Ha", "se"],
+      "count": 2
+    },
+    {
+      "id": "si-02",
+      "word": "Banane",
+      "syllables": ["Ba", "na", "ne"],
+      "count": 3
+    },
+    {
+      "id": "si-03",
+      "word": "Schule",
+      "syllables": ["Schu", "le"],
+      "count": 2
+    },
+    {
+      "id": "si-04",
+      "word": "Elefant",
+      "syllables": ["E", "le", "fant"],
+      "count": 3
+    },
+    {
+      "id": "si-05",
+      "word": "Ball",
+      "syllables": ["Ball"],
+      "count": 1
+    },
+    {
+      "id": "si-06",
+      "word": "Tomate",
+      "syllables": ["To", "ma", "te"],
+      "count": 3
+    },
+    {
+      "id": "si-07",
+      "word": "Blume",
+      "syllables": ["Blu", "me"],
+      "count": 2
+    },
+    {
+      "id": "si-08",
+      "word": "Schokolade",
+      "syllables": ["Scho", "ko", "la", "de"],
+      "count": 4
+    },
+    {
+      "id": "si-09",
+      "word": "Katze",
+      "syllables": ["Kat", "ze"],
+      "count": 2
+    },
+    {
+      "id": "si-10",
+      "word": "Apfel",
+      "syllables": ["Ap", "fel"],
+      "count": 2
+    }
+  ]
+}

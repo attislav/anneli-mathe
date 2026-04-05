@@ -168,6 +168,41 @@ export function checkAnswers() {
         inputA.readOnly = true;
         inputB.readOnly = true;
       }
+    } else if (ex.type === "rechtschreibung" || ex.type === "lueckentext" || ex.type === "silben") {
+      const group = document.getElementById(`mc-${i}-0`);
+      const selected = group?.querySelector(".mc-choice.selected");
+
+      if (!selected) {
+        div.className = "exercise deutsch-exercise retry";
+        feedback.textContent = "Bitte wähle eine Antwort!";
+        wrongCount++;
+        hadWrong = true;
+        return;
+      }
+
+      const ci = parseInt(selected.dataset.ci, 10);
+      if (ex.type === "silben") {
+        isCorrect = ci === ex.count;
+      } else {
+        isCorrect = ci === ex.answerIndex;
+      }
+
+      if (isCorrect) {
+        selected.classList.add("mc-correct");
+        group.querySelectorAll(".mc-choice").forEach((b) => { b.disabled = true; });
+      } else {
+        selected.classList.add("mc-wrong");
+        if (ex.type === "silben") {
+          group.querySelectorAll(".mc-choice").forEach((b) => {
+            if (parseInt(b.dataset.ci, 10) === ex.count) b.classList.add("mc-correct");
+            b.disabled = true;
+          });
+        } else {
+          const correctBtn = group.querySelectorAll(".mc-choice")[ex.answerIndex];
+          if (correctBtn) correctBtn.classList.add("mc-correct");
+          group.querySelectorAll(".mc-choice").forEach((b) => { b.disabled = true; });
+        }
+      }
     } else if (ex.type === "lesen" || ex.type === "thema") {
       let allAnswered = true;
       let qCorrect = 0;
@@ -202,9 +237,11 @@ export function checkAnswers() {
       isCorrect = qCorrect === ex.questions.length;
     }
 
+    const isDeutschType = ex.type === "rechtschreibung" || ex.type === "lueckentext" || ex.type === "silben";
+    const typeExtra = ex.type === "lesen" ? " reading-exercise" : ex.type === "thema" ? " topic-exercise" : isDeutschType ? " deutsch-exercise" : "";
+
     if (isCorrect) {
-      const extraClass = ex.type === "lesen" ? " reading-exercise" : ex.type === "thema" ? " topic-exercise" : "";
-      div.className = `exercise correct${extraClass}`;
+      div.className = `exercise correct${typeExtra}`;
       feedback.textContent = "richtig";
       correctCount++;
       newCorrect++;
@@ -226,7 +263,7 @@ export function checkAnswers() {
       } else {
         if (supportsRescue && state.attempts[i] === 1 && hasAnswerInput) state.attempts[i] = 2;
 
-        const wrongExtra = ex.type === "lesen" ? " reading-exercise" : ex.type === "thema" ? " topic-exercise" : "";
+        div.className = `exercise wrong${typeExtra}`;
         div.className = `exercise wrong${wrongExtra}`;
         let correctText = "";
         if (ex.type === "normal" || ex.type === "luecke" || ex.type === "verdoppeln" || ex.type === "reihen") {
@@ -241,7 +278,7 @@ export function checkAnswers() {
           correctText = ` → ${ex.answerBefore}, ${ex.answerAfter}`;
         } else if (ex.type === "uhrzeit") {
           correctText = ` → ${ex.answer}`;
-        } else if (ex.type === "lesen" || ex.type === "thema") {
+        } else if (ex.type === "lesen" || ex.type === "thema" || isDeutschType) {
           correctText = "";
         }
         feedback.innerHTML = correctText ? `falsch<span class="correct-hint">${correctText}</span>` : "Nicht alle richtig";
@@ -249,7 +286,7 @@ export function checkAnswers() {
         hadWrong = true;
         soundWrong();
         addToErrorPool(ex);
-        if (ex.type !== "lesen" && ex.type !== "thema") showNumberLineHelp(i);
+        if (ex.type !== "lesen" && ex.type !== "thema" && !isDeutschType) showNumberLineHelp(i);
       }
     }
   });

@@ -328,6 +328,47 @@ export function renderExercises() {
         </div>
         <span class="feedback" id="feedback-${i}"></span>
       `;
+    } else if (ex.type === "rechtschreibung") {
+      div.className = "exercise deutsch-exercise";
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="rechtschreibung-exercise">
+          <p class="rechtschreibung-prompt">${ex.prompt}</p>
+          <div class="mc-choices" id="mc-${i}-0">
+            ${ex.choices.map((c, ci) => `<button class="mc-choice" data-ci="${ci}">${c}</button>`).join("")}
+          </div>
+          ${ex.hint ? `<p class="rechtschreibung-hint">${ex.hint}</p>` : ""}
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "lueckentext") {
+      div.className = "exercise deutsch-exercise";
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="lueckentext-exercise">
+          <p class="lueckentext-sentence">${ex.sentence}</p>
+          <div class="mc-choices" id="mc-${i}-0">
+            ${ex.choices.map((c, ci) => `<button class="mc-choice" data-ci="${ci}">${c}</button>`).join("")}
+          </div>
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
+    } else if (ex.type === "silben") {
+      const choiceButtons = [1, 2, 3, 4].map((n) =>
+        `<button class="mc-choice silben-choice" data-ci="${n}">${n}</button>`
+      ).join("");
+      div.className = "exercise deutsch-exercise";
+      div.innerHTML = `
+        <span class="number">${i + 1}.</span>
+        <div class="silben-exercise">
+          <p class="silben-word">${ex.word}</p>
+          <p class="silben-prompt">Wie viele Silben hat das Wort? 👏</p>
+          <div class="mc-choices" id="mc-${i}-0">
+            ${choiceButtons}
+          </div>
+        </div>
+        <span class="feedback" id="feedback-${i}"></span>
+      `;
     }
 
     container.appendChild(div);

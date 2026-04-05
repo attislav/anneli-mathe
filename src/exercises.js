@@ -344,6 +344,70 @@ function generateGeld(config) {
   }
 }
 
+// ============ RECHTSCHREIBUNG (Spelling) ============
+
+function generateRechtschreibung() {
+  const data = state.rechtschreibungData;
+  if (!data || !Array.isArray(data.items) || data.items.length === 0) return;
+
+  const count = Math.min(data.items.length, 8);
+  const pool = [...data.items];
+  shuffleArray(pool);
+  const selected = pool.slice(0, count);
+
+  selected.forEach((item) => {
+    state.exercises.push({
+      type: "rechtschreibung",
+      prompt: item.prompt,
+      choices: [...item.choices],
+      answerIndex: item.answerIndex,
+      hint: item.hint || "",
+    });
+  });
+}
+
+// ============ LÜCKENTEXTE (Fill in the blank) ============
+
+function generateLueckentexte() {
+  const data = state.lueckentexteData;
+  if (!data || !Array.isArray(data.items) || data.items.length === 0) return;
+
+  const count = Math.min(data.items.length, 8);
+  const pool = [...data.items];
+  shuffleArray(pool);
+  const selected = pool.slice(0, count);
+
+  selected.forEach((item) => {
+    state.exercises.push({
+      type: "lueckentext",
+      sentence: item.sentence,
+      choices: [...item.choices],
+      answerIndex: item.answerIndex,
+    });
+  });
+}
+
+// ============ SILBEN (Syllables) ============
+
+function generateSilben() {
+  const data = state.silbenData;
+  if (!data || !Array.isArray(data.items) || data.items.length === 0) return;
+
+  const count = Math.min(data.items.length, 8);
+  const pool = [...data.items];
+  shuffleArray(pool);
+  const selected = pool.slice(0, count);
+
+  selected.forEach((item) => {
+    state.exercises.push({
+      type: "silben",
+      word: item.word,
+      syllables: [...item.syllables],
+      count: item.count,
+    });
+  });
+}
+
 // ============ MAIN GENERATE ============
 
 export function generateExercises() {
@@ -356,6 +420,12 @@ export function generateExercises() {
     generateLesen();
   } else if (state.currentOperation === "thema") {
     generateThema();
+  } else if (state.currentOperation === "rechtschreibung") {
+    generateRechtschreibung();
+  } else if (state.currentOperation === "lueckentexte") {
+    generateLueckentexte();
+  } else if (state.currentOperation === "silben") {
+    generateSilben();
   } else if (state.currentOperation === "textaufgaben") {
     generateTextaufgaben(config);
   } else if (state.currentOperation === "uhrzeit") {

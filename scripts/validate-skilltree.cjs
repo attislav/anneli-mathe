@@ -38,6 +38,9 @@ const ALLOWED_OPERATION = new Set([
   "textaufgaben",
   "uhrzeit",
   "geld",
+  "rechtschreibung",
+  "lueckentexte",
+  "silben",
 ]);
 
 function walk(dir) {

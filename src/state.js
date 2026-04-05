@@ -118,6 +118,9 @@ export const state = {
 
   readingData: null,
   topicsData: null,
+  rechtschreibungData: null,
+  lueckentexteData: null,
+  silbenData: null,
   audioCtx: null,
   roundStartAt: null,
   roundContext: { mode: null, skillId: null },
