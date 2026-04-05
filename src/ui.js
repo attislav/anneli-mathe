@@ -541,6 +541,111 @@ export function renderParentView() {
 
   const next = getNextStage();
 
+  // ---- Wochenbericht: daily breakdown for last 7 days ----
+  const log = Array.isArray(state.practiceLog) ? state.practiceLog : [];
+  const dayNames = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+  const dailyStats = [];
+  for (let i = 6; i >= 0; i--) {
+    const dStart = new Date(now - i * day);
+    dStart.setHours(0, 0, 0, 0);
+    const dEnd = dStart.getTime() + day;
+    const dayEntries = log.filter((e) => e.ts >= dStart.getTime() && e.ts < dEnd);
+    const sec = dayEntries.reduce((a, e) => a + (parseInt(e.durationSec || 0, 10) || 0), 0);
+    const correct = dayEntries.reduce((a, e) => a + (e.correct || 0), 0);
+    const total = dayEntries.reduce((a, e) => a + (e.total || 0), 0);
+    dailyStats.push({
+      label: dayNames[dStart.getDay()],
+      sec,
+      correct,
+      total,
+      date: dStart,
+    });
+  }
+  const maxDaySec = Math.max(...dailyStats.map((d) => d.sec), 1);
+  const weekCorrect = dailyStats.reduce((a, d) => a + d.correct, 0);
+  const weekTotal = dailyStats.reduce((a, d) => a + d.total, 0);
+  const weekAccuracy = weekTotal > 0 ? Math.round((weekCorrect / weekTotal) * 100) : 0;
+
+  const barsHtml = dailyStats
+    .map((d) => {
+      const pct = Math.round((d.sec / maxDaySec) * 100);
+      const isToday = d.date.toDateString() === new Date().toDateString();
+      return `<div class="parent-bar-col${isToday ? " parent-bar-today" : ""}">
+        <div class="parent-bar-fill" style="height:${Math.max(pct, 4)}%"></div>
+        <span class="parent-bar-label">${d.label}</span>
+      </div>`;
+    })
+    .join("");
+
+  // ---- Trend: compare this week vs previous week ----
+  const sec14d = log
+    .filter((e) => e.ts >= now - 14 * day && e.ts < now - 7 * day)
+    .reduce((a, e) => a + (parseInt(e.durationSec || 0, 10) || 0), 0);
+  const prevEntries = log.filter((e) => e.ts >= now - 14 * day && e.ts < now - 7 * day);
+  const prevCorrect = prevEntries.reduce((a, e) => a + (e.correct || 0), 0);
+  const prevTotal = prevEntries.reduce((a, e) => a + (e.total || 0), 0);
+  const prevAccuracy = prevTotal > 0 ? Math.round((prevCorrect / prevTotal) * 100) : 0;
+
+  function trendIcon(current, previous) {
+    if (previous === 0 && current === 0) return "➖";
+    if (current > previous) return "📈";
+    if (current < previous) return "📉";
+    return "➖";
+  }
+  function trendClass(current, previous) {
+    if (current > previous) return "trend-up";
+    if (current < previous) return "trend-down";
+    return "trend-flat";
+  }
+
+  const timeTrend = trendIcon(sec7d, sec14d);
+  const timeTrendCls = trendClass(sec7d, sec14d);
+  const accTrend = trendIcon(weekAccuracy, prevAccuracy);
+  const accTrendCls = trendClass(weekAccuracy, prevAccuracy);
+  const countTrend = trendIcon(weekTotal, prevTotal);
+  const countTrendCls = trendClass(weekTotal, prevTotal);
+
+  // ---- Lernziel-Empfehlungen: top 3 recommended stages ----
+  const unlocked = Array.isArray(state.unlockedStages) ? state.unlockedStages.slice() : [0];
+  const recommendations = [];
+  const recommendedId = pickRecommendedStageId();
+  if (recommendedId !== undefined && state.LEARNING_PATH[recommendedId]) {
+    recommendations.push({ stage: state.LEARNING_PATH[recommendedId], reason: "Schwächen-Analyse" });
+  }
+  // Add next unmastered stages as additional goals
+  for (const sid of unlocked) {
+    if (recommendations.length >= 3) break;
+    if (recommendations.some((r) => r.stage.id === sid)) continue;
+    const stage = state.LEARNING_PATH[sid];
+    if (!stage || state.masteredStages.includes(sid)) continue;
+    const errors = getErrorsForStage(stage);
+    const reason = errors.length > 0 ? `${errors.length} Fehler` : "Noch nicht gemeistert";
+    recommendations.push({ stage, reason });
+  }
+  // If still room, suggest first locked stage as stretch goal
+  if (recommendations.length < 3) {
+    const allIds = state.LEARNING_PATH.map((s) => s.id);
+    const firstLocked = allIds.find((id) => !unlocked.includes(id));
+    if (firstLocked !== undefined && !recommendations.some((r) => r.stage.id === firstLocked)) {
+      recommendations.push({ stage: state.LEARNING_PATH[firstLocked], reason: "Nächstes Ziel" });
+    }
+  }
+
+  const recsHtml = recommendations.length
+    ? recommendations
+        .map(
+          (r) =>
+            `<div class="parent-rec">
+              <span class="parent-rec-icon">${r.stage.icon}</span>
+              <div class="parent-rec-info">
+                <span class="parent-rec-name">${r.stage.name}</span>
+                <span class="parent-rec-reason">${r.reason}</span>
+              </div>
+            </div>`
+        )
+        .join("")
+    : `<div style="color:#777;font-weight:600;">Alle Stufen gemeistert — großartig!</div>`;
+
   grid.innerHTML = `
     <div class="parent-grid" style="grid-column: 1/-1;">
       <div class="parent-card parent-card-subject">
@@ -549,14 +654,40 @@ export function renderParentView() {
       </div>
 
       <div class="parent-card">
-        <h3>⏱️ Zeit</h3>
-        <div class="parent-metric"><span class="label">Heute</span><span class="value">${formatMinutes(secToday)}</span></div>
-        <div class="parent-metric"><span class="label">Letzte 7 Tage</span><span class="value">${formatMinutes(sec7d)}</span></div>
+        <h3>📊 Wochenbericht</h3>
+        <div class="parent-bar-chart">${barsHtml}</div>
+        <div class="parent-metric"><span class="label">Übungszeit (7 Tage)</span><span class="value">${formatMinutes(sec7d)}</span></div>
+        <div class="parent-metric"><span class="label">Aufgaben gelöst</span><span class="value">${weekTotal}</span></div>
+        <div class="parent-metric"><span class="label">Richtig</span><span class="value">${weekCorrect} (${weekAccuracy}%)</span></div>
+      </div>
+
+      <div class="parent-card">
+        <h3>📈 Trend (diese vs. letzte Woche)</h3>
+        <div class="parent-metric">
+          <span class="label">Übungszeit</span>
+          <span class="value ${timeTrendCls}">${timeTrend} ${formatMinutes(sec7d)} <small>vs ${formatMinutes(sec14d)}</small></span>
+        </div>
+        <div class="parent-metric">
+          <span class="label">Aufgaben</span>
+          <span class="value ${countTrendCls}">${countTrend} ${weekTotal} <small>vs ${prevTotal}</small></span>
+        </div>
+        <div class="parent-metric">
+          <span class="label">Genauigkeit</span>
+          <span class="value ${accTrendCls}">${accTrend} ${weekAccuracy}% <small>vs ${prevAccuracy}%</small></span>
+        </div>
+      </div>
+
+      <div class="parent-card">
+        <h3>🎯 Lernziel-Empfehlungen</h3>
+        ${recsHtml}
       </div>
 
       <div class="parent-card">
         <h3>🗺️ Lernpfad (${currentLabel})</h3>
-        <div class="parent-metric"><span class="label">Fortschritt</span><span class="value">${masteredCount}/${totalCount} (${progressPercent}%)</span></div>
+        <div class="parent-progress-bar">
+          <div class="parent-progress-fill" style="width:${progressPercent}%"></div>
+          <span class="parent-progress-text">${masteredCount}/${totalCount} (${progressPercent}%)</span>
+        </div>
         <div class="parent-metric"><span class="label">Nächste Stufe</span><span class="value">${next ? `${next.icon} ${next.name}` : "—"}</span></div>
       </div>
 
