@@ -2,7 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **First: read `AGENTS.md`.** It enforces that Next.js 16 has breaking changes versus older training data and points you at the docs in `node_modules/next/dist/docs/`. Trust the local docs over your prior knowledge of Next.
+> **First: read `AGENTS.md`** for the Next.js-16-breaking-changes notice.
+> **Then: read `ROADMAP.md`** — it is the source of truth for vision, sprint, and backlog. There is an **active multi-week sprint** with concrete weekly milestones; check the roadmap before deciding what to work on. Memory files hold the rationale and persona/character details; the roadmap holds the plan.
 
 ## Stack
 
@@ -34,11 +35,15 @@ If a feature requires the key in client code, the design is wrong — proxy it t
 
 ## Vision and project context
 
-This is not a generic learning app. Read these memory files for the product context:
+The **vision, sprint plan, weekly milestones, and Definition of Done** live in `ROADMAP.md` (repo root). Read it. If you're picking work without checking the roadmap, you're guessing.
+
+The memory files hold the *why* (rationale, persona detail, design decisions):
 
 - `project_vision` — what the app is and is explicitly not
 - `design_persona_anneli` — the North-Star kid (can the material, doesn't like drilling)
-- `sprint_mathe_quest_story` — current sprint goal (one Mathe-Quest with story)
+- `character_anneli` — Anneli as the in-story heroine (visual consistency)
+- `story_concept_chapter1` — chapter 1 design (premise, book persona, bridges, skill mapping)
+- `sprint_mathe_quest_story` — sprint mindset and validation hypothesis
 - `content_pipeline_image_voice` — how visuals and voice are generated
 - `tech_stack_nextjs` — why this stack and the greenfield reset
 
