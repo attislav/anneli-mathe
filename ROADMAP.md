@@ -148,12 +148,32 @@ Format: 1-2 Sätze, immer eingebettet in die aktuelle Brücken-Welt. Der Generat
 - 2 Aufgaben in Folge falsch → **1 Stufe leichter**.
 - Anton/Schlaukopf machen das nicht so feingranular — echter USP.
 
-### Sound-Design pro Brücke (ab Wo 4)
+### Sound-Design pro Brücke (Foundation startet 2026-05-21, ausgebaut bis Wo 4)
 
-- **Erzähler-Stimme**: ElevenLabs (Voice „Sage" oder ähnliche warme Stimme, ggf. Voice-Clone für Buch-Charakter).
-- **Sound-FX**: ElevenLabs Sound-FX-API (Vogel-Zwitschern, Wind, Brücken-Knarzen, Magic-Chimes, Erfolgs-Glocke).
-- **Ambient-Musik** pro Welt via Pixabay/Mixkit (royalty-free). Sky-Kingdom = soft pastel pad music.
-- KEIN „Falsch"-Buzzer-Sound. Nur sanfte Hint-Sounds.
+**Voice-Rollen** (verschiedene Stimmen — sonst klingt die Welt nicht lebendig):
+
+| Rolle | Charakter | Verwendung |
+|---|---|---|
+| `narrator` | warme, weibliche Lese-Stimme | Erzähler-Sätze („Anneli öffnete das Buch…"), Hauptstimme |
+| `book` | etwas älter, weise-freundlich, leicht magisch | wenn das verzauberte Buch direkt mit Anneli spricht |
+| `bird_mother` | warm, mütterlich, etwas älter | Vogelmutter (Brücke 1) |
+| `bird_pip` | heller, jünger, verspielt | Vogel-Begleiter Pip (Name kann variieren) |
+| `dragon` | tief, freundlich-bärenmäßig (Wo 5-6) | Drache in Kapitel 2 |
+
+Im Code: jeder Story-Beat trägt ein `speaker`-Field. Audio-Files sortiert nach Speaker (`public/audio/narrator/*`, `public/audio/book/*`, etc.). Voice-IDs in zentraler Map `src/data/voices.ts`, damit Stimmen-Wechsel ohne Code-Änderung möglich ist.
+
+**Foundation heute Nacht (2026-05-21):**
+- 3 Voices aussuchen (`narrator`, `book`, `bird_mother`/`bird_pip`)
+- 2-3 Test-Beats pro Voice neu vertonen (= ~6-9 Audios total, ~1.5k chars Budget)
+- 3-4 Sound-FX-Clips: Bird-Chirp, Wind, Wood-Bridge-Creak, Magic-Chime (über `POST /v1/sound-generation`)
+
+**Voll-Ausbau Wo 4:**
+- **Erzähler-Stimme** als Default, alle existierenden 15 fable-Audios neu vertonen
+- **Sound-FX-Library** ausgebaut (Erfolgs-Glocke, Falsch-Hint-Sound „sanft", Brücken-Reparatur-Sound, Feder-Geschenk-Sound)
+- **Ambient-Musik** pro Welt via Pixabay/Mixkit (royalty-free). Sky-Kingdom = soft pastel pad music. KEIN ElevenLabs für Musik (Free hat das nicht; Creator-Tier in Wo 4 dazu).
+- KEIN „Falsch"-Buzzer-Sound, nirgends. Nur sanfte Hint-Sounds.
+
+**ElevenLabs Free-Tier (Stand 2026-05-21):** 10k chars/Monat, ~9.5k frei. Sound-Generation-API ist auf Free verfügbar (probiert). Voice-Clones (3 frei) NICHT nutzen für Anneli (würde 1 Slot pro Charakter brennen — lieber die kuratierten Default-Stimmen). Upgrade auf Creator-Tier in Wo 4 wenn Erzähler-Vertonung Vollausbau startet.
 
 ### Pause-Mechanik (10 Min)
 
