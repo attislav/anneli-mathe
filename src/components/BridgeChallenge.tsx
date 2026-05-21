@@ -1,37 +1,60 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import type { Bridge } from "@/data/bridges";
+import { audioSrc } from "@/data/narration";
 import { MathInput } from "./MathInput";
+import { AudioButton } from "./AudioButton";
 
 type Status = "asking" | "wrong" | "correct";
 
 const WRONG_QUIPS = [
-  "Oh, hoppla! Knapp daneben. Probier nochmal.",
-  "Beinahe! Die Brücke wackelt nur — sie hält noch.",
-  "Hmmm. Lass uns das nochmal zusammen anschauen.",
-  "Fast! Atme einmal tief durch und versuch's nochmal.",
+  { text: "Oh, hoppla! Knapp daneben. Probier nochmal.", audio: "quip-wrong-1" },
+  { text: "Beinahe! Die Brücke wackelt nur — sie hält noch.", audio: "quip-wrong-2" },
+  { text: "Hmmm. Lass uns das nochmal zusammen anschauen.", audio: "quip-wrong-3" },
+  { text: "Fast! Atme einmal tief durch und versuch's nochmal.", audio: "quip-wrong-4" },
+];
+
+const SUCCESS_QUIPS = [
+  { text: "Die Brücke hält! Du hast sie repariert.", audio: "quip-success-1" },
+  { text: "Genau richtig. Schau, wie sie sich aufrichtet.", audio: "quip-success-2" },
 ];
 
 // PLACEHOLDER — eine einzige Stub-Aufgabe pro Brücke.
 // Wird im nächsten Schritt durch echte Aufgaben-Generation pro Skill ersetzt.
+// Niveau: Übergang Klasse 1 → Klasse 2.
 const PLACEHOLDER_TASKS: Record<string, { prompt: string; answer: number }> = {
-  steinzaehl: { prompt: "Wie viele Steine sind das? 🪨🪨🪨🪨", answer: 4 },
-  holzplanken: { prompt: "3 + 4 = ?", answer: 7 },
-  bruechig: { prompt: "9 − 4 = ?", answer: 5 },
-  waage: { prompt: "Tippe die größere Zahl: 6 oder 8?", answer: 8 },
-  nachbarn: { prompt: "Welche Zahl kommt vor der 8?", answer: 7 },
-  zehner: { prompt: "7 + ? = 10", answer: 3 },
+  steinzaehl: { prompt: "🪨🪨🪨🪨🪨 🪨🪨🪨🪨🪨 🪨🪨🪨🪨🪨 🪨🪨 — wie viele?", answer: 17 },
+  holzplanken: { prompt: "8 + 7 = ?", answer: 15 },
+  bruechig: { prompt: "15 − 8 = ?", answer: 7 },
+  waage: { prompt: "Welche Zahl ist größer: 47 oder 74?", answer: 74 },
+  nachbarn: { prompt: "Welcher Zehner kommt direkt nach 47?", answer: 50 },
+  zehner: { prompt: "Das Doppelte von 27 ist?", answer: 54 },
 };
+
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
   const task = PLACEHOLDER_TASKS[bridge.id] ?? { prompt: "?", answer: 0 };
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<Status>("asking");
-  const [quipIndex, setQuipIndex] = useState(0);
+  const [wrongQuip, setWrongQuip] = useState<typeof WRONG_QUIPS[number] | null>(null);
+  const [successQuip, setSuccessQuip] = useState<typeof SUCCESS_QUIPS[number] | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-play the quip when wrong / correct is freshly set.
+  useEffect(() => {
+    if (status === "wrong" && wrongQuip) {
+      new Audio(audioSrc(wrongQuip.audio)).play().catch(() => {});
+    }
+    if (status === "correct" && successQuip) {
+      new Audio(audioSrc(successQuip.audio)).play().catch(() => {});
+    }
+  }, [status, wrongQuip, successQuip]);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -39,10 +62,11 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
     if (Number.isNaN(parsed)) return;
 
     if (parsed === task.answer) {
+      setSuccessQuip(pickRandom(SUCCESS_QUIPS));
       setStatus("correct");
     } else {
+      setWrongQuip(pickRandom(WRONG_QUIPS));
       setStatus("wrong");
-      setQuipIndex((i) => (i + 1) % WRONG_QUIPS.length);
       setValue("");
       requestAnimationFrame(() => inputRef.current?.focus());
     }
@@ -62,18 +86,28 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         Brücke {bridge.order} · {bridge.skillLabel}
       </div>
       <h1 className="mb-2 text-3xl font-semibold md:text-4xl">{bridge.name}</h1>
-      <p className="mb-10 text-[var(--color-ink-soft)]">{bridge.description}</p>
+      <p className="mb-6 text-[var(--color-ink-soft)]">{bridge.description}</p>
 
-      {status === "correct" ? (
+      <div className="mb-8 flex items-start gap-3 rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-4">
+        <div className="flex-1 text-base italic leading-relaxed text-[var(--color-ink)]">
+          „{bridge.bookHint}"
+        </div>
+        <AudioButton src={audioSrc(`bridge-${bridge.id}-hint`)} label="Tipp vorlesen" />
+      </div>
+
+      {status === "correct" && successQuip ? (
         <div className="rounded-[var(--radius-card)] bg-[var(--color-mint)] p-8 text-center shadow-[var(--shadow-soft)]">
           <Sparkles
             className="mx-auto mb-3 text-[var(--color-mint-deep)]"
             size={42}
             strokeWidth={1.6}
           />
-          <p className="mb-6 text-lg font-semibold text-[var(--color-mint-deep)]">
-            Die Brücke hält! Du hast sie repariert.
-          </p>
+          <div className="mb-6 flex items-center justify-center gap-3">
+            <p className="text-lg font-semibold text-[var(--color-mint-deep)]">
+              {successQuip.text}
+            </p>
+            <AudioButton src={audioSrc(successQuip.audio)} variant="primary" />
+          </div>
           <Link
             href="/quest/sky-kingdom"
             className="inline-flex items-center justify-center rounded-full bg-[var(--color-mint-deep)] px-6 py-3 text-base font-semibold text-white shadow-[var(--shadow-soft)] transition-transform hover:scale-105"
@@ -98,10 +132,11 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
             />
           </div>
 
-          {status === "wrong" ? (
-            <p className="mb-6 text-center text-base text-[var(--color-accent-rose)]">
-              {WRONG_QUIPS[quipIndex]}
-            </p>
+          {status === "wrong" && wrongQuip ? (
+            <div className="mb-6 flex items-center justify-center gap-3 text-base text-[var(--color-accent-rose)]">
+              <p>{wrongQuip.text}</p>
+              <AudioButton src={audioSrc(wrongQuip.audio)} />
+            </div>
           ) : null}
 
           <div className="flex justify-center">

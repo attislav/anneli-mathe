@@ -40,6 +40,12 @@ yarn-error.log*
 # generated style-test images — reproducible via npm run gen:test-images
 /public/test-images/
 
+# generated voice-test audio — reproducible via npm run gen:test-audio
+/public/test-audio/
+
+# generated production narration — reproducible via npm run gen:narration
+/public/audio/
+
 # vercel
 .vercel
 

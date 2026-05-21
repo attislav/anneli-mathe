@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookSays } from "@/components/BookSays";
 
 <div className="mx-auto w-full max-w-2xl px-6 py-12">
 
@@ -9,11 +10,13 @@ Pastellfarbene Lichter, die nach Pfirsich und Minze duften, ziehen an ihr vorbei
 Erst will sie sich erschrecken — aber es fühlt sich gar nicht gefährlich an.
 Es fühlt sich an, als wäre sie genau dort, wo sie hingehört.
 
-Eine Stimme kichert. *„Na endlich. Ich dachte schon, du machst mich nie auf."*
+Eine Stimme kichert.
+
+<BookSays audio="intro-book-greeting">
+„Na endlich! Ich dachte schon, du machst mich nie auf. Komm mit, Anneli — ich zeige dir, wo wir sind. Du wirst staunen."
+</BookSays>
 
 Es ist das Buch. Es kann sprechen.
-
-*„Komm mit. Ich zeige dir, wo wir sind."*
 
 <div className="mt-12 flex justify-end">
   <Link

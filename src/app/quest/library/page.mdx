@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookSays } from "@/components/BookSays";
 
 <div className="mx-auto w-full max-w-2xl px-6 py-12">
 
@@ -8,14 +9,9 @@ Anneli steht in einer riesigen Halle. Die Decke ist so hoch, dass sie das Ende n
 Überall stehen Regale voller Bücher, manche schweben einfach in der Luft.
 Zwischen den Regalen leuchten kleine Türen, jede einen Spalt offen, jede zu einem anderen Ort.
 
-*„Willkommen in der Bibliothek der Welten,"* flüstert das Buch.
-*„Hier sind unendlich viele Geschichten zuhause — und alle haben Hilfe nötig."*
-
-Aus einer der Türen klingt Vogelgezwitscher. Wind, dünn und kalt, kommt durch den Spalt.
-Das Buch wackelt aufgeregt.
-
-*„Diese Welt nennt sich Himmelreich. Und die Brücken zwischen den schwebenden Inseln zerbröckeln gerade alle.
-Ohne dich finden die Vögel nie wieder zueinander. Trauen wir uns?"*
+<BookSays audio="library-welcome">
+„Willkommen in der Bibliothek der Welten. Hier sind unendlich viele Geschichten zuhause — und alle haben Hilfe nötig. Hörst du das? Aus dieser Tür kommt Wind. Das ist das Himmelreich. Und die Brücken zwischen den schwebenden Inseln zerbröckeln gerade alle. Ohne dich finden die Vögel nie wieder zueinander. Trauen wir uns?"
+</BookSays>
 
 <div className="mt-12 flex justify-end">
   <Link

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "gen:test-images": "node --env-file=.env.local scripts/generate-test-images.mjs"
+    "gen:test-images": "node --env-file=.env.local scripts/generate-test-images.mjs",
+    "gen:test-audio": "node --env-file=.env.local scripts/generate-narration-test.mjs",
+    "gen:narration": "tsx --env-file=.env.local scripts/generate-narration.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -27,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }
