@@ -3,27 +3,32 @@
 //
 // Pädagogisches Ziel wie bei addition20: der Zehnerübergang
 // ("erst zur 10 runter, dann den Rest") wird gezielt geübt.
-// Wir bevorzugen also Aufgaben a − b mit 10 < a ≤ 18 und 1 < b < a − 0
-// und Ergebnis < 10 — das erzwingt den Übergang.
+// Wir bevorzugen also Aufgaben a − b mit 10 < a ≤ 18 und Ergebnis < 10
+// — das erzwingt den Übergang.
 
-import type { Exercise } from "./types";
+import type { Exercise, Level } from "./types";
 import { exerciseId, randInt } from "./types";
+import { vignetteSubtraction } from "./vignettes";
 
 /**
  * Erzeugt eine Minus-Aufgabe a − b mit:
  *   - 0 ≤ Ergebnis ≤ 18
  *   - a ≤ 20
  *
- * ~75 % der Fälle: echter Zehnerübergang (a > 10, Ergebnis < 10).
- * ~25 % leichter (z.B. 18 − 5 = 13, oder 14 − 4 = 10).
+ * Level beeinflusst die Borrow-Wahrscheinlichkeit:
+ *   - "easy":   25 % Zehnerübergang
+ *   - "normal": 75 % Zehnerübergang
+ *   - "hard":   95 % Zehnerübergang, Lücken-Aufgaben häufiger
+ *
  * Aufgabenformen: "a − b = ?", "a − ? = c", "? − b = c".
  */
-export function generateSubtraction20(): Exercise {
-  const wantsBorrow = Math.random() < 0.75;
+export function generateSubtraction20(level: Level = "normal"): Exercise {
+  const borrowP = level === "easy" ? 0.25 : level === "hard" ? 0.95 : 0.75;
+  const wantsBorrow = Math.random() < borrowP;
   const [a, b] = wantsBorrow ? pairWithBorrow() : pairWithoutBorrow();
   const diff = a - b;
 
-  const form = pickForm();
+  const form = pickForm(level);
 
   switch (form) {
     case "a-b": {
@@ -31,8 +36,10 @@ export function generateSubtraction20(): Exercise {
         id: exerciseId("s20"),
         skill: "subtraction20",
         prompt: `${a} − ${b} = ?`,
+        vignette: vignetteSubtraction({ a, b, diff, form }),
         correctAnswer: diff,
         hint: hintFor(a, b),
+        level,
       };
     }
     case "a-?": {
@@ -40,8 +47,10 @@ export function generateSubtraction20(): Exercise {
         id: exerciseId("s20"),
         skill: "subtraction20",
         prompt: `${a} − ? = ${diff}`,
+        vignette: vignetteSubtraction({ a, b, diff, form }),
         correctAnswer: b,
         hint: "Wie viel musst du wegnehmen, damit das Ergebnis stimmt?",
+        level,
       };
     }
     case "?-b": {
@@ -49,8 +58,10 @@ export function generateSubtraction20(): Exercise {
         id: exerciseId("s20"),
         skill: "subtraction20",
         prompt: `? − ${b} = ${diff}`,
+        vignette: vignetteSubtraction({ a, b, diff, form }),
         correctAnswer: a,
         hint: "Welche Zahl ergibt nach dem Minus den richtigen Rest?",
+        level,
       };
     }
   }
@@ -80,8 +91,17 @@ function pairWithoutBorrow(): [number, number] {
 }
 
 type Form = "a-b" | "a-?" | "?-b";
-function pickForm(): Form {
+function pickForm(level: Level): Form {
   const r = Math.random();
+  if (level === "hard") {
+    if (r < 0.35) return "a-b";
+    if (r < 0.7) return "a-?";
+    return "?-b";
+  }
+  if (level === "easy") {
+    if (r < 0.85) return "a-b";
+    return "a-?";
+  }
   if (r < 0.6) return "a-b";
   if (r < 0.8) return "a-?";
   return "?-b";

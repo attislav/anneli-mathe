@@ -6,28 +6,30 @@
 // ein Summand ≥ 6 ist und das Ergebnis > 10 — aber nicht ausschließlich,
 // damit auch nicht-überschreitende Aufgaben als Auflockerung kommen.
 
-import type { Exercise } from "./types";
+import type { Exercise, Level } from "./types";
 import { exerciseId, randInt } from "./types";
+import { vignetteAddition } from "./vignettes";
 
 /**
  * Erzeugt eine Plus-Aufgabe a + b mit 1 ≤ a, b ≤ 18 und a + b ≤ 20.
  *
- * In ~75 % der Fälle ist die Aufgabe ein "echter" Zehnerübergang,
- * d.h. a < 10 und b < 10 und a + b > 10. In ~25 % der Fälle eine
- * leichtere Aufgabe ohne Übergang — als Variation und kleines Erfolgserlebnis.
+ * Level beeinflusst die Carry-Wahrscheinlichkeit:
+ *   - "easy":   30 % Zehnerübergang
+ *   - "normal": 75 % Zehnerübergang
+ *   - "hard":   95 % Zehnerübergang, Lücken-Aufgaben häufiger
  *
- * Zusätzlich variiert die Form: meistens "a + b = ?", manchmal als Lücke
- * "a + ? = c" oder "? + b = c", damit das Kind in beide Richtungen denkt.
+ * Aufgabenform: "a + b = ?", "a + ? = c" oder "? + b = c".
  */
-export function generateAddition20(): Exercise {
-  const wantsCarry = Math.random() < 0.75;
+export function generateAddition20(level: Level = "normal"): Exercise {
+  const carryP = level === "easy" ? 0.3 : level === "hard" ? 0.95 : 0.75;
+  const wantsCarry = Math.random() < carryP;
 
   const [a, b] = wantsCarry ? pairWithCarry() : pairWithoutCarry();
   const sum = a + b;
 
   // Aufgabenform wählen. Lücken-Aufgaben sind interessanter, aber nicht
   // jede Lücken-Variante macht Sinn — wir mischen drei Formen.
-  const form = pickForm();
+  const form = pickForm(level);
 
   switch (form) {
     case "a+b": {
@@ -35,8 +37,10 @@ export function generateAddition20(): Exercise {
         id: exerciseId("a20"),
         skill: "addition20",
         prompt: `${a} + ${b} = ?`,
+        vignette: vignetteAddition({ a, b, sum, form }),
         correctAnswer: sum,
         hint: hintFor(a, b),
+        level,
       };
     }
     case "a+?": {
@@ -44,8 +48,10 @@ export function generateAddition20(): Exercise {
         id: exerciseId("a20"),
         skill: "addition20",
         prompt: `${a} + ? = ${sum}`,
+        vignette: vignetteAddition({ a, b, sum, form }),
         correctAnswer: b,
         hint: "Wie viel fehlt von der ersten Zahl bis zur Summe?",
+        level,
       };
     }
     case "?+b": {
@@ -53,8 +59,10 @@ export function generateAddition20(): Exercise {
         id: exerciseId("a20"),
         skill: "addition20",
         prompt: `? + ${b} = ${sum}`,
+        vignette: vignetteAddition({ a, b, sum, form }),
         correctAnswer: a,
         hint: "Wie viel fehlt vor der zweiten Zahl, damit die Summe stimmt?",
+        level,
       };
     }
   }
@@ -86,8 +94,19 @@ function pairWithoutCarry(): [number, number] {
 }
 
 type Form = "a+b" | "a+?" | "?+b";
-function pickForm(): Form {
+function pickForm(level: Level): Form {
   const r = Math.random();
+  if (level === "hard") {
+    // Mehr Lücken-Varianten — die fordern stärker.
+    if (r < 0.35) return "a+b";
+    if (r < 0.7) return "a+?";
+    return "?+b";
+  }
+  if (level === "easy") {
+    // Fast nur die Standard-Form.
+    if (r < 0.85) return "a+b";
+    return "a+?";
+  }
   if (r < 0.6) return "a+b";
   if (r < 0.8) return "a+?";
   return "?+b";

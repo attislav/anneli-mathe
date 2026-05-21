@@ -225,15 +225,15 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 - [x] Greenfield Next.js 16 + Tailwind 4 + MDX
 - [x] Quest-Routen, Skelett, Stub-Brücken
 - [x] OpenAI TTS (fable) integriert, alle Story-Beats vertont
-- [ ] **Aufgaben-Generator pro Skill** (counting20, addition20, subtraction20, compare100, tensNeighbors, doubleHalf) — randomisiert, variantenreich
-- [ ] **Story-Mikro-Vignetten** pro Aufgabe (Generator liefert 1-2 Sätze Story-Kontext zur Aufgabe, mehrere Templates pro Skill)
-- [ ] **Multi-Task-Flow** in BridgeChallenge: 4–6 Aufgaben pro Brücke, Progressbar, Brücke gilt erst nach allen als repariert
+- [x] **Aufgaben-Generator pro Skill** (counting20, addition20, subtraction20, compare100, tensNeighbors, doubleHalf) — randomisiert, variantenreich, Level-fähig (easy/normal/hard)
+- [x] **Story-Mikro-Vignetten** pro Aufgabe (`src/data/exercises/vignettes.ts` — mehrere Templates pro Skill und Aufgabenform, Sky-Kingdom-Welt: Vogelmama, Pip, Eier, Federn, Wolken, Beeren)
+- [x] **Multi-Task-Flow** in BridgeChallenge: `bridge.totalTasks` Aufgaben pro Brücke (4–6), Progressbar, Brücke gilt erst nach allen Aufgaben als repariert
 - [ ] **Input-Mode pro Brücke** (Tap-Count, Speech, Number-Keypad, Drag-Symbol, Zahlenstrahl-Tap, Spiegel-Mechanik — Component-Switch nach `input_mode`-Feld der Brücke)
-- [ ] **Hinweis-System statt Falsch-Feedback** (kein roter Buzzer; nach 3 Sek Tipp einblenden; nach 3× falsch leichtere Variante)
-- [ ] **Adaptive within bridge** (3 richtig → schwerer / 2 falsch → leichter, im selben Skill-Bereich)
-- [ ] **Vogel-Begleiter mit Namen** (Onboarding-Frage „Wie soll dein Vogel heißen?", Persistenz, im Story-Text verwendet)
+- [x] **Hinweis-System statt Falsch-Feedback** (kein roter Buzzer; nach 8 Sek ohne Eingabe Tipp einblenden; nach falscher Antwort sofort Tipp; nach 3× falsch leichtere Variante)
+- [x] **Adaptive within bridge** (3 richtig in Folge → 1 Stufe schwerer / 2 falsch in Folge → 1 Stufe leichter; Level pro Skill persistiert)
+- [ ] **Vogel-Begleiter mit Namen** (Onboarding-Frage „Wie soll dein Vogel heißen?", Persistenz, im Story-Text verwendet) — Datenmodell vorhanden (`progress.birdName`), UI-Flow fehlt noch
 - [ ] **Pause-Mechanik** (nach 10 Min App-Zeit: Buch schlägt Pause vor, kein hartes Lockout)
-- [ ] **Persistenz (localStorage)**: welche Brücken sind fertig, Vogel-Name, Adaptive-State pro Skill, Anzeige auf Sky-Map
+- [x] **Persistenz (localStorage)**: `src/data/progress.ts` — Brücken-Status, Vogel-Name, Adaptive-Level pro Skill; SkyMap zeigt "fertig"-State mit Häkchen + Aufgaben-Score
 - [ ] **Story-Engine als Daten**: Brücken als JSON-Files in `src/data/bridges/*.json` statt hardcoded TS-Const
 
 ### Woche 2 — Visuals: aus Pastell-Boxen wird Welt
@@ -308,8 +308,8 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | Spur | Aktueller Stand | Nächstes |
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
-| **Aufgaben-Engine** | Stub: 1 fixe Aufgabe pro Brücke | Generator pro Skill, Multi-Task-Flow |
-| **Persistenz** | nichts | localStorage (Sprint), Cloud-Sync (Backlog) |
+| **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
+| **Persistenz** | localStorage (`progress.v1`) ✓ | Vogel-Onboarding UI, Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ | Hero-Bilder Kapitel 1 |
 | **Audio (KI)** | gpt-4o-mini-tts fable, 15 Audios | Wechsel zu ElevenLabs + Sound-FX (Wo 4) |
 | **Adaptive** | nichts | within-bridge (Wo 1), skill-übergreifend (Wo 7-8) |

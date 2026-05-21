@@ -8,20 +8,23 @@
 // erscheint im `prompt` eine ASCII-Repräsentation mit Emoji, die für
 // sich genommen schon spielbar ist.
 
-import type { Exercise } from "./types";
+import type { Exercise, Level } from "./types";
 import { exerciseId, pickOne, randInt } from "./types";
+import { vignetteCounting } from "./vignettes";
 
 // Sichtbare Items in den Gruppen — die Komponente entscheidet später,
 // ob sie das `visual` oder den Prompt rendert.
 const ITEM_GLYPHS = ["🪨", "⭐", "🐦", "🌿"] as const;
 
 /**
- * Erzeugt eine Zähl-Aufgabe mit Gesamtmenge 6..20, aufgeteilt in
- * 1–4 Gruppen. Höhere Mengen bekommen mehr Gruppen, damit das Kind
- * Fünferbündel sehen kann — kein "lineares Abzählen" über 20.
+ * Erzeugt eine Zähl-Aufgabe.
+ * Range hängt vom Level ab:
+ *   - "easy":   6..12 (kleinere Mengen, schnell überschaubar)
+ *   - "normal": 6..20 (Standard für K1→K2)
+ *   - "hard":   14..20 (knapp unter 20, mit zwei vollen Fünferbündeln)
  */
-export function generateCounting20(): Exercise {
-  const total = randInt(6, 20);
+export function generateCounting20(level: Level = "normal"): Exercise {
+  const total = pickTotal(level);
 
   // Gruppierungsstrategie nach Größe:
   // - bis 9: 1–2 Gruppen
@@ -35,15 +38,24 @@ export function generateCounting20(): Exercise {
     .join("  ");
 
   const prompt = `${visualBlocks}\n\nWie viele ${nameFor(glyph)} sind das?`;
+  const vignette = vignetteCounting({ total });
 
   return {
     id: exerciseId("c20"),
     skill: "counting20",
     prompt,
+    vignette,
     visual: { kind: "stones", groups },
     correctAnswer: total,
     hint: "Schau die Gruppen an — fünf, fünf, Rest. Dann musst du nicht einzeln zählen.",
+    level,
   };
+}
+
+function pickTotal(level: Level): number {
+  if (level === "easy") return randInt(6, 12);
+  if (level === "hard") return randInt(14, 20);
+  return randInt(6, 20);
 }
 
 function splitIntoGroups(total: number): number[] {
