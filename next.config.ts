@@ -3,6 +3,9 @@ import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
+  turbopack: {
+    root: import.meta.dirname,
+  },
 };
 
 const withMDX = createMDX({

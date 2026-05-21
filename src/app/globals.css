@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/* Anneli App: warm pastel palette — mint, lavender, peach, with turquoise/honey accents */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg:        #fdf6ef;  /* warm cream — soft page background */
+  --color-paper:     #fffaf3;  /* slightly lighter — cards, story sheets */
+  --color-ink:       #3a2d2d;  /* warm dark brown — body text, kinder als pures Schwarz */
+  --color-ink-soft:  #6b5e5e;  /* secondary text */
+
+  --color-mint:      #b8e0d2;
+  --color-mint-deep: #5fbf9d;
+  --color-lavender:  #d6c9f0;
+  --color-lavender-deep: #9b86d3;
+  --color-peach:     #fbd4b4;
+  --color-peach-deep: #e89968;
+
+  --color-accent-turquoise: #4fb3b8;
+  --color-accent-honey:     #e8a93b;
+  --color-accent-rose:      #e2748e;
+
+  /* shadow + radius defaults */
+  --radius-card: 1.5rem;
+  --shadow-soft: 0 10px 30px -10px rgba(58, 45, 45, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-ink);
+  --color-paper: var(--color-paper);
+  --color-ink-soft: var(--color-ink-soft);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-mint: var(--color-mint);
+  --color-mint-deep: var(--color-mint-deep);
+  --color-lavender: var(--color-lavender);
+  --color-lavender-deep: var(--color-lavender-deep);
+  --color-peach: var(--color-peach);
+  --color-peach-deep: var(--color-peach-deep);
+
+  --color-turquoise: var(--color-accent-turquoise);
+  --color-honey: var(--color-accent-honey);
+  --color-rose: var(--color-accent-rose);
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Headlines get the display font automatically */
+h1, h2, h3 {
+  font-family: var(--font-display), var(--font-body), serif;
+  letter-spacing: -0.01em;
 }

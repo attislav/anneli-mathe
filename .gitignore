@@ -37,6 +37,9 @@ yarn-error.log*
 # local claude code config
 .claude/
 
+# generated style-test images — reproducible via npm run gen:test-images
+/public/test-images/
+
 # vercel
 .vercel
 
