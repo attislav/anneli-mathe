@@ -13,6 +13,8 @@ import {
 } from "@/data/progress";
 import { BookSays } from "./BookSays";
 import { BirdOnboarding } from "./BirdOnboarding";
+import { AmbientPlayer } from "./AmbientPlayer";
+import { ambientSrc } from "@/data/voices";
 
 export function SkyMap() {
   // Persistenz nur client-side — beim ersten Render zeigen wir den
@@ -35,6 +37,11 @@ export function SkyMap() {
       {/* Onboarding: erste Frage beim ersten Mal — „Wie soll dein Vogel heißen?".
           PauseSuggestion wird vom Quest-Layout für alle Quest-Seiten gerendert. */}
       <BirdOnboarding progress={progress} onDone={setProgress} />
+
+      {/* Sky-Kingdom-Ambient: leiser Pastell-Pad / Wind-Loop im Hintergrund.
+          Datei wird in Slot 4 / Wo 4 nach public/audio/ambient/ gedroppt;
+          bis dahin scheitert der Player leise. */}
+      <AmbientPlayer src={ambientSrc("sky-kingdom")} label="Himmelreich-Musik" />
 
       {/* Hero-Bild der schwebenden Inseln + Brücken — gibt der Karte sofort
           Atmosphäre. KI-generiert (gpt-image-2, quality low). */}

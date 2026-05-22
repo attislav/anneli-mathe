@@ -162,10 +162,14 @@ Format: 1-2 Sätze, immer eingebettet in die aktuelle Brücken-Welt. Der Generat
 
 Im Code: jeder Story-Beat trägt ein `speaker`-Field. Audio-Files sortiert nach Speaker (`public/audio/narrator/*`, `public/audio/book/*`, etc.). Voice-IDs in zentraler Map `src/data/voices.ts`, damit Stimmen-Wechsel ohne Code-Änderung möglich ist.
 
-**Foundation heute Nacht (2026-05-21):**
-- 3 Voices aussuchen (`narrator`, `book`, `bird_mother`/`bird_pip`)
-- 2-3 Test-Beats pro Voice neu vertonen (= ~6-9 Audios total, ~1.5k chars Budget)
-- 3-4 Sound-FX-Clips: Bird-Chirp, Wind, Wood-Bridge-Creak, Magic-Chime (über `POST /v1/sound-generation`)
+**Foundation 2026-05-21/22 (erledigt):**
+- ✓ 3 Voice-Rollen definiert (`narrator`, `book`, `bird_pip`) in `src/data/voices.ts`
+- ✓ `narration.ts` mit `speaker`-Field, Audio-Pfade nach Speaker sortiert (`public/audio/<speaker>/<id>.mp3`)
+- ✓ **17 Voice-Audios** generiert: 9 × Book (Story-Beats + alle 6 Brücken-Hints), 1 × Narrator (Opening), 7 × Pip (Intro + 4 Retry-Quips + 2 Success-Quips)
+- ✓ **Note**: ElevenLabs Free-Tier blockt unsere VPS-IP-Range (`detected_unusual_activity` 401). Fallback auf **OpenAI gpt-4o-mini-tts** mit `sage` (narrator), `ballad` (book), `coral` (bird_pip) — Generator: `npm run gen:narration` (Default). ElevenLabs-Generator bleibt als `gen:narration:el` für lokalen Run / Creator-Tier-Upgrade.
+- ✓ **4 Sound-FX** via ElevenLabs Sound-Generation (Sound-Gen funktioniert vom VPS): `bird-chirp`, `wind-soft`, `bridge-creak`, `magic-chime` → `public/audio/fx/`
+- ✓ `useSoundFx` Hook + Integration in `BridgeChallenge` (creak beim Betreten, chime bei jeder richtigen Aufgabe, chirp bei Brücke-fertig)
+- ✓ `AmbientPlayer` Komponente mit Mute-Persist (`localStorage`), bereit für Ambient-Drop in `public/audio/ambient/sky-kingdom.mp3` (Slot 4 / Wo 4)
 
 **Voll-Ausbau Wo 4:**
 - **Erzähler-Stimme** als Default, alle existierenden 15 fable-Audios neu vertonen
@@ -312,7 +316,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ | Brücken-Zustand-Visuals, Buch als Charakter-Asset |
 | **Pause-Mechanik** | 10-Min-Soft-Suggest ✓ | — |
-| **Audio (KI)** | gpt-4o-mini-tts fable, 15 Audios | Wechsel zu ElevenLabs + Sound-FX (Wo 4) |
+| **Audio (KI)** | OpenAI TTS, 3 Voices (sage/ballad/coral), 17 Audios, speaker-aware Paths · 4 ElevenLabs Sound-FX · Ambient-Player bereit ✓ | Ambient-Music droppen (Pixabay), ElevenLabs-Upgrade Wo 4 |
 | **Adaptive** | nichts | within-bridge (Wo 1), skill-übergreifend (Wo 7-8) |
 | **Hosting** | Dev lokal | Vercel (Wo 7–8) |
 | **Input-Modi** | nichts (klassisches Input-Feld) | 6 Modi pro Brücke (Wo 1) |

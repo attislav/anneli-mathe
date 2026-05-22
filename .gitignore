@@ -43,8 +43,9 @@ yarn-error.log*
 # generated voice-test audio — reproducible via npm run gen:test-audio
 /public/test-audio/
 
-# generated production narration — reproducible via npm run gen:narration
-/public/audio/
+# NOTE: /public/audio/ is checked in — reproducible via npm run gen:narration
+# + npm run gen:sound-fx, but committing avoids API roundtrips at every Vercel
+# build and lets reviewers hear what was generated.
 
 # vercel
 .vercel

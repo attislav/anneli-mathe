@@ -14,6 +14,7 @@ import {
 } from "@/data/progress";
 import { MathInput } from "./MathInput";
 import { AudioButton } from "./AudioButton";
+import { useSoundFx } from "@/lib/useSoundFx";
 
 // ----- Konstanten ------------------------------------------------------------
 
@@ -121,6 +122,15 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
   const [retryQuip, setRetryQuip] = useState<typeof RETRY_QUIPS[number] | null>(null);
   const [stepQuip, setStepQuip] = useState<typeof STEP_SUCCESS_QUIPS[number] | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const playFx = useSoundFx();
+
+  // Beim Betreten der Brücke einmalig knarzen — Atmosphäre, kein Game-Over-Vibe.
+  // (Datei darf fehlen, useSoundFx scheitert leise.)
+  useEffect(() => {
+    const t = window.setTimeout(() => playFx("bridge-creak"), 400);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bridge.id]);
 
   const current = exercises[currentIndex];
 
@@ -181,9 +191,14 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
       setWrongInARow(0);
       setStepQuip(pickRandom(STEP_SUCCESS_QUIPS));
 
+      // Magisches Glöckchen — sanftes Erfolgs-Signal, kein Arcade-Buzzer.
+      playFx("magic-chime");
+
       if (nextDone >= totalTasks) {
         // Alle Aufgaben geschafft → Brücke ist repariert.
         setStatus("complete");
+        // Bei Brücken-Abschluss zusätzlich Vogel-Chirp.
+        window.setTimeout(() => playFx("bird-chirp"), 600);
         return;
       }
 
