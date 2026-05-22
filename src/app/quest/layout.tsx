@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Home } from "lucide-react";
 import { Book } from "@/components/Book";
+import { PauseSuggestion } from "@/components/PauseSuggestion";
 
 export default function QuestLayout({ children }: { children: ReactNode }) {
   return (
@@ -20,6 +21,10 @@ export default function QuestLayout({ children }: { children: ReactNode }) {
       <main className="flex flex-1 flex-col pb-36">{children}</main>
 
       <Book message="Hallo Anneli! Schön, dass du da bist. Ich bin … nun, ein Buch. Aber ein ganz besonderes." />
+
+      {/* Pause-Vorschlag nach 10 Min App-Zeit. Sanft, kein hartes Lockout —
+          läuft im Layout, damit alle Quest-Seiten denselben Timer teilen. */}
+      <PauseSuggestion />
     </div>
   );
 }

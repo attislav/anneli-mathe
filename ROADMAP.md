@@ -231,8 +231,8 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 - [ ] **Input-Mode pro Brücke** (Tap-Count, Speech, Number-Keypad, Drag-Symbol, Zahlenstrahl-Tap, Spiegel-Mechanik — Component-Switch nach `input_mode`-Feld der Brücke)
 - [x] **Hinweis-System statt Falsch-Feedback** (kein roter Buzzer; nach 8 Sek ohne Eingabe Tipp einblenden; nach falscher Antwort sofort Tipp; nach 3× falsch leichtere Variante)
 - [x] **Adaptive within bridge** (3 richtig in Folge → 1 Stufe schwerer / 2 falsch in Folge → 1 Stufe leichter; Level pro Skill persistiert)
-- [ ] **Vogel-Begleiter mit Namen** (Onboarding-Frage „Wie soll dein Vogel heißen?", Persistenz, im Story-Text verwendet) — Datenmodell vorhanden (`progress.birdName`), UI-Flow fehlt noch
-- [ ] **Pause-Mechanik** (nach 10 Min App-Zeit: Buch schlägt Pause vor, kein hartes Lockout)
+- [x] **Vogel-Begleiter mit Namen** (Onboarding-Modal beim ersten Sky-Map-Besuch, 6 Namens-Vorschläge + Free-Text, Persistenz via `progress.birdName`, in SkyMap-Header und Retry-Quips als `{bird}`-Platzhalter eingesetzt)
+- [x] **Pause-Mechanik** (nach 10 Min sichtbarer App-Zeit Modal vom Buch mit „Pause machen" oder „Weiterspielen", 30-Min-Cooldown nach Pause; im Quest-Layout aktiv, also auf allen Quest-Seiten)
 - [x] **Persistenz (localStorage)**: `src/data/progress.ts` — Brücken-Status, Vogel-Name, Adaptive-Level pro Skill; SkyMap zeigt "fertig"-State mit Häkchen + Aufgaben-Score
 - [ ] **Story-Engine als Daten**: Brücken als JSON-Files in `src/data/bridges/*.json` statt hardcoded TS-Const
 
@@ -240,10 +240,10 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 
 **Goal:** Es fühlt sich nach Hilda-Buch an, nicht nach Webpage.
 
-- [ ] **Hero-Bilder generieren**: Anneli mit Buch (Intro), Bibliothek der Welten (großes Hero), Sky-Map als illustrierte Karte, sprechendes Buch als Charakter-Asset
+- [x] **Hero-Bilder erste Welle**: Anneli mit Buch (`/hero/anneli-with-book.png`, Home-Hero), Bibliothek der Welten (`/hero/library-of-worlds.png`, Library-Page), Sky-Kingdom-Vista (`/hero/sky-kingdom-vista.png`, SkyMap-Hero) — generiert via `scripts/generate-hero-images.mjs` (gpt-image-2, quality low)
 - [ ] **Brücken-Visuals**: pro Brücke ein Zustand-Bild (kaputt / repariert)
-- [ ] Bilder in Pages einbetten, Pastell-Boxen ersetzen
-- [ ] **Buch-Charakter** sichtbar: nicht mehr nur lucide-Icon, sondern echtes Asset
+- [x] Bilder in Home + Library + SkyMap eingebettet, Pastell-Boxen ersetzt
+- [ ] **Buch-Charakter** sichtbar: nicht mehr nur lucide-Icon, sondern echtes Asset (Intro-Page + Book-Komponente)
 
 ### Woche 3 — Kapitel-1-Abschluss
 
@@ -309,8 +309,9 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
 | **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
-| **Persistenz** | localStorage (`progress.v1`) ✓ | Vogel-Onboarding UI, Cloud-Sync (Backlog) |
-| **Visuals (KI)** | gpt-image-2 Style-Test ✓ | Hero-Bilder Kapitel 1 |
+| **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
+| **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ | Brücken-Zustand-Visuals, Buch als Charakter-Asset |
+| **Pause-Mechanik** | 10-Min-Soft-Suggest ✓ | — |
 | **Audio (KI)** | gpt-4o-mini-tts fable, 15 Audios | Wechsel zu ElevenLabs + Sound-FX (Wo 4) |
 | **Adaptive** | nichts | within-bridge (Wo 1), skill-übergreifend (Wo 7-8) |
 | **Hosting** | Dev lokal | Vercel (Wo 7–8) |

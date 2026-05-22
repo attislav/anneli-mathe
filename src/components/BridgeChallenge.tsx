@@ -17,9 +17,13 @@ import { AudioButton } from "./AudioButton";
 
 // ----- Konstanten ------------------------------------------------------------
 
-/** Quips, die bei „nochmal versuchen" angezeigt werden (kein „falsch!"). */
+/** Quips, die bei „nochmal versuchen" angezeigt werden (kein „falsch!").
+ *  `{bird}` wird beim Rendern durch den persistierten Vogel-Namen ersetzt
+ *  (Default: Pip). So fühlt sich der Begleiter persönlich an, ohne dass wir
+ *  pro Anneli neue Audios brauchen — die Audio-Datei bleibt mit „Pip"
+ *  generiert, der Text auf dem Screen ist dynamisch. */
 const RETRY_QUIPS = [
-  { text: "Probier es nochmal — Pip glaubt an dich.", audio: "quip-wrong-1" },
+  { text: "Probier es nochmal — {bird} glaubt an dich.", audio: "quip-wrong-1" },
   { text: "Beinahe! Die Brücke wackelt nur — sie hält noch.", audio: "quip-wrong-2" },
   { text: "Hmmm. Lass uns das nochmal zusammen anschauen.", audio: "quip-wrong-3" },
   { text: "Fast! Atme einmal tief durch und versuch's nochmal.", audio: "quip-wrong-4" },
@@ -315,10 +319,13 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
             />
           </div>
 
-          {/* Hint-System: kein "falsch!"-Buzzer, nur sanfter Tipp. */}
+          {/* Hint-System: kein "falsch!"-Buzzer, nur sanfter Tipp.
+              `{bird}`-Platzhalter wird hier durch Annelis Vogel-Namen ersetzt. */}
           {status === "retry" && retryQuip ? (
             <div className="mb-4 flex items-center justify-center gap-3 text-base text-[var(--color-ink-soft)]">
-              <p>{retryQuip.text}</p>
+              <p>
+                {retryQuip.text.replace("{bird}", progress?.birdName ?? "Pip")}
+              </p>
               <AudioButton src={audioSrc(retryQuip.audio)} />
             </div>
           ) : null}

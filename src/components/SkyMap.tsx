@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Cloud, Bird, Feather, CheckCircle2 } from "lucide-react";
+import { Bird, Feather, CheckCircle2 } from "lucide-react";
 import { BRIDGES } from "@/data/bridges";
 import {
   loadProgress,
@@ -11,6 +12,7 @@ import {
   type ProgressState,
 } from "@/data/progress";
 import { BookSays } from "./BookSays";
+import { BirdOnboarding } from "./BirdOnboarding";
 
 export function SkyMap() {
   // Persistenz nur client-side — beim ersten Render zeigen wir den
@@ -26,27 +28,48 @@ export function SkyMap() {
 
   const doneCount = progress ? bridgesDoneCount(progress) : 0;
   const allDone = doneCount === BRIDGES.length;
+  const birdName = progress?.birdName ?? "Pip";
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-12">
+    <div className="mx-auto w-full max-w-4xl px-6 py-8">
+      {/* Onboarding: erste Frage beim ersten Mal — „Wie soll dein Vogel heißen?".
+          PauseSuggestion wird vom Quest-Layout für alle Quest-Seiten gerendert. */}
+      <BirdOnboarding progress={progress} onDone={setProgress} />
+
+      {/* Hero-Bild der schwebenden Inseln + Brücken — gibt der Karte sofort
+          Atmosphäre. KI-generiert (gpt-image-2, quality low). */}
+      <div className="mb-8 overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-soft)]">
+        <Image
+          src="/hero/sky-kingdom-vista.png"
+          alt="Wackelige Brücken zwischen schwebenden Pastell-Inseln im Himmelreich"
+          width={1536}
+          height={1024}
+          priority
+          className="h-auto w-full"
+        />
+      </div>
+
       <header className="mb-8 text-center">
-        <div className="mb-4 flex justify-center gap-3 text-[var(--color-mint-deep)]">
-          <Cloud size={36} strokeWidth={1.6} />
-          <Bird size={36} strokeWidth={1.6} />
-          <Cloud size={36} strokeWidth={1.6} />
-        </div>
         <h1 className="mb-3 text-3xl font-semibold md:text-4xl">Das Himmelreich</h1>
         {progress ? (
-          <p className="text-sm text-[var(--color-ink-soft)]">
-            {doneCount} von {BRIDGES.length} Brücken repariert
-          </p>
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-sm text-[var(--color-ink-soft)]">
+              {doneCount} von {BRIDGES.length} Brücken repariert
+            </p>
+            <p className="inline-flex items-center gap-1 text-sm text-[var(--color-mint-deep)]">
+              <Bird size={14} strokeWidth={1.8} />
+              <span>
+                <strong>{birdName}</strong> ist bei dir.
+              </span>
+            </p>
+          </div>
         ) : null}
       </header>
 
       <BookSays audio="sky-kingdom-arrival">
         {allDone
-          ? "Du hast es geschafft! Alle Brücken stehen wieder. Die Vögel zwitschern dir hinterher — und ich glaube, ich habe ein Geschenk für dich."
-          : "Da sind wir. Sechs Brücken — alle wackelig. Such dir eine aus, mit der du anfangen willst. Du musst nicht der Reihe nach, ich verrate dich nicht."}
+          ? `Du hast es geschafft! Alle Brücken stehen wieder. Die Vögel zwitschern dir hinterher — und ich glaube, ${birdName} hat ein Geschenk für dich.`
+          : `Da sind wir. Sechs Brücken — alle wackelig. Such dir eine aus, mit der du anfangen willst. Du musst nicht der Reihe nach, ${birdName} und ich verraten dich nicht.`}
       </BookSays>
 
       <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
