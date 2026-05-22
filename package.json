@@ -9,7 +9,11 @@
     "lint": "eslint",
     "gen:test-images": "node --env-file=.env.local scripts/generate-test-images.mjs",
     "gen:test-audio": "node --env-file=.env.local scripts/generate-narration-test.mjs",
-    "gen:narration": "tsx --env-file=.env.local scripts/generate-narration.ts"
+    "gen:narration": "tsx --env-file=.env.local scripts/generate-narration-openai.ts",
+    "gen:narration:el": "tsx --env-file=.env.local scripts/generate-narration-elevenlabs.ts",
+    "gen:sound-fx": "node --env-file=.env.local scripts/generate-sound-fx.mjs",
+    "gen:hero-images": "node --env-file=.env.local scripts/generate-hero-images.mjs",
+    "gen:bridge-images": "node --env-file=.env.local scripts/generate-bridge-images.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

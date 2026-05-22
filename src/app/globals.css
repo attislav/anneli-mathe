@@ -55,3 +55,19 @@ h1, h2, h3 {
   font-family: var(--font-display), var(--font-body), serif;
   letter-spacing: -0.01em;
 }
+
+/* Bridge-Wobble: ganz sanftes Kippeln des Brücken-Bilds, solange Anneli noch
+   Aufgaben löst. Bewusst LANGSAM und KLEIN — wir wollen Atmosphäre, keine
+   Hektik. Wer Reduce-Motion bevorzugt, sieht das Bild still. */
+@keyframes bridgeWobble {
+  0%, 100% { transform: rotate(-0.4deg) translateY(0); }
+  50%      { transform: rotate(0.4deg)  translateY(-2px); }
+}
+.animate-bridge-wobble {
+  animation: bridgeWobble 4.5s ease-in-out infinite;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-bridge-wobble { animation: none; }
+}
