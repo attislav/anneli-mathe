@@ -238,7 +238,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 - [x] **Vogel-Begleiter mit Namen** (Onboarding-Modal beim ersten Sky-Map-Besuch, 6 Namens-Vorschläge + Free-Text, Persistenz via `progress.birdName`, in SkyMap-Header und Retry-Quips als `{bird}`-Platzhalter eingesetzt)
 - [x] **Pause-Mechanik** (nach 10 Min sichtbarer App-Zeit Modal vom Buch mit „Pause machen" oder „Weiterspielen", 30-Min-Cooldown nach Pause; im Quest-Layout aktiv, also auf allen Quest-Seiten)
 - [x] **Persistenz (localStorage)**: `src/data/progress.ts` — Brücken-Status, Vogel-Name, Adaptive-Level pro Skill; SkyMap zeigt "fertig"-State mit Häkchen + Aufgaben-Score
-- [ ] **Story-Engine als Daten**: Brücken als JSON-Files in `src/data/bridges/*.json` statt hardcoded TS-Const
+- [x] **Story-Engine als Daten**: Brücken als JSON-Files in `src/data/bridges/*.json` statt hardcoded TS-Const (Loader `src/data/bridges/index.ts`, Schema in `SCHEMA.md`. JSON-Schema erweitert um `story_intro`, `hint_chain` und `completion_beat` — BridgeChallenge nutzt alle drei. Backwards-Compat: `bookHint` ist Alias auf `hint_chain[0]`, narration.ts unverändert.)
 
 ### Woche 2 — Visuals: aus Pastell-Boxen wird Welt
 
@@ -312,7 +312,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | Spur | Aktueller Stand | Nächstes |
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
-| **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ · 5 Input-Modi (Tap/Keypad/Compare-Symbol/Number-Line/Mirror) ✓ | Story-Engine als JSON-Daten, Speech (braucht SSR) |
+| **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ · 5 Input-Modi (Tap/Keypad/Compare-Symbol/Number-Line/Mirror) ✓ · Story-Engine als JSON ✓ | Speech (braucht SSR), Abschluss-Sequenz Wo 3 |
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ · 12 Brücken-Status-Bilder ✓ · Buch-Charakter-Asset ✓ | Eltern-View / Skill-Heatmap (Wo 4), Wüsten-Setting (Wo 5) |
 | **Pause-Mechanik** | 10-Min-Soft-Suggest ✓ | — |
