@@ -245,9 +245,9 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 **Goal:** Es fühlt sich nach Hilda-Buch an, nicht nach Webpage.
 
 - [x] **Hero-Bilder erste Welle**: Anneli mit Buch (`/hero/anneli-with-book.png`, Home-Hero), Bibliothek der Welten (`/hero/library-of-worlds.png`, Library-Page), Sky-Kingdom-Vista (`/hero/sky-kingdom-vista.png`, SkyMap-Hero) — generiert via `scripts/generate-hero-images.mjs` (gpt-image-2, quality low)
-- [ ] **Brücken-Visuals**: pro Brücke ein Zustand-Bild (kaputt / repariert)
+- [x] **Brücken-Visuals**: pro Brücke ein Zustand-Bild (kaputt / repariert) — 12 Bilder unter `/public/bridges/<id>/{broken,repaired}.png`, eingebettet in SkyMap (Status-Bild pro Karte) und BridgeChallenge (Wackel-Animation während Spielens, repariert beim Abschluss). Script: `npm run gen:bridge-images`.
 - [x] Bilder in Home + Library + SkyMap eingebettet, Pastell-Boxen ersetzt
-- [ ] **Buch-Charakter** sichtbar: nicht mehr nur lucide-Icon, sondern echtes Asset (Intro-Page + Book-Komponente)
+- [x] **Buch-Charakter** sichtbar: nicht mehr nur lucide-Icon, sondern echtes Asset (`/characters/book.png`) — in Intro-Page, Book-Komponente (schwebend) und BookSays-Komponente (inline) verwendet.
 
 ### Woche 3 — Kapitel-1-Abschluss
 
@@ -314,7 +314,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
 | **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
-| **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ | Brücken-Zustand-Visuals, Buch als Charakter-Asset |
+| **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ · 12 Brücken-Status-Bilder ✓ · Buch-Charakter-Asset ✓ | Eltern-View / Skill-Heatmap (Wo 4), Wüsten-Setting (Wo 5) |
 | **Pause-Mechanik** | 10-Min-Soft-Suggest ✓ | — |
 | **Audio (KI)** | OpenAI TTS, 3 Voices (sage/ballad/coral), 17 Audios, speaker-aware Paths · 4 ElevenLabs Sound-FX · Ambient-Player bereit ✓ | Ambient-Music droppen (Pixabay), ElevenLabs-Upgrade Wo 4 |
 | **Adaptive** | nichts | within-bridge (Wo 1), skill-übergreifend (Wo 7-8) |

@@ -84,48 +84,64 @@ export function SkyMap() {
           const bp = progress ? getBridgeProgress(progress, bridge.id) : null;
           const isDone = bp?.status === "done";
 
+          // Pro Brücke ein eigenes Status-Bild — `broken` solange nicht
+          // repariert, `repaired` nach Abschluss. Dateien liegen unter
+          // public/bridges/<id>/{broken,repaired}.png (gpt-image-2, quality low).
+          const imageSrc = `/bridges/${bridge.id}/${isDone ? "repaired" : "broken"}.png`;
+
           return (
             <li key={bridge.id}>
               <Link
                 href={`/quest/sky-kingdom/${bridge.id}`}
-                className={`group relative block h-full rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1 ${
+                className={`group relative block h-full overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1 ${
                   isDone
                     ? "bg-[var(--color-mint)]/60"
                     : "bg-[var(--color-paper)]"
                 }`}
               >
-                {isDone ? (
-                  <div className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-[var(--color-mint-deep)] px-2 py-1 text-xs font-semibold text-white">
-                    <CheckCircle2 size={14} strokeWidth={2} />
-                    Fertig
-                  </div>
-                ) : null}
-
-                <div
-                  className={`mb-3 inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-                    isDone
-                      ? "bg-white/70 text-[var(--color-mint-deep)]"
-                      : "bg-[var(--color-mint)] text-[var(--color-mint-deep)]"
-                  }`}
-                >
-                  Brücke {bridge.order}
-                </div>
-                <h2 className="mb-2 text-xl font-semibold leading-snug">
-                  {bridge.name}
-                </h2>
-                <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-soft)]">
-                  {bridge.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs font-medium text-[var(--color-lavender-deep)]">
-                    {bridge.skillLabel}
-                  </div>
-                  {isDone && bp ? (
-                    <div className="inline-flex items-center gap-1 text-xs text-[var(--color-mint-deep)]">
-                      <Feather size={14} strokeWidth={1.8} />
-                      {bp.tasksDone}/{bridge.totalTasks}
+                <div className="relative aspect-square w-full overflow-hidden bg-[var(--color-lavender)]/30">
+                  <Image
+                    src={imageSrc}
+                    alt={`${bridge.name} — ${isDone ? "repariert" : "wackelig"}`}
+                    width={512}
+                    height={512}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  {isDone ? (
+                    <div className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--color-mint-deep)] px-2 py-1 text-xs font-semibold text-white shadow-[var(--shadow-soft)]">
+                      <CheckCircle2 size={14} strokeWidth={2} />
+                      Fertig
                     </div>
                   ) : null}
+                </div>
+
+                <div className="p-5">
+                  <div
+                    className={`mb-3 inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+                      isDone
+                        ? "bg-white/70 text-[var(--color-mint-deep)]"
+                        : "bg-[var(--color-mint)] text-[var(--color-mint-deep)]"
+                    }`}
+                  >
+                    Brücke {bridge.order}
+                  </div>
+                  <h2 className="mb-2 text-xl font-semibold leading-snug">
+                    {bridge.name}
+                  </h2>
+                  <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                    {bridge.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-medium text-[var(--color-lavender-deep)]">
+                      {bridge.skillLabel}
+                    </div>
+                    {isDone && bp ? (
+                      <div className="inline-flex items-center gap-1 text-xs text-[var(--color-mint-deep)]">
+                        <Feather size={14} strokeWidth={1.8} />
+                        {bp.tasksDone}/{bridge.totalTasks}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               </Link>
             </li>

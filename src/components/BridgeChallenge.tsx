@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, Feather } from "lucide-react";
 import type { Bridge } from "@/data/bridges";
@@ -280,6 +281,23 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         Zurück zur Karte
       </Link>
 
+      {/* Brücken-Bild: solange Aufgaben laufen, zeigen wir die wackelige
+          (kaputte) Brücke mit sanftem Wackeln — kein Stress-Effekt, nur leise
+          Atmosphäre. Sobald alle Aufgaben gelöst sind, wird das Bild in der
+          CompleteCard durch die reparierte Variante ersetzt. */}
+      <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-soft)]">
+        <Image
+          src={`/bridges/${bridge.id}/${status === "complete" ? "repaired" : "broken"}.png`}
+          alt={`${bridge.name} — ${status === "complete" ? "repariert" : "wackelig"}`}
+          width={1024}
+          height={1024}
+          priority
+          className={`h-full w-full object-cover ${
+            status === "complete" ? "" : "animate-bridge-wobble"
+          }`}
+        />
+      </div>
+
       <div className="mb-2 inline-flex items-center justify-center rounded-full bg-[var(--color-mint)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--color-mint-deep)]">
         Brücke {bridge.order} · {bridge.skillLabel}
       </div>
@@ -407,3 +425,4 @@ function CompleteCard({
     </div>
   );
 }
+
