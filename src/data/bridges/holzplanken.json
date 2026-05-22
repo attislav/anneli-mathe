@@ -1,0 +1,18 @@
+{
+  "id": "holzplanken",
+  "order": 2,
+  "name": "Holzplankenbrücke",
+  "skill": "addition20",
+  "skillLabel": "Plus bis 20 mit Zehnerübergang",
+  "description": "Eine Brücke aus Holzbrettern. Manche fehlen — Anneli rechnet aus, wie viele dazu müssen, auch über die Zehn hinweg.",
+  "inputMode": "keypad",
+  "_inputMode_note": "Brücke 2 sollte Speech sein, braucht aber SSR. Keypad als Fallback bis API-Routes verfügbar.",
+  "totalTasks": 5,
+  "story_intro": "Die Brücke hat Lücken. Damit die Vögel sicher rüberkönnen, müssen die Planken zusammenpassen. Rechne aus, wie viele dazu kommen müssen.",
+  "hint_chain": [
+    "Erst zur Zehn ergänzen, dann den Rest dazu. 8 + 7 = 8 + 2 + 5 = 10 + 5.",
+    "Wie viele fehlen bis zur Zehn? Den Rest legst du oben drauf.",
+    "Nimm deine Finger zur Hilfe — erst bis zehn, dann weiter."
+  ],
+  "completion_beat": "Die Planken liegen alle an ihrem Platz. Die Brücke ist fest. Die Vögel hüpfen vorsichtig rüber — und du hast es geschafft."
+}

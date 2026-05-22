@@ -1,0 +1,17 @@
+{
+  "id": "nachbarn",
+  "order": 5,
+  "name": "Nachbarsbrücke",
+  "skill": "tensNeighbors",
+  "skillLabel": "Zehnernachbarn im Hunderterraum",
+  "description": "Eine Brücke aus nummerierten Bohlen — Anneli findet die Zehnernachbarn (die nächsten Zehner davor und danach).",
+  "inputMode": "number-line",
+  "totalTasks": 4,
+  "story_intro": "Auf dieser Brücke sind die Bohlen mit Zahlen beschriftet. Du musst die nächsten Zehner finden — die Nachbarn davor oder danach.",
+  "hint_chain": [
+    "Welcher Zehner ist gleich vor mir, welcher gleich nach mir? 47: davor 40, danach 50.",
+    "Schau auf die Einer: über 5? Dann liegt der nächste Zehner näher. Unter 5? Dann der davor.",
+    "Such die runde Zahl, die direkt neben deiner Zahl liegt — auf dem Zahlenstrahl."
+  ],
+  "completion_beat": "Jede Bohle hat ihren Nachbarn gefunden. Die Brücke trägt. Du weißt jetzt, zwischen welchen Zehnern jede Zahl wohnt."
+}

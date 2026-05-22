@@ -14,6 +14,7 @@ import {
   type ProgressState,
 } from "@/data/progress";
 import { AudioButton } from "./AudioButton";
+import { BookSays } from "./BookSays";
 import { useSoundFx } from "@/lib/useSoundFx";
 import { BridgeInput, type InputStatus } from "./inputs";
 
@@ -297,7 +298,15 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         Brücke {bridge.order} · {bridge.skillLabel}
       </div>
       <h1 className="mb-2 text-3xl font-semibold md:text-4xl">{bridge.name}</h1>
-      <p className="mb-6 text-[var(--color-ink-soft)]">{bridge.description}</p>
+      <p className="mb-4 text-[var(--color-ink-soft)]">{bridge.description}</p>
+
+      {/* Story-Intro: 1-Satz-Beat vom Buch VOR der ersten Aufgabe. Audio nutzt
+          die existierende `bridge-<id>-hint`-Vertonung, die ebenfalls vom Buch
+          gesprochen wird — gleicher Sprecher, also tonlich konsistent. So
+          hören wir die Story, sie wird nicht nur gelesen. */}
+      {status !== "complete" ? (
+        <BookSays audio={`bridge-${bridge.id}-hint`}>{bridge.story_intro}</BookSays>
+      ) : null}
 
       {/* Progressbar — sichtbarer Fortschritt der Brücken-Reparatur. */}
       <div className="mb-6">
@@ -320,7 +329,15 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
       </div>
 
       {status === "complete" ? (
-        <CompleteCard bridge={bridge} tasksDone={tasksDone} attempts={attempts} />
+        <>
+          {/* Abschluss-Beat vom Buch — die Story geht weiter, sobald die
+              Brücke repariert ist. Audio-ID `bridge-<id>-complete` ist
+              optional (vorerst nicht vertont): AudioButton scheitert leise,
+              wenn die mp3 fehlt. Wenn wir später `npm run gen:narration` mit
+              den completion_beats laufen lassen, klingt's auch. */}
+          <BookSays audio={`bridge-${bridge.id}-complete`}>{bridge.completion_beat}</BookSays>
+          <CompleteCard bridge={bridge} tasksDone={tasksDone} attempts={attempts} />
+        </>
       ) : (
         <div className="rounded-[var(--radius-card)] bg-[var(--color-paper)] p-6 shadow-[var(--shadow-soft)] sm:p-8">
           {current.vignette ? (
@@ -353,9 +370,19 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
             </div>
           ) : null}
 
-          {showHint && current.hint && status !== "step-success" ? (
+          {showHint && status !== "step-success" ? (
             <div className="mt-6 rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-3 text-center text-sm text-[var(--color-ink)]">
-              <span className="font-semibold">Tipp:</span> {current.hint}
+              <span className="font-semibold">Tipp:</span>{" "}
+              {/* Gestaffelter Hint aus der `hint_chain` der Brücke:
+                  0 falsche Versuche → Stufe 0 (sanft),
+                  1 falsch → Stufe 1 (konkreter),
+                  ≥2 falsch → Stufe 2 (Anleitung).
+                  Fallback auf den aufgabenspezifischen `exercise.hint`, wenn
+                  die Brücke nur einen Eintrag hat — so bleibt der Generator-
+                  Hint nicht ungenutzt. */}
+              {bridge.hint_chain[Math.min(wrongInARow, bridge.hint_chain.length - 1)] ??
+                current.hint ??
+                "Schau nochmal genau hin."}
             </div>
           ) : null}
 

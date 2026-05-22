@@ -1,0 +1,17 @@
+{
+  "id": "zehner",
+  "order": 6,
+  "name": "Spiegelbrücke",
+  "skill": "doubleHalf",
+  "skillLabel": "Verdoppeln und Halbieren bis 100",
+  "description": "Die letzte Brücke ist ein Spiegel: was du auf der einen Seite legst, muss auf der anderen verdoppelt oder halbiert sein.",
+  "inputMode": "mirror",
+  "totalTasks": 6,
+  "story_intro": "Die letzte Brücke ist magisch — sie ist ein Spiegel. Eine Seite zeigt dir eine Zahl, du musst die andere Seite vervollständigen: verdoppelt oder halbiert.",
+  "hint_chain": [
+    "Verdoppeln: dieselbe Zahl noch mal dazu. Halbieren: in zwei gleiche Teile.",
+    "Bei Verdoppeln rechnest du plus dieselbe Zahl. Bei Halbieren teilst du durch zwei.",
+    "Stell dir die Zahl als zwei gleich große Haufen vor — einer ist die Hälfte, beide zusammen das Doppelte."
+  ],
+  "completion_beat": "Der Spiegel zeigt zwei Seiten im Gleichgewicht. Die Brücke leuchtet kurz auf — du hast die letzte Brücke im Himmelreich repariert. Die Vögel fliegen wieder frei."
+}

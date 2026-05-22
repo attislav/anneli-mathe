@@ -1,0 +1,17 @@
+{
+  "id": "bruechig",
+  "order": 3,
+  "name": "Brüchige Brücke",
+  "skill": "subtraction20",
+  "skillLabel": "Minus bis 20 mit Zehnerübergang",
+  "description": "Eine alte Brücke, Steine fallen herunter. Anneli rechnet, wie viele übrig bleiben — auch über die Zehn zurück.",
+  "inputMode": "keypad",
+  "totalTasks": 5,
+  "story_intro": "Bröckel, bröckel — wieder ein Stein weg. Wie viele bleiben noch übrig? Rechne nach, bevor die Brücke ganz auseinanderfällt.",
+  "hint_chain": [
+    "Erst zur Zehn runter, dann den Rest. 15 − 8 = 15 − 5 − 3 = 10 − 3.",
+    "Wie viele musst du wegnehmen bis zur Zehn? Den Rest danach.",
+    "Stell dir die Steine vor — nimm einen nach dem anderen weg."
+  ],
+  "completion_beat": "Geschafft! Die Brücke trägt noch — und du weißt jetzt genau, was übrig bleibt. Ein Vogel sitzt auf dem letzten Stein und nickt dir zu."
+}
