@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, Feather } from "lucide-react";
@@ -13,9 +13,9 @@ import {
   setSkillLevel,
   type ProgressState,
 } from "@/data/progress";
-import { MathInput } from "./MathInput";
 import { AudioButton } from "./AudioButton";
 import { useSoundFx } from "@/lib/useSoundFx";
+import { BridgeInput, type InputStatus } from "./inputs";
 
 // ----- Konstanten ------------------------------------------------------------
 
@@ -69,8 +69,6 @@ function nextLevel(current: Level, streak: { correct: number; wrong: number }): 
 
 // ----- Component -------------------------------------------------------------
 
-type Status = "asking" | "retry" | "step-success" | "complete";
-
 export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
   // ----- State (Persistenz + Adaptive) --------------------------------------
 
@@ -118,11 +116,9 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
   const [wrongInARow, setWrongInARow] = useState(0);
   const [showHint, setShowHint] = useState(false);
 
-  const [value, setValue] = useState("");
-  const [status, setStatus] = useState<Status>("asking");
+  const [status, setStatus] = useState<InputStatus>("asking");
   const [retryQuip, setRetryQuip] = useState<typeof RETRY_QUIPS[number] | null>(null);
   const [stepQuip, setStepQuip] = useState<typeof STEP_SUCCESS_QUIPS[number] | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const playFx = useSoundFx();
 
   // Beim Betreten der Brücke einmalig knarzen — Atmosphäre, kein Game-Over-Vibe.
@@ -146,16 +142,19 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
     }
   }, [status, retryQuip, stepQuip]);
 
-  // ----- Hint-Timer: nach HINT_DELAY_MS ohne Eingabe Tipp einblenden --------
+  // ----- Hint-Timer: nach HINT_DELAY_MS Tipp einblenden ---------------------
+  // Input-Komponenten managen ihren eigenen "in progress"-State (z.B. ob
+  // Anneli schon getippt hat) — wir können das hier nicht mehr generisch
+  // wissen. Pragmatisch: Hint blendet trotzdem nach 8s ein, wenn der Status
+  // "asking" ist und der Tap-Timer läuft.
 
   useEffect(() => {
     if (status !== "asking") return;
-    if (value.length > 0) return; // Anneli ist dabei zu tippen — kein Druck.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowHint(false);
     const timer = window.setTimeout(() => setShowHint(true), HINT_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [currentIndex, status, value]);
+  }, [currentIndex, status]);
 
   // ----- Bridge-Abschluss persistieren --------------------------------------
 
@@ -172,15 +171,13 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  // ----- Handler -------------------------------------------------------------
+  // ----- Antwort-Handler (vom Input-Component aufgerufen) -------------------
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleAnswer(answer: number) {
     if (!hasGenerator || !current) return;
-    const parsed = Number(value);
-    if (Number.isNaN(parsed)) return;
+    if (status === "step-success" || status === "complete") return;
 
-    const isCorrect = parsed === current.correctAnswer;
+    const isCorrect = answer === current.correctAnswer;
     const nextAttempts = attempts + 1;
     setAttempts(nextAttempts);
 
@@ -211,14 +208,12 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         const nextEx = generateExercise(bridge.skill, newLevel);
         setExercises((prev) => [...prev, nextEx]);
         setCurrentIndex((i) => i + 1);
-        setValue("");
         setStatus("asking");
         setRetryQuip(null);
         setStepQuip(null);
         setShowHint(false);
         // Streak zurücksetzen nur nach Level-Wechsel (Streak ist die Trigger-Größe).
         if (newLevel !== level) setStreak({ correct: 0, wrong: 0 });
-        requestAnimationFrame(() => inputRef.current?.focus());
       }, 850);
     } else {
       const nextWrongInRow = wrongInARow + 1;
@@ -227,7 +222,6 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
       setWrongInARow(nextWrongInRow);
       setRetryQuip(pickRandom(RETRY_QUIPS));
       setStatus("retry");
-      setValue("");
       setShowHint(true); // Bei falsch sofort Hint zeigen.
 
       // Nach 3× falsch derselben Aufgabe: leichtere Variante anbieten.
@@ -245,7 +239,8 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         setStreak({ correct: 0, wrong: 0 });
       }
 
-      requestAnimationFrame(() => inputRef.current?.focus());
+      // Nach kurzer Pause zurück zu "asking" — damit der Input wieder aktiv ist.
+      window.setTimeout(() => setStatus((s) => (s === "retry" ? "asking" : s)), 900);
     }
   }
 
@@ -327,10 +322,7 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
       {status === "complete" ? (
         <CompleteCard bridge={bridge} tasksDone={tasksDone} attempts={attempts} />
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="rounded-[var(--radius-card)] bg-[var(--color-paper)] p-8 shadow-[var(--shadow-soft)]"
-        >
+        <div className="rounded-[var(--radius-card)] bg-[var(--color-paper)] p-6 shadow-[var(--shadow-soft)] sm:p-8">
           {current.vignette ? (
             <p className="mb-4 text-center text-base italic leading-relaxed text-[var(--color-ink-soft)]">
               {current.vignette}
@@ -341,21 +333,19 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
             {current.prompt}
           </p>
 
-          <div className="mb-6 flex justify-center">
-            <MathInput
-              ref={inputRef}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              autoFocus
-              aria-label="Deine Antwort"
-              disabled={status === "step-success"}
-            />
-          </div>
+          {/* Input-Modus-Switch: jede Brücke hat ihren eigenen Mechanismus. */}
+          <BridgeInput
+            mode={bridge.inputMode}
+            exercise={current}
+            status={status}
+            onSubmit={handleAnswer}
+            disabled={status === "step-success"}
+          />
 
           {/* Hint-System: kein "falsch!"-Buzzer, nur sanfter Tipp.
               `{bird}`-Platzhalter wird hier durch Annelis Vogel-Namen ersetzt. */}
           {status === "retry" && retryQuip ? (
-            <div className="mb-4 flex items-center justify-center gap-3 text-base text-[var(--color-ink-soft)]">
+            <div className="mt-6 flex items-center justify-center gap-3 text-base text-[var(--color-ink-soft)]">
               <p>
                 {retryQuip.text.replace("{bird}", progress?.birdName ?? "Pip")}
               </p>
@@ -364,28 +354,18 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
           ) : null}
 
           {showHint && current.hint && status !== "step-success" ? (
-            <div className="mb-6 rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-3 text-center text-sm text-[var(--color-ink)]">
+            <div className="mt-6 rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-3 text-center text-sm text-[var(--color-ink)]">
               <span className="font-semibold">Tipp:</span> {current.hint}
             </div>
           ) : null}
 
           {status === "step-success" && stepQuip ? (
-            <div className="mb-4 flex items-center justify-center gap-2 text-base font-semibold text-[var(--color-mint-deep)]">
+            <div className="mt-6 flex items-center justify-center gap-2 text-base font-semibold text-[var(--color-mint-deep)]">
               <Sparkles size={20} strokeWidth={1.8} />
               <span>{stepQuip.text}</span>
             </div>
           ) : null}
-
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              disabled={value.length === 0 || status === "step-success"}
-              className="inline-flex items-center justify-center rounded-full bg-[var(--color-lavender-deep)] px-6 py-3 text-base font-semibold text-white shadow-[var(--shadow-soft)] transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-            >
-              Brücke prüfen
-            </button>
-          </div>
-        </form>
+        </div>
       )}
     </div>
   );
@@ -425,4 +405,3 @@ function CompleteCard({
     </div>
   );
 }
-

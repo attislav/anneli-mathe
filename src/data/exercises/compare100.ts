@@ -1,10 +1,14 @@
 // Zahlen vergleichen bis 100.
 // Niveau: Klasse 2 (Zehner und Einer auseinanderhalten).
 //
-// Mechanik: zwei zweistellige Zahlen, Kind soll die GRÖSSERE bzw. KLEINERE
-// nennen. Antwort = die Zahl selbst (nicht "links/rechts"), damit es zum
-// Number-Keypad-Modus passt — der visuelle Drag-Symbol-Modus (<, =, >)
-// kommt später als Komponenten-Variante on top.
+// Mechanik: zwei zweistellige Zahlen, Kind setzt das richtige Symbol
+// (<, =, >) dazwischen. Die Brücke 4 nutzt den `compare-symbol`-Input-Mode
+// (Drag/Tap auf eines der drei Symbole), siehe `CompareSymbolInput.tsx`.
+//
+// `correctAnswer` ist als Symbol-Code kodiert:
+//   -1 = links < rechts
+//    0 = links = rechts
+//    1 = links > rechts
 //
 // Pädagogisches Ziel: zuerst Zehner vergleichen, bei Gleichstand Einer.
 // Wir bevorzugen darum Paare mit GLEICHEN Zehnern (z.B. 47 vs 42) — das
@@ -14,24 +18,18 @@ import type { Exercise, Level } from "./types";
 import { exerciseId, randInt } from "./types";
 import { vignetteCompare } from "./vignettes";
 
-type CompareForm = "larger" | "smaller";
-
 /**
  * Erzeugt eine Vergleichs-Aufgabe.
  * - "easy": einstellige + zweistellige Zahlen (offensichtlich verschieden).
- * - "normal": zweistellige mit ~50% gleichen Zehnern.
+ * - "normal": zweistellige mit ~50% gleichen Zehnern, gelegentlich Gleichheit.
  * - "hard": zweistellige mit ~80% gleichen Zehnern (Einer entscheiden).
  */
 export function generateCompare100(level: Level = "normal"): Exercise {
   const [left, right] = pickPair(level);
-  const form: CompareForm = Math.random() < 0.65 ? "larger" : "smaller";
-  const answer = form === "larger" ? Math.max(left, right) : Math.min(left, right);
-  const askLarger = form === "larger";
+  const compareResult: -1 | 0 | 1 = left < right ? -1 : left > right ? 1 : 0;
 
-  const vignette = vignetteCompare({ left, right, askLarger });
-  const prompt = askLarger
-    ? `Welche Zahl ist größer: ${left} oder ${right}?`
-    : `Welche Zahl ist kleiner: ${left} oder ${right}?`;
+  const vignette = vignetteCompare({ left, right, askLarger: true });
+  const prompt = `${left}   ?   ${right}`;
 
   return {
     id: exerciseId("cmp"),
@@ -39,8 +37,8 @@ export function generateCompare100(level: Level = "normal"): Exercise {
     prompt,
     vignette,
     visual: { kind: "compare", left, right },
-    correctAnswer: answer,
-    hint: hintFor(left, right, form),
+    correctAnswer: compareResult,
+    hint: hintFor(left, right),
     level,
   };
 }
@@ -51,6 +49,12 @@ function pickPair(level: Level): [number, number] {
     const small = randInt(2, 9);
     const big = randInt(20, 99);
     return Math.random() < 0.5 ? [small, big] : [big, small];
+  }
+
+  // ~10% Gleichheits-Fall ab "normal" — das = ist eine eigene Lern-Erfahrung.
+  if (level !== "hard" && Math.random() < 0.12) {
+    const eq = randInt(11, 99);
+    return [eq, eq];
   }
 
   const sameTens = level === "hard" ? Math.random() < 0.8 : Math.random() < 0.5;
@@ -73,15 +77,14 @@ function pickPair(level: Level): [number, number] {
   return [a, b];
 }
 
-function hintFor(left: number, right: number, form: CompareForm): string {
+function hintFor(left: number, right: number): string {
+  if (left === right) {
+    return "Beide sind gleich viele — schau noch einmal genau hin. Welches Zeichen passt dann?";
+  }
   const tensL = Math.floor(left / 10);
   const tensR = Math.floor(right / 10);
   if (tensL === tensR) {
-    return form === "larger"
-      ? "Beide haben gleich viele Zehner — schau die Einer an."
-      : "Gleiche Zehner. Welche Einerstelle ist kleiner?";
+    return "Beide haben gleich viele Zehner — schau die Einer an. Die Spitze zeigt zur kleineren Zahl.";
   }
-  return form === "larger"
-    ? "Schau zuerst die Zehner — wer mehr Zehner hat, ist größer."
-    : "Schau die Zehner — wer weniger Zehner hat, ist kleiner.";
+  return "Schau zuerst die Zehner — wer mehr Zehner hat, ist größer. Die Spitze des Zeichens zeigt zur kleineren Zahl.";
 }

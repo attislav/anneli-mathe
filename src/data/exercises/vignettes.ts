@@ -132,18 +132,12 @@ export function vignetteSubtraction(args: SubArgs): string {
 type CompareArgs = { left: number; right: number; askLarger: boolean };
 
 const COMPARE_TEMPLATES: VignetteFn<CompareArgs>[] = [
-  ({ left, right, askLarger }) =>
-    askLarger
-      ? `Zwei Inseln. Auf der einen liegen ${left} Federn, auf der anderen ${right}. Welche Insel hat mehr?`
-      : `Zwei Inseln. ${left} Federn hier, ${right} Federn da. Welche Insel hat weniger?`,
-  ({ left, right, askLarger }) =>
-    askLarger
-      ? `Auf Wolke A sitzen ${left} Vögel, auf Wolke B ${right}. Welche Wolke ist voller?`
-      : `Wolke A hat ${left} Vögel, Wolke B hat ${right}. Welche Wolke hat weniger Vögel?`,
-  ({ left, right, askLarger }) =>
-    askLarger
-      ? `Die Waagebrücke schwankt. Links liegen ${left} Beeren, rechts ${right}. Welche Seite ist schwerer?`
-      : `Auf der Waagebrücke liegen ${left} Beeren links und ${right} rechts. Welche Seite ist leichter?`,
+  ({ left, right }) =>
+    `Zwei Inseln. Auf der einen liegen ${left} Federn, auf der anderen ${right}. Setz das richtige Zeichen dazwischen.`,
+  ({ left, right }) =>
+    `Auf Wolke A sitzen ${left} Vögel, auf Wolke B ${right}. Welche Seite ist schwerer? Stell die Waage richtig.`,
+  ({ left, right }) =>
+    `Die Waagebrücke schwankt. Links ${left} Beeren, rechts ${right} Beeren. Welches Zeichen passt zwischen die Zahlen?`,
 ];
 
 export function vignetteCompare(args: CompareArgs): string {

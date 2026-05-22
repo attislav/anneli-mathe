@@ -71,3 +71,18 @@ h1, h2, h3 {
 @media (prefers-reduced-motion: reduce) {
   .animate-bridge-wobble { animation: none; }
 }
+
+/* Symbol-Pop: kurzes Aufpoppen, wenn Anneli in Brücke 4 ein Vergleichs-
+   Symbol auswählt. Eine kleine Bestätigung, dass ihre Wahl erkannt ist. */
+@keyframes symbolPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.animate-symbol-pop {
+  animation: symbolPop 0.25s ease-out forwards;
+  display: inline-block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-symbol-pop { animation: none; }
+}

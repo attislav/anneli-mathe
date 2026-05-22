@@ -232,7 +232,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 - [x] **Aufgaben-Generator pro Skill** (counting20, addition20, subtraction20, compare100, tensNeighbors, doubleHalf) — randomisiert, variantenreich, Level-fähig (easy/normal/hard)
 - [x] **Story-Mikro-Vignetten** pro Aufgabe (`src/data/exercises/vignettes.ts` — mehrere Templates pro Skill und Aufgabenform, Sky-Kingdom-Welt: Vogelmama, Pip, Eier, Federn, Wolken, Beeren)
 - [x] **Multi-Task-Flow** in BridgeChallenge: `bridge.totalTasks` Aufgaben pro Brücke (4–6), Progressbar, Brücke gilt erst nach allen Aufgaben als repariert
-- [ ] **Input-Mode pro Brücke** (Tap-Count, Speech, Number-Keypad, Drag-Symbol, Zahlenstrahl-Tap, Spiegel-Mechanik — Component-Switch nach `input_mode`-Feld der Brücke)
+- [x] **Input-Mode pro Brücke** (Tap-Count auf Brücke 1, Keypad auf Brücke 2+3, Compare-Symbol-Tap auf Brücke 4, Zahlenstrahl-Tap auf Brücke 5, Spiegel-Mechanik auf Brücke 6 — Dispatcher in `src/components/inputs/index.tsx`. Speech bleibt blockiert: braucht SSR.)
 - [x] **Hinweis-System statt Falsch-Feedback** (kein roter Buzzer; nach 8 Sek ohne Eingabe Tipp einblenden; nach falscher Antwort sofort Tipp; nach 3× falsch leichtere Variante)
 - [x] **Adaptive within bridge** (3 richtig in Folge → 1 Stufe schwerer / 2 falsch in Folge → 1 Stufe leichter; Level pro Skill persistiert)
 - [x] **Vogel-Begleiter mit Namen** (Onboarding-Modal beim ersten Sky-Map-Besuch, 6 Namens-Vorschläge + Free-Text, Persistenz via `progress.birdName`, in SkyMap-Header und Retry-Quips als `{bird}`-Platzhalter eingesetzt)
@@ -312,14 +312,14 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | Spur | Aktueller Stand | Nächstes |
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
-| **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
+| **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ · 5 Input-Modi (Tap/Keypad/Compare-Symbol/Number-Line/Mirror) ✓ | Story-Engine als JSON-Daten, Speech (braucht SSR) |
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ · 12 Brücken-Status-Bilder ✓ · Buch-Charakter-Asset ✓ | Eltern-View / Skill-Heatmap (Wo 4), Wüsten-Setting (Wo 5) |
 | **Pause-Mechanik** | 10-Min-Soft-Suggest ✓ | — |
 | **Audio (KI)** | OpenAI TTS, 3 Voices (sage/ballad/coral), 17 Audios, speaker-aware Paths · 4 ElevenLabs Sound-FX · Ambient-Player bereit ✓ | Ambient-Music droppen (Pixabay), ElevenLabs-Upgrade Wo 4 |
 | **Adaptive** | nichts | within-bridge (Wo 1), skill-übergreifend (Wo 7-8) |
 | **Hosting** | Dev lokal | Vercel (Wo 7–8) |
-| **Input-Modi** | nichts (klassisches Input-Feld) | 6 Modi pro Brücke (Wo 1) |
+| **Input-Modi** | 5 Modi live (Tap-Count, Keypad, Compare-Symbol, Number-Line, Mirror) ✓ | Speech (Brücke 2) braucht SSR — aktuell Keypad-Fallback |
 | **Eltern-Telegram-Report** | nichts | VPS-Cron sonntags 19:00 (Wo 4) |
 
 ---
