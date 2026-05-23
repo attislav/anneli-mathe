@@ -34,6 +34,43 @@ export type Level = "easy" | "normal" | "hard";
  *   bzw. nach falscher Antwort.
  * - `level`: Schwierigkeitsgrad, mit dem die Aufgabe erzeugt wurde.
  */
+/**
+ * Aufgaben-Variante innerhalb eines Skills. Optional — falls nicht gesetzt,
+ * gilt "plain" (Standard-Form des Skills).
+ *
+ * Werte:
+ *   - "plain"     : nackte Standard-Form (z.B. a+b=?, "Wie viele?")
+ *   - "gap-a"     : Lücke vorne (z.B. ?+b=c, ?-b=c)
+ *   - "gap-b"     : Lücke hinten (z.B. a+?=c, a-?=c)
+ *   - "missing"   : "wie viele fehlen bis X?" (counting20)
+ *   - "even-only" : nur Gerade zählen (counting20)
+ *   - "context"   : Sachaufgabe (z.B. "Anneli hatte ... wie viele verloren?")
+ *   - "commutative": Kommutativ-Frage (a+b vs b+a)
+ *   - "multi-pick": aus mehreren Werten den größten/kleinsten wählen
+ *   - "set-compare": zwei Sets vergleichen
+ *   - "step-before"/"step-after": 5 vor/nach X (tensNeighbors)
+ *   - "closer-tens": welcher Zehner ist näher (tensNeighbors)
+ *   - "quarter"   : Hälfte von Hälfte = Viertel (doubleHalf)
+ *   - "quadruple" : Doppelt von Doppelt = ×4 (doubleHalf)
+ *   - "mix"       : Verkettete Operation (doubleHalf)
+ */
+export type ExerciseVariant =
+  | "plain"
+  | "gap-a"
+  | "gap-b"
+  | "missing"
+  | "even-only"
+  | "context"
+  | "commutative"
+  | "multi-pick"
+  | "set-compare"
+  | "step-before"
+  | "step-after"
+  | "closer-tens"
+  | "quarter"
+  | "quadruple"
+  | "mix";
+
 export type Exercise = {
   id: string;
   skill: Skill;
@@ -44,6 +81,13 @@ export type Exercise = {
   acceptableAnswers?: string[];
   hint?: string;
   level: Level;
+  /**
+   * Optionale Variante innerhalb des Skills. Generatoren setzen das, wenn
+   * sie verschiedene Aufgaben-Formen produzieren. UI darf das auswerten,
+   * muss aber nicht — die Mechanik (`correctAnswer`-Vergleich) funktioniert
+   * unverändert.
+   */
+  variant?: ExerciseVariant;
 };
 
 export type ExerciseVisual =

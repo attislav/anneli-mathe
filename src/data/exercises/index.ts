@@ -13,7 +13,7 @@ import { generateTensNeighbors } from "./tensNeighbors";
 import { generateDoubleHalf } from "./doubleHalf";
 import type { Exercise, Level } from "./types";
 
-export type { Exercise, ExerciseVisual, Level } from "./types";
+export type { Exercise, ExerciseVisual, ExerciseVariant, Level } from "./types";
 export { generateCounting20 } from "./counting20";
 export { generateAddition20 } from "./addition20";
 export { generateSubtraction20 } from "./subtraction20";

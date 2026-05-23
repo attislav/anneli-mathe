@@ -5,20 +5,26 @@
 // soll geübt werden. Wir bevorzugen daher Aufgaben, bei denen mindestens
 // ein Summand ≥ 6 ist und das Ergebnis > 10 — aber nicht ausschließlich,
 // damit auch nicht-überschreitende Aufgaben als Auflockerung kommen.
+//
+// Varianten (M1, 2026-05-23):
+//   - "plain"       : a + b = ?
+//   - "gap-b"       : a + ? = c (Lücke hinten)
+//   - "gap-a"       : ? + b = c (Lücke vorne)
+//   - "commutative" : a+b und b+a — gleicher Wert? (hard-only)
+//
+// Verteilung nach Level:
+//   easy:   90 % plain, 10 % gap-b
+//   normal: 60 % plain, 25 % gap-b, 15 % gap-a
+//   hard:   35 % plain, 25 % gap-b, 25 % gap-a, 15 % commutative
 
 import type { Exercise, Level } from "./types";
 import { exerciseId, randInt } from "./types";
 import { vignetteAddition } from "./vignettes";
 
+type Form = "a+b" | "a+?" | "?+b" | "commutative";
+
 /**
  * Erzeugt eine Plus-Aufgabe a + b mit 1 ≤ a, b ≤ 18 und a + b ≤ 20.
- *
- * Level beeinflusst die Carry-Wahrscheinlichkeit:
- *   - "easy":   30 % Zehnerübergang
- *   - "normal": 75 % Zehnerübergang
- *   - "hard":   95 % Zehnerübergang, Lücken-Aufgaben häufiger
- *
- * Aufgabenform: "a + b = ?", "a + ? = c" oder "? + b = c".
  */
 export function generateAddition20(level: Level = "normal"): Exercise {
   const carryP = level === "easy" ? 0.3 : level === "hard" ? 0.95 : 0.75;
@@ -27,8 +33,6 @@ export function generateAddition20(level: Level = "normal"): Exercise {
   const [a, b] = wantsCarry ? pairWithCarry() : pairWithoutCarry();
   const sum = a + b;
 
-  // Aufgabenform wählen. Lücken-Aufgaben sind interessanter, aber nicht
-  // jede Lücken-Variante macht Sinn — wir mischen drei Formen.
   const form = pickForm(level);
 
   switch (form) {
@@ -41,6 +45,7 @@ export function generateAddition20(level: Level = "normal"): Exercise {
         correctAnswer: sum,
         hint: hintFor(a, b),
         level,
+        variant: "plain",
       };
     }
     case "a+?": {
@@ -52,6 +57,7 @@ export function generateAddition20(level: Level = "normal"): Exercise {
         correctAnswer: b,
         hint: "Wie viel fehlt von der ersten Zahl bis zur Summe?",
         level,
+        variant: "gap-b",
       };
     }
     case "?+b": {
@@ -63,13 +69,27 @@ export function generateAddition20(level: Level = "normal"): Exercise {
         correctAnswer: a,
         hint: "Wie viel fehlt vor der zweiten Zahl, damit die Summe stimmt?",
         level,
+        variant: "gap-a",
+      };
+    }
+    case "commutative": {
+      // Frage: a+b und b+a — gleicher Wert? Antwort ist immer die Summe
+      // (das Kind tippt einfach den Wert, der für beides gilt).
+      return {
+        id: exerciseId("a20"),
+        skill: "addition20",
+        prompt: `${a} + ${b}  und  ${b} + ${a}  =  ?`,
+        vignette: vignetteAddition({ a, b, sum, form }),
+        correctAnswer: sum,
+        hint: "Plus dreht sich um — die Reihenfolge ist egal. Beide ergeben dasselbe.",
+        level,
+        variant: "commutative",
       };
     }
   }
 }
 
 function pairWithCarry(): [number, number] {
-  // Beide Summanden 2..9, Summe 11..18, mindestens einer ≥ 6 für echten Übergang.
   while (true) {
     const a = randInt(2, 9);
     const b = randInt(2, 9);
@@ -81,40 +101,35 @@ function pairWithCarry(): [number, number] {
 }
 
 function pairWithoutCarry(): [number, number] {
-  // Summe bis 10 ODER einer der Summanden ist die 10 selbst (10 + n).
   if (Math.random() < 0.5) {
-    // 10 + n
     const n = randInt(1, 9);
     return Math.random() < 0.5 ? [10, n] : [n, 10];
   }
-  // a + b ≤ 10
   const a = randInt(1, 8);
   const b = randInt(1, 10 - a);
   return Math.random() < 0.5 ? [a, b] : [b, a];
 }
 
-type Form = "a+b" | "a+?" | "?+b";
 function pickForm(level: Level): Form {
   const r = Math.random();
   if (level === "hard") {
-    // Mehr Lücken-Varianten — die fordern stärker.
     if (r < 0.35) return "a+b";
-    if (r < 0.7) return "a+?";
-    return "?+b";
+    if (r < 0.6) return "a+?";
+    if (r < 0.85) return "?+b";
+    return "commutative";
   }
   if (level === "easy") {
-    // Fast nur die Standard-Form.
-    if (r < 0.85) return "a+b";
+    if (r < 0.9) return "a+b";
     return "a+?";
   }
+  // normal
   if (r < 0.6) return "a+b";
-  if (r < 0.8) return "a+?";
+  if (r < 0.85) return "a+?";
   return "?+b";
 }
 
 function hintFor(a: number, b: number): string {
   if (a + b <= 10) return "Beide Summanden zusammen — bleibt noch unter der Zehn.";
-  // Klassischer Zehnerübergangstipp.
   const larger = Math.max(a, b);
   const smaller = Math.min(a, b);
   const toTen = 10 - larger;
