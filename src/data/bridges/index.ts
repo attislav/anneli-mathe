@@ -23,8 +23,19 @@ import zehner from "./zehner.json";
 // ----- Public Types ----------------------------------------------------------
 
 /**
- * Die 6 Skills von Kapitel 1 (Sky Kingdom).
- * Spätere Kapitel ergänzen hier eigene Skill-Strings (`money`, `multiply`, …).
+ * Skills der App.
+ *   Kapitel 1 (Sky Kingdom):
+ *     counting20, addition20, subtraction20, compare100, tensNeighbors, doubleHalf
+ *   Kapitel 2 (Pfirsich-Wüste / Drachenschatz, M3 2026-05-27):
+ *     addSub100      — Plus/Minus bis 100, ohne+mit Übergang
+ *     money          — Cent/Euro (5+20 Cent, 1€-30Cent, etc.)
+ *     wordProblems100 — Sachaufgaben (Anneli sammelt … gibt … weg)
+ *
+ * Spätere Kapitel ergänzen hier eigene Skill-Strings (`multiply`, …).
+ *
+ * NOTE: Kapitel-2-Brücken sind in M3 noch NICHT angelegt — die Generatoren
+ * existieren stand-alone und können von späteren Brücken-JSONs referenziert
+ * werden. Test/Preview via `generateExercise(skill)`.
  */
 export type Skill =
   | "counting20"
@@ -32,7 +43,10 @@ export type Skill =
   | "subtraction20"
   | "compare100"
   | "tensNeighbors"
-  | "doubleHalf";
+  | "doubleHalf"
+  | "addSub100"
+  | "money"
+  | "wordProblems100";
 
 /**
  * Eingabe-Modus pro Brücke. Jede Brücke nutzt einen anderen Input-Mechanismus —

@@ -482,3 +482,214 @@ export function vignetteDoubleHalf(args: DoubleHalfArgs): string {
   if (args.mode === "double") return pickOne(DOUBLE_TEMPLATES)(args);
   return pickOne(HALF_TEMPLATES)(args);
 }
+
+// ============================================================================
+// Kapitel 2 — Pfirsich-Wüste & Drachenschatz (M3, 2026-05-27)
+// ============================================================================
+//
+// Welt-Inventar Kapitel 2:
+//   Wesen:        Drache (jung, freundlich), Karawanenleute, Marktbude-Tante,
+//                 Pip (begleitet Anneli weiter), Wüsten-Eidechse, Sandkrebs
+//   Orte:         Pfirsich-Wüste, Düne, Karawanenmarkt, Drachenhöhle,
+//                 Oase, Kristallpflanzen-Hain, Marktbude
+//   Gegenstände:  Drachen-Schuppen, Goldmünzen, Kristalle, Pfirsiche,
+//                 Datteln, Wasserschläuche, Sand, Talisman, Schatzkarte
+//   Geld:         Cent (1, 2, 5, 10, 20, 50), Euro (1, 2, 5)
+//   Phänomene:    Sandsturm, Wüstenwind, Sonnenuntergang, Sterne über der Wüste
+
+// ---------- addSub100 ----------
+
+type AddSub100Args = {
+  a: number;
+  b: number;
+  result: number;
+  op: "plus" | "minus";
+  form: "plain" | "gap-a" | "gap-b";
+};
+
+const ADD100_TEMPLATES_FULL: VignetteFn<AddSub100Args>[] = [
+  ({ a, b }) =>
+    `In der ersten Düne liegen ${a} Goldmünzen, in der zweiten ${b}. Wie viele insgesamt?`,
+  ({ a, b }) =>
+    `Der Drache zählt ${a} Schuppen am Bauch und ${b} am Rücken. Wie viele zusammen?`,
+  ({ a, b }) =>
+    `Die Karawane hat ${a} Pfirsiche dabei und kauft ${b} dazu. Wie viele Pfirsiche jetzt?`,
+  ({ a, b }) =>
+    `In der Oase wachsen ${a} Kristallpflanzen. Anneli pflanzt ${b} dazu. Wie viele jetzt?`,
+  ({ a, b }) =>
+    `Die Marktbude-Tante zählt ${a} Datteln im Korb und ${b} im Sack. Wie viele insgesamt?`,
+  ({ a, b }) =>
+    `Pip findet ${a} Sandkörner-Glitzer am Morgen und ${b} am Mittag. Wie viele zusammen?`,
+  ({ a, b }) =>
+    `Anneli sammelt ${a} Drachenschuppen-Splitter und der Drache schenkt ihr noch ${b}. Wie viele hat sie jetzt?`,
+  ({ a, b }) =>
+    `Auf der Schatzkarte sind ${a} Schritte zum Brunnen und ${b} weiter zur Höhle. Wie viele Schritte insgesamt?`,
+  ({ a, b }) =>
+    `Die Wüsten-Eidechse zählt ${a} warme Steine am Morgen und ${b} am Abend. Wie viele zusammen?`,
+];
+
+const SUB100_TEMPLATES_FULL: VignetteFn<AddSub100Args>[] = [
+  ({ a, b }) =>
+    `Der Drache hatte ${a} Goldmünzen. Er gibt ${b} an die Karawane. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `Auf der Düne lagen ${a} Pfirsiche. Der Sandsturm hat ${b} weggetragen. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `Im Wasserschlauch waren ${a} Schlucke. Die Karawane trinkt ${b}. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `Anneli hat ${a} Datteln. Sie gibt ${b} an Pip. Wie viele behält sie?`,
+  ({ a, b }) =>
+    `In der Drachenhöhle waren ${a} Kristalle. Der Drache hat ${b} verschenkt. Wie viele liegen noch da?`,
+  ({ a, b }) =>
+    `Die Karawane zählt ${a} Schritte. Sie sind schon ${b} gegangen. Wie viele Schritte bleiben?`,
+  ({ a, b }) =>
+    `Auf dem Marktstand lagen ${a} Pfirsiche. ${b} wurden verkauft. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `Im Kristallpflanzen-Hain wuchsen ${a} Kristalle. ${b} sind ausgetrocknet. Wie viele leuchten noch?`,
+  ({ a, b }) =>
+    `Die Schatzkiste hatte ${a} Münzen. ${b} sind durch ein Loch gerollt. Wie viele liegen noch drin?`,
+];
+
+const ADDSUB100_TEMPLATES_GAP_AB: VignetteFn<AddSub100Args>[] = [
+  ({ a, result, op }) =>
+    op === "plus"
+      ? `Anneli hat ${a} Goldmünzen. Sie braucht insgesamt ${result}. Wie viele fehlen noch?`
+      : `Der Drache hatte ${a} Schuppen. Jetzt sind nur noch ${result} da. Wie viele sind weg?`,
+  ({ a, result, op }) =>
+    op === "plus"
+      ? `In der Karawane sind ${a} Pfirsiche. Es sollen ${result} werden. Wie viele kommen dazu?`
+      : `Im Wasserschlauch waren ${a} Schlucke. Jetzt sind ${result} drin. Wie viele wurden getrunken?`,
+  ({ a, result, op }) =>
+    op === "plus"
+      ? `Auf der Düne liegen ${a} Kristalle. Insgesamt sollen ${result} dort wachsen. Wie viele fehlen?`
+      : `Auf dem Markt lagen ${a} Datteln. Jetzt nur noch ${result}. Wie viele wurden verkauft?`,
+];
+
+const ADDSUB100_TEMPLATES_GAP_PB: VignetteFn<AddSub100Args>[] = [
+  ({ b, result, op }) =>
+    op === "plus"
+      ? `Eine unbekannte Anzahl Münzen, dann ${b} dazu — jetzt sind es ${result}. Wie viele waren es zuerst?`
+      : `Der Drache hatte Schuppen, ${b} sind abgefallen — jetzt sind es ${result}. Wie viele waren es vorher?`,
+  ({ b, result, op }) =>
+    op === "plus"
+      ? `Im Karawanenkorb waren Pfirsiche, dann ${b} dazu — jetzt sind es ${result}. Mit wie vielen hat die Karawane gestartet?`
+      : `Anneli hatte Datteln, gab ${b} ab — jetzt hat sie ${result}. Wie viele hatte sie am Anfang?`,
+];
+
+export function vignetteAddSub100(args: AddSub100Args): string {
+  if (args.form === "gap-b") return pickOne(ADDSUB100_TEMPLATES_GAP_AB)(args);
+  if (args.form === "gap-a") return pickOne(ADDSUB100_TEMPLATES_GAP_PB)(args);
+  return args.op === "plus"
+    ? pickOne(ADD100_TEMPLATES_FULL)(args)
+    : pickOne(SUB100_TEMPLATES_FULL)(args);
+}
+
+// ---------- money ----------
+
+type MoneyArgs = {
+  /** beide Werte in CENT (Euro × 100). Ausgabe-Formatierer macht draus „1 €" oder „30 Cent". */
+  a: number;
+  b: number;
+  result: number;
+  op: "plus" | "minus";
+  /** "cent-only" = beides in Cent, "euro-cent" = Euros + Cent gemischt */
+  scale: "cent-only" | "euro-cent";
+};
+
+/** Formatiert Cent-Wert kindgerecht: 100 → "1 Euro", 50 → "50 Cent", 120 → "1 Euro 20 Cent". */
+export function formatCent(c: number): string {
+  if (c < 100) return `${c} Cent`;
+  const e = Math.floor(c / 100);
+  const r = c % 100;
+  const eStr = `${e} ${e === 1 ? "Euro" : "Euro"}`;
+  if (r === 0) return eStr;
+  return `${eStr} ${r} Cent`;
+}
+
+const MONEY_TEMPLATES_PLUS: VignetteFn<MoneyArgs>[] = [
+  ({ a, b }) =>
+    `Anneli hat ${formatCent(a)} im Beutel. Der Drache schenkt ihr ${formatCent(b)} dazu. Wie viel Cent hat sie jetzt?`,
+  ({ a, b }) =>
+    `Der Pfirsich kostet ${formatCent(a)}, eine Dattel ${formatCent(b)}. Was kostet beides zusammen in Cent?`,
+  ({ a, b }) =>
+    `Pip findet ${formatCent(a)} im Sand. Anneli legt ${formatCent(b)} dazu. Wie viel Cent ist das insgesamt?`,
+  ({ a, b }) =>
+    `Die Karawanen-Tante zählt ${formatCent(a)} im linken Topf, ${formatCent(b)} im rechten. Wie viel Cent zusammen?`,
+  ({ a, b }) =>
+    `Eine Kristallpflanze kostet ${formatCent(a)}, der Krug ${formatCent(b)}. Was kostet beides in Cent?`,
+  ({ a, b }) =>
+    `Anneli spart ${formatCent(a)} und bekommt ${formatCent(b)} von Pip. Wie viel Cent hat sie nun?`,
+  ({ a, b }) =>
+    `Im Marktbeutel sind ${formatCent(a)}. Der Drache wirft ${formatCent(b)} dazu. Wie viel Cent ist im Beutel?`,
+];
+
+const MONEY_TEMPLATES_MINUS: VignetteFn<MoneyArgs>[] = [
+  ({ a, b }) =>
+    `Anneli hat ${formatCent(a)}. Sie kauft einen Pfirsich für ${formatCent(b)}. Wie viel Cent bleiben?`,
+  ({ a, b }) =>
+    `Im Beutel sind ${formatCent(a)}. Pip nimmt ${formatCent(b)} für die Marktbude. Wie viel Cent bleiben?`,
+  ({ a, b }) =>
+    `Der Drache zählt ${formatCent(a)} in seiner Schatzkiste. Er verschenkt ${formatCent(b)}. Wie viel Cent bleibt in der Kiste?`,
+  ({ a, b }) =>
+    `Anneli hat ${formatCent(a)}. Eine Dattel kostet ${formatCent(b)}. Wie viel Cent hat sie noch?`,
+  ({ a, b }) =>
+    `Die Karawane hat ${formatCent(a)} Wegezoll dabei. ${formatCent(b)} sind schon bezahlt. Wie viel Cent bleibt?`,
+  ({ a, b }) =>
+    `Im Karawanen-Beutel sind ${formatCent(a)}. ${formatCent(b)} fallen durch ein Loch. Wie viel Cent ist drin?`,
+];
+
+export function vignetteMoney(args: MoneyArgs): string {
+  return args.op === "plus"
+    ? pickOne(MONEY_TEMPLATES_PLUS)(args)
+    : pickOne(MONEY_TEMPLATES_MINUS)(args);
+}
+
+// ---------- wordProblems100 ----------
+
+type WordProblemArgs = {
+  a: number;
+  b: number;
+  result: number;
+  op: "plus" | "minus";
+  /** Templ.-id für Konsistenz mit dem Generator (z.B. damit eine bestimmte Welt-Szene gewählt wird). */
+  scene?: string;
+};
+
+const WORD_TEMPLATES_PLUS: VignetteFn<WordProblemArgs>[] = [
+  ({ a, b }) =>
+    `Anneli sammelt ${a} Drachenschuppen-Splitter. Pip findet noch ${b} dazu. Wie viele haben sie zusammen?`,
+  ({ a, b }) =>
+    `Die Karawane hat ${a} Pfirsiche gepflückt. Auf der nächsten Düne kommen ${b} dazu. Wie viele Pfirsiche jetzt?`,
+  ({ a, b }) =>
+    `Der Drache hat ${a} Goldmünzen in der Höhle. Er findet noch ${b} im Sand. Wie viele Goldmünzen insgesamt?`,
+  ({ a, b }) =>
+    `Auf der Schatzkarte sind ${a} Schritte zum Brunnen. Von dort sind es ${b} bis zur Drachenhöhle. Wie viele Schritte insgesamt?`,
+  ({ a, b }) =>
+    `In der Oase wachsen ${a} Kristallpflanzen. Anneli pflanzt ${b} neue. Wie viele jetzt?`,
+  ({ a, b }) =>
+    `Pip findet ${a} bunte Steine am Vormittag und ${b} am Nachmittag. Wie viele Steine hat er?`,
+  ({ a, b }) =>
+    `Die Marktbude verkauft am Morgen ${a} Datteln und am Mittag ${b} weitere. Wie viele Datteln wurden insgesamt verkauft?`,
+];
+
+const WORD_TEMPLATES_MINUS: VignetteFn<WordProblemArgs>[] = [
+  ({ a, b }) =>
+    `Anneli sammelt ${a} Federn, gibt ${b} an Pip. Wie viele bleiben ihr?`,
+  ({ a, b }) =>
+    `Der Drache hat ${a} Goldmünzen. Er gibt ${b} der Karawane. Wie viele behält er?`,
+  ({ a, b }) =>
+    `Auf der Düne lagen ${a} Pfirsiche. Der Wüstenwind weht ${b} weg. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `Die Karawane hat ${a} Datteln. ${b} werden auf dem Markt verkauft. Wie viele bleiben?`,
+  ({ a, b }) =>
+    `In der Schatzkiste sind ${a} Kristalle. ${b} werden verschenkt. Wie viele bleiben in der Kiste?`,
+  ({ a, b }) =>
+    `Anneli läuft ${a} Schritte zum Brunnen. ${b} hat sie schon geschafft. Wie viele Schritte bleiben?`,
+  ({ a, b }) =>
+    `Der Drache hat ${a} Schuppen. ${b} sind beim Sandsturm abgefallen. Wie viele bleiben?`,
+];
+
+export function vignetteWordProblem(args: WordProblemArgs): string {
+  return args.op === "plus"
+    ? pickOne(WORD_TEMPLATES_PLUS)(args)
+    : pickOne(WORD_TEMPLATES_MINUS)(args);
+}
