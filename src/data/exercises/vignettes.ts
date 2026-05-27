@@ -693,3 +693,149 @@ export function vignetteWordProblem(args: WordProblemArgs): string {
     ? pickOne(WORD_TEMPLATES_PLUS)(args)
     : pickOne(WORD_TEMPLATES_MINUS)(args);
 }
+
+// ============================================================================
+// Zusatz-Skills Kapitel 1 (M5, 2026-05-27)
+// ============================================================================
+
+// ---------- decompose20 ----------
+
+type Decompose20Args = {
+  total: number;
+  a: number;
+  b: number;
+  form: "gap-b" | "gap-a" | "decomp" | "ten-pair";
+};
+
+const DECOMPOSE_TEN_PAIR: VignetteFn<Decompose20Args>[] = [
+  ({ a, b }) =>
+    `Vogelmama hat 10 Eier im Nest. ${a} sieht sie, die anderen sind unter den Blättern versteckt. Wie viele?`,
+  ({ a, b }) =>
+    `10 Federn sammelt Pip am Morgen. ${a} bunte liegen vorn, der Rest hinten. Wie viele hinten?`,
+  ({ a, b }) =>
+    `Auf der Brücke sitzen 10 Vögel. ${a} schauen nach links, der Rest nach rechts. Wie viele schauen rechts?`,
+  ({ a, b }) =>
+    `Eine Wolke trägt 10 Sterne. ${a} leuchten hell, die anderen schlafen noch. Wie viele schlafen?`,
+  ({ a, b }) =>
+    `10 Beeren im Topf. ${a} sind rot, der Rest blau. Wie viele blaue?`,
+];
+
+const DECOMPOSE_GAP_B: VignetteFn<Decompose20Args>[] = [
+  ({ total, a }) =>
+    `Im Nest liegen insgesamt ${total} Eier. Vogelmama hat ${a} unter dem linken Flügel — wie viele unter dem rechten?`,
+  ({ total, a }) =>
+    `${total} Federn fliegen mit dem Wind. ${a} kullern auf den Felsen, die anderen landen weicher. Wie viele weicher?`,
+  ({ total, a }) =>
+    `Pip findet ${total} Beeren. ${a} steckt er in den Mund, der Rest in den Beutel. Wie viele in den Beutel?`,
+  ({ total, a }) =>
+    `Auf der Wolkenwiese leuchten ${total} Glühwürmchen. ${a} tanzen, die anderen ruhen. Wie viele ruhen?`,
+  ({ total, a }) =>
+    `Vogelmama bringt ${total} Würmer ins Nest. ${a} sind für Pip — wie viele für seine Geschwister?`,
+  ({ total, a }) =>
+    `${total} Sternchen am Himmel. ${a} hat Anneli schon gezählt. Wie viele noch?`,
+  ({ total, a }) =>
+    `Eine Brücke hat ${total} Bretter. ${a} sind schon repariert. Wie viele noch wackelig?`,
+];
+
+const DECOMPOSE_GAP_A: VignetteFn<Decompose20Args>[] = [
+  ({ total, b }) =>
+    `Wenn ich ${b} Federn dazulege, habe ich ${total}. Wie viele habe ich jetzt?`,
+  ({ total, b }) =>
+    `Wenn Pip noch ${b} Beeren findet, hat er ${total}. Wie viele hat er jetzt schon?`,
+  ({ total, b }) =>
+    `${b} Eier kommen ins Nest dazu — dann sind es ${total}. Wie viele waren vorher drin?`,
+  ({ total, b }) =>
+    `Anneli legt ${b} Steine zur Sammlung. Jetzt sind es ${total}. Wie viele hatte sie vorher?`,
+];
+
+const DECOMPOSE_DECOMP: VignetteFn<Decompose20Args>[] = [
+  ({ total, a }) =>
+    `${total} Vögel sitzen auf zwei Zweigen. Auf dem linken sitzen ${a}. Wie viele auf dem rechten?`,
+  ({ total, a }) =>
+    `Vogelmama teilt ${total} Beeren in zwei Schüsseln. Eine hat ${a}. Wie voll ist die andere?`,
+  ({ total, a }) =>
+    `Pip hat ${total} bunte Federn — ${a} kommt in den Schmuckkorb, der Rest in den Tausch-Beutel. Wie viele in den Beutel?`,
+  ({ total, a }) =>
+    `${total} Wolken-Wolle-Bäusche schweben über der Wiese. ${a} sind über dem Nest, der Rest über dem Bach. Wie viele über dem Bach?`,
+  ({ total, a }) =>
+    `Anneli zerteilt ${total} Glühwürmchen auf zwei Hände. Linke Hand ${a}. Wie viele in der rechten?`,
+];
+
+export function vignetteDecompose20(args: Decompose20Args): string {
+  switch (args.form) {
+    case "ten-pair":
+      return pickOne(DECOMPOSE_TEN_PAIR)(args);
+    case "gap-a":
+      return pickOne(DECOMPOSE_GAP_A)(args);
+    case "decomp":
+      return pickOne(DECOMPOSE_DECOMP)(args);
+    case "gap-b":
+    default:
+      return pickOne(DECOMPOSE_GAP_B)(args);
+  }
+}
+
+// ---------- visualCompare20 ----------
+
+type VisualCompareArgs = {
+  a: number;
+  b: number;
+  c?: number;
+  form: "pair-more" | "pair-less" | "multi-pick" | "equal-check";
+  ask: "more" | "less" | "equal";
+};
+
+const VC_PAIR_MORE: VignetteFn<VisualCompareArgs>[] = [
+  ({ a, b }) =>
+    `Zwei Wolken segeln vorbei. Auf der einen sitzen ${a} Vögel, auf der anderen ${b}. Welche trägt mehr?`,
+  ({ a, b }) =>
+    `In einem Nest liegen ${a} Eier, im anderen ${b}. Welches ist voller?`,
+  ({ a, b }) =>
+    `Pip zählt zwei Beerenkörbe: einer hat ${a}, der andere ${b}. Welcher ist voller?`,
+  ({ a, b }) =>
+    `Zwei Zweige voller Glühwürmchen — ${a} und ${b}. Welcher leuchtet stärker?`,
+  ({ a, b }) =>
+    `Zwei Federnsammlungen: ${a} bunte und ${b} bunte. Welche ist größer?`,
+];
+
+const VC_PAIR_LESS: VignetteFn<VisualCompareArgs>[] = [
+  ({ a, b }) =>
+    `Zwei Wolken — auf einer sitzen ${a} Vögel, auf der anderen ${b}. Welche ist leerer?`,
+  ({ a, b }) =>
+    `Pip vergleicht zwei Nester: ${a} und ${b} Eier. Welches braucht noch mehr?`,
+  ({ a, b }) =>
+    `Zwei Töpfe Wolken-Wolle: ${a} und ${b} Bäusche. Welcher ist weniger voll?`,
+];
+
+const VC_MULTI_MORE: VignetteFn<VisualCompareArgs>[] = [
+  ({ a, b, c }) =>
+    `Drei Wolken segeln vorbei: ${a}, ${b} und ${c} Vögel. Welche trägt am meisten?`,
+  ({ a, b, c }) =>
+    `Drei Beerenkörbe stehen am Nest — ${a}, ${b}, ${c}. Welcher ist am vollsten?`,
+];
+
+const VC_MULTI_LESS: VignetteFn<VisualCompareArgs>[] = [
+  ({ a, b, c }) =>
+    `Drei Nester mit ${a}, ${b} und ${c} Eiern. Welches hat die wenigsten?`,
+  ({ a, b, c }) =>
+    `Drei Zweige voll Glühwürmchen: ${a}, ${b}, ${c}. Welcher leuchtet am schwächsten?`,
+];
+
+const VC_EQUAL: VignetteFn<VisualCompareArgs>[] = [
+  ({ a, b }) =>
+    `Pip schaut zwei Wolken an: ${a} Vögel auf der einen, ${b} auf der anderen. Sind beide gleich voll?`,
+  ({ a, b }) =>
+    `Zwei Nester — ${a} und ${b} Eier. Trägt jedes Nest gleich viele Eier?`,
+];
+
+export function vignetteVisualCompare20(args: VisualCompareArgs): string {
+  if (args.form === "equal-check") return pickOne(VC_EQUAL)(args);
+  if (args.form === "multi-pick") {
+    return args.ask === "more"
+      ? pickOne(VC_MULTI_MORE)(args)
+      : pickOne(VC_MULTI_LESS)(args);
+  }
+  return args.form === "pair-more"
+    ? pickOne(VC_PAIR_MORE)(args)
+    : pickOne(VC_PAIR_LESS)(args);
+}

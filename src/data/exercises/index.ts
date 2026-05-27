@@ -3,8 +3,9 @@
 // Stand 2026-05-27:
 //   Kapitel 1 (Sky Kingdom): counting20, addition20, subtraction20,
 //     compare100, tensNeighbors, doubleHalf — alle 6 implementiert.
-//   Kapitel 2 (Pfirsich-Wüste, M3 2026-05-27): addSub100, money,
-//     wordProblems100 — Generator-only (Brücken-JSONs folgen später).
+//   Zusatz-Skills Kapitel 1 (M5): decompose20, visualCompare20 — Generator-only.
+//   Kapitel 2 (Pfirsich-Wüste, M3): addSub100, money, wordProblems100
+//     — Generator-only (Brücken-JSONs folgen später).
 //
 // Jeder Generator akzeptiert optional ein Level ("easy" | "normal" | "hard"),
 // gesteuert vom Adaptive-System in BridgeChallenge.
@@ -19,6 +20,8 @@ import { generateDoubleHalf } from "./doubleHalf";
 import { generateAddSub100 } from "./addSub100";
 import { generateMoney } from "./money";
 import { generateWordProblems100 } from "./wordProblems100";
+import { generateDecompose20 } from "./decompose20";
+import { generateVisualCompare20 } from "./visualCompare20";
 import type { Exercise, Level } from "./types";
 
 export type { Exercise, ExerciseVisual, ExerciseVariant, Level } from "./types";
@@ -31,10 +34,12 @@ export { generateDoubleHalf } from "./doubleHalf";
 export { generateAddSub100 } from "./addSub100";
 export { generateMoney } from "./money";
 export { generateWordProblems100 } from "./wordProblems100";
+export { generateDecompose20 } from "./decompose20";
+export { generateVisualCompare20 } from "./visualCompare20";
 
 /**
  * True, wenn für diesen Skill bereits ein Generator existiert.
- * Aktuell true für alle Skills aus Kapitel 1 + Kapitel 2.
+ * Aktuell true für alle 11 Skills.
  */
 export function hasGeneratorFor(skill: Skill): boolean {
   switch (skill) {
@@ -47,6 +52,8 @@ export function hasGeneratorFor(skill: Skill): boolean {
     case "addSub100":
     case "money":
     case "wordProblems100":
+    case "decompose20":
+    case "visualCompare20":
       return true;
     default:
       return false;
@@ -76,6 +83,10 @@ export function generateExercise(skill: Skill, level: Level = "normal"): Exercis
       return generateMoney(level);
     case "wordProblems100":
       return generateWordProblems100(level);
+    case "decompose20":
+      return generateDecompose20(level);
+    case "visualCompare20":
+      return generateVisualCompare20(level);
     default: {
       // Compile-time Erschöpfung: wenn ein neuer Skill hinzukommt,
       // beschwert sich TS hier — kein stilles Durchrutschen.
