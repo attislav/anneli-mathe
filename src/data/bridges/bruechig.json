@@ -6,7 +6,7 @@
   "skillLabel": "Minus bis 20 mit Zehnerübergang",
   "description": "Eine alte Brücke, Steine fallen herunter. Anneli rechnet, wie viele übrig bleiben — auch über die Zehn zurück.",
   "inputMode": "keypad",
-  "totalTasks": 5,
+  "totalTasks": 9,
   "story_intro": "Bröckel, bröckel — wieder ein Stein weg. Wie viele bleiben noch übrig? Rechne nach, bevor die Brücke ganz auseinanderfällt.",
   "hint_chain": [
     "Erst zur Zehn runter, dann den Rest. 15 − 8 = 15 − 5 − 3 = 10 − 3.",

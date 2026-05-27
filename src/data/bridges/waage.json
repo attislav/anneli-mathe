@@ -6,7 +6,7 @@
   "skillLabel": "Zahlen vergleichen bis 100",
   "description": "Zwei Inseln, eine große Waage, eine Frage: welche Seite wiegt mehr? Anneli vergleicht zweistellige Zahlen.",
   "inputMode": "compare-symbol",
-  "totalTasks": 4,
+  "totalTasks": 7,
   "story_intro": "Die Brücke ist eine Waage zwischen zwei Inseln. Damit sie nicht kippt, musst du sagen, welche Seite mehr wiegt — oder ob beide gleich schwer sind.",
   "hint_chain": [
     "Schau zuerst die Zehner an. Bei gleichen Zehnern entscheiden die Einer.",

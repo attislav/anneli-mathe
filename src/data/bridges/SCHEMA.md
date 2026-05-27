@@ -17,7 +17,7 @@ Der Schritt zu Daten-Files (statt hardcoded TS-Const) ist die architektonische V
 | `skillLabel` | ja | string | menschenlesbar („Mengen erfassen bis 20"). |
 | `description` | ja | string | 1-2 Sätze für SkyMap & Brücken-Header. |
 | `inputMode` | ja | `InputMode` | welcher Eingabe-Mechanismus (siehe unten). |
-| `totalTasks` | ja | int | Anzahl Aufgaben für die Reparatur (4–6). |
+| `totalTasks` | ja | int | Anzahl Aufgaben für die Reparatur (7–10, seit M4 2026-05-27 — vorher 4–6). |
 | `story_intro` | ja | string | 1-Satz-Beat VOR der ersten Aufgabe (Roadmap: „atmosphärischer Druck"). |
 | `hint_chain` | ja | string[] | 1–3 gestaffelte Tipps. `[0]` ist der primäre Hint (von `book`-Stimme vertont — Audio-ID `bridge-<id>-hint`). |
 | `completion_beat` | ja | string | Story-Beat NACH der letzten Aufgabe (in CompleteCard sichtbar). |

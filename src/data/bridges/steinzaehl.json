@@ -6,7 +6,7 @@
   "skillLabel": "Mengen erfassen bis 20",
   "description": "Eine breite Brücke aus Steinen. Anneli erkennt schnell, wie viele es sind — ohne einzeln zu zählen.",
   "inputMode": "tap-count",
-  "totalTasks": 4,
+  "totalTasks": 8,
   "story_intro": "Die Vogelmutter zählt ihre Eier — aber ein paar Steine sind dazwischen gerollt. Hilf ihr, die richtige Anzahl zu finden.",
   "hint_chain": [
     "Schau die Gruppen an. Fünfer, Zehner. Dann zählst du nicht mehr — du siehst es.",

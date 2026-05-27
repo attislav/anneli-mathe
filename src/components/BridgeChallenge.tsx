@@ -68,6 +68,37 @@ function nextLevel(current: Level, streak: { correct: number; wrong: number }): 
   return current;
 }
 
+/**
+ * Warm-Up-Override (M4): bei mehr Aufgaben pro Brücke fühlt sich ein
+ * sofortiger Start auf „normal" oder „hard" überrumpelnd an. Wir geben
+ * Anneli 2 sanfte Einstiegs-Aufgaben und steigern dann.
+ *
+ *   index 0 (1. Aufgabe): immer easy
+ *   index 1 (2. Aufgabe): easy → easy, normal → easy, hard → normal
+ *   ab index 2: adaptiveLevel wie gehabt
+ *
+ * Stretch-Cap am Ende: in der allerletzten Aufgabe nicht erstmalig auf
+ * „hard" hochschalten — der Abschluss soll ein Erfolgserlebnis sein.
+ */
+function applyWarmup(
+  baseLevel: Level,
+  taskIndex: number,
+  totalTasks: number,
+  isFinalTask: boolean
+): Level {
+  if (taskIndex === 0) return "easy";
+  if (taskIndex === 1) {
+    if (baseLevel === "hard") return "normal";
+    return "easy";
+  }
+  // Letzte Aufgabe: kein neuer hard-Sprung, aber falls Anneli schon auf
+  // hard war, dort bleiben.
+  if (isFinalTask && baseLevel === "hard" && totalTasks >= 8) {
+    return "normal";
+  }
+  return baseLevel;
+}
+
 // ----- Component -------------------------------------------------------------
 
 export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
@@ -104,8 +135,9 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
         },
       ];
     }
-    // Initial 1 Aufgabe — die folgenden werden adaptiv nachgeneriert.
-    return [generateExercise(bridge.skill, "normal")];
+    // Initial 1 Aufgabe — Warmup-Override: erste Aufgabe immer easy.
+    // Die folgenden werden adaptiv nachgeneriert (siehe handleAnswer).
+    return [generateExercise(bridge.skill, "easy")];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridge.id]);
 
@@ -206,7 +238,11 @@ export function BridgeChallenge({ bridge }: { bridge: Bridge }) {
       window.setTimeout(() => {
         const newLevel = nextLevel(level, nextStreak);
         if (newLevel !== level) setLevel(newLevel);
-        const nextEx = generateExercise(bridge.skill, newLevel);
+        // Warm-Up + End-Cap auf das frisch berechnete Level anwenden.
+        const upcomingIndex = currentIndex + 1; // wir hängen am Ende an
+        const isFinalTask = upcomingIndex === totalTasks - 1;
+        const effectiveLevel = applyWarmup(newLevel, upcomingIndex, totalTasks, isFinalTask);
+        const nextEx = generateExercise(bridge.skill, effectiveLevel);
         setExercises((prev) => [...prev, nextEx]);
         setCurrentIndex((i) => i + 1);
         setStatus("asking");

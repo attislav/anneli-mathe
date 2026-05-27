@@ -7,7 +7,7 @@
   "description": "Eine Brücke aus Holzbrettern. Manche fehlen — Anneli rechnet aus, wie viele dazu müssen, auch über die Zehn hinweg.",
   "inputMode": "keypad",
   "_inputMode_note": "Brücke 2 sollte Speech sein, braucht aber SSR. Keypad als Fallback bis API-Routes verfügbar.",
-  "totalTasks": 5,
+  "totalTasks": 9,
   "story_intro": "Die Brücke hat Lücken. Damit die Vögel sicher rüberkönnen, müssen die Planken zusammenpassen. Rechne aus, wie viele dazu kommen müssen.",
   "hint_chain": [
     "Erst zur Zehn ergänzen, dann den Rest dazu. 8 + 7 = 8 + 2 + 5 = 10 + 5.",

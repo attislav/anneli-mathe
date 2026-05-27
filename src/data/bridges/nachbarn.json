@@ -6,7 +6,7 @@
   "skillLabel": "Zehnernachbarn im Hunderterraum",
   "description": "Eine Brücke aus nummerierten Bohlen — Anneli findet die Zehnernachbarn (die nächsten Zehner davor und danach).",
   "inputMode": "number-line",
-  "totalTasks": 4,
+  "totalTasks": 8,
   "story_intro": "Auf dieser Brücke sind die Bohlen mit Zahlen beschriftet. Du musst die nächsten Zehner finden — die Nachbarn davor oder danach.",
   "hint_chain": [
     "Welcher Zehner ist gleich vor mir, welcher gleich nach mir? 47: davor 40, danach 50.",
