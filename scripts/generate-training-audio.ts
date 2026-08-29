@@ -11,7 +11,8 @@
 //
 // Aufruf:
 //   npm run gen:training-audio              # alles Fehlende erzeugen
-//   npm run gen:training-audio -- --limit 5 # erst mal fünf zum Reinhören
+//   npm run gen:training-audio -- --kind text --limit 3   # Stimme prüfen
+//   npm run gen:training-audio -- --limit 5                # erst mal fünf
 //   npm run gen:training-audio -- --force   # auch vorhandene neu erzeugen
 //   npm run gen:training-audio -- --dry-run # nur zeigen, was fehlt
 //
@@ -40,6 +41,11 @@ const args = process.argv.slice(2);
 const FORCE = args.includes("--force");
 const DRY_RUN = args.includes("--dry-run");
 const LIMIT = readLimit(args);
+/**
+ * `--kind text` — nur eine Sorte erzeugen. Praktisch, um die Stimme erst an
+ * einem ganzen Satz zu prüfen, bevor alle 358 Dateien laufen.
+ */
+const KIND = readKind(args);
 /** Gleichzeitige Requests. Konservativ — TTS-Quotas sind knapper als Text. */
 const CONCURRENCY = 3;
 
@@ -50,6 +56,17 @@ const MP3_KBPS = 64;
 const OUT_ROOT = path.resolve("public/audio/training");
 
 type Job = { file: string; text: string; kind: "num" | "frag" | "text"; label: string };
+
+function readKind(argv: string[]): "num" | "frag" | "text" | null {
+  const index = argv.indexOf("--kind");
+  if (index === -1) return null;
+  const value = argv[index + 1];
+  if (value !== "num" && value !== "frag" && value !== "text") {
+    console.error("--kind erwartet num, frag oder text.");
+    process.exit(1);
+  }
+  return value;
+}
 
 /** `--limit N` — nur N Dateien erzeugen, zum Reinhören vor dem großen Lauf. */
 function readLimit(argv: string[]): number | null {
@@ -97,6 +114,7 @@ const jobs: Job[] = [
 ];
 
 let pending = jobs.filter((j) => FORCE || !fs.existsSync(j.file));
+if (KIND) pending = pending.filter((j) => j.kind === KIND);
 if (LIMIT !== null) pending = pending.slice(0, LIMIT);
 
 console.log(`Modell:  ${MODEL}`);
