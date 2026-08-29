@@ -17,12 +17,16 @@ import {
   loadTraining,
   type ModuleProgress,
 } from "@/data/trainingProgress";
+import { staticAudioId } from "@/data/training/speech";
 import { ACCENTS } from "@/lib/accents";
+import { useSpeech } from "@/lib/useSpeech";
+import { SpeakButton } from "./SpeakButton";
 import { TrickCard } from "./TrickCard";
 import { TrainingSession } from "./TrainingSession";
 
 export function TrainingModuleView({ module }: { module: TrainingModule }) {
   const accent = ACCENTS[module.accent];
+  const speech = useSpeech();
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState<ModuleProgress | null>(null);
 
@@ -59,7 +63,16 @@ export function TrainingModuleView({ module }: { module: TrainingModule }) {
 
       <h1 className="mb-2 text-3xl font-semibold md:text-4xl">{module.title}</h1>
       <p className="mb-1 text-sm text-[var(--color-ink-soft)]">{module.grade}</p>
-      <p className="mb-6 leading-relaxed text-[var(--color-ink-soft)]">{module.summary}</p>
+      <div className="mb-6 flex items-start gap-3">
+        <p className="flex-1 leading-relaxed text-[var(--color-ink-soft)]">{module.summary}</p>
+        <SpeakButton
+          speech={speech}
+          text={module.summary}
+          staticId={staticAudioId.summary(module.id)}
+          label="Beschreibung vorlesen"
+          size="sm"
+        />
+      </div>
 
       {runs > 0 ? (
         <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--color-paper)] px-4 py-2 text-sm shadow-[var(--shadow-soft)]">
@@ -77,6 +90,9 @@ export function TrainingModuleView({ module }: { module: TrainingModule }) {
             trick={trick}
             accent={module.accent}
             number={module.tricks.length > 1 ? i + 1 : undefined}
+            moduleId={module.id}
+            trickIndex={i}
+            speech={speech}
           />
         ))}
       </div>

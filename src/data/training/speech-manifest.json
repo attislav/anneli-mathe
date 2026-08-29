@@ -1,0 +1,1450 @@
+{
+  "generatedAt": "2026-08-29T07:16:21.377Z",
+  "numbers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100
+  ],
+  "fragments": [
+    {
+      "key": "ist-10mw1i",
+      "text": "ist",
+      "seen": 217484,
+      "example": "zahlenfreunde: 3 + 1 = 4."
+    },
+    {
+      "key": "plus-1ikkig",
+      "text": "plus",
+      "seen": 131073,
+      "example": "zahlenfreunde: 3 + 1"
+    },
+    {
+      "key": "minus-1wsz7o",
+      "text": "minus",
+      "seen": 83863,
+      "example": "zahlenfreunde: 10 − 9"
+    },
+    {
+      "key": "mal-1tdpk0",
+      "text": "mal",
+      "seen": 55013,
+      "example": "einmaleins-kern: 1 · 2"
+    },
+    {
+      "key": "und-p7a7iy",
+      "text": "und",
+      "seen": 24210,
+      "example": "zahlenfreunde: 2 + 8 = 10 — 2 und 8 sind Zahlenfreunde."
+    },
+    {
+      "key": "dann-1oe59o",
+      "text": "dann",
+      "seen": 21246,
+      "example": "zehnersprung: 14 − 4 = 10, dann 10 − 2 = 8."
+    },
+    {
+      "key": "bis-ssr7zp",
+      "text": "bis",
+      "seen": 20855,
+      "example": "zahlenfreunde: Von 2 bis 10 fehlen noch 8 Schritte. Zähl an den Fingern weiter."
+    },
+    {
+      "key": "von-1wzx0r",
+      "text": "Von",
+      "seen": 19526,
+      "example": "zahlenfreunde: Von 2 bis 10 fehlen noch 8 Schritte. Zähl an den Fingern weiter."
+    },
+    {
+      "key": "plus-wie-viel-ist-10gtgh",
+      "text": "plus wie viel ist",
+      "seen": 17907,
+      "example": "zahlenfreunde: 2 + ? = 10"
+    },
+    {
+      "key": "in-i3gxwe",
+      "text": "in",
+      "seen": 17547,
+      "example": "zehnersprung: Von 14 bis 10 sind es 4 zurück. Zerlege die 6 in 4 und 2."
+    },
+    {
+      "key": "geteilt-durch-6dgng9",
+      "text": "geteilt durch",
+      "seen": 15380,
+      "example": "teilen: 30 : 10"
+    },
+    {
+      "key": "mal-mdninp",
+      "text": "Mal",
+      "seen": 12243,
+      "example": "einmaleins-kern: Mal 1 ändert nichts — 2 bleibt 2."
+    },
+    {
+      "key": "rechne-115em1",
+      "text": "Rechne",
+      "seen": 12000,
+      "example": "fast-zehner: 9 ist fast 10. Rechne 18 + 10 = 28 und nimm dann 1 weg."
+    },
+    {
+      "key": "mal-wie-viel-ist-17ay8n",
+      "text": "mal wie viel ist",
+      "seen": 11704,
+      "example": "einmaleins-kern: 2 · ? = 8"
+    },
+    {
+      "key": "also-lwmnaq",
+      "text": "Also",
+      "seen": 8657,
+      "example": "bis20: Die Zehn bleibt stehen: 6 + 3 = 9. Also 16 + 3 = 19."
+    },
+    {
+      "key": "also-fehlt-die-1oistp",
+      "text": "also fehlt die",
+      "seen": 8010,
+      "example": "einmaleins-kern: 2 · 4 = 8, also fehlt die 4."
+    },
+    {
+      "key": "ist-fast-1lojdi",
+      "text": "ist fast",
+      "seen": 7857,
+      "example": "fast-zehner: 9 ist fast 10. Rechne 18 + 10 = 28 und nimm dann 1 weg."
+    },
+    {
+      "key": "die-haelfte-von-12k92f",
+      "text": "Die Hälfte von",
+      "seen": 7819,
+      "example": "verdoppeln: Die Hälfte von 4"
+    },
+    {
+      "key": "geh-die-2qwli5",
+      "text": "Geh die",
+      "seen": 7511,
+      "example": "einmaleins: Geh die 4er-Reihe in Sprüngen hoch und zähl mit, bis du bei 16 bist."
+    },
+    {
+      "key": "er-reihe-in-spruengen-hoch-und-zaehl-mit-caoqy0",
+      "text": "er-Reihe in Sprüngen hoch und zähl mit, bis du bei",
+      "seen": 7511,
+      "example": "einmaleins: Geh die 4er-Reihe in Sprüngen hoch und zähl mit, bis du bei 16 bist."
+    },
+    {
+      "key": "bist-19wn87",
+      "text": "bist",
+      "seen": 7511,
+      "example": "einmaleins: Geh die 4er-Reihe in Sprüngen hoch und zähl mit, bis du bei 16 bist."
+    },
+    {
+      "key": "sind-es-1u9a4p",
+      "text": "sind es",
+      "seen": 6257,
+      "example": "zehnersprung: Von 14 bis 10 sind es 4 zurück. Zerlege die 6 in 4 und 2."
+    },
+    {
+      "key": "weg-58akay",
+      "text": "weg",
+      "seen": 6050,
+      "example": "fast-zehner: 9 ist fast 10. Rechne 18 + 10 = 28 und nimm dann 1 weg."
+    },
+    {
+      "key": "die-zehn-bleibt-stehen-rechne-nur-1quq16",
+      "text": "Die Zehn bleibt stehen. Rechne nur",
+      "seen": 5903,
+      "example": "bis20: Die Zehn bleibt stehen. Rechne nur 6 + 3 = 9."
+    },
+    {
+      "key": "die-zehn-bleibt-stehen-1b3l8y",
+      "text": "Die Zehn bleibt stehen:",
+      "seen": 5903,
+      "example": "bis20: Die Zehn bleibt stehen: 6 + 3 = 9. Also 16 + 3 = 19."
+    },
+    {
+      "key": "such-die-malaufgabe-16uqjc",
+      "text": "Such die Malaufgabe:",
+      "seen": 5721,
+      "example": "teilen: Such die Malaufgabe: 10 · ? = 30. Mal 10 hängt nur eine Null an. Welche Zahl wird mit einer Null zu 30?"
+    },
+    {
+      "key": "also-ist-1u8s4k",
+      "text": "also ist",
+      "seen": 5721,
+      "example": "teilen: 10 · 3 = 30, also ist 30 : 10 = 3."
+    },
+    {
+      "key": "zerlege-die-pop6un",
+      "text": "Zerlege die",
+      "seen": 5675,
+      "example": "zehnersprung: Von 9 bis 10 fehlen 1. Zerlege die 2 in 1 und 1."
+    },
+    {
+      "key": "zerlege-1u5o40",
+      "text": "Zerlege",
+      "seen": 5608,
+      "example": "verdoppeln: Zerlege 36 in 20 und 16 — so lassen sich beide Teile sauber halbieren: 10 + 8."
+    },
+    {
+      "key": "fehlen-15a44k",
+      "text": "fehlen",
+      "seen": 5230,
+      "example": "zehnersprung: Von 9 bis 10 fehlen 1. Zerlege die 2 in 1 und 1."
+    },
+    {
+      "key": "denk-die-nullen-weg-uahe3s",
+      "text": "Denk die Nullen weg:",
+      "seen": 5188,
+      "example": "volle-zehner: Denk die Nullen weg: 1 + 2 = 3."
+    },
+    {
+      "key": "null-dran-17fn0m",
+      "text": "Null dran:",
+      "seen": 5188,
+      "example": "volle-zehner: 1 + 2 = 3, Null dran: 30."
+    },
+    {
+      "key": "die-h1eycx",
+      "text": "Die",
+      "seen": 4703,
+      "example": "einmaleins-kern: Die 5er-Reihe ist die halbe 10er-Reihe: 10 · 2 = 20, die Hälfte davon ist 10."
+    },
+    {
+      "key": "er-reihe-ist-die-halbe-m87hae",
+      "text": "er-Reihe ist die halbe",
+      "seen": 4703,
+      "example": "einmaleins-kern: Die 5er-Reihe ist die halbe 10er-Reihe: 10 · 2 = 20, die Hälfte davon ist 10."
+    },
+    {
+      "key": "er-reihe-1etn47",
+      "text": "er-Reihe:",
+      "seen": 4703,
+      "example": "einmaleins-kern: Die 5er-Reihe ist die halbe 10er-Reihe: 10 · 2 = 20, die Hälfte davon ist 10."
+    },
+    {
+      "key": "die-haelfte-davon-ist-79k4qw",
+      "text": "die Hälfte davon ist",
+      "seen": 4703,
+      "example": "einmaleins-kern: Die 5er-Reihe ist die halbe 10er-Reihe: 10 · 2 = 20, die Hälfte davon ist 10."
+    },
+    {
+      "key": "dazu-1qaw8b",
+      "text": "dazu",
+      "seen": 4631,
+      "example": "zahlenfreunde: 2 und 8 sind Zahlenfreunde — zusammen 10. Dann nur noch 4 dazu."
+    },
+    {
+      "key": "sind-zahlenfreunde-1xh4us",
+      "text": "sind Zahlenfreunde",
+      "seen": 4376,
+      "example": "zahlenfreunde: 2 + 8 = 10 — 2 und 8 sind Zahlenfreunde."
+    },
+    {
+      "key": "mehr-als-1ranrv",
+      "text": "mehr als",
+      "seen": 4143,
+      "example": "fast-zehner: 11 ist 1 mehr als 10. Rechne 84 + 10 = 94 und leg 1 dazu."
+    },
+    {
+      "key": "wie-viel-mal-1htsu8",
+      "text": "wie viel mal",
+      "seen": 4022,
+      "example": "einmaleins-kern: ? · 5 = 25"
+    },
+    {
+      "key": "zurueck-zerlege-die-wenpn6",
+      "text": "zurück. Zerlege die",
+      "seen": 4016,
+      "example": "zehnersprung: Von 14 bis 10 sind es 4 zurück. Zerlege die 6 in 4 und 2."
+    },
+    {
+      "key": "zehner-1ysdwa",
+      "text": "Zehner",
+      "seen": 3978,
+      "example": "volle-zehner: In Zehnern: 3 + ? = 7. Es fehlen 4 Zehner."
+    },
+    {
+      "key": "und-nimm-dann-klywpw",
+      "text": "und nimm dann",
+      "seen": 3967,
+      "example": "fast-zehner: 9 ist fast 10. Rechne 18 + 10 = 28 und nimm dann 1 weg."
+    },
+    {
+      "key": "wieder-zurueck-eiq4q8",
+      "text": "wieder zurück",
+      "seen": 3909,
+      "example": "bis100: 50 ist ein glatter Zehner. Nimm einen ganzen Zehner weg: 50 − 10 = 40. Davon gibst du 9 wieder zurück."
+    },
+    {
+      "key": "und-gib-rz7vsc",
+      "text": "und gib",
+      "seen": 3890,
+      "example": "fast-zehner: 9 ist fast 10. Rechne 15 − 10 = 5 und gib 1 wieder zurück."
+    },
+    {
+      "key": "fehlen-noch-jyn3tx",
+      "text": "fehlen noch",
+      "seen": 3889,
+      "example": "zahlenfreunde: Von 2 bis 10 fehlen noch 8 Schritte. Zähl an den Fingern weiter."
+    },
+    {
+      "key": "schritte-zaehl-an-den-fingern-weiter-131341",
+      "text": "Schritte. Zähl an den Fingern weiter",
+      "seen": 3889,
+      "example": "zahlenfreunde: Von 2 bis 10 fehlen noch 8 Schritte. Zähl an den Fingern weiter."
+    },
+    {
+      "key": "erst-1eux2u",
+      "text": "Erst",
+      "seen": 3811,
+      "example": "bis100: Zerlege 32 in 30 und 2. Erst 44 + 30 = 74."
+    },
+    {
+      "key": "das-doppelte-von-1lk6ph",
+      "text": "Das Doppelte von",
+      "seen": 3589,
+      "example": "verdoppeln: Das Doppelte von 4"
+    },
+    {
+      "key": "ist-verdoppeln-14tv03",
+      "text": "ist Verdoppeln:",
+      "seen": 3549,
+      "example": "einmaleins-kern: Mal 2 ist Verdoppeln: 3 + 3."
+    },
+    {
+      "key": "auf-hl6uo7",
+      "text": "auf",
+      "seen": 3530,
+      "example": "zehnersprung: Erst von 3 auf 10 — das sind 7. Und von 10 auf 11 noch 1."
+    },
+    {
+      "key": "denn-13e0oe",
+      "text": "denn",
+      "seen": 3425,
+      "example": "verdoppeln: Die Hälfte von 4 ist 2, denn 2 + 2 = 4."
+    },
+    {
+      "key": "heisst-einfach-eine-null-anhaengen-aus-18nvgo",
+      "text": "heißt: einfach eine Null anhängen. Aus",
+      "seen": 3311,
+      "example": "einmaleins-kern: Mal 10 heißt: einfach eine Null anhängen. Aus 1 wird 10."
+    },
+    {
+      "key": "wird-1vsr6s",
+      "text": "wird",
+      "seen": 3311,
+      "example": "einmaleins-kern: Mal 10 heißt: einfach eine Null anhängen. Aus 1 wird 10."
+    },
+    {
+      "key": "nur-die-zehner-aendern-sich-zcbon2",
+      "text": "Nur die Zehner ändern sich:",
+      "seen": 3286,
+      "example": "bis100: Nur die Zehner ändern sich: 5 + 2 = 7 Zehner. Die 0 bleibt hinten stehen."
+    },
+    {
+      "key": "haengt-nur-eine-null-an-welche-zahl-wird-1102dz",
+      "text": "hängt nur eine Null an. Welche Zahl wird mit einer Null zu",
+      "seen": 2866,
+      "example": "einmaleins-kern: Mal 10 hängt nur eine Null an. Welche Zahl wird mit einer Null zu 60?"
+    },
+    {
+      "key": "zaehl-in-fuenfer-schritten-vznmk8",
+      "text": "Zähl in Fünfer-Schritten:",
+      "seen": 2791,
+      "example": "einmaleins-kern: Zähl in Fünfer-Schritten: 5, 10, 15 … bis 30. Wie viele Sprünge waren das?"
+    },
+    {
+      "key": "wie-viele-spruenge-waren-das-1hvh82",
+      "text": "Wie viele Sprünge waren das",
+      "seen": 2791,
+      "example": "einmaleins-kern: Zähl in Fünfer-Schritten: 5, 10, 15 … bis 30. Wie viele Sprünge waren das?"
+    },
+    {
+      "key": "noch-1a9621",
+      "text": "noch",
+      "seen": 2754,
+      "example": "zehnersprung: Erst von 3 auf 10 — das sind 7. Und von 10 auf 11 noch 1."
+    },
+    {
+      "key": "denk-an-die-verdopplung-5v1ohc",
+      "text": "Denk an die Verdopplung:",
+      "seen": 2605,
+      "example": "verdoppeln: Denk an die Verdopplung: 7 + 7 = 14. 8 ist eins mehr."
+    },
+    {
+      "key": "wenn-du-von-1cphqy",
+      "text": "Wenn du von",
+      "seen": 2594,
+      "example": "zahlenfreunde: Wenn du von 10 die 9 wegnimmst, bleibt der Zahlenfreund von 9 übrig."
+    },
+    {
+      "key": "die-1o1es4",
+      "text": "die",
+      "seen": 2594,
+      "example": "zahlenfreunde: Wenn du von 10 die 9 wegnimmst, bleibt der Zahlenfreund von 9 übrig."
+    },
+    {
+      "key": "wegnimmst-bleibt-der-zahlenfreund-von-v5wlws",
+      "text": "wegnimmst, bleibt der Zahlenfreund von",
+      "seen": 2594,
+      "example": "zahlenfreunde: Wenn du von 10 die 9 wegnimmst, bleibt der Zahlenfreund von 9 übrig."
+    },
+    {
+      "key": "uebrig-ihwr77",
+      "text": "übrig",
+      "seen": 2594,
+      "example": "zahlenfreunde: Wenn du von 10 die 9 wegnimmst, bleibt der Zahlenfreund von 9 übrig."
+    },
+    {
+      "key": "welche-zahl-ergibt-verdoppelt-1stfn4",
+      "text": "Welche Zahl ergibt verdoppelt",
+      "seen": 2558,
+      "example": "einmaleins-kern: Welche Zahl ergibt verdoppelt 8? Das ist die Hälfte von 8."
+    },
+    {
+      "key": "das-ist-die-haelfte-von-0pkgdp",
+      "text": "Das ist die Hälfte von",
+      "seen": 2558,
+      "example": "einmaleins-kern: Welche Zahl ergibt verdoppelt 8? Das ist die Hälfte von 8."
+    },
+    {
+      "key": "das-doppelte-von-wie-viel-ist-jdmnhi",
+      "text": "Das Doppelte von wie viel ist",
+      "seen": 2381,
+      "example": "verdoppeln: Das Doppelte von ? ist 14"
+    },
+    {
+      "key": "rueckwaerts-gedacht-welche-zahl-plus-sic-1ksyhj",
+      "text": "Rückwärts gedacht: welche Zahl plus sich selbst ergibt",
+      "seen": 2381,
+      "example": "verdoppeln: Rückwärts gedacht: welche Zahl plus sich selbst ergibt 14? Das ist die Hälfte."
+    },
+    {
+      "key": "das-ist-die-haelfte-rgpk8u",
+      "text": "Das ist die Hälfte",
+      "seen": 2381,
+      "example": "verdoppeln: Rückwärts gedacht: welche Zahl plus sich selbst ergibt 14? Das ist die Hälfte."
+    },
+    {
+      "key": "also-ist-die-gesuchte-zahl-szu2v1",
+      "text": "also ist die gesuchte Zahl",
+      "seen": 2381,
+      "example": "verdoppeln: 7 + 7 = 14, also ist die gesuchte Zahl 7."
+    },
+    {
+      "key": "minus-wie-viel-ist-sa8cr8",
+      "text": "minus wie viel ist",
+      "seen": 2380,
+      "example": "bis20: 17 − ? = 10"
+    },
+    {
+      "key": "die-zehner-bleiben-stehen-w96nrv",
+      "text": "Die Zehner bleiben stehen:",
+      "seen": 2355,
+      "example": "bis100: Die Zehner bleiben stehen: 1 + 4 = 5."
+    },
+    {
+      "key": "in-zehnern-1m3m5w",
+      "text": "In Zehnern:",
+      "seen": 2344,
+      "example": "volle-zehner: In Zehnern: 3 + ? = 7. Es fehlen 4 Zehner."
+    },
+    {
+      "key": "es-fehlen-fvil81",
+      "text": "Es fehlen",
+      "seen": 2344,
+      "example": "volle-zehner: In Zehnern: 3 + ? = 7. Es fehlen 4 Zehner."
+    },
+    {
+      "key": "wie-oft-passt-mzbo6s",
+      "text": "Wie oft passt",
+      "seen": 2341,
+      "example": "teilen: Wie oft passt 2 in 4?"
+    },
+    {
+      "key": "zaehl-die-j9258p",
+      "text": "Zähl die",
+      "seen": 2341,
+      "example": "teilen: Zähl die 2er-Sprünge bis 4 und merk dir, wie viele Sprünge es waren."
+    },
+    {
+      "key": "er-spruenge-bis-1bs8tt",
+      "text": "er-Sprünge bis",
+      "seen": 2341,
+      "example": "teilen: Zähl die 2er-Sprünge bis 4 und merk dir, wie viele Sprünge es waren."
+    },
+    {
+      "key": "und-merk-dir-wie-viele-spruenge-es-waren-1au8pn",
+      "text": "und merk dir, wie viele Sprünge es waren",
+      "seen": 2341,
+      "example": "teilen: Zähl die 2er-Sprünge bis 4 und merk dir, wie viele Sprünge es waren."
+    },
+    {
+      "key": "passt-1l3bnk",
+      "text": "passt",
+      "seen": 2341,
+      "example": "teilen: 2 passt 2 mal in 4."
+    },
+    {
+      "key": "mal-in-pbgeqc",
+      "text": "mal in",
+      "seen": 2341,
+      "example": "teilen: 2 passt 2 mal in 4."
+    },
+    {
+      "key": "fehlt-1j6zyy",
+      "text": "fehlt:",
+      "seen": 2201,
+      "example": "bis20: Von 3 bis 6 fehlt: 3. Die Zehn ändert sich nicht."
+    },
+    {
+      "key": "die-zehn-aendert-sich-nicht-1ja8zl",
+      "text": "Die Zehn ändert sich nicht",
+      "seen": 2201,
+      "example": "bis20: Von 3 bis 6 fehlt: 3. Die Zehn ändert sich nicht."
+    },
+    {
+      "key": "und-nimm-noch-onqpa7",
+      "text": "und nimm noch",
+      "seen": 2083,
+      "example": "fast-zehner: 11 ist 1 mehr als 10. Rechne 89 − 10 = 79 und nimm noch 1 weg."
+    },
+    {
+      "key": "und-leg-1625af",
+      "text": "und leg",
+      "seen": 2060,
+      "example": "fast-zehner: 11 ist 1 mehr als 10. Rechne 84 + 10 = 94 und leg 1 dazu."
+    },
+    {
+      "key": "das-sind-1hjtut",
+      "text": "das sind",
+      "seen": 2053,
+      "example": "zehnersprung: Erst von 3 auf 10 — das sind 7. Und von 10 auf 11 noch 1."
+    },
+    {
+      "key": "dreh-die-aufgabe-um-1h21sp",
+      "text": "Dreh die Aufgabe um:",
+      "seen": 2027,
+      "example": "einmaleins-kern: Dreh die Aufgabe um: 5 · wie viel ergibt 25? Zähl in Fünfer-Schritten: 5, 10, 15 … bis 25. Wie viele Sprünge waren das?"
+    },
+    {
+      "key": "mal-wie-viel-ergibt-1j1t5t",
+      "text": "mal wie viel ergibt",
+      "seen": 2027,
+      "example": "einmaleins-kern: Dreh die Aufgabe um: 5 · wie viel ergibt 25? Zähl in Fünfer-Schritten: 5, 10, 15 … bis 25. Wie viele Sprünge waren das?"
+    },
+    {
+      "key": "das-ist-dieselbe-frage-wie-extj3y",
+      "text": "Das ist dieselbe Frage wie",
+      "seen": 1995,
+      "example": "teilen: Das ist dieselbe Frage wie 14 : 2. Welche Zahl ergibt verdoppelt 14? Das ist die Hälfte von 14."
+    },
+    {
+      "key": "runter-auf-17gx4e",
+      "text": "runter auf",
+      "seen": 1978,
+      "example": "zehnersprung: Von 15 runter auf 10 sind 5. Von 10 runter auf 8 noch 2."
+    },
+    {
+      "key": "zaehl-die-zahl-einfach-noch-einmal-dazu-oa6u1g",
+      "text": "zähl die Zahl einfach noch einmal dazu",
+      "seen": 1960,
+      "example": "verdoppeln: 4 + 4 — zähl die Zahl einfach noch einmal dazu."
+    },
+    {
+      "key": "geteilt-durch-wie-viel-ist-1dffy4",
+      "text": "geteilt durch wie viel ist",
+      "seen": 1943,
+      "example": "teilen: 12 : ? = 4"
+    },
+    {
+      "key": "frag-dich-wie-viel-mal-1mi3mm",
+      "text": "Frag dich: wie viel mal",
+      "seen": 1943,
+      "example": "teilen: Frag dich: wie viel mal 4 ergibt 12?"
+    },
+    {
+      "key": "ergibt-h62rhc",
+      "text": "ergibt",
+      "seen": 1943,
+      "example": "teilen: Frag dich: wie viel mal 4 ergibt 12?"
+    },
+    {
+      "key": "dann-plus-4u5mq2",
+      "text": "dann plus",
+      "seen": 1935,
+      "example": "bis100: 44 + 30 = 74, dann + 2 = 76."
+    },
+    {
+      "key": "geh-in-schritten-von-1wn275",
+      "text": "Geh in Schritten: von",
+      "seen": 1889,
+      "example": "bis100: Geh in Schritten: von 22 bis 30 sind es 8. Wie weit ist es von da bis 46?"
+    },
+    {
+      "key": "wie-weit-ist-es-von-da-bis-1htbt4",
+      "text": "Wie weit ist es von da bis",
+      "seen": 1889,
+      "example": "bis100: Geh in Schritten: von 22 bis 30 sind es 8. Wie weit ist es von da bis 46?"
+    },
+    {
+      "key": "dann-minus-kttitu",
+      "text": "dann minus",
+      "seen": 1876,
+      "example": "bis100: 72 − 10 = 62, dann − 5 = 57."
+    },
+    {
+      "key": "fang-bei-id1so3",
+      "text": "Fang bei",
+      "seen": 1850,
+      "example": "zahlenfreunde: Fang bei 3 an und zähl 1 weiter."
+    },
+    {
+      "key": "an-und-zaehl-7h4umv",
+      "text": "an und zähl",
+      "seen": 1850,
+      "example": "zahlenfreunde: Fang bei 3 an und zähl 1 weiter."
+    },
+    {
+      "key": "weiter-1qy12p",
+      "text": "weiter",
+      "seen": 1850,
+      "example": "zahlenfreunde: Fang bei 3 an und zähl 1 weiter."
+    },
+    {
+      "key": "erst-von-zdlr8q",
+      "text": "Erst von",
+      "seen": 1765,
+      "example": "zehnersprung: Erst von 3 auf 10 — das sind 7. Und von 10 auf 11 noch 1."
+    },
+    {
+      "key": "und-von-1y1v0p",
+      "text": "Und von",
+      "seen": 1765,
+      "example": "zehnersprung: Erst von 3 auf 10 — das sind 7. Und von 10 auf 11 noch 1."
+    },
+    {
+      "key": "zehner-die-923d9n",
+      "text": "Zehner. Die",
+      "seen": 1652,
+      "example": "bis100: Nur die Zehner ändern sich: 5 + 2 = 7 Zehner. Die 0 bleibt hinten stehen."
+    },
+    {
+      "key": "bleibt-hinten-stehen-4hk370",
+      "text": "bleibt hinten stehen",
+      "seen": 1652,
+      "example": "bis100: Nur die Zehner ändern sich: 5 + 2 = 7 Zehner. Die 0 bleibt hinten stehen."
+    },
+    {
+      "key": "welcher-zehner-liegt-vor-1fciy7",
+      "text": "Welcher Zehner liegt vor",
+      "seen": 1601,
+      "example": "volle-zehner: Welcher Zehner liegt vor 21?"
+    },
+    {
+      "key": "schau-nur-auf-die-zehner-stelle-von-1k02n4",
+      "text": "Schau nur auf die Zehner-Stelle von",
+      "seen": 1601,
+      "example": "volle-zehner: Schau nur auf die Zehner-Stelle von 21 — die Einer fallen weg."
+    },
+    {
+      "key": "die-einer-fallen-weg-bidhhx",
+      "text": "die Einer fallen weg",
+      "seen": 1601,
+      "example": "volle-zehner: Schau nur auf die Zehner-Stelle von 21 — die Einer fallen weg."
+    },
+    {
+      "key": "vor-1p885c",
+      "text": "Vor",
+      "seen": 1601,
+      "example": "volle-zehner: Vor 21 liegt der Zehner 20."
+    },
+    {
+      "key": "liegt-der-zehner-1ikm9f",
+      "text": "liegt der Zehner",
+      "seen": 1601,
+      "example": "volle-zehner: Vor 21 liegt der Zehner 20."
+    },
+    {
+      "key": "geh-von-b61y5k",
+      "text": "Geh von",
+      "seen": 1600,
+      "example": "zahlenfreunde: Geh von 8 aus 1 Schritte zurück."
+    },
+    {
+      "key": "aus-brf73s",
+      "text": "aus",
+      "seen": 1600,
+      "example": "zahlenfreunde: Geh von 8 aus 1 Schritte zurück."
+    },
+    {
+      "key": "schritte-zurueck-ajczqk",
+      "text": "Schritte zurück",
+      "seen": 1600,
+      "example": "zahlenfreunde: Geh von 8 aus 1 Schritte zurück."
+    },
+    {
+      "key": "sind-zahlenfreunde-zusammen-3y7rzq",
+      "text": "sind Zahlenfreunde, zusammen",
+      "seen": 1580,
+      "example": "zahlenfreunde: 2 und 8 sind Zahlenfreunde — zusammen 10. Dann nur noch 4 dazu."
+    },
+    {
+      "key": "dann-nur-noch-1nv235",
+      "text": "Dann nur noch",
+      "seen": 1580,
+      "example": "zahlenfreunde: 2 und 8 sind Zahlenfreunde — zusammen 10. Dann nur noch 4 dazu."
+    },
+    {
+      "key": "denk-rueckwaerts-welche-zahl-ergibt-zusa-1kci09",
+      "text": "Denk rückwärts: welche Zahl ergibt zusammen mit sich selbst",
+      "seen": 1501,
+      "example": "verdoppeln: Denk rückwärts: welche Zahl ergibt zusammen mit sich selbst 4?"
+    },
+    {
+      "key": "in-zehnern-gedacht-wgj3yi",
+      "text": "In Zehnern gedacht:",
+      "seen": 1494,
+      "example": "volle-zehner: In Zehnern gedacht: 9 + ? = 10. Der Zahlenfreund von 9 ist 1."
+    },
+    {
+      "key": "der-zahlenfreund-von-1wvfqn",
+      "text": "Der Zahlenfreund von",
+      "seen": 1494,
+      "example": "volle-zehner: In Zehnern gedacht: 9 + ? = 10. Der Zahlenfreund von 9 ist 1."
+    },
+    {
+      "key": "zehn-dazu-heisst-die-einer-bleiben-gleic-aenkk3",
+      "text": "Zehn dazu heißt: die Einer bleiben gleich, vorne kommt die",
+      "seen": 1480,
+      "example": "bis20: Zehn dazu heißt: die Einer bleiben gleich, vorne kommt die 1 hin."
+    },
+    {
+      "key": "hin-2g4snw",
+      "text": "hin",
+      "seen": 1480,
+      "example": "bis20: Zehn dazu heißt: die Einer bleiben gleich, vorne kommt die 1 hin."
+    },
+    {
+      "key": "und-eine-zehn-das-ist-4f3qhc",
+      "text": "und eine Zehn, das ist",
+      "seen": 1480,
+      "example": "bis20: 7 und eine Zehn — das ist 17."
+    },
+    {
+      "key": "wie-viele-einer-musst-du-wegnehmen-damit-1qcsia",
+      "text": "Wie viele Einer musst du wegnehmen, damit nur noch die glatte",
+      "seen": 1391,
+      "example": "bis20: Wie viele Einer musst du wegnehmen, damit nur noch die glatte 10 übrig ist?"
+    },
+    {
+      "key": "uebrig-ist-1qhbf7",
+      "text": "übrig ist",
+      "seen": 1391,
+      "example": "bis20: Wie viele Einer musst du wegnehmen, damit nur noch die glatte 10 übrig ist?"
+    },
+    {
+      "key": "heisst-zweimal-verdoppeln-1doecs",
+      "text": "heißt zweimal verdoppeln:",
+      "seen": 1375,
+      "example": "einmaleins: Mal 4 heißt zweimal verdoppeln: 3 + 3 = 6, und 6 + 6 = 12."
+    },
+    {
+      "key": "welcher-zehner-kommt-nach-ehm0c9",
+      "text": "Welcher Zehner kommt nach",
+      "seen": 1373,
+      "example": "volle-zehner: Welcher Zehner kommt nach 51?"
+    },
+    {
+      "key": "sind-es-noch-x1walr",
+      "text": "sind es noch",
+      "seen": 1373,
+      "example": "volle-zehner: Von 51 sind es noch 9 bis zum nächsten glatten Zehner."
+    },
+    {
+      "key": "bis-zum-naechsten-glatten-zehner-13xq5w",
+      "text": "bis zum nächsten glatten Zehner",
+      "seen": 1373,
+      "example": "volle-zehner: Von 51 sind es noch 9 bis zum nächsten glatten Zehner."
+    },
+    {
+      "key": "nach-4nn1rn",
+      "text": "Nach",
+      "seen": 1373,
+      "example": "volle-zehner: Nach 51 kommt der Zehner 60."
+    },
+    {
+      "key": "kommt-der-zehner-k6c9ek",
+      "text": "kommt der Zehner",
+      "seen": 1373,
+      "example": "volle-zehner: Nach 51 kommt der Zehner 60."
+    },
+    {
+      "key": "ist-eins-weniger-ht3zrp",
+      "text": "ist eins weniger",
+      "seen": 1333,
+      "example": "verdoppeln: Denk an die Verdopplung: 2 + 2 = 4. 1 ist eins weniger."
+    },
+    {
+      "key": "ist-eins-mehr-uez728",
+      "text": "ist eins mehr",
+      "seen": 1272,
+      "example": "verdoppeln: Denk an die Verdopplung: 7 + 7 = 14. 8 ist eins mehr."
+    },
+    {
+      "key": "verdopple-erst-die-zehner-6fyie4",
+      "text": "Verdopple erst die Zehner:",
+      "seen": 1262,
+      "example": "verdoppeln: Verdopple erst die Zehner: 20 + 20 = 40. Dann die Einer: 3 + 3 = 6."
+    },
+    {
+      "key": "dann-die-einer-18c2i0",
+      "text": "Dann die Einer:",
+      "seen": 1262,
+      "example": "verdoppeln: Verdopple erst die Zehner: 20 + 20 = 40. Dann die Einer: 3 + 3 = 6."
+    },
+    {
+      "key": "nimm-die-ganze-zehn-weg-dann-bleiben-nur-2rvmpd",
+      "text": "Nimm die ganze Zehn weg, dann bleiben nur die Einer übrig",
+      "seen": 1025,
+      "example": "bis20: Nimm die ganze Zehn weg — dann bleiben nur die Einer übrig."
+    },
+    {
+      "key": "nachbaraufgabe-2ivuol",
+      "text": "Nachbaraufgabe:",
+      "seen": 991,
+      "example": "einmaleins: Nachbaraufgabe: 2 · 6 = 12, und noch eine 6 dazu."
+    },
+    {
+      "key": "und-noch-eine-46h735",
+      "text": "und noch eine",
+      "seen": 991,
+      "example": "einmaleins: Nachbaraufgabe: 2 · 6 = 12, und noch eine 6 dazu."
+    },
+    {
+      "key": "sind-5rzdl7",
+      "text": "sind",
+      "seen": 989,
+      "example": "zehnersprung: Von 15 runter auf 10 sind 5. Von 10 runter auf 8 noch 2."
+    },
+    {
+      "key": "die-haelfte-von-v1ygmp",
+      "text": "die Hälfte von",
+      "seen": 969,
+      "example": "verdoppeln: Zerlege 24 in 20 und 4. Die Hälfte von 20 ist 10, die Hälfte von 4 ist 2."
+    },
+    {
+      "key": "so-lassen-sich-beide-teile-sauber-halbie-15ag4w",
+      "text": "so lassen sich beide Teile sauber halbieren:",
+      "seen": 828,
+      "example": "verdoppeln: Zerlege 36 in 20 und 16 — so lassen sich beide Teile sauber halbieren: 10 + 8."
+    },
+    {
+      "key": "er-trick-rechne-2aqyx5",
+      "text": "er-Trick: rechne",
+      "seen": 826,
+      "example": "einmaleins: 9er-Trick: rechne 10 · 8 = 80 und nimm eine 8 wieder weg."
+    },
+    {
+      "key": "und-nimm-eine-eb5rw4",
+      "text": "und nimm eine",
+      "seen": 826,
+      "example": "einmaleins: 9er-Trick: rechne 10 · 8 = 80 und nimm eine 8 wieder weg."
+    },
+    {
+      "key": "wieder-weg-1qqy4u",
+      "text": "wieder weg",
+      "seen": 826,
+      "example": "einmaleins: 9er-Trick: rechne 10 · 8 = 80 und nimm eine 8 wieder weg."
+    },
+    {
+      "key": "ist-mal-1j0imw",
+      "text": "ist mal",
+      "seen": 601,
+      "example": "einmaleins: Mal 8 ist mal 4, noch einmal verdoppelt: 4 · 8 = 32, das Doppelte davon ist 64."
+    },
+    {
+      "key": "noch-einmal-verdoppelt-1qo9sg",
+      "text": "noch einmal verdoppelt:",
+      "seen": 601,
+      "example": "einmaleins: Mal 8 ist mal 4, noch einmal verdoppelt: 4 · 8 = 32, das Doppelte davon ist 64."
+    },
+    {
+      "key": "das-doppelte-davon-ist-w26ok0",
+      "text": "das Doppelte davon ist",
+      "seen": 601,
+      "example": "einmaleins: Mal 8 ist mal 4, noch einmal verdoppelt: 4 · 8 = 32, das Doppelte davon ist 64."
+    },
+    {
+      "key": "aendert-nichts-1gnwfw",
+      "text": "ändert nichts",
+      "seen": 541,
+      "example": "einmaleins-kern: Mal 1 ändert nichts — 2 bleibt 2."
+    },
+    {
+      "key": "bleibt-1bhd5q",
+      "text": "bleibt",
+      "seen": 541,
+      "example": "einmaleins-kern: Mal 1 ändert nichts — 2 bleibt 2."
+    },
+    {
+      "key": "null-wieder-dran-1k9hap",
+      "text": "Null wieder dran:",
+      "seen": 494,
+      "example": "verdoppeln: Denk die Null weg: 1 + 1 = 2. Null wieder dran: 20."
+    },
+    {
+      "key": "fehlt-noch-ein-schritt-zaehl-an-den-fing-yl3r9a",
+      "text": "fehlt noch ein Schritt. Zähl an den Fingern weiter",
+      "seen": 487,
+      "example": "zahlenfreunde: Von 9 bis 10 fehlt noch ein Schritt. Zähl an den Fingern weiter."
+    },
+    {
+      "key": "denk-die-null-weg-g0v3uh",
+      "text": "Denk die Null weg:",
+      "seen": 367,
+      "example": "verdoppeln: Denk die Null weg: 1 + 1 = 2. Null wieder dran: 20."
+    },
+    {
+      "key": "geh-erst-runter-auf-tmbfhf",
+      "text": "Geh erst runter auf",
+      "seen": 288,
+      "example": "bis100: Geh erst runter auf 60 — das sind 5. Dann noch 1 weiter zurück."
+    },
+    {
+      "key": "dann-noch-1dxfjv",
+      "text": "Dann noch",
+      "seen": 288,
+      "example": "bis100: Geh erst runter auf 60 — das sind 5. Dann noch 1 weiter zurück."
+    },
+    {
+      "key": "weiter-zurueck-v2wlqw",
+      "text": "weiter zurück",
+      "seen": 288,
+      "example": "bis100: Geh erst runter auf 60 — das sind 5. Dann noch 1 weiter zurück."
+    },
+    {
+      "key": "denk-die-null-weg-die-haelfte-von-bvyqgf",
+      "text": "Denk die Null weg: die Hälfte von",
+      "seen": 127,
+      "example": "verdoppeln: Denk die Null weg: die Hälfte von 4 ist 2. Null wieder dran: 20."
+    },
+    {
+      "key": "zusammen-08qdv1",
+      "text": "Zusammen",
+      "seen": 93,
+      "example": "einmaleins: Zerlege die 7: 5 · 7 = 35 und 2 · 7 = 14. Zusammen 49."
+    },
+    {
+      "key": "ist-ein-glatter-zehner-nimm-einen-ganzen-0p3vhe",
+      "text": "ist ein glatter Zehner. Nimm einen ganzen Zehner weg:",
+      "seen": 19,
+      "example": "bis100: 50 ist ein glatter Zehner. Nimm einen ganzen Zehner weg: 50 − 10 = 40. Davon gibst du 9 wieder zurück."
+    },
+    {
+      "key": "davon-gibst-du-1b1r26",
+      "text": "Davon gibst du",
+      "seen": 19,
+      "example": "bis100: 50 ist ein glatter Zehner. Nimm einen ganzen Zehner weg: 50 − 10 = 40. Davon gibst du 9 wieder zurück."
+    }
+  ],
+  "texts": [
+    {
+      "id": "zahlenfreunde--summary",
+      "text": "Welche zwei Zahlen ergeben zusammen 10? Wer die Paare im Kopf hat, rechnet später alles schneller."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--title",
+      "text": "Die Zehner-Paare."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--idea",
+      "text": "Zu jeder Zahl gibt es genau einen Freund, mit dem sie 10 ergibt. Diese fünf Paare lernst du auswendig, dann musst du nie wieder zählen."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--step-1",
+      "text": "Halte beide Hände hoch: das sind 10 Finger."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--step-2",
+      "text": "Klappe 3 Finger weg, wie viele stehen noch? 7."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--step-3",
+      "text": "Also: 3 und 7 sind Zahlenfreunde."
+    },
+    {
+      "id": "zahlenfreunde--trick-1--step-4",
+      "text": "Merke dir die fünf Paare wie fünf beste Freunde."
+    },
+    {
+      "id": "bis20--summary",
+      "text": "Rechnen im Zwanzigerraum, ohne über die Zehn zu springen. Die Zehn bleibt stehen, du rechnest nur mit den Einern."
+    },
+    {
+      "id": "bis20--trick-1--title",
+      "text": "Die Zehn bleibt stehen."
+    },
+    {
+      "id": "bis20--trick-1--idea",
+      "text": "Bei Aufgaben wie 13 plus 5 passiert mit der Zehn gar nichts. Du rechnest nur mit den Einern und setzt die Zehn wieder davor."
+    },
+    {
+      "id": "bis20--trick-1--step-1",
+      "text": "Zerlege 13 in 10 und 3."
+    },
+    {
+      "id": "bis20--trick-1--step-2",
+      "text": "Rechne nur die Einer: 3 plus 5 ist 8."
+    },
+    {
+      "id": "bis20--trick-1--step-3",
+      "text": "Setze die Zehn wieder davor: 18."
+    },
+    {
+      "id": "zehnersprung--summary",
+      "text": "8 plus 7 oder 15 minus 8: Aufgaben, bei denen du über die Zehn hinweg musst. Mit dem Zwischenstopp auf der 10 geht das ganz leicht."
+    },
+    {
+      "id": "zehnersprung--trick-1--title",
+      "text": "Zwischenstopp auf der 10."
+    },
+    {
+      "id": "zehnersprung--trick-1--idea",
+      "text": "Die 10 ist wie ein Rastplatz. Du gehst erst bis zur 10, und erst dann den Rest."
+    },
+    {
+      "id": "zehnersprung--trick-1--step-1",
+      "text": "Wie weit ist es von 8 bis 10? 2 Schritte."
+    },
+    {
+      "id": "zehnersprung--trick-1--step-2",
+      "text": "Zerlege die 7 in 2 und 5."
+    },
+    {
+      "id": "zehnersprung--trick-1--step-3",
+      "text": "8 plus 2 ist 10."
+    },
+    {
+      "id": "zehnersprung--trick-1--step-4",
+      "text": "10 plus 5 ist 15."
+    },
+    {
+      "id": "zehnersprung--trick-2--title",
+      "text": "Rückwärts genauso."
+    },
+    {
+      "id": "zehnersprung--trick-2--idea",
+      "text": "Beim Minus machst du den Zwischenstopp auch auf der 10, nur rückwärts."
+    },
+    {
+      "id": "zehnersprung--trick-2--step-1",
+      "text": "Von 15 bis zur 10 sind es 5 zurück."
+    },
+    {
+      "id": "zehnersprung--trick-2--step-2",
+      "text": "Zerlege die 8 in 5 und 3."
+    },
+    {
+      "id": "zehnersprung--trick-2--step-3",
+      "text": "15 minus 5 ist 10."
+    },
+    {
+      "id": "zehnersprung--trick-2--step-4",
+      "text": "10 minus 3 ist 7."
+    },
+    {
+      "id": "verdoppeln--summary",
+      "text": "Das Doppelte und die Hälfte hast du blitzschnell im Kopf. Und mit den Nachbaraufgaben löst du damit noch viel mehr."
+    },
+    {
+      "id": "verdoppeln--trick-1--title",
+      "text": "Nachbaraufgaben."
+    },
+    {
+      "id": "verdoppeln--trick-1--idea",
+      "text": "Wenn du die Verdopplungen kennst, kennst du auch alle Aufgaben direkt daneben. 6 plus 7 ist nur eins mehr als 6 plus 6."
+    },
+    {
+      "id": "verdoppeln--trick-1--step-1",
+      "text": "Suche die Verdopplung in der Nähe: 6 plus 6 ist 12."
+    },
+    {
+      "id": "verdoppeln--trick-1--step-2",
+      "text": "7 ist eins mehr als 6."
+    },
+    {
+      "id": "verdoppeln--trick-1--step-3",
+      "text": "Also 12 plus 1 ist 13."
+    },
+    {
+      "id": "verdoppeln--trick-2--title",
+      "text": "Große Zahlen halbieren."
+    },
+    {
+      "id": "verdoppeln--trick-2--idea",
+      "text": "Halbiere erst die Zehner, dann die Einer, und zähle beides zusammen."
+    },
+    {
+      "id": "verdoppeln--trick-2--step-1",
+      "text": "Zerlege 48 in 40 und 8."
+    },
+    {
+      "id": "verdoppeln--trick-2--step-2",
+      "text": "Die Hälfte von 40 ist 20."
+    },
+    {
+      "id": "verdoppeln--trick-2--step-3",
+      "text": "Die Hälfte von 8 ist 4."
+    },
+    {
+      "id": "verdoppeln--trick-2--step-4",
+      "text": "20 plus 4 ist 24."
+    },
+    {
+      "id": "volle-zehner--summary",
+      "text": "30 plus 40, 90 minus 50: Mit vollen Zehnern rechnest du genauso wie mit kleinen Zahlen, nur mit einer Null hinten dran."
+    },
+    {
+      "id": "volle-zehner--trick-1--title",
+      "text": "Rechne klein, häng die Null an."
+    },
+    {
+      "id": "volle-zehner--trick-1--idea",
+      "text": "3 Zehner plus 4 Zehner sind 7 Zehner. Du rechnest also 3 plus 4 und hängst die Null wieder an."
+    },
+    {
+      "id": "volle-zehner--trick-1--step-1",
+      "text": "Denk dir die Nullen weg: 3 plus 4."
+    },
+    {
+      "id": "volle-zehner--trick-1--step-2",
+      "text": "3 plus 4 ist 7."
+    },
+    {
+      "id": "volle-zehner--trick-1--step-3",
+      "text": "Null wieder dran: 70."
+    },
+    {
+      "id": "bis100--summary",
+      "text": "Jetzt kommt der ganze Hunderterraum. Du rechnest in zwei Schritten: erst die Zehner, dann die Einer."
+    },
+    {
+      "id": "bis100--trick-1--title",
+      "text": "Erst Zehner, dann Einer."
+    },
+    {
+      "id": "bis100--trick-1--idea",
+      "text": "Zerlege die zweite Zahl in Zehner und Einer und rechne in zwei Schritten. Nie alles auf einmal."
+    },
+    {
+      "id": "bis100--trick-1--step-1",
+      "text": "Zerlege 25 in 20 und 5."
+    },
+    {
+      "id": "bis100--trick-1--step-2",
+      "text": "43 plus 20 ist 63."
+    },
+    {
+      "id": "bis100--trick-1--step-3",
+      "text": "63 plus 5 ist 68."
+    },
+    {
+      "id": "bis100--trick-2--title",
+      "text": "Am Zehner Pause machen."
+    },
+    {
+      "id": "bis100--trick-2--idea",
+      "text": "Wenn du über einen Zehner musst, halte kurz auf dem Zehner an, genau wie bei der 10."
+    },
+    {
+      "id": "bis100--trick-2--step-1",
+      "text": "Von 36 bis 40 sind es 4."
+    },
+    {
+      "id": "bis100--trick-2--step-2",
+      "text": "Zerlege 8 in 4 und 4."
+    },
+    {
+      "id": "bis100--trick-2--step-3",
+      "text": "36 plus 4 ist 40."
+    },
+    {
+      "id": "bis100--trick-2--step-4",
+      "text": "40 plus 4 ist 44."
+    },
+    {
+      "id": "fast-zehner--summary",
+      "text": "Plus 9 ist schwer? Plus 10 ist leicht. Rechne einfach mit dem glatten Zehner und korrigiere danach."
+    },
+    {
+      "id": "fast-zehner--trick-1--title",
+      "text": "Erst zu viel, dann zurück."
+    },
+    {
+      "id": "fast-zehner--trick-1--idea",
+      "text": "9 ist fast 10. Rechne plus 10 (das kannst du blind) und nimm hinterher 1 wieder weg."
+    },
+    {
+      "id": "fast-zehner--trick-1--step-1",
+      "text": "Rechne 47 plus 10 ist 57."
+    },
+    {
+      "id": "fast-zehner--trick-1--step-2",
+      "text": "Du hast 1 zu viel dazugetan."
+    },
+    {
+      "id": "fast-zehner--trick-1--step-3",
+      "text": "57 minus 1 ist 56."
+    },
+    {
+      "id": "fast-zehner--trick-2--title",
+      "text": "Beim Minus andersherum."
+    },
+    {
+      "id": "fast-zehner--trick-2--idea",
+      "text": "Minus 9 heißt: minus 10, und dann 1 wieder zurückgeben."
+    },
+    {
+      "id": "fast-zehner--trick-2--step-1",
+      "text": "Rechne 62 minus 10 ist 52."
+    },
+    {
+      "id": "fast-zehner--trick-2--step-2",
+      "text": "Du hast 1 zu viel weggenommen."
+    },
+    {
+      "id": "fast-zehner--trick-2--step-3",
+      "text": "52 plus 1 ist 53."
+    },
+    {
+      "id": "einmaleins-kern--summary",
+      "text": "Die drei leichtesten Reihen zuerst. Wer sie sicher kann, hat den Schlüssel für das ganze Einmaleins."
+    },
+    {
+      "id": "einmaleins-kern--trick-1--title",
+      "text": "Die 5er ist die halbe 10er."
+    },
+    {
+      "id": "einmaleins-kern--trick-1--idea",
+      "text": "Die 10er-Reihe kannst du sofort. Und die 5er-Reihe ist immer genau die Hälfte davon."
+    },
+    {
+      "id": "einmaleins-kern--trick-1--step-1",
+      "text": "Rechne zuerst 10 mal 7 ist 70."
+    },
+    {
+      "id": "einmaleins-kern--trick-1--step-2",
+      "text": "Nimm die Hälfte davon."
+    },
+    {
+      "id": "einmaleins-kern--trick-1--step-3",
+      "text": "Die Hälfte von 70 ist 35."
+    },
+    {
+      "id": "einmaleins-kern--trick-2--title",
+      "text": "Malnehmen ist Springen."
+    },
+    {
+      "id": "einmaleins-kern--trick-2--idea",
+      "text": "2 mal 8 heißt: zwei Achter-Sprünge. Malnehmen ist nichts anderes als mehrmals dieselbe Zahl dazuzählen."
+    },
+    {
+      "id": "einmaleins-kern--trick-2--step-1",
+      "text": "Ein Sprung: 8."
+    },
+    {
+      "id": "einmaleins-kern--trick-2--step-2",
+      "text": "Noch ein Sprung: 8 plus 8."
+    },
+    {
+      "id": "einmaleins-kern--trick-2--step-3",
+      "text": "Das ist die Verdopplung: 16."
+    },
+    {
+      "id": "einmaleins--summary",
+      "text": "Jetzt alle Reihen. Mit Tauschaufgabe, Nachbaraufgabe und dem 9er-Trick musst du viel weniger auswendig lernen, als es aussieht."
+    },
+    {
+      "id": "einmaleins--trick-1--title",
+      "text": "Tauschaufgabe."
+    },
+    {
+      "id": "einmaleins--trick-1--idea",
+      "text": "7 mal 3 und 3 mal 7 haben dasselbe Ergebnis. Dreh die Aufgabe immer so, dass sie für dich leichter ist."
+    },
+    {
+      "id": "einmaleins--trick-1--step-1",
+      "text": "3 mal 8 ist dasselbe wie 8 mal 3."
+    },
+    {
+      "id": "einmaleins--trick-1--step-2",
+      "text": "8 mal 3 ist 24."
+    },
+    {
+      "id": "einmaleins--trick-1--step-3",
+      "text": "Also ist auch 3 mal 8 ist 24."
+    },
+    {
+      "id": "einmaleins--trick-2--title",
+      "text": "Nachbaraufgabe."
+    },
+    {
+      "id": "einmaleins--trick-2--idea",
+      "text": "Kennst du 5 mal 7, dann kennst du auch 6 mal 7, es ist nur eine Siebener-Reihe mehr."
+    },
+    {
+      "id": "einmaleins--trick-2--step-1",
+      "text": "Nimm die Kernaufgabe: 5 mal 7 ist 35."
+    },
+    {
+      "id": "einmaleins--trick-2--step-2",
+      "text": "6 mal 7 ist eine 7 mehr."
+    },
+    {
+      "id": "einmaleins--trick-2--step-3",
+      "text": "35 plus 7 ist 42."
+    },
+    {
+      "id": "einmaleins--trick-3--title",
+      "text": "Der 9er-Trick."
+    },
+    {
+      "id": "einmaleins--trick-3--idea",
+      "text": "9 ist fast 10. Rechne mit der 10 und nimm die Zahl einmal wieder weg."
+    },
+    {
+      "id": "einmaleins--trick-3--step-1",
+      "text": "Rechne 10 mal 6 ist 60."
+    },
+    {
+      "id": "einmaleins--trick-3--step-2",
+      "text": "Nimm eine 6 wieder weg."
+    },
+    {
+      "id": "einmaleins--trick-3--step-3",
+      "text": "60 minus 6 ist 54."
+    },
+    {
+      "id": "teilen--summary",
+      "text": "Teilen musst du gar nicht extra lernen, du suchst einfach die passende Malaufgabe."
+    },
+    {
+      "id": "teilen--trick-1--title",
+      "text": "Such die Malaufgabe."
+    },
+    {
+      "id": "teilen--trick-1--idea",
+      "text": "Jede Geteilt-Aufgabe hat eine Mal-Aufgabe als Zwilling. Frage dich: mal wie viel ergibt das?"
+    },
+    {
+      "id": "teilen--trick-1--step-1",
+      "text": "Frage dich: 4 mal wie viel ist 24?"
+    },
+    {
+      "id": "teilen--trick-1--step-2",
+      "text": "Geh die 4er-Reihe: 4, 8, 12, 16, 20, 24."
+    },
+    {
+      "id": "teilen--trick-1--step-3",
+      "text": "Das waren 6 Sprünge."
+    },
+    {
+      "id": "teilen--trick-1--step-4",
+      "text": "Also 24 geteilt durch 4 ist 6."
+    }
+  ]
+}

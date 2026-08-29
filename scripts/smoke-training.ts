@@ -73,3 +73,45 @@ if (bad > 0) {
 console.log(
   `OK — ${TRAINING_MODULES.length} Module × ${LEVELS.length} Level × ${PER_COMBO} Aufgaben geprüft.`
 );
+
+// ----- Sprech-Invarianten ----------------------------------------------------
+// Jeder Text muss sich sauber in Zahlen und Bausteine zerlegen lassen. Zwei
+// direkt aufeinanderfolgende Zahlen bedeuten, dass ein Trennwort verloren
+// ging („15 minus 5 10 bleibt") — das klingt vorgelesen kaputt.
+
+import { splitSpeech, speechPlainText } from "../src/data/training/speech";
+
+let speechBad = 0;
+for (const mod of TRAINING_MODULES) {
+  for (const level of LEVELS) {
+    for (let i = 0; i < 300; i++) {
+      const t = generateTrainingTask(mod.id, level);
+      for (const [label, text] of [
+        ["prompt", t.prompt],
+        ["hint", t.hint],
+        ["solution", t.solution],
+      ] as const) {
+        const parts = splitSpeech(text);
+        if (parts.length === 0) {
+          console.error(`FAIL: ${mod.id}/${label} ergibt keine Sprech-Teile:`, text);
+          speechBad++;
+          continue;
+        }
+        for (let p = 1; p < parts.length; p++) {
+          if (parts[p].kind === "number" && parts[p - 1].kind === "number") {
+            console.error(
+              `FAIL: ${mod.id}/${label} — zwei Zahlen ohne Trennwort:\n  "${text}"\n  → "${speechPlainText(parts)}"`
+            );
+            speechBad++;
+          }
+        }
+      }
+    }
+  }
+}
+
+if (speechBad > 0) {
+  console.error(`\n${speechBad} Sprech-Problem(e) gefunden.`);
+  process.exit(1);
+}
+console.log("Sprech-Zerlegung OK — keine verschluckten Trennwörter.");

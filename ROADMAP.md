@@ -138,9 +138,44 @@ Module sind **nicht gesperrt** — wer bis 20 sicher rechnet, springt weiter. Sp
 - `src/app/training/` — Route mit statischer Generierung pro Modul
 - `scripts/smoke-training.ts` (`npm run smoke:training`) — 15.000 generierte Aufgaben gegen Zahlenraum-, Text- und Lösungs-Invarianten
 
+### Vertonung des Trainings (2026-08-29)
+
+Alles im Training ist vorlesbar: die Aufgabe, der Tipp, der Rechenweg, die Trick-Erklärungen und die Modulbeschreibungen. Vertont wird mit **Gemini TTS**, und zwar **vollständig im Voraus** — die App ruft zur Laufzeit keine API.
+
+**Warum im Voraus?** Die App ist ein statischer Export (`output: "export"`), es gibt keinen Server, der einen API-Key halten könnte. Ein Key in den Vercel-Variablen wäre zur Laufzeit für niemanden lesbar.
+
+**Wie das trotz gewürfelter Aufgaben geht.** Alle dynamischen Texte sind Schablonen mit eingesetzten Zahlen. Trennt man an den Zahlen, bleibt eine endliche Menge Textbausteine übrig:
+
+```
+"Von 8 bis 10 fehlen 2."  →  ["Von", 8, "bis", 10, "fehlen", 2]
+```
+
+Gemessen über 120.000 generierte Aufgaben sind das **155 Bausteine**. Zusammen mit den Zahlen 0–100 und den 101 festen Sätzen ergibt das **358 Audio-Dateien** statt der ~30.000, die vollständig ausgeschriebene Sätze bräuchten. Zur Laufzeit werden die Clips hintereinander abgespielt; Satzzeichen zwischen zwei Zahlen werden zu echten Sprechpausen, damit „5, 10, 15" nicht zusammenklebt.
+
+| | |
+|---|---|
+| `num/0–100.mp3` | die Zahlen, einzeln |
+| `frag/<key>.mp3` | die Textbausteine dazwischen |
+| `text/<id>.mp3` | feste Sätze am Stück — beste Betonung, weil ungeschnitten |
+
+**Ablauf:**
+
+```bash
+npm run collect:speech        # Manifest aus den Generatoren einsammeln
+npm run gen:training-audio    # Gemini TTS → public/audio/training/**
+git add public/audio/training && git commit && git push
+```
+
+`GEMINI_API_KEY` gehört dafür in `.env.local` (gitignored) — **nicht** zu Vercel. Modell und Stimme sind über `GEMINI_TTS_MODEL` / `GEMINI_TTS_VOICE` austauschbar (Default: `gemini-2.5-flash-preview-tts`, Stimme `Leda`). Das Skript schneidet Stille an den Rändern weg und gleicht die Lautstärke an — ohne das zerfiele der zusammengesetzte Satz in Einzelwörter. Kodiert wird als MP3 rein in JS (`@breezystack/lamejs`), also ohne ffmpeg.
+
+**Fallback:** Fehlt eine Datei, liest die Sprachausgabe des Geräts den ganzen Satz vor. Die App ist damit nie stumm — auch nicht zwischen Code-Stand und Audio-Stand.
+
+**Bedienung:** Lautsprecher-Knopf an Aufgabe, Tipp, Rechenweg, jedem Trick-Schritt und der Modulbeschreibung; „Vorlesen" auf der Trick-Karte liest die ganze Erklärung am Stück; ein Schalter in der Übungsrunde liest jede neue Aufgabe automatisch vor (Default aus, Einstellung wird gemerkt).
+
 ### Offen (Training)
 
-- [ ] Vorlese-Funktion für Aufgabe und Trick (TTS, analog Story-Zweig)
+- [ ] **Audio erzeugen und committen** (`npm run gen:training-audio`) — bis dahin läuft die Gerätestimme
+- [ ] Trick-Beispiele (`trick.example`) vertonen — bei Modul 1 ist das „·" dort ein Listentrenner, kein Malzeichen, das braucht eine Sonderbehandlung
 - [ ] Eigenes KI-Bild für die Trainings-Kachel auf der Startseite (aktuell typografische Rechen-Kachel)
 - [ ] Trainings-Daten in den Eltern-View / Skill-Heatmap (Wo 4) einspeisen
 - [ ] Später: Sachaufgaben-Modul und Geld-Modul, sobald Kapitel 2 die Generatoren dafür hat
@@ -363,7 +398,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | Spur | Aktueller Stand | Nächstes |
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
-| **Kopfrechnen-Zweig** | 10 Module + Tricks, eigene Persistenz, Zahlentastatur, Smoke-Test ✓ | Vorlese-Funktion, Trainings-Daten im Eltern-View |
+| **Kopfrechnen-Zweig** | 10 Module + Tricks, eigene Persistenz, Zahlentastatur, Smoke-Test ✓ · Vertonung verdrahtet (358 Clips, Gerätestimme als Fallback) ✓ | Gemini-Audio erzeugen und committen, Trainings-Daten im Eltern-View |
 | **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ · 12 Brücken-Status-Bilder ✓ · Buch-Charakter-Asset ✓ | Eltern-View / Skill-Heatmap (Wo 4), Wüsten-Setting (Wo 5) |

@@ -17,7 +17,7 @@ export function generateBis20(level: Level = "normal"): TrainingTask {
       const a = 10 + ones;
       return make(`${a} + ${b}`, a + b, level, {
         hint: `Die Zehn bleibt stehen. Rechne nur ${ones} + ${b} = ${ones + b}.`,
-        solution: `${a} + ${b}: 10 bleibt, ${ones} + ${b} = ${ones + b}. Also ${a + b}.`,
+        solution: `Die Zehn bleibt stehen: ${ones} + ${b} = ${ones + b}. Also ${a} + ${b} = ${a + b}.`,
       });
     }
     case "minus": {
@@ -27,7 +27,7 @@ export function generateBis20(level: Level = "normal"): TrainingTask {
       const b = randInt(1, ones);
       return make(`${a} − ${b}`, a - b, level, {
         hint: `Die Zehn bleibt stehen. Rechne nur ${ones} − ${b} = ${ones - b}.`,
-        solution: `${a} − ${b}: 10 bleibt, ${ones} − ${b} = ${ones - b}. Also ${a - b}.`,
+        solution: `Die Zehn bleibt stehen: ${ones} − ${b} = ${ones - b}. Also ${a} − ${b} = ${a - b}.`,
       });
     }
     case "plus-ten": {

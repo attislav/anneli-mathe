@@ -18,7 +18,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Lightbulb, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, Lightbulb, RotateCcw, Sparkles, Volume2, VolumeX } from "lucide-react";
 import type { TrainingModule } from "@/data/training/modules";
 import { nextTrainingModule } from "@/data/training/modules";
 import { generateTrainingTask, type Level, type TrainingTask } from "@/data/training";
@@ -29,7 +29,9 @@ import {
   type TrainingState,
 } from "@/data/trainingProgress";
 import { ACCENTS } from "@/lib/accents";
+import { loadAutoRead, saveAutoRead, useSpeech } from "@/lib/useSpeech";
 import { NumberPad } from "./NumberPad";
+import { SpeakButton } from "./SpeakButton";
 import { TrickCard } from "./TrickCard";
 import { useSoundFx } from "@/lib/useSoundFx";
 
@@ -70,6 +72,15 @@ export function TrainingSession({
 }) {
   const accent = ACCENTS[module.accent];
   const playFx = useSoundFx();
+  const speech = useSpeech();
+
+  // „Aufgabe automatisch vorlesen" — für Kinder, die lieber hören als lesen.
+  // Einstellung bleibt über Sitzungen hinweg erhalten.
+  const [autoRead, setAutoRead] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAutoRead(loadAutoRead());
+  }, []);
 
   const [training, setTraining] = useState<TrainingState | null>(null);
   const [level, setLevel] = useState<Level>("normal");
@@ -106,6 +117,16 @@ export function TrainingSession({
     setLevel(startLevel);
     setTask(generateTrainingTask(module.id, startLevel));
   }, [module.id]);
+
+  // --- Aufgabe automatisch vorlesen -----------------------------------------
+  // Nur bei einer NEUEN Aufgabe, nicht nach einem zweiten Versuch — sonst
+  // redet die App Anneli beim Nachdenken dazwischen.
+  useEffect(() => {
+    if (!autoRead || !task) return;
+    speech.speak(task.prompt);
+    // `speech` ist über useCallback stabil; die Aufgabe ist der Auslöser.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task?.id, autoRead]);
 
   // --- Tipp nach Ruhephase --------------------------------------------------
 
@@ -252,14 +273,34 @@ export function TrainingSession({
           <span>
             Aufgabe {Math.min(taskIndex + 1, module.taskCount)} von {module.taskCount}
           </span>
-          <button
-            type="button"
-            onClick={() => setShowTrick((s) => !s)}
-            className="inline-flex items-center gap-1 rounded-full bg-[var(--color-lavender)]/50 px-3 py-1 font-semibold text-[var(--color-lavender-deep)]"
-          >
-            <Lightbulb size={14} strokeWidth={2} />
-            {showTrick ? "Trick ausblenden" : "Trick zeigen"}
-          </button>
+          <span className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const next = !autoRead;
+                setAutoRead(next);
+                saveAutoRead(next);
+                if (!next) speech.stop();
+              }}
+              aria-pressed={autoRead}
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1 font-semibold transition-colors ${
+                autoRead
+                  ? "bg-[var(--color-mint)] text-[var(--color-mint-deep)]"
+                  : "bg-[var(--color-lavender)]/50 text-[var(--color-ink-soft)]"
+              }`}
+            >
+              {autoRead ? <Volume2 size={14} strokeWidth={2} /> : <VolumeX size={14} strokeWidth={2} />}
+              Vorlesen
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowTrick((s) => !s)}
+              className="inline-flex items-center gap-1 rounded-full bg-[var(--color-lavender)]/50 px-3 py-1 font-semibold text-[var(--color-lavender-deep)]"
+            >
+              <Lightbulb size={14} strokeWidth={2} />
+              {showTrick ? "Trick ausblenden" : "Trick zeigen"}
+            </button>
+          </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--color-lavender)]/40" aria-hidden>
           <div
@@ -271,7 +312,13 @@ export function TrainingSession({
 
       {showTrick ? (
         <div className="mb-6">
-          <TrickCard trick={module.tricks[0]} accent={module.accent} />
+          <TrickCard
+            trick={module.tricks[0]}
+            accent={module.accent}
+            moduleId={module.id}
+            trickIndex={0}
+            speech={speech}
+          />
         </div>
       ) : null}
 
@@ -279,9 +326,12 @@ export function TrainingSession({
       <div className="mb-6 rounded-[var(--radius-card)] bg-[var(--color-paper)] p-8 text-center shadow-[var(--shadow-soft)]">
         {task ? (
           <>
-            <p className="mb-5 text-4xl font-semibold tabular-nums leading-tight md:text-5xl">
-              {promptWithEquals(task.prompt)}
-            </p>
+            <div className="mb-5 flex items-center justify-center gap-4">
+              <p className="text-4xl font-semibold tabular-nums leading-tight md:text-5xl">
+                {promptWithEquals(task.prompt)}
+              </p>
+              <SpeakButton speech={speech} text={task.prompt} label="Aufgabe vorlesen" />
+            </div>
             <div
               className={`mx-auto flex h-16 w-32 items-center justify-center rounded-2xl border-2 text-4xl font-semibold tabular-nums transition-colors ${
                 phase === "correct"
@@ -319,7 +369,15 @@ export function TrainingSession({
             <p className="mb-1 text-sm font-semibold text-[var(--color-peach-deep)]">
               So geht der Rechenweg:
             </p>
-            <p className="mb-3 leading-relaxed">{task.solution}</p>
+            <div className="mb-3 flex items-start justify-center gap-3">
+              <p className="leading-relaxed">{task.solution}</p>
+              <SpeakButton
+                speech={speech}
+                text={task.solution}
+                label="Rechenweg vorlesen"
+                size="sm"
+              />
+            </div>
             <button
               type="button"
               onClick={handleContinueAfterReveal}
@@ -332,8 +390,11 @@ export function TrainingSession({
         ) : null}
 
         {!showSolution && showHint && task ? (
-          <div className="rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-3 text-center text-sm leading-relaxed">
-            <span className="font-semibold">Tipp:</span> {task.hint}
+          <div className="flex items-start gap-3 rounded-2xl bg-[var(--color-lavender)]/40 px-5 py-3 text-sm leading-relaxed">
+            <p className="flex-1">
+              <span className="font-semibold">Tipp:</span> {task.hint}
+            </p>
+            <SpeakButton speech={speech} text={task.hint} label="Tipp vorlesen" size="sm" />
           </div>
         ) : null}
       </div>

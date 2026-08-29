@@ -14,6 +14,8 @@
     "gen:sound-fx": "node --env-file=.env.local scripts/generate-sound-fx.mjs",
     "gen:hero-images": "node --env-file=.env.local scripts/generate-hero-images.mjs",
     "gen:bridge-images": "node --env-file=.env.local scripts/generate-bridge-images.mjs",
+    "collect:speech": "tsx scripts/collect-speech.ts",
+    "gen:training-audio": "tsx --env-file=.env.local scripts/generate-training-audio.ts",
     "smoke:generators": "tsx scripts/smoke-generators.ts",
     "smoke:training": "tsx scripts/smoke-training.ts"
   },
@@ -28,6 +30,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@breezystack/lamejs": "^1.2.7",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
