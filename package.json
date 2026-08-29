@@ -13,7 +13,9 @@
     "gen:narration:el": "tsx --env-file=.env.local scripts/generate-narration-elevenlabs.ts",
     "gen:sound-fx": "node --env-file=.env.local scripts/generate-sound-fx.mjs",
     "gen:hero-images": "node --env-file=.env.local scripts/generate-hero-images.mjs",
-    "gen:bridge-images": "node --env-file=.env.local scripts/generate-bridge-images.mjs"
+    "gen:bridge-images": "node --env-file=.env.local scripts/generate-bridge-images.mjs",
+    "smoke:generators": "tsx scripts/smoke-generators.ts",
+    "smoke:training": "tsx scripts/smoke-training.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

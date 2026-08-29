@@ -96,6 +96,57 @@ Pro Kapitel: ~20–40 Aufgaben, randomisiert, beliebig wiederholbar. Insgesamt m
 
 ---
 
+## Zweiter Weg: Kopfrechnen-Training (2026-08-29)
+
+Die Startseite ist seitdem eine **Weggabelung**: Geschichte oder Kopfrechnen. Beide Wege sind vollständig unabhängig — eigener Spielstand (`anneli.training.v1` neben `anneli.progress.v1`), eigene Aufgaben-Generatoren, eigene Route (`/training`). Wer nur rechnen will, muss nicht durch die Geschichte; wer nur die Geschichte will, sieht nie eine Übungsrunde.
+
+**Warum überhaupt ein Drill-Zweig, wo die App ausdrücklich kein Aufgabengenerator sein will?** Weil Kopfrechnen Automatisierung braucht und Automatisierung Wiederholung. Der Unterschied zu Anton/Zahlenzorro liegt nicht darin, dass wir *nicht* üben lassen — sondern **wie**: Jedes Modul lehrt zuerst eine **Strategie** („erst zur 10, dann der Rest"), und die Aufgaben-Hinweise wenden genau diese Strategie auf die konkreten Zahlen an. Geübt wird ein Denkweg, nicht das Abarbeiten von Zeilen.
+
+### Modul-Leiter (Zahlenraum wächst, Klasse 2 → 3)
+
+| # | Modul | Zahlenraum | Trick(s) |
+|---|---|---|---|
+| 1 | Zahlenfreunde bis 10 | bis 10 | die fünf Zehner-Paare |
+| 2 | Plus und Minus bis 20 | bis 20, ohne Übergang | „die Zehn bleibt stehen" |
+| 3 | Über die Zehn springen | bis 20, mit Übergang | Zwischenstopp auf der 10 (vor- und rückwärts) |
+| 4 | Verdoppeln und Halbieren | bis 100 | Nachbaraufgaben, stellenweise halbieren |
+| 5 | Volle Zehner bis 100 | volle Zehner | „rechne klein, häng die Null an" |
+| 6 | Plus und Minus bis 100 | bis 100 | erst Zehner, dann Einer · am Zehner Pause |
+| 7 | Der Fast-Zehner-Trick | bis 100 | +9 = +10−1, −9 = −10+1 |
+| 8 | Kernaufgaben im Einmaleins | 2er, 5er, 10er | 5er = halbe 10er · malnehmen ist springen |
+| 9 | Das ganze Einmaleins | bis 10 · 10 | Tauschaufgabe · Nachbaraufgabe · 9er-Trick |
+| 10 | Teilen und Umkehraufgaben | 1×1 rückwärts | „such die Malaufgabe" |
+
+Module sind **nicht gesperrt** — wer bis 20 sicher rechnet, springt weiter. Sperren wäre genau die Bevormundung, die diese App nicht sein will.
+
+### Regeln der Übungsrunde
+
+- **Trick zuerst.** Beim Öffnen eines Moduls steht die Erklärung, die Runde startet man selbst. Während der Runde ist der Trick jederzeit wieder aufklappbar.
+- **Kein Timer, keine Stoppuhr, kein Game-Over.** Auch hier gilt „atmosphärischer Druck, nie Stress".
+- **Kein rotes „Falsch"**. Bei einer falschen Antwort kommt der Trick-Tipp mit genau diesen Zahlen. Nach 12 Sek Ruhe kommt er von selbst.
+- **Nach 3 Fehlversuchen** zeigt die App den Rechenweg und geht weiter — Festhängen gibt es nicht.
+- **Adaptiv innerhalb der Runde**: 3 richtig in Folge → eine Stufe schwerer, 2 falsch in Folge → eine Stufe leichter. Level wird pro Modul persistiert.
+- **Gezählt wird „dran sein"**: Die Punkte auf der Modul-Karte zählen Runden, nicht Fehlerfreiheit. Ein Abbruch schreibt die gerechneten Aufgaben trotzdem gut.
+- **Eigene Zahlentastatur** statt `<input type="number">` — die System-Tastatur schiebt auf dem Tablet die halbe Seite weg. Physische Tastatur (Ziffern, Backspace, Enter) funktioniert trotzdem.
+
+### Dateien
+
+- `src/data/training/modules.ts` — Module + Tricks (Quelle der Wahrheit)
+- `src/data/training/generators/*.ts` — ein Generator je Modulgruppe, Level-fähig
+- `src/data/trainingProgress.ts` — Persistenz, getrennt vom Story-Fortschritt
+- `src/components/TrainingHome|TrainingModuleView|TrainingSession|NumberPad|TrickCard.tsx`
+- `src/app/training/` — Route mit statischer Generierung pro Modul
+- `scripts/smoke-training.ts` (`npm run smoke:training`) — 15.000 generierte Aufgaben gegen Zahlenraum-, Text- und Lösungs-Invarianten
+
+### Offen (Training)
+
+- [ ] Vorlese-Funktion für Aufgabe und Trick (TTS, analog Story-Zweig)
+- [ ] Eigenes KI-Bild für die Trainings-Kachel auf der Startseite (aktuell typografische Rechen-Kachel)
+- [ ] Trainings-Daten in den Eltern-View / Skill-Heatmap (Wo 4) einspeisen
+- [ ] Später: Sachaufgaben-Modul und Geld-Modul, sobald Kapitel 2 die Generatoren dafür hat
+
+---
+
 ## UX-Konzept & Lernpsychologie (Erweiterung 2026-05-21)
 
 Diese Sektion definiert *wie* Anneli mit der App interagiert — die operative Antwort auf die Vision-Forderung „Lust auf Lernen, kein Aufgabengenerator mit Belohnungsschicht".
@@ -312,6 +363,7 @@ Anneli spielt variable Sitzungen, wann sie Lust hat. Sammelmechanik (Buchseiten,
 | Spur | Aktueller Stand | Nächstes |
 |---|---|---|
 | **App-Skelett** | Next.js 16, Routes, MDX, Tailwind | Aufgaben-Engine |
+| **Kopfrechnen-Zweig** | 10 Module + Tricks, eigene Persistenz, Zahlentastatur, Smoke-Test ✓ | Vorlese-Funktion, Trainings-Daten im Eltern-View |
 | **Aufgaben-Engine** | 6 Generatoren + Vignetten + Multi-Task-Flow + Adaptive ✓ | Input-Modes pro Brücke, Story-Engine als Daten |
 | **Persistenz** | localStorage (`progress.v1`) + Bird-Onboarding-Flag ✓ | Cloud-Sync (Backlog) |
 | **Visuals (KI)** | gpt-image-2 Style-Test ✓ · 3 Hero-Bilder live ✓ · 12 Brücken-Status-Bilder ✓ · Buch-Charakter-Asset ✓ | Eltern-View / Skill-Heatmap (Wo 4), Wüsten-Setting (Wo 5) |
