@@ -1,0 +1,108 @@
+// Sammelbares: Sticker, Haustiere, Laden-Artikel.
+
+import type { WorldId } from "./skills";
+
+// ---------------------------------------------------------------------------
+// Sticker — kleine Fabelwesen, 12 pro Welt, 2 davon selten (Glitzer).
+
+export type StickerShape = "round" | "tall" | "wide";
+export type Sticker = {
+  id: string;
+  world: WorldId;
+  name: string;
+  color: string;
+  belly: string;
+  shape: StickerShape;
+  ears: "cat" | "round" | "antenna" | "horn" | "none";
+  rare: boolean;
+};
+
+const S = (world: WorldId, name: string, color: string, belly: string, shape: StickerShape, ears: Sticker["ears"], rare = false): Sticker => ({
+  id: `${world}-${name.toLowerCase().replace(/[^a-zäöüß]/g, "")}`,
+  world,
+  name,
+  color,
+  belly,
+  shape,
+  ears,
+  rare,
+});
+
+export const STICKERS: Sticker[] = [
+  S("start", "Plusi", "#FF9F1C", "#FFE2B8", "round", "cat"),
+  S("start", "Minu", "#4CC3FF", "#D3F1FF", "round", "round"),
+  S("start", "Zehni", "#6BD66B", "#D9F7D9", "tall", "antenna"),
+  S("start", "Krabbi", "#FF5D5D", "#FFD1D1", "wide", "antenna"),
+  S("start", "Muschla", "#FF9EC7", "#FFE3F0", "wide", "none"),
+  S("start", "Sandi", "#F2C14E", "#FFF1C4", "round", "round"),
+  S("start", "Wellchen", "#2EC4B6", "#C9F4EF", "tall", "none"),
+  S("start", "Koko", "#B07A4F", "#EBD3BF", "round", "cat"),
+  S("start", "Pünktchen", "#9B7BFF", "#E6DEFF", "round", "antenna"),
+  S("start", "Sternfisch", "#FFD23F", "#FFF3BF", "wide", "horn"),
+  S("start", "Glitzerkrebs", "#FF5D9E", "#FFD6E7", "wide", "horn", true),
+  S("start", "Perli", "#E4E8F7", "#FFFFFF", "round", "round", true),
+
+  S("wald", "Zahlix", "#9B7BFF", "#E6DEFF", "round", "cat", true),
+  S("wald", "Moosi", "#6BD66B", "#D9F7D9", "round", "round"),
+  S("wald", "Pilzi", "#FF5D5D", "#FFE3E3", "tall", "none"),
+  S("wald", "Eichi", "#B07A4F", "#EBD3BF", "round", "round"),
+  S("wald", "Fuchsi", "#FF9F1C", "#FFF1DE", "tall", "cat"),
+  S("wald", "Hoppel", "#C9B8A6", "#FFFFFF", "tall", "cat"),
+  S("wald", "Igelchen", "#8A6A55", "#E9D9CC", "wide", "none"),
+  S("wald", "Blattwurm", "#2BB673", "#BFF0D6", "wide", "antenna"),
+  S("wald", "Glühwürmi", "#FFD23F", "#FFF7CC", "round", "antenna"),
+  S("wald", "Rabe Rudi", "#3B3F6B", "#9EA3D1", "tall", "none"),
+  S("wald", "Schnecki", "#FF9EC7", "#FFE8F2", "wide", "antenna"),
+  S("wald", "Silberhirsch", "#C7D0E6", "#FFFFFF", "tall", "horn", true),
+
+  S("strand", "Kraki", "#FF5D9E", "#FFD6E7", "round", "none"),
+  S("strand", "Robbi", "#8FA3B8", "#E3EAF2", "wide", "round"),
+  S("strand", "Pelli", "#FFFFFF", "#FFE7A8", "tall", "none"),
+  S("strand", "Quallo", "#B9A8FF", "#EEE9FF", "tall", "antenna"),
+  S("strand", "Schildi", "#2BB673", "#FFE7A8", "wide", "none"),
+  S("strand", "Möwi", "#E9EEF5", "#FFFFFF", "round", "none"),
+  S("strand", "Seepferdi", "#FF9F1C", "#FFE2B8", "tall", "horn"),
+  S("strand", "Kugelfisch", "#FFD23F", "#FFF3BF", "round", "antenna"),
+  S("strand", "Delfi", "#4CC3FF", "#D3F1FF", "wide", "none"),
+  S("strand", "Korallix", "#FF7A59", "#FFD9CC", "round", "horn"),
+  S("strand", "Regenbogenfisch", "#7B4DFF", "#FFD6F0", "wide", "horn", true),
+  S("strand", "Goldmuschel", "#FFC531", "#FFF3BF", "wide", "none", true),
+];
+
+export function stickersOf(world: WorldId): Sticker[] {
+  return STICKERS.filter((s) => s.world === world);
+}
+
+// ---------------------------------------------------------------------------
+// Haustiere
+
+export type PetSpecies = "funkel" | "drachi" | "pieps";
+
+export const PETS: Record<PetSpecies, { label: string; color: string; belly: string; accent: string; egg: string; eggSpots: string }> = {
+  funkel: { label: "Flausch-Katze", color: "#FF8FC2", belly: "#FFD3E6", accent: "#FF6FA8", egg: "#FFD3E6", eggSpots: "#FF8FC2" },
+  drachi: { label: "Mini-Drache", color: "#5ACB7A", belly: "#D6F5C9", accent: "#2E9E52", egg: "#D6F5C9", eggSpots: "#5ACB7A" },
+  pieps: { label: "Wolken-Eule", color: "#6FB8FF", belly: "#DDEFFF", accent: "#3F8FE0", egg: "#DDEFFF", eggSpots: "#6FB8FF" },
+};
+
+/** Entwicklungsstufe aus dem Spieler-Level. */
+export function petStage(level: number): 1 | 2 | 3 {
+  if (level >= 10) return 3;
+  if (level >= 5) return 2;
+  return 1;
+}
+
+export const PET_STAGE_NAMES = ["", "Baby", "Kind", "Groß"] as const;
+
+// ---------------------------------------------------------------------------
+// Laden: Zubehör fürs Haustier
+
+export type ShopItem = { id: string; name: string; price: number; slot: "head" | "face" | "neck" };
+
+export const SHOP: ShopItem[] = [
+  { id: "schleife", name: "Schleife", price: 60, slot: "head" },
+  { id: "schal", name: "Regenbogen-Schal", price: 80, slot: "neck" },
+  { id: "brille", name: "Sternenbrille", price: 100, slot: "face" },
+  { id: "zauberhut", name: "Zauberhut", price: 120, slot: "head" },
+  { id: "fliege", name: "Fliege", price: 70, slot: "neck" },
+  { id: "krone", name: "Goldkrone", price: 250, slot: "head" },
+];

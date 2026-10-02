@@ -1,0 +1,266 @@
+// Ausmalbilder als Flächen-Daten.
+//
+// Jedes Bild ist eine Liste von Ebenen (hinten → vorne). Eine Ebene ist
+// entweder eine FLÄCHE (`region`), die das Kind antippen und füllen kann,
+// oder eine feste Zeichnung (`fixed`: Augen, Mund, Linien).
+//
+// `color` pro Fläche ist der Vorschlag fürs Rechen-Malbild: dort steht auf
+// der Fläche eine Aufgabe, deren Ergebnis zur Farbe in der Legende führt.
+//
+// Die Bilder sind ein erster Satz von Hand gezeichneter Vektoren. Später
+// kommen KI-generierte Linienbilder dazu (vektorisiert, gleiche Struktur).
+
+import type { WorldId } from "./skills";
+
+export type Shape =
+  | { t: "path"; d: string }
+  | { t: "circle"; cx: number; cy: number; r: number }
+  | { t: "ellipse"; cx: number; cy: number; rx: number; ry: number }
+  | { t: "rect"; x: number; y: number; w: number; h: number; rx?: number };
+
+export type Layer = { shape: Shape; region?: string; fixed?: string; strokeOnly?: boolean };
+
+export type ColoringPage = {
+  id: string;
+  title: string;
+  world: WorldId;
+  regions: Record<string, { color: string; label?: [number, number] }>;
+  layers: Layer[];
+};
+
+const R = (region: string, shape: Shape): Layer => ({ region, shape });
+const F = (fill: string, shape: Shape): Layer => ({ fixed: fill, shape });
+const L = (d: string): Layer => ({ strokeOnly: true, shape: { t: "path", d } });
+const P = (d: string): Shape => ({ t: "path", d });
+const C = (cx: number, cy: number, r: number): Shape => ({ t: "circle", cx, cy, r });
+const E = (cx: number, cy: number, rx: number, ry: number): Shape => ({ t: "ellipse", cx, cy, rx, ry });
+
+function starPath(cx: number, cy: number, r: number): string {
+  const pts: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const rad = i % 2 === 0 ? r : r * 0.45;
+    const a = (Math.PI / 5) * i - Math.PI / 2;
+    pts.push(`${(cx + rad * Math.cos(a)).toFixed(1)} ${(cy + rad * Math.sin(a)).toFixed(1)}`);
+  }
+  return `M${pts.join(" L")} Z`;
+}
+
+const SKY = P("M20 2 H320 a18 18 0 0 1 18 18 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 V20 a18 18 0 0 1 18 -18 Z");
+
+export const COLORING_PAGES: ColoringPage[] = [
+  {
+    id: "fisch",
+    title: "Der Rechen-Fisch",
+    world: "start",
+    regions: {
+      water: { color: "#8ED8FF", label: [60, 60] },
+      sand: { color: "#FFE7A8", label: [170, 322] },
+      weed: { color: "#2BB673", label: [42, 312] },
+      bubbles: { color: "#FFFFFF", label: [280, 95] },
+      tail: { color: "#FFD23F", label: [52, 170] },
+      fins: { color: "#FF5D5D", label: [176, 98] },
+      body: { color: "#FF9F1C", label: [104, 170] },
+      stripes: { color: "#FFFFFF" },
+    },
+    layers: [
+      R("water", SKY),
+      R("sand", P("M2 296 Q170 272 338 296 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("weed", P("M38 338 Q14 298 42 262 Q62 298 52 338 Z")),
+      R("weed", P("M292 338 Q314 296 286 254 Q268 296 278 338 Z")),
+      R("bubbles", C(280, 90, 15)),
+      R("bubbles", C(302, 48, 10)),
+      R("bubbles", C(268, 40, 7)),
+      R("tail", P("M84 170 L30 116 L44 170 L30 224 Z")),
+      R("fins", P("M138 114 Q172 58 218 114 Z")),
+      R("fins", P("M150 226 Q176 266 204 224 Z")),
+      R("body", E(170, 170, 95, 62)),
+      R("stripes", P("M130 120 Q122 170 130 220 L148 224 Q140 170 148 116 Z")),
+      R("stripes", P("M188 114 Q180 170 188 226 L206 222 Q198 170 206 118 Z")),
+      F("#FFFFFF", C(230, 154, 14)),
+      F("#1F2347", C(233, 156, 6)),
+      L("M244 186 Q254 192 262 182"),
+    ],
+  },
+  {
+    id: "schmetterling",
+    title: "Der Zahlen-Schmetterling",
+    world: "start",
+    regions: {
+      sky: { color: "#8ED8FF", label: [170, 34] },
+      grass: { color: "#6BD66B", label: [60, 318] },
+      upper: { color: "#FF9EC7", label: [78, 128] },
+      lower: { color: "#9B7BFF", label: [104, 214] },
+      spotsTop: { color: "#FFD23F" },
+      spotsBottom: { color: "#FFFFFF" },
+      body: { color: "#B07A4F", label: [170, 214] },
+    },
+    layers: [
+      R("sky", SKY),
+      R("grass", P("M2 300 Q170 268 338 300 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("upper", P("M162 150 Q72 36 50 108 Q40 172 162 172 Z")),
+      R("upper", P("M178 150 Q268 36 290 108 Q300 172 178 172 Z")),
+      R("lower", P("M162 176 Q72 180 80 250 Q110 292 162 202 Z")),
+      R("lower", P("M178 176 Q268 180 260 250 Q230 292 178 202 Z")),
+      R("spotsTop", C(96, 112, 15)),
+      R("spotsTop", C(244, 112, 15)),
+      R("spotsBottom", C(112, 238, 11)),
+      R("spotsBottom", C(228, 238, 11)),
+      L("M164 102 Q150 74 138 64"),
+      L("M176 102 Q190 74 202 64"),
+      F("#1F2347", C(137, 63, 5)),
+      F("#1F2347", C(203, 63, 5)),
+      R("body", E(170, 178, 13, 64)),
+      R("body", C(170, 106, 15)),
+      F("#1F2347", C(165, 104, 2.5)),
+      F("#1F2347", C(175, 104, 2.5)),
+    ],
+  },
+  {
+    id: "eule",
+    title: "Die Nacht-Eule",
+    world: "wald",
+    regions: {
+      sky: { color: "#3B3F8F", label: [50, 50] },
+      moon: { color: "#FFD23F", label: [285, 66] },
+      ears: { color: "#7B4DFF" },
+      body: { color: "#9B7BFF", label: [118, 222] },
+      wings: { color: "#7B4DFF" },
+      belly: { color: "#E6DEFF", label: [170, 222] },
+      branch: { color: "#B07A4F", label: [290, 280] },
+      eyes: { color: "#FFFFFF" },
+      beak: { color: "#FF9F1C" },
+      feet: { color: "#FF9F1C" },
+    },
+    layers: [
+      R("sky", SKY),
+      R("moon", C(285, 60, 28)),
+      R("ears", P("M106 112 L114 58 L146 96 Z")),
+      R("ears", P("M234 112 L226 58 L194 96 Z")),
+      R("body", E(170, 182, 82, 98)),
+      R("wings", P("M92 160 Q66 222 110 262 Q122 210 112 160 Z")),
+      R("wings", P("M248 160 Q274 222 230 262 Q218 210 228 160 Z")),
+      R("belly", E(170, 214, 50, 58)),
+      L("M150 200 q10 8 20 0 q10 8 20 0 M150 222 q10 8 20 0 q10 8 20 0"),
+      R("branch", P("M2 276 Q170 246 338 266 V290 Q170 270 2 300 Z")),
+      R("feet", E(150, 270, 13, 8)),
+      R("feet", E(190, 268, 13, 8)),
+      R("eyes", C(140, 140, 28)),
+      R("eyes", C(200, 140, 28)),
+      F("#1F2347", C(142, 142, 12)),
+      F("#1F2347", C(198, 142, 12)),
+      F("#FFFFFF", C(146, 138, 4)),
+      F("#FFFFFF", C(202, 138, 4)),
+      R("beak", P("M161 162 L179 162 L170 182 Z")),
+    ],
+  },
+  {
+    id: "drache",
+    title: "Der Zahlen-Drache",
+    world: "wald",
+    regions: {
+      sky: { color: "#8ED8FF", label: [56, 160] },
+      sun: { color: "#FFD23F", label: [285, 68] },
+      cloud: { color: "#FFFFFF", label: [78, 94] },
+      hill: { color: "#6BD66B", label: [64, 312] },
+      tail: { color: "#9B7BFF", label: [62, 232] },
+      feet: { color: "#2EC4B6" },
+      spikes: { color: "#FF9F1C" },
+      body: { color: "#9B7BFF", label: [112, 214] },
+      belly: { color: "#FF9EC7", label: [174, 246] },
+      wing: { color: "#2EC4B6", label: [170, 166] },
+      head: { color: "#9B7BFF", label: [236, 124] },
+    },
+    layers: [
+      R("sky", SKY),
+      R("sun", C(285, 62, 32)),
+      R("cloud", P("M40 104 a20 20 0 0 1 8 -38 a26 26 0 0 1 48 -6 a20 20 0 0 1 22 30 a14 14 0 0 1 -6 14 Z")),
+      R("hill", P("M2 270 Q90 222 170 256 T338 248 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("tail", P("M104 246 Q50 266 36 214 Q34 200 46 206 Q60 236 98 222 Z")),
+      R("feet", E(126, 279, 24, 15)),
+      R("feet", E(196, 282, 24, 15)),
+      R("spikes", P("M112 182 l12 -26 l14 22 Z M144 172 l14 -28 l14 24 Z M200 112 l10 -26 l16 20 Z M228 106 l16 -22 l10 26 Z")),
+      R("body", E(160, 226, 72, 56)),
+      R("belly", E(172, 240, 40, 34)),
+      R("wing", P("M146 190 Q112 118 172 128 Q166 150 204 150 Q192 178 176 194 Z")),
+      R("head", C(228, 150, 46)),
+      F("#FFFFFF", C(213, 143, 11)),
+      F("#FFFFFF", C(246, 141, 11)),
+      F("#1F2347", C(215, 145, 5)),
+      F("#1F2347", C(248, 143, 5)),
+      L("M216 168 Q230 178 244 167"),
+    ],
+  },
+  {
+    id: "rakete",
+    title: "Die Sternen-Rakete",
+    world: "strand",
+    regions: {
+      sky: { color: "#2B2E6E", label: [280, 220] },
+      ring: { color: "#FFD23F" },
+      planet: { color: "#FF9EC7", label: [70, 84] },
+      stars: { color: "#FFD23F" },
+      rocket: { color: "#FFFFFF", label: [170, 214] },
+      nose: { color: "#FF5D5D", label: [170, 84] },
+      window: { color: "#8ED8FF", label: [170, 154] },
+      fins: { color: "#FF5D5D" },
+      flame: { color: "#FF9F1C", label: [152, 276] },
+      core: { color: "#FFD23F" },
+    },
+    layers: [
+      R("sky", SKY),
+      R("ring", E(70, 80, 54, 11)),
+      R("planet", C(70, 80, 32)),
+      R("stars", P(starPath(270, 52, 13))),
+      R("stars", P(starPath(300, 140, 10))),
+      R("stars", P(starPath(44, 210, 12))),
+      R("stars", P(starPath(290, 300, 9))),
+      R("flame", P("M138 250 Q170 336 202 250 Z")),
+      R("core", P("M154 250 Q170 300 186 250 Z")),
+      R("fins", P("M126 196 L88 262 L126 250 Z")),
+      R("fins", P("M214 196 L252 262 L214 250 Z")),
+      R("rocket", P("M170 50 Q215 100 215 190 L215 252 L125 252 L125 190 Q125 100 170 50 Z")),
+      R("nose", P("M170 50 Q194 72 204 102 L136 102 Q146 72 170 50 Z")),
+      R("window", C(170, 152, 22)),
+      L("M140 226 H200"),
+    ],
+  },
+  {
+    id: "pilzhaus",
+    title: "Das Pilzhaus",
+    world: "strand",
+    regions: {
+      sky: { color: "#8ED8FF", label: [290, 60] },
+      sun: { color: "#FFD23F", label: [60, 62] },
+      grass: { color: "#6BD66B", label: [50, 310] },
+      cap: { color: "#FF5D5D", label: [170, 66] },
+      dots: { color: "#FFFFFF" },
+      wall: { color: "#FFF1C4", label: [132, 248] },
+      door: { color: "#B07A4F", label: [170, 252] },
+      windows: { color: "#8ED8FF" },
+      flowers: { color: "#FF9EC7" },
+    },
+    layers: [
+      R("sky", SKY),
+      R("sun", C(60, 60, 28)),
+      R("grass", P("M2 268 Q170 238 338 268 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("wall", { t: "rect", x: 106, y: 162, w: 128, h: 108, rx: 14 }),
+      R("door", P("M150 270 V228 a20 20 0 0 1 40 0 V270 Z")),
+      R("windows", C(127, 202, 12)),
+      R("windows", C(213, 202, 12)),
+      R("cap", P("M54 172 Q170 20 286 172 Z")),
+      R("dots", C(128, 122, 14)),
+      R("dots", C(198, 96, 12)),
+      R("dots", C(240, 144, 10)),
+      R("dots", C(96, 156, 9)),
+      R("flowers", C(40, 292, 11)),
+      R("flowers", C(300, 300, 11)),
+      R("flowers", C(268, 286, 8)),
+      F("#FFD23F", C(40, 292, 4)),
+      F("#FFD23F", C(300, 300, 4)),
+    ],
+  },
+];
+
+export function getPage(id: string): ColoringPage | undefined {
+  return COLORING_PAGES.find((p) => p.id === id);
+}

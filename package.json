@@ -17,7 +17,8 @@
     "collect:speech": "tsx scripts/collect-speech.ts",
     "gen:training-audio": "tsx --env-file=.env.local scripts/generate-training-audio.ts",
     "smoke:generators": "tsx scripts/smoke-generators.ts",
-    "smoke:training": "tsx scripts/smoke-training.ts"
+    "smoke:training": "tsx scripts/smoke-training.ts",
+    "smoke:game": "tsx scripts/smoke-game.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

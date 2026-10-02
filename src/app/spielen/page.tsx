@@ -3,11 +3,11 @@
 import { useSave } from "@/game/state";
 import { Splash } from "@/ui/chrome";
 import { Onboarding } from "@/screens/Onboarding";
-import { PathScreen } from "@/screens/PathScreen";
+import { ArcadeScreen } from "@/screens/ArcadeScreen";
 
-export default function Home() {
+export default function ArcadePage() {
   const save = useSave();
   if (!save) return <Splash />;
   if (!save.profile) return <Onboarding />;
-  return <PathScreen save={save} />;
+  return <ArcadeScreen save={save} />;
 }

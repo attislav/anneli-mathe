@@ -1,0 +1,11 @@
+{
+  "name": "Sternenpfad",
+  "short_name": "Sternenpfad",
+  "description": "Mathe-Abenteuer für die 2. Klasse",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7b4dff",
+  "theme_color": "#7b4dff",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

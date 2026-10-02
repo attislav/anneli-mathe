@@ -1,73 +1,150 @@
 @import "tailwindcss";
 
-/* Anneli App: warm pastel palette — mint, lavender, peach, with turquoise/honey accents */
-:root {
-  --color-bg:        #fdf6ef;  /* warm cream — soft page background */
-  --color-paper:     #fffaf3;  /* slightly lighter — cards, story sheets */
-  --color-ink:       #3a2d2d;  /* warm dark brown — body text, kinder als pures Schwarz */
-  --color-ink-soft:  #6b5e5e;  /* secondary text */
+/* Sternenpfad: bunt, rund, „drückbar". Dicke Unterkanten an Knöpfen,
+   kräftige Farben, viel Weißraum. Jede Farbe hat eine dunkle Schatten-
+   Variante für den 3D-Knopf-Effekt. */
 
-  --color-mint:      #b8e0d2;
-  --color-mint-deep: #5fbf9d;
-  --color-lavender:  #d6c9f0;
-  --color-lavender-deep: #9b86d3;
-  --color-peach:     #fbd4b4;
-  --color-peach-deep: #e89968;
+@theme {
+  --color-ink: #1f2347;
+  --color-ink-soft: #5b5f86;
+  --color-paper: #ffffff;
+  --color-mist: #f4f1ff;
 
-  --color-accent-turquoise: #4fb3b8;
-  --color-accent-honey:     #e8a93b;
-  --color-accent-rose:      #e2748e;
+  --color-grape: #7b4dff;
+  --color-grape-dark: #5a2fe0;
+  --color-grape-light: #efe9ff;
+  --color-leaf: #2bb673;
+  --color-leaf-dark: #1e8f57;
+  --color-leaf-light: #dff8e9;
+  --color-sun: #ffc531;
+  --color-sun-dark: #e5a100;
+  --color-sun-light: #fff6d6;
+  --color-coin: #ff9f1c;
+  --color-coin-dark: #d97b00;
+  --color-coin-light: #ffebd1;
+  --color-sky: #4cc3ff;
+  --color-sky-dark: #2a9fd9;
+  --color-sky-light: #e3f5ff;
+  --color-rose: #ff5d9e;
+  --color-rose-dark: #c93b77;
+  --color-rose-light: #ffe3f0;
+  --color-flame: #ff6b3d;
+  --color-cloud: #e3e8f0;
+  --color-cloud-dark: #c2cad6;
+  --color-night: #24275e;
+  --color-night-light: #3a3e85;
 
-  /* shadow + radius defaults */
-  --radius-card: 1.5rem;
-  --shadow-soft: 0 10px 30px -10px rgba(58, 45, 45, 0.18);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-fredoka), var(--font-body), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--color-bg);
-  --color-foreground: var(--color-ink);
-  --color-paper: var(--color-paper);
-  --color-ink-soft: var(--color-ink-soft);
-
-  --color-mint: var(--color-mint);
-  --color-mint-deep: var(--color-mint-deep);
-  --color-lavender: var(--color-lavender);
-  --color-lavender-deep: var(--color-lavender-deep);
-  --color-peach: var(--color-peach);
-  --color-peach-deep: var(--color-peach-deep);
-
-  --color-turquoise: var(--color-accent-turquoise);
-  --color-honey: var(--color-accent-honey);
-  --color-rose: var(--color-accent-rose);
-
-  --font-sans: var(--font-body);
-  --font-display: var(--font-display);
+html,
+body {
+  background: var(--color-mist);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
 }
 
-/* Headlines get the display font automatically */
-h1, h2, h3 {
-  font-family: var(--font-display), var(--font-body), serif;
-  letter-spacing: -0.01em;
+button {
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-/* Bridge-Wobble: ganz sanftes Kippeln des Brücken-Bilds, solange Anneli noch
-   Aufgaben löst. Bewusst LANGSAM und KLEIN — wir wollen Atmosphäre, keine
-   Hektik. Wer Reduce-Motion bevorzugt, sieht das Bild still. */
-@keyframes bridgeWobble {
-  0%, 100% { transform: rotate(-0.4deg) translateY(0); }
-  50%      { transform: rotate(0.4deg)  translateY(-2px); }
+/* --- Drückbarer Knopf -------------------------------------------------- */
+
+.chunky {
+  --depth: 6px;
+  box-shadow: 0 var(--depth) 0 var(--shade, rgba(31, 35, 71, 0.15));
+  transition:
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out;
 }
-.animate-bridge-wobble {
-  animation: bridgeWobble 4.5s ease-in-out infinite;
-  transform-origin: 50% 60%;
-  will-change: transform;
+.chunky:active:not(:disabled) {
+  transform: translateY(calc(var(--depth) - 2px));
+  box-shadow: 0 2px 0 var(--shade, rgba(31, 35, 71, 0.15));
 }
+.chunky:disabled {
+  cursor: default;
+}
+
+/* --- Animationen --------------------------------------------------------- */
+
+@keyframes pop-in {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-7deg); }
+  75% { transform: rotate(7deg); }
+}
+@keyframes shake {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(8deg); }
+  60% { transform: rotate(-4deg); }
+  80% { transform: rotate(4deg); }
+}
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes confetti {
+  0% { transform: translateY(-20vh) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 1; }
+}
+@keyframes hatch {
+  0% { transform: scale(1) rotate(0); }
+  20% { transform: scale(1.05) rotate(-10deg); }
+  40% { transform: scale(1.05) rotate(10deg); }
+  60% { transform: scale(1.1) rotate(-6deg); }
+  80% { transform: scale(1.2) rotate(0); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes hit {
+  0%, 100% { transform: translateX(0); filter: none; }
+  25% { transform: translateX(-10px); filter: brightness(1.6); }
+  75% { transform: translateX(10px); }
+}
+
+.anim-pop { animation: pop-in 0.4s ease-out both; }
+.anim-bob { animation: bob 2.2s ease-in-out infinite; }
+.anim-ring { animation: ring 1.6s ease-out infinite; }
+.anim-wiggle { animation: wiggle 0.5s ease-in-out 2; }
+.anim-shake { animation: shake 1.2s ease-in-out infinite; }
+.anim-sheet { animation: sheet-up 0.28s ease-out both; }
+.anim-float { animation: float-up 0.9s ease-out both; }
+.anim-fade { animation: fade-in 0.3s ease-out both; }
+.anim-hatch { animation: hatch 1.2s ease-in-out both; }
+.anim-hit { animation: hit 0.4s ease-in-out; }
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-bridge-wobble { animation: none; }
+  .anim-pop, .anim-bob, .anim-ring, .anim-wiggle, .anim-shake, .anim-float, .anim-hatch, .anim-hit {
+    animation: none;
+  }
 }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }

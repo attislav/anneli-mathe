@@ -22,7 +22,15 @@ npm run dev      # next dev
 npm run build    # next build
 npm run start    # next start (production)
 npm run lint     # eslint
+npm run smoke:game  # alle Aufgaben-Generatoren gegen Invarianten prüfen
 ```
+
+## Code-Landkarte (neue App)
+
+- `src/game/` — Engine ohne UI: Kompetenzen + Generatoren (`skills.ts`), Welten/Pfad (`worlds.ts`), Adaptivität (`adaptive.ts`), Spielstand (`state.ts`), Sammelbares, Ausmalbilder, Sound, Vorlesen
+- `src/lesson/` — Lektions-Ablauf (`engine.ts`), Aufgaben-Formate, Ergebnis, Rechentrick
+- `src/screens/`, `src/games/`, `src/ui/` — Bildschirme, Mini-Spiele, Bausteine
+- Alter Story-/Trainings-Code (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`) ist nicht mehr verlinkt und wird entfernt
 
 ## Secrets / API keys
 

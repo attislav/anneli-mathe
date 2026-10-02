@@ -210,34 +210,38 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 
 ## 9. Phasen
 
-### Phase 0 — Aufräumen & Fundament (~1 Woche)
+### Phase 0 — Aufräumen & Fundament
 
-- [ ] Story-Modus nach `archive/story-mode` sichern und entfernen
-- [ ] Design-System: Farben, Schrift, Buttons, Karten, Animations-Bausteine
-- [ ] Datenmodell: Profil, Kompetenzen, Knoten, Fortschritt, Inventar (IndexedDB)
-- [ ] PWA-Grundgerüst (Manifest, Icon, Offline)
-- [ ] Kompetenz-Graph Klasse 2 als Daten
-- [ ] Testing-Setup (Vitest + Playwright)
+- [ ] Alten Code entfernen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`, alte Skripte und Assets) — wartet auf Freigabe, steht bis dahin unverlinkt neben der neuen App
+- [x] Design-System: Farben + 3D-Knöpfe in `globals.css`, Bausteine in `src/ui/`
+- [x] Datenmodell: Spielstand in `src/game/state.ts` (localStorage, `sternenpfad.v1`)
+- [~] PWA: Manifest + Icon da, Offline-Modus (Service Worker) fehlt noch
+- [x] Kompetenzen Klasse 2 als Daten: 15 Kompetenzen × 5 Stufen in `src/game/skills.ts`
+- [~] Tests: `npm run smoke:game` (225.000 Aufgaben gegen Invarianten) — Klick-Test lief lokal mit Playwright, liegt noch nicht im Repo
 
-### Phase 1 — MVP „Der Pfad" (~2 Wochen) → Test mit Anneli
+### Phase 1 — MVP „Der Pfad" → Test mit Anneli
 
-- [ ] Weltkarte mit Pfad, Startinsel + Zahlenwald (~30 Knoten)
-- [ ] Lektions-Screen mit 5 Formaten: Zahlentastatur, Auswahl, Zahlenstrahl, Zehner legen, Zahlenmauer
-- [ ] Sterne, Münzen, XP, Combo-Feier, Ergebnis-Screen mit Truhe
-- [ ] Adaptive Engine v1 (Können-Wert pro Kompetenz, 80 %-Ziel)
-- [ ] Ausmalbilder v1 (Set für 2 Welten, Füllen + Galerie)
-- [ ] Haustier-Ei schlüpft beim ersten Start
-- [ ] Alles vorgelesen, Sound-FX
+- [x] Weltkarte mit Pfad: Startinsel, Zahlenwald, Plus-Minus-Strand (26 Knoten), weitere Welten im Nebel
+- [x] 6 Formate: Antippen, Zahlentastatur, Zehner legen, Zahlenstrahl, Zahlenmauer, Vergleichen
+- [x] Sterne, Münzen, XP/Level, Combos, Ergebnis-Screen mit Truhe
+- [x] Adaptive Engine v1 (`src/game/adaptive.ts`: +0,2/−0,8-Treppe → ~80 % Treffer)
+- [x] Rechentricks als eigene Knoten, Tipp nach Fehler, Rechenweg nach 2. Fehler
+- [x] Ausmalbilder v1: 6 Bilder, freies Malen + Rechen-Malbild mit Münz-Bonus
+- [x] Haustier: Ei aussuchen, schlüpfen, taufen, wächst mit dem Level
+- [x] Vorlesen (Gerätestimme) + Sound-FX (Web Audio, keine Dateien)
+- [ ] KI-Bilder für Haustiere, Sticker, Bosse, Ausmalbilder (braucht `OPENAI_API_KEY` als Environment-Variable)
 - [ ] **DoD:** Anneli spielt eine Woche freiwillig. Beobachten, notieren, nachschärfen.
 
-### Phase 2 — Belohnungswelt (~2 Wochen)
+### Phase 2 — Belohnungswelt
 
-- [ ] Shop, Avatar, Baumhaus
-- [ ] Sticker-Album
-- [ ] Freispiel-Arcade mit 3 Mini-Spielen + Zeitlimit
-- [ ] Tagesziel, Serie, Tagesschatz, Abzeichen
-- [ ] Boss-Kämpfe
-- [ ] **Adventskalender bis 1. Dezember** (echter Termin, echte Vorfreude)
+- [x] Laden mit Zubehör fürs Haustier
+- [x] Sticker-Album (36 Sticker, seltene mit Glitzer, Doppelte → Münzen)
+- [x] Spielhalle mit 2 Mini-Spielen (Ballon-Platzen, Rechen-Memory) + Tageslimit
+- [x] Tagesziel, Serie (Flamme)
+- [x] Boss-Kämpfe (3 Bosse)
+- [ ] Baumhaus, Avatar, Abzeichen, Tagesschatz
+- [ ] Mehr Mini-Spiele (Zehner-Turm, Sternen-Rakete)
+- [ ] **Adventskalender bis 1. Dezember**
 
 ### Phase 3 — Voller Lehrplan (~4–6 Wochen)
 
@@ -249,7 +253,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 
 ### Phase 4 — Eltern & Cloud (~2 Wochen)
 
-- [ ] Eltern-Bereich mit Gate, Fortschritt, Limits, Schul-Modus
+- [~] Eltern-Ecke (unter „Ich"): Rechen-Sperre, Können pro Thema, Spielhallen-Limit, Zurücksetzen — Schul-Modus fehlt
 - [ ] Supabase: Eltern-Login, Sync, mehrere Kinderprofile
 - [ ] Wochenbericht
 
