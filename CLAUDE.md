@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > **First: read `AGENTS.md`** for the Next.js-16-breaking-changes notice.
-> **Then: read `ROADMAP.md`** — it is the source of truth for vision, sprint, and backlog. There is an **active multi-week sprint** with concrete weekly milestones; check the roadmap before deciding what to work on. Memory files hold the rationale and persona/character details; the roadmap holds the plan.
+> **Then: read `ROADMAP.md`** — it is the source of truth for vision, phases, and backlog. **Restart 2026-10-02:** the story mode is dropped; the app is now gamification-first (path, stars, coins, rewards, adaptive difficulty). Check the roadmap's current phase before deciding what to work on.
 
 ## Stack
 
@@ -35,9 +35,9 @@ If a feature requires the key in client code, the design is wrong — proxy it t
 
 ## Vision and project context
 
-The **vision, sprint plan, weekly milestones, and Definition of Done** live in `ROADMAP.md` (repo root). Read it. If you're picking work without checking the roadmap, you're guessing.
+The **vision, phases, and Definition of Done** live in `ROADMAP.md` (repo root). Read it. If you're picking work without checking the roadmap, you're guessing.
 
-The memory files hold the *why* (rationale, persona detail, design decisions):
+The memory files below describe the **old story mode** (pre-2026-10-02). Persona and pipeline notes are still useful; story/chapter notes are historical:
 
 - `project_vision` — what the app is and is explicitly not
 - `design_persona_anneli` — the North-Star kid (can the material, doesn't like drilling)
