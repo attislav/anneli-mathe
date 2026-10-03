@@ -7,7 +7,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronLeft } from "lucide-react";
 import { randInt } from "@/game/random";
-import { dailyActivity, mistakesFor, overview, skillReports, type SkillReport } from "@/game/report";
+import { dailyActivity, mistakesFor, overview, skillGrowth, skillReports, weeklyProgress, type SkillReport } from "@/game/report";
+import { AccuracyChart, LevelChart } from "@/ui/ProgressCharts";
 import type { SaveState } from "@/game/state";
 import { WORLDS } from "@/game/worlds";
 import { useBackdrop } from "@/ui/chrome";
@@ -64,6 +65,10 @@ export function ReportScreen({ save }: { save: SaveState }) {
   const maxMin = Math.max(5, ...days.map((d) => d.minutes));
   const strong = reports.filter((r) => r.status === "stark");
   const weak = reports.filter((r) => r.status === "hakt").sort((a, b) => a.acc - b.acc);
+  const weeks = weeklyProgress(save);
+  const growth = skillGrowth(save);
+  const withData = weeks.filter((w) => w.level !== null);
+  const levelChange = withData.length >= 2 ? withData[withData.length - 1].level! - withData[0].level! : null;
 
   return (
     <main className="mx-auto min-h-dvh max-w-2xl px-4 pb-16 pt-5">
@@ -91,6 +96,33 @@ export function ReportScreen({ save }: { save: SaveState }) {
               </div>
             ))}
           </div>
+
+          <section className="mt-4 rounded-[22px] bg-white p-4">
+            <h2 className="font-display text-xl font-semibold">Fortschritt über die Zeit</h2>
+            <p className="text-sm text-ink-soft">
+              Die App hält die Aufgaben so schwer, dass etwa 80 % gleich klappen. Lernfortschritt zeigt sich deshalb daran, dass die <b>Stufe steigt</b> (1 = leicht, 5 = Meister).
+              {levelChange !== null && (levelChange > 0.15 ? ` Seit ${withData[0].label}: +${levelChange.toFixed(1)} Stufen.` : levelChange < -0.15 ? ` Seit ${withData[0].label}: ${levelChange.toFixed(1)} Stufen (oft bei neuen, schwereren Themen).` : " Die Stufe ist zuletzt ungefähr gleich geblieben.")}
+            </p>
+            <h3 className="mt-3 text-sm font-extrabold">Ø Stufe pro Woche</h3>
+            <LevelChart weeks={weeks} />
+            <h3 className="mt-2 text-sm font-extrabold">Gleich richtig pro Woche (%)</h3>
+            <AccuracyChart weeks={weeks} />
+            {growth.length > 0 && (
+              <>
+                <h3 className="mt-3 text-sm font-extrabold">Pro Thema: Stufe am Anfang → jetzt</h3>
+                <ul className="mt-1 flex flex-col gap-1 text-sm">
+                  {growth.slice(0, 8).map((g) => (
+                    <li key={g.id} className="flex items-center justify-between gap-2 border-b border-mist py-1">
+                      <span className="font-extrabold">{g.title}</span>
+                      <span className="whitespace-nowrap">
+                        {g.from.toFixed(1)} → <b>{g.to.toFixed(1)}</b> {g.to - g.from > 0.3 ? <span className="text-leaf-dark">▲</span> : g.to - g.from < -0.3 ? <span className="text-rose-dark">▼</span> : null}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
 
           <section className="mt-4 rounded-[22px] bg-white p-4">
             <h2 className="font-display text-xl font-semibold">Übezeit (14 Tage)</h2>

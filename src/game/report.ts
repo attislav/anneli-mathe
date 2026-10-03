@@ -108,3 +108,49 @@ export function mistakesFor(s: SaveState, skillId: string, max = 3): string[] {
       return `${t.question}${term ? ` ${term}` : ""}${answer}`;
     });
 }
+
+export type WeekPoint = { start: string; label: string; tasks: number; level: number | null; acc: number | null };
+
+/** Montag der Woche (lokal) als Datum. */
+function mondayOf(d: Date): Date {
+  const m = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
+  return m;
+}
+
+/** Wochenwerte der letzten `weeks` Wochen (älteste zuerst): Ø Stufe und Trefferquote. */
+export function weeklyProgress(s: SaveState, weeks = 8): WeekPoint[] {
+  const thisMonday = mondayOf(new Date());
+  const out: WeekPoint[] = [];
+  for (let i = weeks - 1; i >= 0; i--) {
+    const start = new Date(thisMonday);
+    start.setDate(start.getDate() - 7 * i);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+    const from = start.getTime() / 1000;
+    const to = end.getTime() / 1000;
+    const list = s.log.filter((e) => e.t >= from && e.t < to && !e.p);
+    out.push({
+      start: todayKey(start),
+      label: `${start.getDate()}.${start.getMonth() + 1}.`,
+      tasks: list.length,
+      level: list.length ? list.reduce((a, e) => a + e.l, 0) / list.length : null,
+      acc: list.length ? list.filter((e) => e.ok).length / list.length : null,
+    });
+  }
+  return out;
+}
+
+/** Pro Thema: Stufe am Anfang (erste 10 Aufgaben) und jetzt (letzte 10) — ab 15 Aufgaben. */
+export function skillGrowth(s: SaveState): { id: string; title: string; from: number; to: number }[] {
+  const by = new Map<string, SaveState["log"]>();
+  for (const e of s.log) {
+    if (!SKILLS[e.s] || e.p) continue;
+    by.set(e.s, [...(by.get(e.s) ?? []), e]);
+  }
+  const avg = (xs: SaveState["log"]) => xs.reduce((a, e) => a + e.l, 0) / xs.length;
+  return [...by.entries()]
+    .filter(([, list]) => list.length >= 15)
+    .map(([id, list]) => ({ id, title: getSkill(id).title, from: avg(list.slice(0, 10)), to: avg(list.slice(-10)) }))
+    .sort((a, b) => b.to - b.from - (a.to - a.from));
+}
