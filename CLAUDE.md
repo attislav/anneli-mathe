@@ -30,7 +30,7 @@ npm run smoke:game  # alle Aufgaben-Generatoren gegen Invarianten prüfen
 - `src/lesson/` — Lektions-Ablauf (`engine.ts`), Aufgaben-Formate, Ergebnis, Rechentrick
 - `src/screens/`, `src/games/`, `src/ui/` — Bildschirme, Mini-Spiele, Bausteine
 - Kopfrechen-Training (aus der ersten Version, eigenständig): Route `/training`, Code in `src/components/Training*`, `src/data/training/`, `src/lib/useSpeech.ts`
-- Der alte Story-Modus liegt nur noch auf dem Branch `archive/story-mode`
+- Alter Story-Modus („Anneli & das verzauberte Buch“): versteckt unter `/quest` (Link nur in der Eltern-Ecke), Code in `src/app/quest`, `src/components` (Book, Bridge…, SkyMap …), `src/data/exercises`, `src/data/bridges.ts`. Nicht weiterentwickeln; seine Bilder/Töne sind vom Offline-Vorabladen ausgenommen
 
 ## Secrets / API keys
 
