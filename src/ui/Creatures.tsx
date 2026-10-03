@@ -1,6 +1,11 @@
-// Sticker-Wesen und Bosse — einfache Vektor-Figuren aus Parametern.
+"use client";
 
+// Sticker-Wesen und Bosse. Bosse kommen als KI-Bild aus dem Sprite-Atlas,
+// mit Vektor-Figur als Fallback; Sticker sind (noch) Vektor-Figuren.
+
+import { useArtReady, type SpriteKey } from "@/game/art";
 import type { Sticker } from "@/game/collection";
+import { Sprite } from "./Sprite";
 import type { WorldId } from "@/game/skills";
 
 export function StickerArt({ sticker, size = 56, hidden = false }: { sticker: Sticker; size?: number; hidden?: boolean }) {
@@ -48,7 +53,31 @@ export function StickerArt({ sticker, size = 56, hidden = false }: { sticker: St
   );
 }
 
-export function BossArt({ world, color, size = 120, mood = "grin" }: { world: WorldId; color: string; size?: number; mood?: "grin" | "ouch" | "dizzy" }) {
+type BossProps = { world: WorldId; color: string; size?: number; mood?: "grin" | "ouch" | "dizzy" };
+
+export function BossArt(props: BossProps) {
+  const ready = useArtReady();
+  if (!ready) return <VectorBoss {...props} />;
+  const { world, size = 120, mood = "grin" } = props;
+  const filter = mood === "ouch" ? "brightness(1.35) saturate(1.3)" : mood === "dizzy" ? "grayscale(0.35)" : undefined;
+  const transform = mood === "ouch" ? "scale(0.94) rotate(-5deg)" : mood === "dizzy" ? "rotate(14deg)" : undefined;
+  return (
+    <div className="relative" style={{ width: size, height: size }} aria-hidden="true">
+      <Sprite name={`boss-${world}` as SpriteKey} size={size} style={{ filter, transform, transition: "transform 0.2s, filter 0.2s" }} />
+      {mood === "dizzy" && (
+        <svg viewBox="0 0 120 120" width={size} height={size} className="absolute inset-0">
+          <g fill="#FFD23F" stroke="#E5A100" strokeWidth="1.5">
+            <path d="M30 14 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1z" />
+            <path d="M60 4 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1z" />
+            <path d="M90 14 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1z" />
+          </g>
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function VectorBoss({ world, color, size = 120, mood = "grin" }: BossProps) {
   return (
     <svg viewBox="0 0 120 120" width={size} height={size} aria-hidden="true">
       {world === "start" && (

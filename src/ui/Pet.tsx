@@ -1,8 +1,15 @@
-// Das Haustier — drei Arten, drei Entwicklungsstufen, Zubehör aus dem Laden.
-// Platzhalter-Vektoren, bis die KI-Bilder da sind; die Schnittstelle
-// (Art, Stufe, Stimmung, Zubehör) bleibt dann gleich.
+"use client";
 
+// Das Haustier — drei Arten, drei Entwicklungsstufen, Zubehör aus dem Laden.
+//
+// Erste Wahl ist das KI-Bild aus dem Sprite-Atlas; das Zubehör liegt als
+// Vektor-Ebene darüber und wird an Kopf und Augen des Bildes ausgerichtet.
+// Solange der Atlas nicht geladen ist (oder gar nicht lädt), zeichnen wir
+// die Vektor-Figur — gleiche Schnittstelle, nie ein leerer Fleck.
+
+import { useArtReady, SPRITES, type SpriteKey } from "@/game/art";
 import { PETS, type PetSpecies } from "@/game/collection";
+import { Sprite } from "./Sprite";
 
 export type Mood = "happy" | "joy" | "think" | "sleepy";
 
@@ -15,9 +22,34 @@ type Props = {
   className?: string;
 };
 
-export function Pet({ species, stage = 1, mood = "happy", equipped = [], size = 96, className }: Props) {
+export function Pet(props: Props) {
+  const ready = useArtReady();
+  if (!ready) return <VectorPet {...props} />;
+  const { species, stage = 1, mood = "happy", equipped = [], size = 96, className } = props;
+  const key = `pet-${species}-${stage}` as SpriteKey;
+  const { top, eye } = SPRITES[key];
+  // Zubehör ist für einen Kopf mit Oberkante bei y=30 und Augen bei y=60 gezeichnet
+  // (Vektor-Raster 0–120). Auf die Maße des Bildes umrechnen.
+  const headTop = top * 120;
+  const eyeY = eye * 120;
+  const scale = Math.min(1.3, Math.max(0.8, (eyeY - headTop) / 30));
+  const tilt = mood === "think" ? "rotate(-6deg)" : undefined;
+  return (
+    <div className={`relative ${className ?? ""}`} style={{ width: size, height: size, transform: tilt, transition: "transform 0.3s" }} aria-hidden="true">
+      <Sprite name={key} size={size} />
+      {equipped.length > 0 && (
+        <svg viewBox="0 0 120 120" width={size} height={size} className="absolute inset-0 overflow-visible">
+          <g transform={`translate(60 ${eyeY}) scale(${scale}) translate(-60 -60)`}>
+            <Accessories equipped={equipped} />
+          </g>
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function VectorPet({ species, stage = 1, mood = "happy", equipped = [], size = 96, className }: Props) {
   const p = PETS[species];
-  const has = (id: string) => equipped.includes(id);
   return (
     <svg viewBox="0 0 120 120" width={size} height={size} className={className} aria-hidden="true">
       {stage === 3 && (
@@ -104,6 +136,15 @@ export function Pet({ species, stage = 1, mood = "happy", equipped = [], size = 
         </g>
       )}
 
+      <Accessories equipped={equipped} />
+    </svg>
+  );
+}
+
+function Accessories({ equipped }: { equipped: string[] }) {
+  const has = (id: string) => equipped.includes(id);
+  return (
+    <>
       {/* Zubehör */}
       {has("schal") && (
         <g>
@@ -130,11 +171,13 @@ export function Pet({ species, stage = 1, mood = "happy", equipped = [], size = 
         </g>
       )}
       {has("krone") && <path d="M38 34 L40 12 L50 24 L60 6 L70 24 L80 12 L82 34 Z" fill="#FFD23F" stroke="#E5A100" strokeWidth="2.5" strokeLinejoin="round" />}
-    </svg>
+    </>
   );
 }
 
 export function Egg({ species, size = 110, className }: { species: PetSpecies; size?: number; className?: string }) {
+  const ready = useArtReady();
+  if (ready) return <Sprite name={`egg-${species}` as SpriteKey} size={size} className={className} />;
   const p = PETS[species];
   return (
     <svg viewBox="0 0 100 120" width={size} height={(size * 120) / 100} className={className} aria-hidden="true">
