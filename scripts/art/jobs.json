@@ -1,0 +1,20 @@
+{
+  "_info": "Original-PNGs (gpt_image_2_5, sunburst, medium, transparent). Basis-URL: https://d8j0ntlcm91z4.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/",
+  "atlas1": {
+    "pet-funkel-1": "hf_20261003_053132_81c3e2d0-4009-4bfb-9d27-f0263828d02d.png",
+    "pet-funkel-2": "hf_20261003_053133_4f338653-49ce-4aeb-9bef-492dd03c1413.png",
+    "pet-funkel-3": "hf_20261002_221125_2b0fae06-e701-4e34-93d9-92d23e72b4d3.png",
+    "pet-drachi-1": "hf_20261002_221126_afdfebb2-eff2-4216-a994-960291876ff9.png",
+    "pet-drachi-2": "hf_20261002_221125_8c510eff-740d-4435-b479-13bb54da2b66.png",
+    "pet-drachi-3": "hf_20261002_221126_b0bf96b9-b8c4-414b-befa-49ceb48b8fc0.png",
+    "pet-pieps-1": "hf_20261003_053132_417b0d5e-b18a-446c-9ea1-9df1cb58ff15.png",
+    "pet-pieps-2": "hf_20261003_053133_f54d1691-7623-4ffd-8173-66b46375f80f.png",
+    "pet-pieps-3": "hf_20261003_053203_37f78ea8-6193-4e70-a746-9f37f79f972b.png",
+    "egg-funkel": "hf_20261003_053204_b1eec4f0-a18b-43a1-a60a-1b2e619d6c0d.png",
+    "egg-drachi": "hf_20261003_053203_b44a0d2d-1446-42b2-ac4a-eed34dcf7cf2.png",
+    "egg-pieps": "hf_20261003_053204_501bae97-18f9-40e2-a9bf-2b51389ae33e.png",
+    "boss-start": "hf_20261003_053232_33d59232-0632-4c35-8692-3b1e2fcaca15.png",
+    "boss-wald": "hf_20261003_053232_049e5884-9b5f-471d-9b22-d7bf3f11c767.png",
+    "boss-strand": "hf_20261003_053231_f2420e8e-a392-4de0-85da-df2e02423b0b.png"
+  }
+}
