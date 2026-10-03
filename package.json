@@ -14,6 +14,10 @@
     "art:fetch": "node scripts/fetch-art.mjs"
   },
   "dependencies": {
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.3.8",
+    "@types/mdx": "^2.0.14",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "qrcode-generator": "^1.5.2",

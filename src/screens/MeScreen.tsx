@@ -171,6 +171,13 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
           <div className="text-sm text-ink-soft">
             Insgesamt: {save.stats.lessons} Lektionen, {save.stats.tasks} Aufgaben, davon {save.stats.tasks ? Math.round((save.stats.firstTry / save.stats.tasks) * 100) : 0} % beim ersten Versuch richtig.
           </div>
+          <Link href="/quest/intro/" className="flex items-center justify-between rounded-[22px] bg-mist p-4 font-extrabold">
+            <span>
+              Alter Story-Modus
+              <span className="block text-sm font-normal text-ink-soft">„Anneli und das verzauberte Buch“ – aus der ersten Version</span>
+            </span>
+            <ChevronRight size={20} className="shrink-0 text-ink-soft" />
+          </Link>
           <Link href="/advent/?vorschau=1" className="flex items-center justify-between rounded-[22px] bg-mist p-4 font-extrabold">
             Adventskalender vorab ansehen
             <ChevronRight size={20} className="text-ink-soft" />

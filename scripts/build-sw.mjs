@@ -13,7 +13,9 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const OUT = "out";
-const SKIP = [/^sw\.js$/, /^404/, /^_not-found\//];
+// Der alte Story-Modus (/quest, ca. 25 MB Bilder und Ton) wird nicht
+// vorab geladen — er wird nur bei Bedarf und dann aus dem Netz geholt.
+const SKIP = [/^sw\.js$/, /^404/, /^_not-found\//, /^quest\//, /^(bridges|hero|characters)\//, /^audio\/(bird_pip|book|fx)\//];
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
