@@ -171,6 +171,13 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
           <div className="text-sm text-ink-soft">
             Insgesamt: {save.stats.lessons} Lektionen, {save.stats.tasks} Aufgaben, davon {save.stats.tasks ? Math.round((save.stats.firstTry / save.stats.tasks) * 100) : 0} % beim ersten Versuch richtig.
           </div>
+          <Link href="/bericht/" className="flex items-center justify-between rounded-[22px] bg-grape p-4 font-extrabold text-white">
+            <span>
+              Lernbericht öffnen
+              <span className="block text-sm font-normal text-white/85">Was klappt gut, wo hakt es, wie viel wird geübt</span>
+            </span>
+            <ChevronRight size={20} className="shrink-0" />
+          </Link>
           <Link href="/quest/intro/" className="flex items-center justify-between rounded-[22px] bg-mist p-4 font-extrabold">
             <span>
               Alter Story-Modus
