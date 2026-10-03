@@ -1,6 +1,7 @@
 "use client";
 
-// Erster Start: Name → Ei aussuchen und schlüpfen lassen → Haustier taufen → Startpunkt.
+// Erster Start: Name → Ei aussuchen und schlüpfen lassen → Haustier taufen →
+// Einstufungs-Abenteuer (oder ganz vorne anfangen).
 
 import { useState } from "react";
 import { PETS, type PetSpecies } from "@/game/collection";
@@ -9,6 +10,8 @@ import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
 import { Egg, Pet } from "@/ui/Pet";
 import { Confetti, useBackdrop } from "@/ui/chrome";
+import { placementResult } from "@/game/placement";
+import { Placement } from "./Placement";
 
 const NAME_IDEAS: Record<PetSpecies, string[]> = {
   funkel: ["Funkel", "Mimi", "Flausch", "Luna"],
@@ -16,7 +19,7 @@ const NAME_IDEAS: Record<PetSpecies, string[]> = {
   pieps: ["Pieps", "Wolke", "Hoot", "Federchen"],
 };
 
-type Step = "name" | "egg" | "hatch" | "petname" | "start";
+type Step = "name" | "egg" | "hatch" | "petname" | "start" | "placement";
 
 export function Onboarding() {
   useBackdrop("#7B4DFF");
@@ -35,10 +38,11 @@ export function Onboarding() {
     }, 1300);
   };
 
-  const finish = (skipStart: boolean) => {
+  const finish = (startIndex: number) => {
     if (!species) return;
     sfx.fanfare();
-    createProfile({ name: name.trim() || "Rechenheld", pet: species, petName: petName.trim() || NAME_IDEAS[species][0] }, skipStart);
+    const { skipped, mastery } = placementResult(startIndex);
+    createProfile({ name: name.trim() || "Rechenheld", pet: species, petName: petName.trim() || NAME_IDEAS[species][0] }, skipped, mastery);
   };
 
   return (
@@ -112,16 +116,18 @@ export function Onboarding() {
         <>
           <Pet species={species} size={110} />
           <h1 className="font-display text-3xl font-semibold">Wo fangt ihr an?</h1>
-          <button onClick={() => finish(false)} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-coin-dark">Startinsel</div>
-            <div className="text-ink-soft">Rechnen bis 20 — zum Warmwerden</div>
+          <button onClick={() => setStep("placement")} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
+            <div className="font-display text-2xl font-semibold text-grape">Zeig, was du kannst!</div>
+            <div className="text-ink-soft">Ein kleines Abenteuer, ca. 5 Minuten — danach weißt du, in welcher Welt du startest.</div>
           </button>
-          <button onClick={() => finish(true)} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-leaf-dark">Zahlenwald</div>
-            <div className="text-ink-soft">Zahlen bis 100 — für alle, die bis 20 schon sicher sind</div>
+          <button onClick={() => finish(0)} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
+            <div className="font-display text-2xl font-semibold text-coin-dark">Ganz vorne anfangen</div>
+            <div className="text-ink-soft">Startinsel: Rechnen bis 20 — zum Warmwerden</div>
           </button>
         </>
       )}
+
+      {step === "placement" && species && <Placement species={species} onDone={finish} />}
     </main>
   );
 }

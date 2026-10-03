@@ -288,7 +288,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-7b ✓ | **Spielstand mitnehmen** | Eltern-Ecke: Spielstand als QR-Code + Text-Code exportieren, auf anderem Gerät scannen/einfügen (ohne Server) | Stand wandert vom Handy aufs Tablet. Hinweis: Auf dem iPad hat die Homescreen-App einen eigenen Speicher – dort den Code einfügen statt QR-Link |
 | AP-8 ✓ | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
 | AP-9 ✓ | **Übungskiste (Fehler-Wiederholung)** | falsch gelöste Aufgaben kommen nach 1/3/7 Tagen zurück | eigener Knoten „Übungskiste" auf dem Pfad |
-| AP-10 | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte | ersetzt die Startfrage im Onboarding |
+| AP-10 ✓ | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte | ersetzt die Startfrage im Onboarding |
 | AP-11 | **Saison: Halloween + Adventskalender** | Event-Rahmen; Halloween-Deko im Oktober; 24 Türchen ab 1.12. | Eltern können Kalender vorab ansehen |
 | AP-12 | **Welt 8: Formen-Ozean** | Formen, Symmetrie, Muster; Format „Spiegeln im Gitter" | 9 Knoten spielbar |
 | AP-13 | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |

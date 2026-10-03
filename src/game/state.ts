@@ -194,7 +194,8 @@ export function isNodeOpen(s: SaveState, world: World, index: number): boolean {
 /** Der nächste offene, noch nicht geschaffte Knoten. */
 export function currentNode(s: SaveState): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {
-    if (!worldGate(s, world).open) continue;
+    // Übersprungene Welten bleiben offen, sind aber nicht „dran".
+    if (!worldGate(s, world).open || s.skippedWorlds.includes(world.id)) continue;
     for (let i = 0; i < world.nodes.length; i++) {
       if (isNodeOpen(s, world, i) && !isNodeDone(s, world.nodes[i])) return { world, node: world.nodes[i], index: i };
     }
@@ -275,15 +276,9 @@ export function markPlayedToday(s: SaveState): SaveState {
   return s.days.includes(day) ? s : { ...s, days: [...s.days, day].slice(-400) };
 }
 
-export function createProfile(profile: Profile, skipStart: boolean): void {
-  update((s) => {
-    const next: SaveState = { ...s, profile, coins: s.coins || 50 };
-    if (skipStart) {
-      next.skippedWorlds = ["start"];
-      next.mastery = { ...next.mastery, freunde10: 3.5, plus20: 3.5, uebergang20: 3.2, doppelt: 3 };
-    }
-    return next;
-  });
+/** Neues Profil. `skipped`: Welten, die die Einstufung schon als geschafft erkannt hat. */
+export function createProfile(profile: Profile, skipped: WorldId[] = [], mastery: Record<string, number> = {}): void {
+  update((s) => ({ ...s, profile, coins: s.coins || 50, skippedWorlds: skipped, mastery: { ...s.mastery, ...mastery } }));
 }
 
 export type LessonOutcome = {
