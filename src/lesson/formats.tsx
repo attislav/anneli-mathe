@@ -5,7 +5,8 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, CompareTask, InputTask, NumberLineTask, Task, TensOnesTask, WallTask } from "@/game/types";
+import type { ChoiceTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import { MoneyPiece, MoneyRow } from "@/ui/Money";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
 
@@ -28,6 +29,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <WallView {...props} task={task} />;
     case "compare":
       return <CompareView {...props} task={task} />;
+    case "money-build":
+      return <MoneyBuildView {...props} task={task} />;
   }
 }
 
@@ -46,6 +49,7 @@ function ChoiceView({ task, status, onAnswer }: FormatProps<ChoiceTask>) {
   const long = task.options.some((o) => o.length > 4);
   return (
     <div className="flex flex-col gap-5">
+      {task.visual && <VisualCard visual={task.visual} />}
       {task.term && <div className={`${card} flex min-h-[130px] items-center justify-center px-4 py-6 text-center font-display text-[clamp(2.4rem,11vw,3.8rem)] font-semibold leading-tight`}>{renderTerm(task.term)}</div>}
       <div className={`grid gap-4 ${task.options.length === 2 || long ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2"}`}>
         {task.options.map((opt) => {
@@ -129,6 +133,7 @@ function InputView({ task, status, onAnswer }: FormatProps<InputTask>) {
   const [entry, setEntry] = useState("");
   return (
     <div className="flex flex-col gap-5">
+      {task.visual && <VisualCard visual={task.visual} />}
       <div className={`${card} flex min-h-[130px] flex-wrap items-center justify-center px-4 py-6 text-center font-display text-[clamp(2.2rem,10vw,3.6rem)] font-semibold leading-tight`}>{renderTerm(task.term, entry)}</div>
       <NumPad value={entry} onChange={setEntry} onOk={() => onAnswer(Number(entry) === task.answer)} disabled={status !== "ask"} />
     </div>
@@ -293,6 +298,52 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+// --- Bild über der Aufgabe -------------------------------------------------
+
+function VisualCard({ visual }: { visual: Visual }) {
+  return (
+    <div className={`${card} px-3 py-4`}>
+      <MoneyRow items={visual.items} size={visual.items.length > 6 ? 46 : 56} />
+    </div>
+  );
+}
+
+// --- Geld legen -------------------------------------------------------------
+
+function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>) {
+  const [laid, setLaid] = useState<{ id: number; v: number }[]>([]);
+  const [nextId, setNextId] = useState(0);
+  const locked = status !== "ask";
+  const add = (v: number) => {
+    if (locked || laid.length >= 20) return;
+    sfx.coin();
+    setLaid((l) => [...l, { id: nextId, v }]);
+    setNextId((n) => n + 1);
+  };
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} flex min-h-[170px] flex-wrap content-center items-center justify-center gap-2 p-4`}>
+        {laid.length === 0 && <span className="font-extrabold text-ink-soft">Tippe unten auf Münzen und Scheine.</span>}
+        {laid.map((p) => (
+          <button key={p.id} disabled={locked} onClick={() => setLaid((l) => l.filter((x) => x.id !== p.id))} aria-label="wieder wegnehmen" className="anim-pop">
+            <MoneyPiece value={p.v} size={48} />
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-wrap items-center justify-center gap-2 rounded-[24px] bg-white/60 p-3">
+        {[...task.pieces].sort((a, b) => b - a).map((v) => (
+          <button key={v} disabled={locked} onClick={() => add(v)} className="chunky rounded-2xl bg-white p-1.5" style={{ ["--shade" as string]: "#DCD6F5", ["--depth" as string]: "4px" }}>
+            <MoneyPiece value={v} size={50} />
+          </button>
+        ))}
+      </div>
+      <Button tone="grape" disabled={locked || laid.length === 0} onClick={() => onAnswer(laid.reduce((a, p) => a + p.v, 0) === task.target)}>
+        Prüfen
+      </Button>
     </div>
   );
 }

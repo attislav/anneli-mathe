@@ -6,6 +6,20 @@
 
 import { SKILLS } from "../src/game/skills";
 import type { Format, Level, TaskDraft } from "../src/game/types";
+import { breakDown } from "../src/game/money";
+
+/** „1,20 €", „2 € 5 ct", „35 ct", „3 €" → Cent. */
+function cents(s: string): number {
+  let m = s.match(/^(\d+),(\d\d) €$/);
+  if (m) return Number(m[1]) * 100 + Number(m[2]);
+  m = s.match(/^(\d+) € (\d+) ct$/);
+  if (m) return Number(m[1]) * 100 + Number(m[2]);
+  m = s.match(/^(\d+) €$/);
+  if (m) return Number(m[1]) * 100;
+  m = s.match(/^(\d+) ct$/);
+  if (m) return Number(m[1]);
+  return NaN;
+}
 
 const RUNS = 3000;
 const errors: string[] = [];
@@ -76,12 +90,16 @@ function check(skill: string, level: Level, t: TaskDraft) {
     }
     case "compare": {
       const val = (s: string) => Function(`return ${s.replace(/−/g, "-")}`)() as number;
-      const l = val(t.left);
-      const r = val(t.right);
+      const [l, r] = t.values ?? [val(t.left), val(t.right)];
       const sym = l < r ? "<" : l > r ? ">" : "=";
       if (sym !== t.answer) fail(skill, level, "Vergleich falsch", t);
+      if (t.values && (cents(t.left) !== l || cents(t.right) !== r)) fail(skill, level, "Geldbetrag passt nicht zum Wert", t);
       break;
     }
+    case "money-build":
+      if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
+      if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
+      break;
   }
 }
 

@@ -280,7 +280,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-1 ✓ | **KI-Bilder Welle 1** | 3 Haustiere × 3 Stufen, 3 Eier, 3 Bosse | Bilder in App sichtbar, Vektor-Fallback greift |
 | AP-2 ✓ | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
 | AP-3 ✓ | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
-| AP-4 | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
+| AP-4 ✓ | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
 | AP-5 | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
 | AP-6 | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
 | AP-7 | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |

@@ -239,6 +239,15 @@ function Decor({ world, height }: { world: World; height: number }) {
               <rect x={side - 3} y={y + 18} width="6" height="18" rx="3" fill="#6E8B5B" />
             </g>
           );
+        if (world.id === "hafen")
+          return (
+            <g key={i}>
+              <path d={`M${side - 24} ${y + 8} H${side + 24} L${side + 16} ${y + 24} H${side - 16} Z`} fill="#B07A4F" />
+              <rect x={side - 2} y={y - 26} width="4" height="34" fill="#7A4E2D" />
+              <path d={`M${side + 2} ${y - 24} L${side + 20} ${y} H${side + 2} Z`} fill="#fff" />
+              <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
+            </g>
+          );
         if (world.id === "start")
           return (
             <g key={i}>

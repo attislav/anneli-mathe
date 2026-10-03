@@ -7,7 +7,7 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare";
+export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build";
 
 type TaskBase = {
   id: string;
@@ -21,10 +21,14 @@ type TaskBase = {
   solution: string;
 };
 
+/** Bild über der Aufgabe — z. B. Münzen und Scheine zum Zählen (Werte in Cent). */
+export type Visual = { kind: "money"; items: number[] };
+
 /** Antwort antippen. `term` ist die große Aufgabe, z.B. „38 + 7 = ?". */
 export type ChoiceTask = TaskBase & {
   format: "choice";
   term?: string;
+  visual?: Visual;
   options: string[];
   answer: string;
 };
@@ -33,6 +37,7 @@ export type ChoiceTask = TaskBase & {
 export type InputTask = TaskBase & {
   format: "input";
   term: string;
+  visual?: Visual;
   answer: number;
 };
 
@@ -66,9 +71,19 @@ export type CompareTask = TaskBase & {
   left: string;
   right: string;
   answer: "<" | ">" | "=";
+  /** Werte der Seiten, wenn sie keine Rechenterme sind (z. B. „2 € 5 ct"). */
+  values?: [number, number];
 };
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask;
+/** Geldbetrag mit Münzen und Scheinen legen. Alles in Cent. */
+export type MoneyBuildTask = TaskBase & {
+  format: "money-build";
+  target: number;
+  /** Welche Münzen/Scheine zur Auswahl stehen. */
+  pieces: number[];
+};
+
+export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

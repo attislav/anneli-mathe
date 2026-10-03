@@ -67,6 +67,19 @@ export const STICKERS: Sticker[] = [
   S("strand", "Korallix", "#FF7A59", "#FFD9CC", "round", "horn"),
   S("strand", "Regenbogenfisch", "#7B4DFF", "#FFD6F0", "wide", "horn", true),
   S("strand", "Goldmuschel", "#FFC531", "#FFF3BF", "wide", "none", true),
+
+  S("hafen", "Papagei Pip", "#2BB673", "#FFD23F", "round", "horn"),
+  S("hafen", "Käpt'n Krebs", "#FF5D5D", "#FFD1D1", "wide", "antenna"),
+  S("hafen", "Ankerli", "#5B6B8C", "#C9D3E3", "tall", "none"),
+  S("hafen", "Münzi", "#F2C14E", "#FFF3BF", "round", "round"),
+  S("hafen", "Fässchen", "#B07A4F", "#EBD3BF", "tall", "none"),
+  S("hafen", "Segeli", "#FFFFFF", "#D3F1FF", "tall", "horn"),
+  S("hafen", "Kompassi", "#C99A1E", "#FFF1C4", "round", "antenna"),
+  S("hafen", "Möwe Mia", "#E9EEF5", "#FFFFFF", "round", "none"),
+  S("hafen", "Krake Kalle", "#9B7BFF", "#E6DEFF", "round", "none"),
+  S("hafen", "Schatzi", "#FF9F1C", "#FFE2B8", "wide", "none"),
+  S("hafen", "Goldpapagei", "#FFC531", "#FFF3BF", "round", "horn", true),
+  S("hafen", "Diamantkrabbe", "#7FDBFF", "#E3F5FF", "wide", "horn", true),
 ];
 
 export function stickersOf(world: WorldId): Sticker[] {

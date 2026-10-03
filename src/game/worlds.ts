@@ -94,10 +94,30 @@ export const WORLDS: World[] = [
       { id: "strand-boss", kind: "boss", title: "Pirat Plumps", skills: ["zehnerPlus", "einerPlus", "ergaenzen", "uebergang100"], coloring: "pilzhaus" },
     ],
   },
+  {
+    id: "hafen",
+    index: 3,
+    name: "Piratenhafen",
+    tagline: "Rechnen mit Geld",
+    starsToEnter: 44,
+    theme: { ground: "#D6F3F1", band: "#0E9AA7", bandShade: "#0A7580", deco: "#F2C27B", decoDark: "#8FD3CF" },
+    boss: { name: "Papagei Polly", color: "#2BB673", shade: "#1E8F57" },
+    nodes: [
+      { id: "hafen-1", kind: "trick", title: "Große zuerst", skills: ["geldZaehlen"] },
+      { id: "hafen-2", kind: "lesson", title: "Geld legen", skills: ["geldLegen"] },
+      { id: "hafen-3", kind: "lesson", title: "Euro und Cent", skills: ["euroCent"] },
+      { id: "hafen-4", kind: "chest", title: "Schatzkiste", skills: [], coloring: "schiff" },
+      { id: "hafen-5", kind: "lesson", title: "Was ist mehr?", skills: ["geldVergleichen"] },
+      { id: "hafen-6", kind: "trick", title: "Rückgeld", skills: ["einkaufen"] },
+      { id: "hafen-7", kind: "lesson", title: "Einkaufen", skills: ["einkaufen"] },
+      { id: "hafen-8", kind: "review", title: "Gemischt", skills: ["geldZaehlen", "geldLegen", "euroCent", "geldVergleichen", "einkaufen"] },
+      { id: "hafen-boss", kind: "boss", title: "Papagei Polly", skills: ["geldZaehlen", "euroCent", "geldVergleichen", "einkaufen"], coloring: "papagei" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Vulkaninsel", "Knobel-Labor", "Piratenhafen", "Einmaleins-Zirkus", "Bäckerei", "Uhrenschloss"];
+export const COMING_SOON = ["Einmaleins-Zirkus", "Bäckerei", "Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

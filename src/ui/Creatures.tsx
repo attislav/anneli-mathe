@@ -3,7 +3,7 @@
 // Sticker-Wesen und Bosse. Bosse kommen als KI-Bild aus dem Sprite-Atlas,
 // mit Vektor-Figur als Fallback; Sticker sind (noch) Vektor-Figuren.
 
-import { STICKER_ATLAS, useArtReady, type SpriteKey } from "@/game/art";
+import { SPRITES, STICKER_ATLAS, useArtReady, type SpriteKey } from "@/game/art";
 import { STICKERS, type Sticker } from "@/game/collection";
 import { Sprite } from "./Sprite";
 import type { WorldId } from "@/game/skills";
@@ -12,9 +12,10 @@ type StickerProps = { sticker: Sticker; size?: number; hidden?: boolean };
 
 export function StickerArt(props: StickerProps) {
   const ready = useArtReady(STICKER_ATLAS);
-  if (!ready) return <VectorSticker {...props} />;
+  const index = STICKERS.indexOf(props.sticker);
+  // Sticker neuer Welten haben noch kein Bild im Atlas → Vektor-Figur.
+  if (!ready || index < 0 || index >= STICKER_ATLAS.cols * STICKER_ATLAS.rows) return <VectorSticker {...props} />;
   const { sticker, size = 56, hidden = false } = props;
-  const index = STICKERS.indexOf(sticker);
   // Noch nicht gefunden: dunkle Silhouette — man ahnt, wer da wartet.
   const style = hidden ? { filter: "brightness(0) opacity(0.12)" } : undefined;
   return (
@@ -78,13 +79,14 @@ type BossProps = { world: WorldId; color: string; size?: number; mood?: "grin" |
 
 export function BossArt(props: BossProps) {
   const ready = useArtReady();
-  if (!ready) return <VectorBoss {...props} />;
-  const { world, size = 120, mood = "grin" } = props;
+  const key = `boss-${props.world}` as SpriteKey;
+  if (!ready || !(key in SPRITES)) return <VectorBoss {...props} />;
+  const { size = 120, mood = "grin" } = props;
   const filter = mood === "ouch" ? "brightness(1.35) saturate(1.3)" : mood === "dizzy" ? "grayscale(0.35)" : undefined;
   const transform = mood === "ouch" ? "scale(0.94) rotate(-5deg)" : mood === "dizzy" ? "rotate(14deg)" : undefined;
   return (
     <div className="relative" style={{ width: size, height: size }} aria-hidden="true">
-      <Sprite name={`boss-${world}` as SpriteKey} size={size} style={{ filter, transform, transition: "transform 0.2s, filter 0.2s" }} />
+      <Sprite name={key} size={size} style={{ filter, transform, transition: "transform 0.2s, filter 0.2s" }} />
       {mood === "dizzy" && (
         <svg viewBox="0 0 120 120" width={size} height={size} className="absolute inset-0">
           <g fill="#FFD23F" stroke="#E5A100" strokeWidth="1.5">
@@ -115,6 +117,7 @@ function VectorBoss({ world, color, size = 120, mood = "grin" }: BossProps) {
           <ellipse cx="60" cy="84" rx="22" ry="18" fill="#B9A8FF" />
         </>
       )}
+      {world === "hafen" && <path d="M52 66 L68 66 L60 82 Z" fill="#FF9F1C" stroke="#1F2347" strokeWidth="2" strokeLinejoin="round" />}
       {world === "strand" && (
         <>
           <path d="M20 40 Q60 0 100 40 Z" fill="#1F2347" />
