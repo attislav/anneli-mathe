@@ -38,6 +38,29 @@
   --font-display: var(--font-fredoka), var(--font-body), system-ui, sans-serif;
 }
 
+:root {
+  /* Farben des Kopfrechen-Trainings (aus der ersten App-Version übernommen) */
+  --color-bg: #f4f1ff;
+  --color-mint: #b8e0d2;
+  --color-mint-deep: #3fae86;
+  --color-lavender: #e1d8f7;
+  --color-lavender-deep: #7b4dff;
+  --color-peach: #fbd4b4;
+  --color-peach-deep: #e2804a;
+  --color-accent-turquoise: #2ea8ae;
+  --color-accent-honey: #e5a100;
+  --color-accent-rose: #e2588a;
+  --radius-card: 1.5rem;
+  --shadow-soft: 0 10px 30px -10px rgba(31, 35, 71, 0.18);
+}
+
+.kopfrechnen h1,
+.kopfrechnen h2,
+.kopfrechnen h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
 html,
 body {
   background: var(--color-mist);

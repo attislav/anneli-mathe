@@ -13,8 +13,7 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const OUT = "out";
-// Alter Story-/Trainings-Code — nicht verlinkt, also nicht vorab laden.
-const SKIP = [/^quest\//, /^training\//, /^audio\//, /^bridges\//, /^hero\//, /^characters\//, /^(file|globe|next|vercel|window)\.svg$/, /^sw\.js$/, /^404/, /^_not-found\//];
+const SKIP = [/^sw\.js$/, /^404/, /^_not-found\//];
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {

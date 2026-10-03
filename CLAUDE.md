@@ -9,7 +9,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Next.js 16.2** (App Router) + **React 19.2** + **TypeScript 5**
 - **Tailwind CSS 4** (new engine, configured via `@tailwindcss/postcss`)
-- **MDX** via `@next/mdx` for story / quest content (`.md` and `.mdx` are page extensions; see `src/mdx-components.tsx` for global component overrides)
 - **lucide-react** for UI icons (buttons, navigation, status — anything system-level)
 - **All illustrations, characters, story art**: KI-generiert, custom. **Never** use stock icons, generic clipart, or emoji as placeholders for things meant to look polished. See [[content-pipeline-image-voice]] in memory.
 - **Hosting**: Vercel
@@ -30,7 +29,8 @@ npm run smoke:game  # alle Aufgaben-Generatoren gegen Invarianten prüfen
 - `src/game/` — Engine ohne UI: Kompetenzen + Generatoren (`skills.ts`), Welten/Pfad (`worlds.ts`), Adaptivität (`adaptive.ts`), Spielstand (`state.ts`), Sammelbares, Ausmalbilder, Sound, Vorlesen
 - `src/lesson/` — Lektions-Ablauf (`engine.ts`), Aufgaben-Formate, Ergebnis, Rechentrick
 - `src/screens/`, `src/games/`, `src/ui/` — Bildschirme, Mini-Spiele, Bausteine
-- Alter Story-/Trainings-Code (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`) ist nicht mehr verlinkt und wird entfernt
+- Kopfrechen-Training (aus der ersten Version, eigenständig): Route `/training`, Code in `src/components/Training*`, `src/data/training/`, `src/lib/useSpeech.ts`
+- Der alte Story-Modus liegt nur noch auf dem Branch `archive/story-mode`
 
 ## Secrets / API keys
 
@@ -59,4 +59,7 @@ The memory index (`MEMORY.md`) lists them all and is auto-loaded.
 
 ## Legacy code
 
-The pre-greenfield Vanilla/Vite app (skill tree, error pool, gamification, achievements) lives on branch `archive/legacy-vanilla`. Pull patterns from there *as reference* — do not 1:1 port. The new UI model is different.
+- `archive/story-mode` — die Story-Version („Anneli & das verzauberte Buch"), Stand vor dem Neustart.
+- `archive/legacy-vanilla` — die Vanilla/Vite-App davor (Skill-Tree, Fehlerpool, Gamification).
+
+Nur als Referenz nutzen, nicht 1:1 portieren.

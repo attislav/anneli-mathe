@@ -212,7 +212,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 
 ### Phase 0 — Aufräumen & Fundament
 
-- [ ] Alten Code entfernen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`, alte Skripte und Assets) — wartet auf Freigabe, steht bis dahin unverlinkt neben der neuen App
+- [x] Story-Modus archiviert (Branch `archive/story-mode`) und entfernt. Das Kopfrechen-Training bleibt als eigener Bereich (`/training`, Link oben auf dem Pfad)
 - [x] Design-System: Farben + 3D-Knöpfe in `globals.css`, Bausteine in `src/ui/`
 - [x] Datenmodell: Spielstand in `src/game/state.ts` (localStorage, `sternenpfad.v1`)
 - [x] PWA: Manifest, PNG-Icons, Service Worker (`scripts/build-sw.mjs`) — nach dem ersten Besuch läuft alles offline
@@ -299,7 +299,6 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-20 | **Cloud-Sync** | Supabase, Eltern-Login, mehrere Kinder | braucht Zugangsdaten → mit Papa klären |
 
 **Blockiert / braucht Entscheidung:**
-- Alten Code löschen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`) — wartet auf Freigabe
 - Bilder ins Repo laden: `cloudfront.net` ist freigegeben (gilt ab der nächsten Sitzung) → dort `npm run art:fetch` ausführen und `public/art/` committen. Die App bevorzugt lokale Kopien automatisch.
 - Vorproduzierte Stimme (Gemini-TTS) braucht `GEMINI_API_KEY` in der Umgebung
 

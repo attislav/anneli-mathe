@@ -3,7 +3,8 @@
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Lightbulb, Lock, Shuffle } from "lucide-react";
+import Link from "next/link";
+import { Calculator, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
 import { TIER_NAMES, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import {
@@ -63,6 +64,14 @@ export function PathScreen({ save }: { save: SaveState }) {
           {Math.min(lessonsToday, DAILY_GOAL)} / {DAILY_GOAL}
         </div>
       </div>
+
+      <Link href="/training/" className="mx-3.5 mt-2.5 flex items-center gap-3 rounded-[20px] bg-white px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-light text-leaf-dark">
+          <Calculator size={20} strokeWidth={2.4} />
+        </span>
+        <span className="flex-1 font-extrabold">Kopfrechen-Training</span>
+        <ChevronRight size={20} className="text-ink-soft" />
+      </Link>
 
       {WORLDS.map((world) => (
         <WorldSection key={world.id} world={world} save={save} current={current?.node.id ?? null} currentRef={currentRef} onPick={(node) => setSheet({ world, node })} />
