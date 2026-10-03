@@ -6,6 +6,10 @@
 //   review  — Mischung aus allen Kompetenzen der Welt, die schwächsten öfter
 //   chest   — Schatzkiste: Ausmalbild + Sticker + Münzen
 //   boss    — Weltende: Aufgaben sind Angriffe, Sieg öffnet die nächste Welt
+//
+// Jede Welt hat zwei Runden: erst lernt man jede Kompetenz kennen, dann
+// kommt sie mit `boost: 1` noch einmal — eine Stufe schwerer (Profi-Niveau
+// schon auf Bronze). So wird der Pfad lang, ohne sich zu wiederholen.
 
 import type { WorldId } from "./skills";
 
@@ -18,7 +22,13 @@ export type PathNode = {
   skills: string[];
   /** Für Schatzkisten und Bosse: welches Ausmalbild drin ist. */
   coloring?: string;
+  /** Zweite Runde: Aufgaben eine Stufe schwerer. */
+  boost?: 1;
 };
+
+const chest = (id: string, coloring?: string): PathNode => ({ id, kind: "chest", title: "Schatzkiste", skills: [], coloring });
+const round2 = (id: string, title: string, skills: string[]): PathNode => ({ id, kind: "lesson", title, skills, boost: 1 });
+const mix2 = (id: string, skills: string[]): PathNode => ({ id, kind: "review", title: "Großes Gemisch", skills, boost: 1 });
 
 export type Boss = { name: string; color: string; shade: string };
 
@@ -51,6 +61,13 @@ export const WORLDS: World[] = [
       { id: "start-5", kind: "lesson", title: "Über die 10", skills: ["uebergang20"] },
       { id: "start-6", kind: "lesson", title: "Verdoppeln", skills: ["doppelt"] },
       { id: "start-7", kind: "review", title: "Gemischt", skills: ["freunde10", "plus20", "uebergang20", "doppelt"] },
+      round2("start-8", "Zahlenfreunde 2", ["freunde10"]),
+      chest("start-9"),
+      round2("start-10", "Plus & Minus 2", ["plus20"]),
+      round2("start-11", "Über die 10 2", ["uebergang20"]),
+      round2("start-12", "Verdoppeln 2", ["doppelt"]),
+      chest("start-13"),
+      mix2("start-14", ["freunde10", "plus20", "uebergang20", "doppelt"]),
       { id: "start-boss", kind: "boss", title: "Krabbe Knacks", skills: ["freunde10", "plus20", "uebergang20", "doppelt"], coloring: "schmetterling" },
     ],
   },
@@ -59,7 +76,7 @@ export const WORLDS: World[] = [
     index: 1,
     name: "Zahlenwald",
     tagline: "Zahlen bis 100",
-    starsToEnter: 10,
+    starsToEnter: 20,
     theme: { ground: "#CFF5D6", band: "#2BB673", bandShade: "#1E8F57", deco: "#8FDCA0", decoDark: "#5FBF77" },
     boss: { name: "Eulenkönig Uhu", color: "#3B2F80", shade: "#241B5C" },
     nodes: [
@@ -71,6 +88,14 @@ export const WORLDS: World[] = [
       { id: "wald-6", kind: "lesson", title: "Zahlenreihen", skills: ["reihen"] },
       { id: "wald-7", kind: "lesson", title: "Gerade & ungerade", skills: ["geradeUngerade"] },
       { id: "wald-8", kind: "review", title: "Gemischt", skills: ["zehnerEiner", "zahlenstrahl", "vergleichen", "nachbarn", "reihen", "geradeUngerade"] },
+      round2("wald-9", "Zehner & Einer 2", ["zehnerEiner"]),
+      chest("wald-10"),
+      round2("wald-11", "Zahlenstrahl 2", ["zahlenstrahl"]),
+      round2("wald-12", "Größer, kleiner? 2", ["vergleichen"]),
+      round2("wald-13", "Nachbarzahlen 2", ["nachbarn"]),
+      round2("wald-14", "Zahlenreihen 2", ["reihen"]),
+      chest("wald-15"),
+      mix2("wald-16", ["zehnerEiner", "zahlenstrahl", "vergleichen", "nachbarn", "reihen", "geradeUngerade"]),
       { id: "wald-boss", kind: "boss", title: "Eulenkönig Uhu", skills: ["zehnerEiner", "zahlenstrahl", "vergleichen", "nachbarn", "reihen"], coloring: "drache" },
     ],
   },
@@ -79,7 +104,7 @@ export const WORLDS: World[] = [
     index: 2,
     name: "Plus-Minus-Strand",
     tagline: "Rechnen bis 100",
-    starsToEnter: 26,
+    starsToEnter: 42,
     theme: { ground: "#D3F1FF", band: "#2A9FD9", bandShade: "#1C7BB0", deco: "#FFE7A8", decoDark: "#9ADCF7" },
     boss: { name: "Pirat Plumps", color: "#7A4E2D", shade: "#55341C" },
     nodes: [
@@ -91,6 +116,14 @@ export const WORLDS: World[] = [
       { id: "strand-6", kind: "trick", title: "Am Zehner Pause", skills: ["uebergang100"] },
       { id: "strand-7", kind: "lesson", title: "Über den Zehner", skills: ["uebergang100"] },
       { id: "strand-8", kind: "review", title: "Gemischt", skills: ["zehnerPlus", "einerPlus", "ergaenzen", "mauern", "uebergang100"] },
+      round2("strand-9", "Mit Zehnern 2", ["zehnerPlus"]),
+      round2("strand-10", "Einer dazu 2", ["einerPlus"]),
+      chest("strand-11"),
+      round2("strand-12", "Ergänzen 2", ["ergaenzen"]),
+      round2("strand-13", "Zahlenmauern 2", ["mauern"]),
+      round2("strand-14", "Über den Zehner 2", ["uebergang100"]),
+      chest("strand-15"),
+      mix2("strand-16", ["zehnerPlus", "einerPlus", "ergaenzen", "mauern", "uebergang100"]),
       { id: "strand-boss", kind: "boss", title: "Pirat Plumps", skills: ["zehnerPlus", "einerPlus", "ergaenzen", "uebergang100"], coloring: "pilzhaus" },
     ],
   },
@@ -99,7 +132,7 @@ export const WORLDS: World[] = [
     index: 3,
     name: "Piratenhafen",
     tagline: "Rechnen mit Geld",
-    starsToEnter: 44,
+    starsToEnter: 64,
     theme: { ground: "#D6F3F1", band: "#0E9AA7", bandShade: "#0A7580", deco: "#F2C27B", decoDark: "#8FD3CF" },
     boss: { name: "Papagei Polly", color: "#2BB673", shade: "#1E8F57" },
     nodes: [
@@ -111,13 +144,49 @@ export const WORLDS: World[] = [
       { id: "hafen-6", kind: "trick", title: "Rückgeld", skills: ["einkaufen"] },
       { id: "hafen-7", kind: "lesson", title: "Einkaufen", skills: ["einkaufen"] },
       { id: "hafen-8", kind: "review", title: "Gemischt", skills: ["geldZaehlen", "geldLegen", "euroCent", "geldVergleichen", "einkaufen"] },
+      round2("hafen-9", "Geld zählen 2", ["geldZaehlen"]),
+      round2("hafen-10", "Geld legen 2", ["geldLegen"]),
+      chest("hafen-11"),
+      round2("hafen-12", "Euro und Cent 2", ["euroCent"]),
+      round2("hafen-13", "Was ist mehr? 2", ["geldVergleichen"]),
+      round2("hafen-14", "Einkaufen 2", ["einkaufen"]),
+      chest("hafen-15"),
+      mix2("hafen-16", ["geldZaehlen", "geldLegen", "euroCent", "geldVergleichen", "einkaufen"]),
       { id: "hafen-boss", kind: "boss", title: "Papagei Polly", skills: ["geldZaehlen", "euroCent", "geldVergleichen", "einkaufen"], coloring: "papagei" },
+    ],
+  },
+  {
+    id: "zirkus",
+    index: 4,
+    name: "Einmaleins-Zirkus",
+    tagline: "Malnehmen",
+    starsToEnter: 86,
+    theme: { ground: "#FFE8EF", band: "#E2588A", bandShade: "#B23A66", deco: "#FFD23F", decoDark: "#F7A8C3" },
+    boss: { name: "Zauberer Zahlobert", color: "#7B4DFF", shade: "#5A2FE0" },
+    nodes: [
+      { id: "zirkus-1", kind: "lesson", title: "Malnehmen verstehen", skills: ["malVerstehen"] },
+      { id: "zirkus-2", kind: "trick", title: "Kernaufgaben", skills: ["kernaufgaben"] },
+      { id: "zirkus-3", kind: "lesson", title: "Tauschen", skills: ["tauschen"] },
+      chest("zirkus-4", "zelt"),
+      { id: "zirkus-5", kind: "trick", title: "Nachbaraufgabe", skills: ["malReihen"] },
+      { id: "zirkus-6", kind: "lesson", title: "Einmaleins-Reihen", skills: ["malReihen"] },
+      { id: "zirkus-7", kind: "lesson", title: "Zirkus-Geschichten", skills: ["malSach"] },
+      { id: "zirkus-8", kind: "review", title: "Gemischt", skills: ["malVerstehen", "kernaufgaben", "tauschen", "malReihen", "malSach"] },
+      round2("zirkus-9", "Malnehmen verstehen 2", ["malVerstehen"]),
+      round2("zirkus-10", "Kernaufgaben 2", ["kernaufgaben"]),
+      chest("zirkus-11"),
+      round2("zirkus-12", "Einmaleins-Reihen 2", ["malReihen"]),
+      round2("zirkus-13", "Quadrate", ["tauschen"]),
+      round2("zirkus-14", "Zirkus-Geschichten 2", ["malSach"]),
+      chest("zirkus-15"),
+      mix2("zirkus-16", ["malVerstehen", "kernaufgaben", "tauschen", "malReihen", "malSach"]),
+      { id: "zirkus-boss", kind: "boss", title: "Zauberer Zahlobert", skills: ["kernaufgaben", "malReihen", "tauschen", "malSach"], coloring: "seehund" },
     ],
   },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Einmaleins-Zirkus", "Bäckerei", "Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro"];
+export const COMING_SOON = ["Bäckerei", "Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

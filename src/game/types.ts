@@ -22,7 +22,7 @@ type TaskBase = {
 };
 
 /** Bild über der Aufgabe — z. B. Münzen und Scheine zum Zählen (Werte in Cent). */
-export type Visual = { kind: "money"; items: number[] };
+export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: number; cols: number };
 
 /** Antwort antippen. `term` ist die große Aufgabe, z.B. „38 + 7 = ?". */
 export type ChoiceTask = TaskBase & {

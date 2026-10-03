@@ -1,0 +1,5 @@
+{
+  "_info": "Hintergrund-Landschaften pro Welt (9:16, gpt_image_2_5 sunburst medium), je 3 Bilder von oben nach unten. Basis-URL wie in jobs.json.",
+  "start": ["hf_20261003_062013_3037eeeb-e0b8-4411-a7c0-6512073d48ee.png", "hf_20261003_062012_aab3865a-3bee-424d-80c7-9f1a936582f5.png", "hf_20261003_062012_e2f293e7-3bb9-4219-9ea5-43c33189b4a7.png"],
+  "wald": ["hf_20261003_062012_e9bd6913-4cd4-4c4c-851f-7671ba544116.png"]
+}

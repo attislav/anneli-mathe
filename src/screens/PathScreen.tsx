@@ -248,6 +248,14 @@ function Decor({ world, height }: { world: World; height: number }) {
               <rect x={side - 3} y={y + 18} width="6" height="18" rx="3" fill="#6E8B5B" />
             </g>
           );
+        if (world.id === "zirkus")
+          return (
+            <g key={i}>
+              <circle cx={side} cy={y} r="16" fill={world.theme.decoDark} />
+              <path d={`M${side} ${y + 16} q-4 14 2 28`} stroke="#fff" strokeWidth="2" fill="none" />
+              <path d={`M${side + (side < COL / 2 ? 22 : -22)} ${y + 30} l4 9 9 1 -7 6 2 9 -8 -4 -8 4 2 -9 -7 -6 9 -1z`} fill={world.theme.deco} />
+            </g>
+          );
         if (world.id === "hafen")
           return (
             <g key={i}>

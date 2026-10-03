@@ -305,6 +305,18 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
 // --- Bild über der Aufgabe -------------------------------------------------
 
 function VisualCard({ visual }: { visual: Visual }) {
+  if (visual.kind === "dots") {
+    const dot = Math.min(26, Math.floor(220 / Math.max(visual.rows, visual.cols)));
+    return (
+      <div className={`${card} flex justify-center px-3 py-4`}>
+        <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${visual.cols}, ${dot}px)` }} aria-label={`${visual.rows} Reihen mit je ${visual.cols} Punkten`}>
+          {Array.from({ length: visual.rows * visual.cols }, (_, i) => (
+            <span key={i} className="rounded-full" style={{ width: dot, height: dot, background: Math.floor(i / visual.cols) % 2 ? "#FF5D9E" : "#7B4DFF" }} />
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={`${card} px-3 py-4`}>
       <MoneyRow items={visual.items} size={visual.items.length > 6 ? 46 : 56} />

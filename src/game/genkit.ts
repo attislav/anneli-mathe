@@ -5,7 +5,7 @@
 import type { Format, Level, TaskDraft } from "./types";
 import { chance, numberOptions, pick, randInt } from "./random";
 
-export type WorldId = "start" | "wald" | "strand" | "hafen";
+export type WorldId = "start" | "wald" | "strand" | "hafen" | "zirkus";
 
 export type Trick = {
   title: string;

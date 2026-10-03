@@ -38,7 +38,7 @@ function solveTerm(term: string): number[] {
   const hits: number[] = [];
   if (!term.includes("=")) return hits;
   for (let x = 0; x <= 200; x++) {
-    const expr = term.replace("?", String(x)).replace(/−/g, "-");
+    const expr = term.replace("?", String(x)).replace(/−/g, "-").replace(/·/g, "*");
     const [l, r] = expr.split("=");
     try {
       if (Function(`return (${l}) === (${r})`)()) hits.push(x);

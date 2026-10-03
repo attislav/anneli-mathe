@@ -80,6 +80,19 @@ export const STICKERS: Sticker[] = [
   S("hafen", "Schatzi", "#FF9F1C", "#FFE2B8", "wide", "none"),
   S("hafen", "Goldpapagei", "#FFC531", "#FFF3BF", "round", "horn", true),
   S("hafen", "Diamantkrabbe", "#7FDBFF", "#E3F5FF", "wide", "horn", true),
+
+  S("zirkus", "Clown Kringel", "#FF5D5D", "#FFE3E3", "round", "round"),
+  S("zirkus", "Seelöwe Sami", "#5B6B8C", "#C9D3E3", "tall", "none"),
+  S("zirkus", "Ponny", "#FFFFFF", "#FFE3F0", "tall", "horn"),
+  S("zirkus", "Jongli", "#FF9F1C", "#FFE2B8", "round", "antenna"),
+  S("zirkus", "Löwe Leo", "#F2C14E", "#FFF1C4", "round", "cat"),
+  S("zirkus", "Popcorni", "#FFF1C4", "#FFFFFF", "round", "none"),
+  S("zirkus", "Ballonia", "#FF5D9E", "#FFD6E7", "tall", "antenna"),
+  S("zirkus", "Elefantino", "#9AA6B8", "#E3E8F0", "wide", "round"),
+  S("zirkus", "Akroba", "#7B4DFF", "#E6DEFF", "tall", "cat"),
+  S("zirkus", "Zuckerwatte", "#FF9EC7", "#FFE8F2", "round", "none"),
+  S("zirkus", "Sternenclown", "#FFD23F", "#FFF7CC", "round", "horn", true),
+  S("zirkus", "Regenbogen-Einhorn", "#E6DEFF", "#FFFFFF", "tall", "horn", true),
 ];
 
 export function stickersOf(world: WorldId): Sticker[] {

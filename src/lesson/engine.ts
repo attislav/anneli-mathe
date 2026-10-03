@@ -42,7 +42,9 @@ export function startRun(node: PathNode, tier: Tier, mastery: Record<string, num
 
 export function nextTask(run: Run): Task {
   const skillId = run.node.skills.length === 1 ? run.node.skills[0] : pickWeakSkill(run.node.skills, run.mastery);
-  const level = levelFor(run.mastery[skillId], run.tier, run.bias);
+  // Zweite Runde (`boost`): eine Stufe schwerer, aber höchstens Meister.
+  const tier = Math.min(2, run.tier + (run.node.boost ?? 0)) as Tier;
+  const level = levelFor(run.mastery[skillId], tier, run.bias);
   const [a, b] = run.formats.slice(-2);
   // Zweimal dasselbe Format hintereinander → jetzt bitte etwas anderes.
   const avoid = a && a === b ? [a] : [];

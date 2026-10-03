@@ -117,6 +117,7 @@ function VectorBoss({ world, color, size = 120, mood = "grin" }: BossProps) {
           <ellipse cx="60" cy="84" rx="22" ry="18" fill="#B9A8FF" />
         </>
       )}
+      {world === "zirkus" && <path d="M34 34 L60 4 L86 34 Z" fill="#1F2347" stroke="#FFD23F" strokeWidth="3" strokeLinejoin="round" />}
       {world === "hafen" && <path d="M52 66 L68 66 L60 82 Z" fill="#FF9F1C" stroke="#1F2347" strokeWidth="2" strokeLinejoin="round" />}
       {world === "strand" && (
         <>

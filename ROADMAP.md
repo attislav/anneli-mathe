@@ -109,7 +109,7 @@ Eine große Weltkarte mit gewundenem Pfad. Jede Welt ist eine Insel mit eigenem 
 | 11 | **Detektivbüro** | Sachaufgaben, Tabellen, Strichlisten, Diagramme, Kombinatorik |
 | ★ | **Sternen-Expedition** | Klasse-3-Vorschau für Überflieger: bis 1000, halbschriftlich — keine Obergrenze |
 
-Je Welt 15–25 Knoten → **~200 Lektionen**, durch Generatoren endlos wiederspielbar.
+Je Welt ~17 Knoten in zwei Runden (zweite Runde eine Stufe schwerer) → bei 12 Welten **~200 Knoten**, durch Generatoren endlos wiederspielbar.
 
 ---
 
@@ -281,7 +281,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-2 ✓ | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
 | AP-3 ✓ | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
 | AP-4 ✓ | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
-| AP-5 | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
+| AP-5 ✓ | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
 | AP-6 | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
 | AP-7 | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |
 | AP-8 | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
