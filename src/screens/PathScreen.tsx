@@ -341,6 +341,14 @@ function Decor({ world, height }: { world: World; height: number }) {
               <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
             </g>
           );
+        if (world.id === "ozean")
+          return (
+            <g key={i}>
+              <path d={`M${side} ${y - 22} l7 14 15 2 -11 10 3 15 -14 -7 -14 7 3 -15 -11 -10 15 -2z`} fill={world.theme.decoDark} />
+              <circle cx={side + (side < COL / 2 ? 24 : -24)} cy={y + 30} r="7" fill="none" stroke={world.theme.decoDark} strokeWidth="3" />
+              <circle cx={side + (side < COL / 2 ? 14 : -14)} cy={y + 44} r="4" fill="none" stroke={world.theme.decoDark} strokeWidth="2.5" />
+            </g>
+          );
         if (world.id === "schloss")
           return (
             <g key={i}>

@@ -15,6 +15,7 @@ import { HAFEN_SKILLS } from "./skillsHafen";
 import { ZIRKUS_SKILLS } from "./skillsZirkus";
 import { BAECKEREI_SKILLS } from "./skillsBaeckerei";
 import { SCHLOSS_SKILLS } from "./skillsSchloss";
+import { OZEAN_SKILLS } from "./skillsOzean";
 
 export type { GenCtx, Skill, Texts, Trick, WorldId } from "./genkit";
 
@@ -538,7 +539,7 @@ const uebergang100: Skill = {
 };
 
 export const SKILLS: Record<string, Skill> = Object.fromEntries(
-  [freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS].map((s) => [s.id, s]),
+  [freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS].map((s) => [s.id, s]),
 );
 
 export function getSkill(id: string): Skill {

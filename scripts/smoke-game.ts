@@ -101,6 +101,18 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
       break;
+    case "mirror": {
+      const keys = t.cells.map(([r, c]) => `${r},${c}`);
+      if (t.cells.length === 0 || new Set(keys).size !== keys.length) fail(skill, level, "Spiegel-Kästchen leer oder doppelt", t);
+      if (t.cells.some(([r, c]) => r < 0 || r >= t.rows || c < 0 || c >= t.half)) fail(skill, level, "Spiegel-Kästchen außerhalb", t);
+      break;
+    }
+    case "pattern": {
+      const keys = t.options.map((o) => o.shape + o.color);
+      if (new Set(keys).size !== keys.length) fail(skill, level, "doppelte Muster-Optionen", t);
+      if (t.answer < 0 || t.answer >= t.options.length || t.options.length < 2) fail(skill, level, "Muster-Antwort ungültig", t);
+      break;
+    }
     case "clock-set":
       if (t.hour < 1 || t.hour > 12 || t.minute < 0 || t.minute > 55 || t.minute % t.step !== 0) fail(skill, level, "Uhrzeit nicht stellbar", t);
       break;

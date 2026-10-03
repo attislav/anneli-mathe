@@ -19,6 +19,7 @@ const PROBE: Record<WorldId, string[]> = {
   zirkus: ["kernaufgaben", "malReihen"],
   baeckerei: ["geteilt", "halbieren"],
   schloss: ["uhrLesen", "zeitWoerter"],
+  ozean: ["formen", "spiegeln"],
 };
 
 const LEVEL: Level = 3;
