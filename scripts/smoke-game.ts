@@ -38,7 +38,7 @@ function solveTerm(term: string): number[] {
   const hits: number[] = [];
   if (!term.includes("=")) return hits;
   for (let x = 0; x <= 200; x++) {
-    const expr = term.replace("?", String(x)).replace(/−/g, "-").replace(/·/g, "*");
+    const expr = term.replace("?", String(x)).replace(/−/g, "-").replace(/·/g, "*").replace(/:/g, "/");
     const [l, r] = expr.split("=");
     try {
       if (Function(`return (${l}) === (${r})`)()) hits.push(x);
@@ -99,6 +99,10 @@ function check(skill: string, level: Level, t: TaskDraft) {
     case "money-build":
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
+      break;
+    case "share":
+      if (t.total % t.plates !== 0) fail(skill, level, "nicht gerecht teilbar", t);
+      if (t.plates < 2 || t.plates > 5 || t.total > 24 || t.total < t.plates) fail(skill, level, "zu viele Teller/Teile zum Legen", t);
       break;
   }
 }

@@ -23,7 +23,7 @@ import {
 } from "@/game/state";
 import { COMING_SOON, WORLDS, type PathNode, type World } from "@/game/worlds";
 import { sfx } from "@/game/sound";
-import { artSrc, SCENERY, useArtReady } from "@/game/art";
+import { artSrc, SCENERY, useArtReady, type Atlas } from "@/game/art";
 import { ChestArt, StarIcon, StarRow } from "@/ui/art";
 import { BottomNav, Confetti, Sheet, TopBar } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
@@ -241,10 +241,13 @@ function NodeButton({ save, world, node, open, current, onPick }: { save: SaveSt
 
 /** `true`, sobald alle drei Landschaftsbilder der Welt geladen sind. */
 function useSceneryReady(world: World): boolean {
-  const [a, b, c] = SCENERY[world.id];
+  const [a, b, c] = SCENERY[world.id] ?? NO_SCENERY;
   const ready = [useArtReady(a), useArtReady(b), useArtReady(c)];
-  return ready.every(Boolean);
+  return SCENERY[world.id] !== undefined && ready.every(Boolean);
 }
+
+/** Platzhalter für Welten ohne Landschaftsbilder (Hooks brauchen immer drei). */
+const NO_SCENERY: Atlas[] = Array.from({ length: 3 }, (_, i) => ({ local: `/art/none-${i}.webp`, url: "", cols: 1, rows: 1 }));
 
 /** Überblend-Zone zwischen zwei Landschaftsbildern (px). */
 const BLEND = 70;
@@ -257,7 +260,7 @@ const BLEND = 70;
 function Scenery({ world, height }: { world: World; height: number }) {
   const ready = useSceneryReady(world);
   if (!ready) return null;
-  const panels = SCENERY[world.id];
+  const panels = SCENERY[world.id] ?? NO_SCENERY;
   const panelH = (height + BLEND * (panels.length - 1)) / panels.length;
   const fade = `linear-gradient(to bottom, transparent, #000 ${BLEND}px, #000 calc(100% - ${BLEND}px), transparent)`;
   return (
@@ -309,6 +312,14 @@ function Decor({ world, height }: { world: World; height: number }) {
               <rect x={side - 2} y={y - 26} width="4" height="34" fill="#7A4E2D" />
               <path d={`M${side + 2} ${y - 24} L${side + 20} ${y} H${side + 2} Z`} fill="#fff" />
               <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
+            </g>
+          );
+        if (world.id === "baeckerei")
+          return (
+            <g key={i}>
+              <path d={`M${side - 20} ${y + 14} C${side - 34} ${y + 14} ${side - 34} ${y - 4} ${side - 22} ${y - 6} C${side - 14} ${y - 20} ${side + 14} ${y - 20} ${side + 22} ${y - 6} C${side + 34} ${y - 4} ${side + 34} ${y + 14} ${side + 20} ${y + 14} Z`} fill={world.theme.deco} stroke={world.theme.decoDark} strokeWidth="3" />
+              <path d={`M${side - 10} ${y - 2} q6 6 12 0 M${side + 2} ${y + 4} q6 6 12 0`} stroke={world.theme.decoDark} strokeWidth="3" fill="none" strokeLinecap="round" />
+              <circle cx={side + (side < COL / 2 ? 26 : -26)} cy={y + 36} r="9" fill="#E3A36B" />
             </g>
           );
         if (world.id === "start")

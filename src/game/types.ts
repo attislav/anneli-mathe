@@ -7,7 +7,7 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build";
+export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share";
 
 type TaskBase = {
   id: string;
@@ -83,7 +83,17 @@ export type MoneyBuildTask = TaskBase & {
   pieces: number[];
 };
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask;
+/** Gebäck gerecht auf Teller verteilen. Richtig: alles verteilt, überall gleich viel. */
+export type ShareTask = TaskBase & {
+  format: "share";
+  total: number;
+  plates: number;
+  item: Treat;
+};
+
+export type Treat = "keks" | "muffin" | "brezel";
+
+export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

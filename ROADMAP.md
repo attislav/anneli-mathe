@@ -283,7 +283,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-4 ✓ | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
 | AP-5 ✓ | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
 | ✓ | **Gemalte Weltkarte** | Pro Welt 3 KI-Landschaften (9:16) hinter dem Pfad, weich überblendet; Vektor-Deko als Fallback | 15 Bilder, ~1,3 MB |
-| AP-6 | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
+| AP-6 ✓ | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
 | AP-7 | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |
 | AP-8 | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
 | AP-9 | **Übungskiste (Fehler-Wiederholung)** | falsch gelöste Aufgaben kommen nach 1/3/7 Tagen zurück | eigener Knoten „Übungskiste" auf dem Pfad |
@@ -301,7 +301,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 
 **Blockiert / braucht Entscheidung:**
 - Bilder ins Repo laden: `cloudfront.net` ist freigegeben (gilt ab der nächsten Sitzung) → dort `npm run art:fetch` ausführen und `public/art/` committen. Die App bevorzugt lokale Kopien automatisch.
-- Vorproduzierte Stimme (Gemini-TTS) braucht `GEMINI_API_KEY` in der Umgebung
+- **Neu vertonen (später, keine Prio):** Die aktuelle Stimme wirkt gruselig. Sie bleibt vorerst drin, es wird aber **nichts Neues vertont**. Später kommt eine neue Stimme mit einem anderen Modell, wie, sagt Papa dann. → Bei Gelegenheit daran erinnern.
 
 ## Offene Entscheidungen
 

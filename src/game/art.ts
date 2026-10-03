@@ -59,7 +59,7 @@ export type SpriteKey = keyof typeof SPRITES;
  * Landschaften hinter dem Pfad: pro Welt drei Bilder (9:16) von oben nach
  * unten, die ineinander überblenden. Originale in `scripts/art/backgrounds.json`.
  */
-export const SCENERY: Record<WorldId, Atlas[]> = {
+export const SCENERY: Partial<Record<WorldId, Atlas[]>> = {
   start: [
     { local: "/art/welt-start-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/b86519ae-271d-47a8-9c4b-e1aba5587887.webp", cols: 1, rows: 1 },
     { local: "/art/welt-start-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/f627b42e-b081-4814-a831-ca9797aa21ba.webp", cols: 1, rows: 1 },
@@ -84,6 +84,11 @@ export const SCENERY: Record<WorldId, Atlas[]> = {
     { local: "/art/welt-zirkus-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/2e998c69-8ae6-4ccd-9d2c-9289def6ce8f.webp", cols: 1, rows: 1 },
     { local: "/art/welt-zirkus-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/d29d5b6f-b481-44b3-8859-a6cac5f0cd12.webp", cols: 1, rows: 1 },
     { local: "/art/welt-zirkus-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/adc1d03b-3417-4532-a24a-5ebfed45c964.webp", cols: 1, rows: 1 },
+  ],
+  baeckerei: [
+    { local: "/art/welt-baeckerei-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/7a78faeb-8047-498f-bfcf-ad1afcbae50d.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-baeckerei-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/e0d8f50e-f594-493d-b585-39ea4e1753f5.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-baeckerei-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/8d42442b-3990-479d-9435-56272ad9d997.webp", cols: 1, rows: 1 },
   ],
 };
 

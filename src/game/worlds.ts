@@ -183,10 +183,38 @@ export const WORLDS: World[] = [
       { id: "zirkus-boss", kind: "boss", title: "Zauberer Zahlobert", skills: ["kernaufgaben", "malReihen", "tauschen", "malSach"], coloring: "seehund" },
     ],
   },
+  {
+    id: "baeckerei",
+    index: 5,
+    name: "Bäckerei",
+    tagline: "Teilen",
+    starsToEnter: 108,
+    theme: { ground: "#FFF1E0", band: "#C8763A", bandShade: "#9A5524", deco: "#F7C99B", decoDark: "#E3A36B" },
+    boss: { name: "Teigmonster Knetbert", color: "#F2C48D", shade: "#C8915A" },
+    nodes: [
+      { id: "baeckerei-1", kind: "lesson", title: "Gerecht verteilen", skills: ["verteilen"] },
+      { id: "baeckerei-2", kind: "trick", title: "Halbieren", skills: ["halbieren"] },
+      { id: "baeckerei-3", kind: "trick", title: "Umkehraufgabe", skills: ["geteilt"] },
+      chest("baeckerei-4", "torte"),
+      { id: "baeckerei-5", kind: "lesson", title: "Mal und Geteilt", skills: ["umkehr"] },
+      { id: "baeckerei-6", kind: "lesson", title: "Geteilt rechnen", skills: ["geteilt"] },
+      { id: "baeckerei-7", kind: "lesson", title: "Bäckerei-Geschichten", skills: ["backSach"] },
+      { id: "baeckerei-8", kind: "review", title: "Gemischt", skills: ["verteilen", "halbieren", "geteilt", "umkehr", "backSach"] },
+      round2("baeckerei-9", "Verteilen 2", ["verteilen"]),
+      round2("baeckerei-10", "Halbieren 2", ["halbieren"]),
+      chest("baeckerei-11"),
+      round2("baeckerei-12", "Geteilt rechnen 2", ["geteilt"]),
+      round2("baeckerei-13", "Mal und Geteilt 2", ["umkehr"]),
+      round2("baeckerei-14", "Bäckerei-Geschichten 2", ["backSach"]),
+      chest("baeckerei-15"),
+      mix2("baeckerei-16", ["verteilen", "halbieren", "geteilt", "umkehr", "backSach"]),
+      { id: "baeckerei-boss", kind: "boss", title: "Teigmonster Knetbert", skills: ["geteilt", "umkehr", "halbieren", "backSach"], coloring: "cupcake" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Bäckerei", "Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
+export const COMING_SOON = ["Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

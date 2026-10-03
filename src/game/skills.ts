@@ -13,6 +13,7 @@ import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genkit";
 import { HAFEN_SKILLS } from "./skillsHafen";
 import { ZIRKUS_SKILLS } from "./skillsZirkus";
+import { BAECKEREI_SKILLS } from "./skillsBaeckerei";
 
 export type { GenCtx, Skill, Texts, Trick, WorldId } from "./genkit";
 
@@ -536,7 +537,7 @@ const uebergang100: Skill = {
 };
 
 export const SKILLS: Record<string, Skill> = Object.fromEntries(
-  [freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS].map((s) => [s.id, s]),
+  [freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS].map((s) => [s.id, s]),
 );
 
 export function getSkill(id: string): Skill {

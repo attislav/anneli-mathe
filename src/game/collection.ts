@@ -93,6 +93,19 @@ export const STICKERS: Sticker[] = [
   S("zirkus", "Zuckerwatte", "#FF9EC7", "#FFE8F2", "round", "none"),
   S("zirkus", "Sternenclown", "#FFD23F", "#FFF7CC", "round", "horn", true),
   S("zirkus", "Regenbogen-Einhorn", "#E6DEFF", "#FFFFFF", "tall", "horn", true),
+
+  S("baeckerei", "Brezelchen", "#C8763A", "#F7C99B", "wide", "none"),
+  S("baeckerei", "Krümel", "#E3A36B", "#FFF1E0", "round", "round"),
+  S("baeckerei", "Muffi", "#FF9EC7", "#FFE8F2", "round", "antenna"),
+  S("baeckerei", "Teigling", "#F7E6C4", "#FFFFFF", "round", "none"),
+  S("baeckerei", "Hörnchen", "#E5A100", "#FFF1C4", "wide", "horn"),
+  S("baeckerei", "Mehlmaus", "#E3E8F0", "#FFFFFF", "round", "round"),
+  S("baeckerei", "Zimtschnecke", "#B07A4F", "#EBD3BF", "round", "antenna"),
+  S("baeckerei", "Erdbeertörtchen", "#FF5D5D", "#FFE3E3", "tall", "none"),
+  S("baeckerei", "Baguetti", "#D9A066", "#FFF1E0", "tall", "cat"),
+  S("baeckerei", "Schoko-Keks", "#7A4E2D", "#D9B89A", "round", "cat"),
+  S("baeckerei", "Goldbrezel", "#FFC531", "#FFF3BF", "wide", "horn", true),
+  S("baeckerei", "Zuckerfee", "#E6DEFF", "#FFFFFF", "tall", "antenna", true),
 ];
 
 export function stickersOf(world: WorldId): Sticker[] {

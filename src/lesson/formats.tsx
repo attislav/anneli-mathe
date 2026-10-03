@@ -5,7 +5,8 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import type { ChoiceTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import { PlateArt, TreatIcon } from "@/ui/Bakery";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
@@ -31,6 +32,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <CompareView {...props} task={task} />;
     case "money-build":
       return <MoneyBuildView {...props} task={task} />;
+    case "share":
+      return <ShareView {...props} task={task} />;
   }
 }
 
@@ -356,6 +359,83 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
       <Button tone="grape" disabled={locked || laid.length === 0} onClick={() => onAnswer(laid.reduce((a, p) => a + p.v, 0) === task.target)}>
         Prüfen
       </Button>
+    </div>
+  );
+}
+
+// --- Verteilen auf Teller ----------------------------------------------------
+
+function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
+  const [onPlate, setOnPlate] = useState<number[]>(() => Array.from({ length: task.plates }, () => 0));
+  const locked = status !== "ask";
+  const pile = task.total - onPlate.reduce((a, b) => a + b, 0);
+  const put = (i: number) => {
+    if (locked || pile === 0) return;
+    sfx.pop();
+    setOnPlate((p) => p.map((n, j) => (j === i ? n + 1 : n)));
+  };
+  const takeBack = (i: number) => {
+    if (locked || onPlate[i] === 0) return;
+    sfx.tap();
+    setOnPlate((p) => p.map((n, j) => (j === i ? n - 1 : n)));
+  };
+  const round = () => {
+    if (locked || pile < task.plates) return;
+    sfx.pop();
+    setOnPlate((p) => p.map((n) => n + 1));
+  };
+  return (
+    <div className="flex flex-col gap-3">
+      <div className={`${card} flex min-h-[92px] flex-wrap content-center items-center justify-center gap-1 p-3`}>
+        {pile === 0 ? (
+          <span className="font-extrabold text-ink-soft">Alles verteilt!</span>
+        ) : (
+          Array.from({ length: pile }, (_, i) => (
+            <span key={i} className="anim-pop">
+              <TreatIcon item={task.item} size={30} />
+            </span>
+          ))
+        )}
+      </div>
+      <div className="flex flex-wrap items-end justify-center gap-2.5">
+        {onPlate.map((n, i) => (
+          <div key={i} className="flex w-[104px] flex-col items-center">
+            <button
+              aria-label={`Teller ${i + 1}: ${n}`}
+              disabled={locked}
+              onClick={() => put(i)}
+              className="chunky flex min-h-[86px] w-full flex-wrap content-end items-end justify-center gap-0.5 rounded-[22px] bg-white/70 px-1.5 pb-1 pt-2"
+              style={{ ["--shade" as string]: "#E4D3C0", ["--depth" as string]: "4px" }}
+            >
+              {Array.from({ length: n }, (_, k) => (
+                <span key={k} className="anim-pop">
+                  <TreatIcon item={task.item} size={24} />
+                </span>
+              ))}
+              <PlateArt width={92} />
+            </button>
+            <div className="mt-1.5 flex items-center gap-2">
+              <button
+                aria-label={`Von Teller ${i + 1} zurücklegen`}
+                disabled={locked || n === 0}
+                onClick={() => takeBack(i)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white font-display text-xl font-semibold leading-none text-ink-soft shadow-[0_3px_0_#E4D3C0] disabled:opacity-30"
+              >
+                −
+              </button>
+              <span className="w-6 text-center font-display text-lg font-semibold text-ink-soft">{n}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-2.5">
+        <Button tone="sky" disabled={locked || pile < task.plates} onClick={round}>
+          Reihum
+        </Button>
+        <Button tone="grape" disabled={locked || pile > 0} onClick={() => onAnswer(onPlate.every((n) => n === onPlate[0]))}>
+          Prüfen
+        </Button>
+      </div>
     </div>
   );
 }
