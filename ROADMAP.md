@@ -215,7 +215,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 - [ ] Alten Code entfernen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`, alte Skripte und Assets) — wartet auf Freigabe, steht bis dahin unverlinkt neben der neuen App
 - [x] Design-System: Farben + 3D-Knöpfe in `globals.css`, Bausteine in `src/ui/`
 - [x] Datenmodell: Spielstand in `src/game/state.ts` (localStorage, `sternenpfad.v1`)
-- [~] PWA: Manifest + Icon da, Offline-Modus (Service Worker) fehlt noch
+- [x] PWA: Manifest, PNG-Icons, Service Worker (`scripts/build-sw.mjs`) — nach dem ersten Besuch läuft alles offline
 - [x] Kompetenzen Klasse 2 als Daten: 15 Kompetenzen × 5 Stufen in `src/game/skills.ts`
 - [~] Tests: `npm run smoke:game` (225.000 Aufgaben gegen Invarianten) — Klick-Test lief lokal mit Playwright, liegt noch nicht im Repo
 
@@ -279,7 +279,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 |---|---|---|---|
 | AP-1 ✓ | **KI-Bilder Welle 1** | 3 Haustiere × 3 Stufen, 3 Eier, 3 Bosse | Bilder in App sichtbar, Vektor-Fallback greift |
 | AP-2 ✓ | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
-| AP-3 | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
+| AP-3 ✓ | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
 | AP-4 | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
 | AP-5 | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
 | AP-6 | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
@@ -300,7 +300,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 
 **Blockiert / braucht Entscheidung:**
 - Alten Code löschen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`) — wartet auf Freigabe
-- Bilder ins Repo laden: `cloudfront.net` ist in der Cloud-Umgebung gesperrt → Bilder werden direkt vom CDN geladen; Freigabe der Domain würde lokale Kopien erlauben
+- Bilder ins Repo laden: `cloudfront.net` ist freigegeben (gilt ab der nächsten Sitzung) → dort `npm run art:fetch` ausführen und `public/art/` committen. Die App bevorzugt lokale Kopien automatisch.
 - Vorproduzierte Stimme (Gemini-TTS) braucht `GEMINI_API_KEY` in der Umgebung
 
 ## Offene Entscheidungen

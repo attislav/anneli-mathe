@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/build-sw.mjs",
     "start": "next start",
     "lint": "eslint",
     "gen:test-images": "node --env-file=.env.local scripts/generate-test-images.mjs",
@@ -18,7 +18,8 @@
     "gen:training-audio": "tsx --env-file=.env.local scripts/generate-training-audio.ts",
     "smoke:generators": "tsx scripts/smoke-generators.ts",
     "smoke:training": "tsx scripts/smoke-training.ts",
-    "smoke:game": "tsx scripts/smoke-game.ts"
+    "smoke:game": "tsx scripts/smoke-game.ts",
+    "art:fetch": "node scripts/fetch-art.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

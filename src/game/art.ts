@@ -6,15 +6,17 @@
 // ein Download statt fünfzehn, und der Browser cacht ihn. Die Original-
 // PNGs und Prompts stehen in `scripts/art/jobs.json`.
 //
-// Die Bilder liegen auf dem Higgsfield-CDN. Lädt der Atlas nicht (offline,
-// gesperrt), zeigen alle Komponenten ihre Vektor-Zeichnung als Fallback.
+// Reihenfolge beim Laden: erst die lokale Kopie in `public/art/` (holt
+// `npm run art:fetch`), dann das Higgsfield-CDN. Lädt beides nicht, zeigen
+// alle Komponenten ihre Vektor-Zeichnung als Fallback.
 
 import { useSyncExternalStore } from "react";
 
-export type Atlas = { url: string; cols: number; rows: number };
+export type Atlas = { local: string; url: string; cols: number; rows: number };
 
 /** Haustiere, Eier, Bosse (Zellen à 384 px). */
 export const ATLAS1: Atlas = {
+  local: "/art/figuren.webp",
   url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/4c3602f6-051a-4d40-9e27-15a734fc408e.webp",
   cols: 5,
   rows: 3,
@@ -22,6 +24,7 @@ export const ATLAS1: Atlas = {
 
 /** Die 36 Sticker, in derselben Reihenfolge wie `STICKERS` (Zellen à 192 px). */
 export const STICKER_ATLAS: Atlas = {
+  local: "/art/sticker.webp",
   url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/e3764a9e-6efc-4e4f-9ebd-34156f1e89d3.webp",
   cols: 6,
   rows: 6,
@@ -53,22 +56,30 @@ export type SpriteKey = keyof typeof SPRITES;
 
 // --- Ladezustand (pro Atlas) -------------------------------------------------
 
-type Status = "loading" | "ok" | "fail";
-const status = new Map<string, Status>();
+const resolved = new Map<string, string | null>();
 const listeners = new Set<() => void>();
 
-function load(url: string) {
-  if (status.has(url) || typeof window === "undefined") return;
-  status.set(url, "loading");
-  const img = new Image();
-  img.onload = () => set(url, "ok");
-  img.onerror = () => set(url, "fail");
-  img.src = url;
+function tryLoad(src: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = src;
+  });
 }
 
-function set(url: string, s: Status) {
-  status.set(url, s);
-  listeners.forEach((l) => l());
+function load(atlas: Atlas) {
+  if (resolved.has(atlas.local) || typeof window === "undefined") return;
+  resolved.set(atlas.local, null);
+  void (async () => {
+    for (const src of [atlas.local, atlas.url]) {
+      if (await tryLoad(src)) {
+        resolved.set(atlas.local, src);
+        listeners.forEach((l) => l());
+        return;
+      }
+    }
+  })();
 }
 
 function subscribe(l: () => void) {
@@ -76,8 +87,13 @@ function subscribe(l: () => void) {
   return () => listeners.delete(l);
 }
 
+/** Die Bildquelle, die geladen hat — oder `null` (noch nicht / gar nicht). */
+export function artSrc(atlas: Atlas): string | null {
+  return resolved.get(atlas.local) ?? null;
+}
+
 /** `true`, sobald der Atlas geladen ist. Vorher und bei Fehlern: Vektor-Fallback. */
 export function useArtReady(atlas: Atlas = ATLAS1): boolean {
-  load(atlas.url);
-  return useSyncExternalStore(subscribe, () => status.get(atlas.url) === "ok", () => false);
+  load(atlas);
+  return useSyncExternalStore(subscribe, () => artSrc(atlas) !== null, () => false);
 }

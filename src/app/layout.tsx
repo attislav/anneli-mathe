@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
+import { RegisterSW } from "@/ui/RegisterSW";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
   title: "Sternenpfad",
   description: "Mathe-Abenteuer für die 2. Klasse — Sterne sammeln, Welten entdecken.",
   manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "Sternenpfad", statusBarStyle: "default" },
 };
 
@@ -34,7 +36,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="de" className={`${nunito.variable} ${fredoka.variable} h-full antialiased`}>
-      <body className="min-h-full font-sans font-bold">{children}</body>
+      <body className="min-h-full font-sans font-bold">
+        {children}
+        <RegisterSW />
+      </body>
     </html>
   );
 }
