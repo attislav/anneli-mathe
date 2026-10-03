@@ -2,6 +2,10 @@
 
 // Sammeln: Sticker-Album, Ausmalbilder-Galerie, Laden fürs Haustier.
 
+import { activeSeason, SEASON_NAMES, type SeasonId } from "@/game/season";
+import type { CollectionGroup } from "@/game/collection";
+
+const SEASON_GROUPS = (Object.keys(SEASON_NAMES) as SeasonId[]).map((id) => ({ id: id as CollectionGroup, name: SEASON_NAMES[id] }));
 import Link from "next/link";
 import { useState } from "react";
 import { Lock } from "lucide-react";
@@ -58,7 +62,7 @@ export function CollectScreen({ save, initialTab = "sticker" }: { save: SaveStat
 function Stickers({ save }: { save: SaveState }) {
   return (
     <>
-      {WORLDS.map((world) => {
+      {[...WORLDS.map((w) => ({ id: w.id as CollectionGroup, name: w.name })), ...SEASON_GROUPS.filter((g) => activeSeason() === g.id || stickersOf(g.id).some((st) => save.stickers[st.id]))].map((world) => {
         const list = stickersOf(world.id);
         const got = list.filter((s) => save.stickers[s.id]).length;
         return (
@@ -97,7 +101,8 @@ function Pages({ save }: { save: SaveState }) {
     <div className="grid grid-cols-2 gap-3">
       {COLORING_PAGES.map((page) => {
         const unlocked = save.pages.includes(page.id);
-        const world = WORLDS.find((w) => w.id === page.world)!;
+        const world = WORLDS.find((w) => w.id === page.world);
+        const hint = world ? `Versteckt in einer Truhe im ${world.name}` : page.world === "halloween" ? "Gibt's nur im Oktober im Tagesschatz" : "Versteckt im Adventskalender";
         return unlocked ? (
           <Link key={page.id} href={`/ausmalen?b=${page.id}`} className="chunky flex flex-col items-center gap-2 rounded-[22px] bg-white p-3" style={{ ["--shade" as string]: "#F2D58A" }}>
             <ColoringSvg page={page} fills={save.fills[page.id] ?? {}} size={140} />
@@ -106,7 +111,7 @@ function Pages({ save }: { save: SaveState }) {
         ) : (
           <div key={page.id} className="flex flex-col items-center justify-center gap-2 rounded-[22px] bg-white/60 p-3 text-center" style={{ minHeight: 200 }}>
             <Lock className="text-ink-soft" size={30} />
-            <div className="text-sm font-extrabold text-ink-soft">Versteckt in einer Truhe im {world.name}</div>
+            <div className="text-sm font-extrabold text-ink-soft">{hint}</div>
           </div>
         );
       })}

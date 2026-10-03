@@ -8,9 +8,10 @@
 
 import { useSyncExternalStore } from "react";
 import { START_MASTERY, type Tier } from "./adaptive";
-import { STICKERS, SHOP, type PetSpecies } from "./collection";
+import { STICKERS, SHOP, type CollectionGroup, type PetSpecies } from "./collection";
 import { WORLDS, starNodes, type PathNode, type World } from "./worlds";
 import { pick } from "./random";
+import { activeSeason } from "./season";
 import type { WorldId } from "./skills";
 import type { Level, TaskDraft } from "./types";
 
@@ -48,6 +49,8 @@ export type SaveState = {
   dailyChests: number;
   /** Übungskiste: falsch gelöste Aufgaben, die später wiederkommen. */
   practice: PracticeItem[];
+  /** Adventskalender: geöffnete Türchen im Jahr `year`. */
+  advent: { year: number; opened: number[] };
 };
 
 /** Eine Aufgabe in der Übungskiste. `box` 0–2: nach 1, 3, 7 Tagen wieder dran. */
@@ -80,6 +83,7 @@ export function emptyState(): SaveState {
     badges: [],
     dailyChests: 0,
     practice: [],
+    advent: { year: 0, opened: [] },
   };
 }
 
@@ -247,7 +251,7 @@ export type Reward =
 const DUPLICATE_COINS = 15;
 
 /** Würfelt einen Sticker der Welt — neue sind wahrscheinlicher, seltene seltener. */
-export function rollSticker(s: SaveState, world: WorldId, allowRare: boolean): Reward {
+export function rollSticker(s: SaveState, world: CollectionGroup, allowRare: boolean): Reward {
   const pool = STICKERS.filter((st) => st.world === world && (allowRare || !st.rare || Math.random() < 0.12));
   const fresh = pool.filter((st) => !s.stickers[st.id]);
   const chosen = fresh.length > 0 && Math.random() < 0.8 ? pick(fresh) : pick(pool);
@@ -324,8 +328,10 @@ export function dailyChestWaiting(s: SaveState): boolean {
 /** Belohnung fürs Lektionsende — wird VOR dem Öffnen der Truhe gewürfelt. */
 export function lessonRewards(s: SaveState, node: PathNode, world: World, firstTime: boolean): Reward[] {
   const rewards: Reward[] = [];
+  const halloween = activeSeason() === "halloween";
   if (dailyChestWaiting(s)) {
-    rewards.push({ kind: "daily" }, rollSticker(s, world.id, true), { kind: "coins", amount: DAILY_COINS });
+    rewards.push({ kind: "daily" }, rollSticker(s, halloween ? "halloween" : world.id, true), { kind: "coins", amount: DAILY_COINS });
+    if (halloween && !s.pages.includes("kuerbis")) rewards.push({ kind: "page", id: "kuerbis" });
     // Folgende Sticker gegen den Stand NACH dem Tagesschatz würfeln (sonst zweimal „neu").
     s = applyRewards(s, rewards);
   }
@@ -335,7 +341,7 @@ export function lessonRewards(s: SaveState, node: PathNode, world: World, firstT
     rewards.push({ kind: "coins", amount: 50 });
     return rewards;
   }
-  if (firstTime || Math.random() < 0.45) rewards.push(rollSticker(s, world.id, false));
+  if (firstTime || Math.random() < 0.45) rewards.push(rollSticker(s, halloween && Math.random() < 0.35 ? "halloween" : world.id, false));
   rewards.push({ kind: "coins", amount: firstTime ? 20 : 10 });
   return rewards;
 }

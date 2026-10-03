@@ -1,6 +1,10 @@
 // Sammelbares: Sticker, Haustiere, Laden-Artikel.
 
 import type { WorldId } from "./skills";
+import type { SeasonId } from "./season";
+
+/** Sticker und Ausmalbilder gehören zu einer Welt oder einem Saison-Event. */
+export type CollectionGroup = WorldId | SeasonId;
 
 // ---------------------------------------------------------------------------
 // Sticker — kleine Fabelwesen, 12 pro Welt, 2 davon selten (Glitzer).
@@ -8,7 +12,7 @@ import type { WorldId } from "./skills";
 export type StickerShape = "round" | "tall" | "wide";
 export type Sticker = {
   id: string;
-  world: WorldId;
+  world: CollectionGroup;
   name: string;
   color: string;
   belly: string;
@@ -17,7 +21,7 @@ export type Sticker = {
   rare: boolean;
 };
 
-const S = (world: WorldId, name: string, color: string, belly: string, shape: StickerShape, ears: Sticker["ears"], rare = false): Sticker => ({
+const S = (world: CollectionGroup, name: string, color: string, belly: string, shape: StickerShape, ears: Sticker["ears"], rare = false): Sticker => ({
   id: `${world}-${name.toLowerCase().replace(/[^a-zäöüß]/g, "")}`,
   world,
   name,
@@ -119,9 +123,27 @@ export const STICKERS: Sticker[] = [
   S("schloss", "Weckerle", "#FF9F1C", "#FFE2B8", "round", "round"),
   S("schloss", "Sternenuhr", "#FFC531", "#FFF3BF", "round", "horn", true),
   S("schloss", "Kristallkönigin", "#7FDBFF", "#E3F5FF", "tall", "antenna", true),
+
+  // Saison: Halloween (gibt es nur im Oktober)
+  S("halloween", "Kürbi", "#FF9F1C", "#FFE2B8", "round", "antenna"),
+  S("halloween", "Gespensti", "#F4F1FF", "#FFFFFF", "tall", "none"),
+  S("halloween", "Fledermausi", "#5B4B8A", "#C9BFF0", "wide", "cat"),
+  S("halloween", "Hexenkätzchen", "#2E2A4F", "#9B8FD0", "round", "cat"),
+  S("halloween", "Spinni", "#7B4DFF", "#E6DEFF", "round", "antenna"),
+  S("halloween", "Mondkürbis", "#FFC531", "#FFF3BF", "round", "horn", true),
+
+  // Saison: Winter (Adventskalender)
+  S("winter", "Schneemann Schnuppi", "#FFFFFF", "#E3F5FF", "round", "none"),
+  S("winter", "Rentier Rudi", "#B07A4F", "#EBD3BF", "tall", "horn"),
+  S("winter", "Pinguin Pino", "#24275E", "#FFFFFF", "tall", "none"),
+  S("winter", "Eisbärchen", "#F4F1FF", "#FFFFFF", "round", "round"),
+  S("winter", "Lebkuchi", "#C8763A", "#F7C99B", "wide", "round"),
+  S("winter", "Schneeflocki", "#7FDBFF", "#E3F5FF", "round", "antenna"),
+  S("winter", "Glitzerstern", "#FFD23F", "#FFF7CC", "round", "horn", true),
+  S("winter", "Weihnachtswichtel", "#FF5D5D", "#FFE3E3", "tall", "horn", true),
 ];
 
-export function stickersOf(world: WorldId): Sticker[] {
+export function stickersOf(world: CollectionGroup): Sticker[] {
   return STICKERS.filter((s) => s.world === world);
 }
 

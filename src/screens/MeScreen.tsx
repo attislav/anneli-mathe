@@ -5,7 +5,8 @@
 import { TransferSection } from "@/ui/Transfer";
 import { BadgesSection } from "@/ui/Badges";
 import { useState } from "react";
-import { Heart, Lock, Volume2, VolumeX } from "lucide-react";
+import { ChevronRight, Heart, Lock, Volume2, VolumeX } from "lucide-react";
+import Link from "next/link";
 import { START_MASTERY } from "@/game/adaptive";
 import { PET_STAGE_NAMES, PETS, petStage } from "@/game/collection";
 import { SKILLS } from "@/game/skills";
@@ -170,6 +171,10 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
           <div className="text-sm text-ink-soft">
             Insgesamt: {save.stats.lessons} Lektionen, {save.stats.tasks} Aufgaben, davon {save.stats.tasks ? Math.round((save.stats.firstTry / save.stats.tasks) * 100) : 0} % beim ersten Versuch richtig.
           </div>
+          <Link href="/advent/?vorschau=1" className="flex items-center justify-between rounded-[22px] bg-mist p-4 font-extrabold">
+            Adventskalender vorab ansehen
+            <ChevronRight size={20} className="text-ink-soft" />
+          </Link>
           <TransferSection />
           {!confirmReset ? (
             <button onClick={() => setConfirmReset(true)} className="self-start text-sm font-extrabold text-rose-dark underline">

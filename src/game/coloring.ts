@@ -10,7 +10,7 @@
 // Die Bilder sind ein erster Satz von Hand gezeichneter Vektoren. Später
 // kommen KI-generierte Linienbilder dazu (vektorisiert, gleiche Struktur).
 
-import type { WorldId } from "./skills";
+import type { CollectionGroup } from "./collection";
 
 export type Shape =
   | { t: "path"; d: string }
@@ -23,7 +23,7 @@ export type Layer = { shape: Shape; region?: string; fixed?: string; strokeOnly?
 export type ColoringPage = {
   id: string;
   title: string;
-  world: WorldId;
+  world: CollectionGroup;
   regions: Record<string, { color: string; label?: [number, number] }>;
   layers: Layer[];
 };
@@ -492,6 +492,94 @@ export const COLORING_PAGES: ColoringPage[] = [
       R("door", P("M146 300 V256 Q170 228 194 256 V300 Z")),
       F("#1F2347", { t: "rect", x: 48, y: 196, w: 18, h: 26, rx: 9 }),
       F("#1F2347", { t: "rect", x: 272, y: 196, w: 18, h: 26, rx: 9 }),
+    ],
+  },
+  {
+    id: "kuerbis",
+    title: "Der Halloween-Kürbis",
+    world: "halloween",
+    regions: {
+      sky: { color: "#3A3E85", label: [50, 50] },
+      moon: { color: "#FFF3BF", label: [270, 70] },
+      ground: { color: "#6BD66B", label: [60, 320] },
+      pumpkin: { color: "#FF9F1C", label: [110, 220] },
+      stem: { color: "#2BB673" },
+      face: { color: "#FFD23F" },
+      bats: { color: "#1F2347" },
+    },
+    layers: [
+      R("sky", SKY),
+      R("moon", C(270, 70, 36)),
+      R("bats", P("M60 70 q10 -14 20 0 q10 -14 20 0 q-10 4 -20 14 q-10 -10 -20 -14 Z")),
+      R("bats", P("M170 46 q8 -11 16 0 q8 -11 16 0 q-8 3 -16 11 q-8 -8 -16 -11 Z")),
+      R("ground", P("M2 296 Q170 270 338 296 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("pumpkin", E(170, 220, 118, 86)),
+      L("M130 140 Q112 220 130 300 M210 140 Q228 220 210 300 M170 134 V306"),
+      R("stem", P("M160 140 Q158 112 176 100 L184 108 Q172 118 180 140 Z")),
+      R("face", P("M110 196 L136 176 L142 204 Z M230 196 L204 176 L198 204 Z")),
+      R("face", P("M108 236 Q170 290 232 236 L216 244 L204 232 L190 250 L176 236 L162 252 L150 236 L136 248 L124 236 Z")),
+    ],
+  },
+  {
+    id: "schneemann",
+    title: "Der Schneemann",
+    world: "winter",
+    regions: {
+      sky: { color: "#C9E9FF", label: [50, 50] },
+      snow: { color: "#FFFFFF", label: [60, 322] },
+      body: { color: "#F4F1FF", label: [170, 250] },
+      head: { color: "#F4F1FF" },
+      hat: { color: "#24275E", label: [170, 62] },
+      scarf: { color: "#FF5D5D", label: [210, 168] },
+      nose: { color: "#FF9F1C" },
+      flakes: { color: "#FFFFFF" },
+    },
+    layers: [
+      R("sky", SKY),
+      R("flakes", C(50, 120, 7)),
+      R("flakes", C(290, 90, 6)),
+      R("flakes", C(260, 200, 5)),
+      R("flakes", C(70, 220, 6)),
+      R("snow", P("M2 300 Q170 280 338 300 V320 a18 18 0 0 1 -18 18 H20 a18 18 0 0 1 -18 -18 Z")),
+      R("body", C(170, 246, 66)),
+      R("head", C(170, 130, 46)),
+      R("hat", P("M128 92 H212 V84 H196 V30 H144 V84 H128 Z")),
+      R("scarf", P("M126 166 Q170 186 214 166 L216 182 Q170 200 124 182 Z M190 182 L206 222 L188 226 L180 188 Z")),
+      R("nose", P("M170 132 L206 140 L170 146 Z")),
+      F("#1F2347", C(154, 118, 5)),
+      F("#1F2347", C(186, 118, 5)),
+      F("#1F2347", C(170, 228, 6)),
+      F("#1F2347", C(170, 256, 6)),
+      F("#1F2347", C(170, 284, 6)),
+    ],
+  },
+  {
+    id: "tannenbaum",
+    title: "Der Tannenbaum",
+    world: "winter",
+    regions: {
+      wall: { color: "#FFE8EF", label: [50, 50] },
+      tree: { color: "#2BB673", label: [170, 200] },
+      trunk: { color: "#B07A4F" },
+      star: { color: "#FFD23F" },
+      balls: { color: "#FF5D5D" },
+      gifts: { color: "#7B4DFF", label: [70, 300] },
+      ribbon: { color: "#FFD23F" },
+    },
+    layers: [
+      R("wall", SKY),
+      R("trunk", { t: "rect", x: 152, y: 270, w: 36, h: 40 }),
+      R("tree", P("M170 50 L250 160 H210 L276 270 H64 L130 160 H90 Z")),
+      R("star", P(starPath(170, 46, 24))),
+      R("balls", C(140, 150, 9)),
+      R("balls", C(196, 130, 9)),
+      R("balls", C(120, 236, 10)),
+      R("balls", C(214, 214, 10)),
+      R("balls", C(170, 190, 9)),
+      R("gifts", { t: "rect", x: 40, y: 270, w: 66, h: 52, rx: 6 }),
+      R("gifts", { t: "rect", x: 236, y: 280, w: 60, h: 42, rx: 6 }),
+      R("ribbon", { t: "rect", x: 68, y: 270, w: 10, h: 52 }),
+      R("ribbon", { t: "rect", x: 261, y: 280, w: 10, h: 42 }),
     ],
   },
 ];

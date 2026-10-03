@@ -2,11 +2,12 @@
 
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
+import { activeSeason, adventDay } from "@/game/season";
 import { duePractice, PRACTICE_ID } from "@/game/practice";
 import { claimBadges } from "@/game/badges";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Archive, Calculator, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
+import { Archive, Calculator, Gift, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
 import { TIER_NAMES, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import {
@@ -74,6 +75,8 @@ export function PathScreen({ save }: { save: SaveState }) {
           {Math.min(lessonsToday, DAILY_GOAL)} / {DAILY_GOAL}
         </div>
       </div>
+
+      <SeasonBanner />
 
       {practiceDue > 0 && (
         <Link href={`/lektion/?n=${PRACTICE_ID}`} className="anim-pop mx-3.5 mt-2.5 flex items-center gap-3 rounded-[20px] bg-sun-light px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
@@ -471,4 +474,38 @@ function NodeSheet({ save, world, node, onClose }: { save: SaveState; world: Wor
       </div>
     </Sheet>
   );
+}
+
+/** Halloween im Oktober, Adventskalender im Dezember. */
+function SeasonBanner() {
+  const season = activeSeason();
+  if (season === "halloween") {
+    return (
+      <div className="relative mx-3.5 mt-2.5 overflow-hidden rounded-[20px] bg-[#2E2A4F] px-4 py-3 text-white sm:mx-auto sm:max-w-[548px]">
+        <svg viewBox="52 0 68 40" width="68" height="40" aria-hidden="true" className="absolute bottom-3 right-3 opacity-90">
+          <path d="M10 18 q6 -9 12 0 q6 -9 12 0 q-6 3 -12 9 q-6 -6 -12 -9 Z M60 8 q5 -7 10 0 q5 -7 10 0 q-5 2 -10 7 q-5 -5 -10 -7 Z" fill="#9B8FD0" />
+          <ellipse cx="102" cy="28" rx="14" ry="11" fill="#FF9F1C" />
+          <path d="M101 17 q0 -6 4 -8" stroke="#2BB673" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M96 25 l3 -3 l2 3 Z M104 25 l3 -3 l2 3 Z M96 31 q6 4 12 0" stroke="#2E2A4F" strokeWidth="1.6" fill="#2E2A4F" />
+        </svg>
+        <div className="pr-24 font-display text-xl font-semibold leading-tight text-[#FFB648]">Halloween im Sternenpfad!</div>
+        <div className="pr-24 text-sm text-white/80">Gruselig-süße Kürbis-Sticker verstecken sich jetzt in den Truhen.</div>
+      </div>
+    );
+  }
+  if (season === "winter" && adventDay() > 0) {
+    return (
+      <Link href="/advent/" className="anim-pop mx-3.5 mt-2.5 flex items-center gap-3 rounded-[20px] bg-[#1B2050] px-4 py-3 text-white sm:mx-auto sm:max-w-[548px]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5484D]">
+          <Gift size={22} strokeWidth={2.4} />
+        </span>
+        <span className="flex-1">
+          <span className="block font-display text-xl font-semibold">Adventskalender</span>
+          <span className="block text-sm text-white/80">Türchen {adventDay()} wartet auf dich!</span>
+        </span>
+        <ChevronRight size={20} className="text-white/70" />
+      </Link>
+    );
+  }
+  return null;
 }
