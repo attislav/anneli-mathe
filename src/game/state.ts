@@ -381,6 +381,11 @@ export function updateSettings(patch: Partial<SaveState["settings"]>): void {
   update((s) => ({ ...s, settings: { ...s.settings, ...patch } }));
 }
 
+/** Spielstand von einem anderen Gerät übernehmen (ersetzt den aktuellen). */
+export function replaceSave(incoming: Partial<SaveState>): void {
+  update(() => ({ ...emptyState(), ...incoming, v: 1, settings: { ...emptyState().settings, ...incoming.settings } }));
+}
+
 export function resetAll(): void {
   update(() => emptyState());
 }

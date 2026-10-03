@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
 import { RegisterSW } from "@/ui/RegisterSW";
+import { ImportFromLink } from "@/ui/Transfer";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-full font-sans font-bold">
         {children}
         <RegisterSW />
+        <ImportFromLink />
       </body>
     </html>
   );

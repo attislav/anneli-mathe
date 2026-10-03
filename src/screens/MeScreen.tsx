@@ -2,6 +2,7 @@
 
 // „Ich": Haustier füttern, Level, Statistik, Einstellungen und die Eltern-Ecke.
 
+import { TransferSection } from "@/ui/Transfer";
 import { useState } from "react";
 import { Heart, Lock, Volume2, VolumeX } from "lucide-react";
 import { START_MASTERY } from "@/game/adaptive";
@@ -166,6 +167,7 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
           <div className="text-sm text-ink-soft">
             Insgesamt: {save.stats.lessons} Lektionen, {save.stats.tasks} Aufgaben, davon {save.stats.tasks ? Math.round((save.stats.firstTry / save.stats.tasks) * 100) : 0} % beim ersten Versuch richtig.
           </div>
+          <TransferSection />
           {!confirmReset ? (
             <button onClick={() => setConfirmReset(true)} className="self-start text-sm font-extrabold text-rose-dark underline">
               Spielstand zurücksetzen
