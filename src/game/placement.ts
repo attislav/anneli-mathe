@@ -20,6 +20,7 @@ const PROBE: Record<WorldId, string[]> = {
   baeckerei: ["geteilt", "halbieren"],
   schloss: ["uhrLesen", "zeitWoerter"],
   ozean: ["formen", "spiegeln"],
+  werkstatt: ["lineal", "einheiten"],
 };
 
 const LEVEL: Level = 3;

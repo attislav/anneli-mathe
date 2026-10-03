@@ -292,7 +292,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-11 ✓ | **Saison: Halloween + Adventskalender** | Event-Rahmen; Halloween-Deko im Oktober; 24 Türchen ab 1.12. | Eltern können Kalender vorab ansehen |
 | AP-12 ✓ | **Welt 8: Formen-Ozean** | Formen, Symmetrie, Muster; Format „Spiegeln im Gitter" | 9 Knoten spielbar |
 | AP-12b ✓ | **Lernbericht (pro Gerät)** | Jede erste Antwort wird mitgeschrieben (Thema, Stufe, richtig?, Zeit). Eltern-Ecke → Bericht: Stärken, Problemthemen, Trefferquote + Trend pro Thema, Zeit pro Aufgabe, Übezeit pro Tag, typische Fehler | Bericht zeigt echte Daten; zentrales Dashboard erst mit AP-20 |
-| AP-13 | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |
+| AP-13 ✓ | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |
 | AP-14 | **Welt 10: Detektivbüro** | Sachaufgaben, Diagramme | 9 Knoten spielbar |
 | AP-14b | **Puzzle-Ausmalbilder** | Geheime KI-Malvorlagen (s/w, dicke Linien) in 9 Teilen; Teile zufällig wie Sticker (Truhen, Lektionen, Tagesschatz), Doppelte → Münzen; komplett → in der App ausmalen oder auf A4 drucken | 6 Bilder sammelbar, Druck sieht sauber aus |
 | AP-15 | **Schul-Modus** | Eltern wählen Schulthema → Empfehlung auf dem Pfad | in der Eltern-Ecke einstellbar |

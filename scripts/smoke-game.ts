@@ -21,6 +21,17 @@ function cents(s: string): number {
   return NaN;
 }
 
+/** „1 m 20 cm", „120 cm", „2 m" → cm. */
+function lengthCm(s: string): number {
+  let m = s.match(/^(\d+) m (\d+) cm$/);
+  if (m) return Number(m[1]) * 100 + Number(m[2]);
+  m = s.match(/^(\d+) m$/);
+  if (m) return Number(m[1]) * 100;
+  m = s.match(/^(\d+) cm$/);
+  if (m) return Number(m[1]);
+  return NaN;
+}
+
 const RUNS = 3000;
 const errors: string[] = [];
 const formats = new Map<string, Set<Format>>();
@@ -94,12 +105,16 @@ function check(skill: string, level: Level, t: TaskDraft) {
       const [l, r] = t.values ?? [val(t.left), val(t.right)];
       const sym = l < r ? "<" : l > r ? ">" : "=";
       if (sym !== t.answer) fail(skill, level, "Vergleich falsch", t);
-      if (t.values && (cents(t.left) !== l || cents(t.right) !== r)) fail(skill, level, "Geldbetrag passt nicht zum Wert", t);
+      if (t.values && /€|ct/.test(t.left + t.right) && (cents(t.left) !== l || cents(t.right) !== r)) fail(skill, level, "Geldbetrag passt nicht zum Wert", t);
+      if (t.values && /\bm\b|cm/.test(t.left + t.right) && (lengthCm(t.left) !== l || lengthCm(t.right) !== r)) fail(skill, level, "Länge passt nicht zum Wert", t);
       break;
     }
     case "money-build":
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
+      break;
+    case "ruler":
+      if (t.target < 1 || t.target > t.max || t.max > 20) fail(skill, level, "Lineal-Ziel ungültig", t);
       break;
     case "mirror": {
       const keys = t.cells.map(([r, c]) => `${r},${c}`);

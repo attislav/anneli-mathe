@@ -137,6 +137,19 @@ export const STICKERS: Sticker[] = [
   S("ozean", "Perlenmuschel", "#F4F1FF", "#FFFFFF", "wide", "horn", true),
   S("ozean", "Regenbogenwal", "#9BE3EC", "#FFFFFF", "wide", "round", true),
 
+  S("werkstatt", "Schraubi", "#9AA6B8", "#E3E8F0", "round", "antenna"),
+  S("werkstatt", "Hammerhans", "#D9822B", "#F7C99B", "tall", "none"),
+  S("werkstatt", "Maßbandmaus", "#FFC531", "#FFF3BF", "round", "round"),
+  S("werkstatt", "Zahnradzwerg", "#C99A1E", "#FFF1C4", "round", "horn"),
+  S("werkstatt", "Linealix", "#FFE7A8", "#FFFFFF", "tall", "antenna"),
+  S("werkstatt", "Hobelchen", "#B07A4F", "#EBD3BF", "wide", "none"),
+  S("werkstatt", "Robbi", "#4CC3FF", "#D3F1FF", "round", "antenna"),
+  S("werkstatt", "Zangenzora", "#FF5D5D", "#FFD1D1", "wide", "horn"),
+  S("werkstatt", "Magnetmo", "#E5484D", "#9AA6B8", "round", "horn"),
+  S("werkstatt", "Pinselpia", "#9B7BFF", "#E6DEFF", "tall", "cat"),
+  S("werkstatt", "Goldschraube", "#FFC531", "#FFF7CC", "round", "horn", true),
+  S("werkstatt", "Erfinderin Eule", "#7B4DFF", "#E6DEFF", "round", "cat", true),
+
   // Saison: Halloween (gibt es nur im Oktober)
   S("halloween", "Kürbi", "#FF9F1C", "#FFE2B8", "round", "antenna"),
   S("halloween", "Gespensti", "#F4F1FF", "#FFFFFF", "tall", "none"),

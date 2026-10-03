@@ -270,10 +270,38 @@ export const WORLDS: World[] = [
       { id: "ozean-boss", kind: "boss", title: "Krake Kringel", skills: ["formen", "spiegeln", "muster", "koerper"], coloring: "seestern" },
     ],
   },
+  {
+    id: "werkstatt",
+    index: 8,
+    name: "Mess-Werkstatt",
+    tagline: "Längen messen",
+    starsToEnter: 174,
+    theme: { ground: "#FFF4E6", band: "#D9822B", bandShade: "#A85F17", deco: "#F7C99B", decoDark: "#C98A4B" },
+    boss: { name: "Roboter Bolzi", color: "#9AA6B8", shade: "#6E7A8E" },
+    nodes: [
+      { id: "werkstatt-1", kind: "trick", title: "Lineal anlegen", skills: ["lineal"] },
+      { id: "werkstatt-2", kind: "lesson", title: "Längen schätzen", skills: ["schaetzen"] },
+      { id: "werkstatt-3", kind: "lesson", title: "Meter und Zentimeter", skills: ["einheiten"] },
+      chest("werkstatt-4", "roboter"),
+      { id: "werkstatt-5", kind: "lesson", title: "Mit Längen rechnen", skills: ["laengenRechnen"] },
+      { id: "werkstatt-6", kind: "lesson", title: "Längen vergleichen", skills: ["laengenVergleichen"] },
+      { id: "werkstatt-7", kind: "lesson", title: "Messen & schätzen", skills: ["lineal", "schaetzen"] },
+      { id: "werkstatt-8", kind: "review", title: "Gemischt", skills: ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"] },
+      round2("werkstatt-9", "Lineal 2", ["lineal"]),
+      round2("werkstatt-10", "Meter und Zentimeter 2", ["einheiten"]),
+      chest("werkstatt-11"),
+      round2("werkstatt-12", "Längen schätzen 2", ["schaetzen"]),
+      round2("werkstatt-13", "Mit Längen rechnen 2", ["laengenRechnen"]),
+      round2("werkstatt-14", "Längen vergleichen 2", ["laengenVergleichen"]),
+      chest("werkstatt-15"),
+      mix2("werkstatt-16", ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"]),
+      { id: "werkstatt-boss", kind: "boss", title: "Roboter Bolzi", skills: ["lineal", "einheiten", "laengenRechnen", "laengenVergleichen"], coloring: "werkzeugkiste" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
+export const COMING_SOON = ["Detektivbüro", "Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

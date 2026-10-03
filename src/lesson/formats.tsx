@@ -5,10 +5,11 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import type { ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
 import { PlateArt, TreatIcon } from "@/ui/Bakery";
 import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
 import { ShapeGroup, ShapeIcon, SolidArt } from "@/ui/Shapes";
+import { cmWidth, RULER_PAD, RulerItemArt, RulerScale } from "@/ui/Ruler";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
@@ -42,6 +43,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <MirrorView {...props} task={task} />;
     case "pattern":
       return <PatternView {...props} task={task} />;
+    case "ruler":
+      return <RulerView {...props} task={task} />;
   }
 }
 
@@ -286,11 +289,11 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-center gap-3">
-        <div className={`${card} flex h-[110px] flex-1 items-center justify-center font-display text-[clamp(1.8rem,8vw,2.8rem)] font-semibold`}>{task.left}</div>
+        <div className={`${card} flex h-[110px] flex-1 items-center justify-center px-2 text-center font-display font-semibold leading-tight ${task.left.length > 7 ? "text-[clamp(1.2rem,5.5vw,1.9rem)]" : "text-[clamp(1.8rem,8vw,2.8rem)]"}`}>{task.left}</div>
         <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full border-4 border-dashed border-grape font-display text-5xl font-semibold" style={{ background: shown ? c.bg : "transparent", color: shown ? c.fg : "#7B4DFF", borderStyle: shown ? "solid" : "dashed" }}>
           {shown ?? ""}
         </div>
-        <div className={`${card} flex h-[110px] flex-1 items-center justify-center font-display text-[clamp(1.8rem,8vw,2.8rem)] font-semibold`}>{task.right}</div>
+        <div className={`${card} flex h-[110px] flex-1 items-center justify-center px-2 text-center font-display font-semibold leading-tight ${task.right.length > 7 ? "text-[clamp(1.2rem,5.5vw,1.9rem)]" : "text-[clamp(1.8rem,8vw,2.8rem)]"}`}>{task.right}</div>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {(["<", "=", ">"] as const).map((sym) => (
@@ -320,6 +323,14 @@ function VisualCard({ visual }: { visual: Visual }) {
     return (
       <div className={`${card} px-3 py-4`}>
         <ShapeGroup items={visual.items} scatter={visual.scatter} />
+      </div>
+    );
+  }
+  if (visual.kind === "ruler") {
+    return (
+      <div className={`${card} flex flex-col items-center px-2 py-4`}>
+        <RulerItemArt item={visual.item} from={visual.from} to={visual.to} max={visual.max} width={RULER_W} />
+        <RulerScale max={visual.max} width={RULER_W} />
       </div>
     );
   }
@@ -609,6 +620,49 @@ function PatternView({ task, status, onAnswer }: FormatProps<PatternTask>) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+// --- Linie am Lineal zeichnen -----------------------------------------------
+
+const RULER_W = 320;
+
+function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
+  const [end, setEnd] = useState<number | null>(null);
+  const locked = status !== "ask";
+  const u = cmWidth(RULER_W, task.max);
+  const shown = status === "reveal" ? task.target : end;
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} flex flex-col items-center px-2 py-4`}>
+        <svg viewBox={`0 0 ${RULER_W} 24`} width={RULER_W} height={24} aria-hidden="true" className="block">
+          {shown !== null && <line x1={RULER_PAD} x2={RULER_PAD + shown * u} y1={12} y2={12} stroke={status === "reveal" ? "#FFB648" : "#7B4DFF"} strokeWidth="6" strokeLinecap="round" />}
+          <circle cx={RULER_PAD} cy={12} r={5} fill="#7B4DFF" />
+        </svg>
+        <div className="relative" style={{ width: RULER_W }}>
+          <RulerScale max={task.max} width={RULER_W} />
+          <div className="absolute inset-0 flex" style={{ paddingLeft: RULER_PAD - u / 2 }}>
+            {Array.from({ length: task.max }, (_, i) => i + 1).map((cm) => (
+              <button
+                key={cm}
+                aria-label={`${cm} Zentimeter`}
+                disabled={locked}
+                onClick={() => {
+                  sfx.tap();
+                  setEnd(cm);
+                }}
+                className="h-full"
+                style={{ width: u, marginLeft: cm === 1 ? u : 0 }}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mt-2 font-display text-lg font-semibold text-ink-soft">{end === null ? "Tippe auf das Lineal" : `${end} cm`}</div>
+      </div>
+      <Button tone="grape" disabled={locked || end === null} onClick={() => onAnswer(end === task.target)}>
+        Prüfen
+      </Button>
     </div>
   );
 }
