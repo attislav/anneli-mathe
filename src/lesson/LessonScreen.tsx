@@ -2,6 +2,7 @@
 
 // Eine Lektion spielen: (Trick) → Aufgaben → Ergebnis mit Truhe.
 
+import { claimBadges } from "@/game/badges";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Volume2, X } from "lucide-react";
 import { starsFor, type Tier } from "@/game/adaptive";
@@ -81,6 +82,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
       const xp = 10 + r.firstTry * 3 + (isBoss ? 20 : 0);
       const before = levelInfo(s.xp);
       recordLesson({ node, world, tier, stars, coins: r.coins, xp, tasks: r.done, firstTry: r.firstTry, mastery: r.mastery, rewards });
+      rewards.push(...claimBadges(readSave()));
       const after = levelInfo(readSave().xp);
       sfx.fanfare();
       setOutcome({ stars, coins: r.coins, xp, firstTry: r.firstTry, done: r.done, rewards, levelBefore: before.level, levelAfter: after, bestStreak: r.bestStreak });

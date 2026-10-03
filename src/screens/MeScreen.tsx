@@ -3,6 +3,7 @@
 // „Ich": Haustier füttern, Level, Statistik, Einstellungen und die Eltern-Ecke.
 
 import { TransferSection } from "@/ui/Transfer";
+import { BadgesSection } from "@/ui/Badges";
 import { useState } from "react";
 import { Heart, Lock, Volume2, VolumeX } from "lucide-react";
 import { START_MASTERY } from "@/game/adaptive";
@@ -73,6 +74,8 @@ export function MeScreen({ save }: { save: SaveState }) {
           <Stat value={streak(save)} label="Tage am Stück" />
         </div>
       </div>
+
+      <BadgesSection save={save} />
 
       <div className="mt-4 flex flex-col gap-2 rounded-[24px] bg-white p-4">
         <Toggle label="Töne" on={save.settings.sound} onChange={(v) => updateSettings({ sound: v })} icon={save.settings.sound ? <Volume2 /> : <VolumeX />} />

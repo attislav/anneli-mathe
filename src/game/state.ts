@@ -41,6 +41,10 @@ export type SaveState = {
   settings: { sound: boolean; autoRead: boolean; arcadeMinutes: number };
   stats: { tasks: number; firstTry: number; lessons: number };
   games: Record<string, number>;
+  /** Verliehene Abzeichen (IDs). */
+  badges: string[];
+  /** Wie viele Tagesschätze schon geöffnet wurden. */
+  dailyChests: number;
 };
 
 export function emptyState(): SaveState {
@@ -66,6 +70,8 @@ export function emptyState(): SaveState {
     settings: { sound: true, autoRead: false, arcadeMinutes: 15 },
     stats: { tasks: 0, firstTry: 0, lessons: 0 },
     games: {},
+    badges: [],
+    dailyChests: 0,
   };
 }
 
@@ -224,7 +230,10 @@ export const DAILY_GOAL = 3;
 export type Reward =
   | { kind: "coins"; amount: number }
   | { kind: "sticker"; id: string; duplicate: boolean }
-  | { kind: "page"; id: string };
+  | { kind: "page"; id: string }
+  | { kind: "badge"; id: string }
+  /** Tagesschatz: die erste Lektion des Tages gibt extra. */
+  | { kind: "daily" };
 
 const DUPLICATE_COINS = 15;
 
@@ -245,6 +254,7 @@ export function applyRewards(s: SaveState, rewards: Reward[]): SaveState {
       if (r.duplicate) next = { ...next, coins: next.coins + DUPLICATE_COINS };
     }
     if (r.kind === "page" && !next.pages.includes(r.id)) next.pages.push(r.id);
+    if (r.kind === "daily") next = { ...next, dailyChests: next.dailyChests + 1 };
   }
   return next;
 }
@@ -301,9 +311,21 @@ export function recordLesson(o: LessonOutcome): void {
   });
 }
 
+export const DAILY_COINS = 25;
+
+/** Ist heute noch keine Lektion geschafft? Dann wartet der Tagesschatz. */
+export function dailyChestWaiting(s: SaveState): boolean {
+  return s.today.day !== todayKey() || s.today.lessons === 0;
+}
+
 /** Belohnung fürs Lektionsende — wird VOR dem Öffnen der Truhe gewürfelt. */
 export function lessonRewards(s: SaveState, node: PathNode, world: World, firstTime: boolean): Reward[] {
   const rewards: Reward[] = [];
+  if (dailyChestWaiting(s)) {
+    rewards.push({ kind: "daily" }, rollSticker(s, world.id, true), { kind: "coins", amount: DAILY_COINS });
+    // Folgende Sticker gegen den Stand NACH dem Tagesschatz würfeln (sonst zweimal „neu").
+    s = applyRewards(s, rewards);
+  }
   if (node.kind === "boss") {
     if (firstTime && node.coloring) rewards.push({ kind: "page", id: node.coloring });
     rewards.push(rollSticker(s, world.id, true));

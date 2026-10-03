@@ -2,6 +2,7 @@
 
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
+import { claimBadges } from "@/game/badges";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Calculator, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
@@ -10,6 +11,8 @@ import { petStage } from "@/game/collection";
 import {
   currentNode,
   DAILY_GOAL,
+  dailyChestWaiting,
+  readSave,
   isNodeDone,
   isNodeOpen,
   levelInfo,
@@ -48,15 +51,19 @@ export function PathScreen({ save }: { save: SaveState }) {
     currentRef.current?.scrollIntoView({ block: "center" });
   }, []);
 
-  const lessonsToday = save.today.lessons;
+  const dailyWaiting = dailyChestWaiting(save);
+  const lessonsToday = dailyWaiting ? 0 : save.today.lessons;
 
   return (
     <div className="min-h-dvh pb-28">
       <TopBar save={save} />
 
       <div className="mx-3.5 mt-3 flex items-center gap-3 rounded-[20px] bg-white px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
+        <div className={`relative shrink-0 ${dailyWaiting ? "anim-wiggle" : "opacity-60"}`} title={dailyWaiting ? "Tagesschatz wartet" : "Tagesschatz geöffnet"}>
+          <ChestArt size={40} open={!dailyWaiting} />
+        </div>
         <div className="flex-1">
-          <div className="text-sm font-extrabold text-ink-soft">{lessonsToday >= DAILY_GOAL ? "Tagesziel geschafft!" : "Tagesziel"}</div>
+          <div className="text-sm font-extrabold text-ink-soft">{dailyWaiting ? "Tagesschatz wartet – schaff eine Lektion!" : lessonsToday >= DAILY_GOAL ? "Tagesziel geschafft!" : "Tagesziel"}</div>
           <div className="mt-1 h-3 overflow-hidden rounded-full bg-grape-light">
             <div className="h-full rounded-full bg-grape transition-all" style={{ width: `${Math.min(100, (lessonsToday / DAILY_GOAL) * 100)}%` }} />
           </div>
@@ -384,7 +391,8 @@ function NodeSheet({ save, world, node, onClose }: { save: SaveState; world: Wor
                 aria-label="Truhe öffnen"
                 onClick={() => {
                   sfx.chest();
-                  setChestRewards(openChest(node, world));
+                  const got = openChest(node, world);
+                  setChestRewards([...got, ...claimBadges(readSave())]);
                 }}
               >
                 <ChestArt size={170} className="anim-shake" />
