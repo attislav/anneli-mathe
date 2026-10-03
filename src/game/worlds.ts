@@ -12,6 +12,7 @@
 // schon auf Bronze). So wird der Pfad lang, ohne sich zu wiederholen.
 
 import type { WorldId } from "./skills";
+import type { Level, TaskDraft } from "./types";
 
 export type NodeKind = "lesson" | "trick" | "review" | "chest" | "boss";
 
@@ -24,6 +25,8 @@ export type PathNode = {
   coloring?: string;
   /** Zweite Runde: Aufgaben eine Stufe schwerer. */
   boost?: 1;
+  /** Übungskiste: feste Aufgaben statt neu erzeugter. */
+  practice?: (TaskDraft & { skillId: string; level: Level })[];
 };
 
 const chest = (id: string, coloring?: string): PathNode => ({ id, kind: "chest", title: "Schatzkiste", skills: [], coloring });

@@ -12,6 +12,7 @@ import { uid } from "@/game/random";
 export const BOSS_HP = 7;
 
 export function taskCount(node: PathNode): number {
+  if (node.practice) return node.practice.length;
   if (node.kind === "trick") return 5;
   if (node.kind === "review") return 8;
   if (node.kind === "boss") return BOSS_HP;
@@ -41,6 +42,8 @@ export function startRun(node: PathNode, tier: Tier, mastery: Record<string, num
 }
 
 export function nextTask(run: Run): Task {
+  const fixed = run.node.practice?.[run.done];
+  if (fixed) return { ...fixed, id: uid() } as Task;
   const skillId = run.node.skills.length === 1 ? run.node.skills[0] : pickWeakSkill(run.node.skills, run.mastery);
   // Zweite Runde (`boost`): eine Stufe schwerer, aber höchstens Meister.
   const tier = Math.min(2, run.tier + (run.node.boost ?? 0)) as Tier;

@@ -3,6 +3,7 @@
 // Eine Lektion spielen: (Trick) → Aufgaben → Ergebnis mit Truhe.
 
 import { claimBadges } from "@/game/badges";
+import { notePractice, practiceNode, PRACTICE_ID, reviewPractice } from "@/game/practice";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Volume2, X } from "lucide-react";
 import { starsFor, type Tier } from "@/game/adaptive";
@@ -27,7 +28,8 @@ const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
 const CHEERS = ["Du schaffst das!", "Schau genau hin.", "Ich glaub an dich!", "Los geht's!", "Denk an den Trick!"];
 
 export function LessonScreen({ save, nodeId, tier }: { save: SaveState; nodeId: string; tier: Tier }) {
-  const found = findNode(nodeId);
+  // Einmal festhalten: die Übungskiste ändert sich, während man sie spielt.
+  const [found] = useState(() => (nodeId === PRACTICE_ID ? practiceNode(save) : findNode(nodeId)));
   if (!found || found.node.kind === "chest") {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6 text-center">
@@ -128,6 +130,8 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   const onAnswer = (correct: boolean) => {
     if (status !== "ask") return;
     if (attempt === 0) {
+      if (node.practice) reviewPractice(task, correct);
+      else notePractice(task, correct);
       const res = firstAnswer(run, task, correct);
       setRun(res.run);
       if (correct) {

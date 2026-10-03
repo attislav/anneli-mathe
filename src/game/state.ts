@@ -12,6 +12,7 @@ import { STICKERS, SHOP, type PetSpecies } from "./collection";
 import { WORLDS, starNodes, type PathNode, type World } from "./worlds";
 import { pick } from "./random";
 import type { WorldId } from "./skills";
+import type { Level, TaskDraft } from "./types";
 
 const KEY = "sternenpfad.v1";
 
@@ -45,7 +46,13 @@ export type SaveState = {
   badges: string[];
   /** Wie viele Tagesschätze schon geöffnet wurden. */
   dailyChests: number;
+  /** Übungskiste: falsch gelöste Aufgaben, die später wiederkommen. */
+  practice: PracticeItem[];
 };
+
+/** Eine Aufgabe in der Übungskiste. `box` 0–2: nach 1, 3, 7 Tagen wieder dran. */
+export type PracticeItem = { key: string; task: TaskDraftWithSkill; box: number; due: string };
+export type TaskDraftWithSkill = TaskDraft & { skillId: string; level: Level };
 
 export function emptyState(): SaveState {
   return {
@@ -72,6 +79,7 @@ export function emptyState(): SaveState {
     games: {},
     badges: [],
     dailyChests: 0,
+    practice: [],
   };
 }
 
@@ -301,7 +309,7 @@ export function recordLesson(o: LessonOutcome): void {
       xp: s.xp + o.xp,
       coins: s.coins + o.coins,
       mastery: { ...s.mastery, ...o.mastery },
-      nodes: { ...s.nodes, [o.node.id]: { stars, plays: (s.nodes[o.node.id]?.plays ?? 0) + 1 } },
+      nodes: o.node.practice ? s.nodes : { ...s.nodes, [o.node.id]: { stars, plays: (s.nodes[o.node.id]?.plays ?? 0) + 1 } },
       today: { ...s.today, lessons: s.today.lessons + 1 },
       stats: { tasks: s.stats.tasks + o.tasks, firstTry: s.stats.firstTry + o.firstTry, lessons: s.stats.lessons + 1 },
     };

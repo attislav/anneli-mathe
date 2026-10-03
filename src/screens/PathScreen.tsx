@@ -2,10 +2,11 @@
 
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
+import { duePractice, PRACTICE_ID } from "@/game/practice";
 import { claimBadges } from "@/game/badges";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Calculator, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
+import { Archive, Calculator, Check, ChevronRight, Lightbulb, Lock, Shuffle } from "lucide-react";
 import { TIER_NAMES, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import {
@@ -52,6 +53,7 @@ export function PathScreen({ save }: { save: SaveState }) {
   }, []);
 
   const dailyWaiting = dailyChestWaiting(save);
+  const practiceDue = duePractice(save).length;
   const lessonsToday = dailyWaiting ? 0 : save.today.lessons;
 
   return (
@@ -72,6 +74,21 @@ export function PathScreen({ save }: { save: SaveState }) {
           {Math.min(lessonsToday, DAILY_GOAL)} / {DAILY_GOAL}
         </div>
       </div>
+
+      {practiceDue > 0 && (
+        <Link href={`/lektion/?n=${PRACTICE_ID}`} className="anim-pop mx-3.5 mt-2.5 flex items-center gap-3 rounded-[20px] bg-sun-light px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sun text-ink">
+            <Archive size={20} strokeWidth={2.4} />
+          </span>
+          <span className="flex-1">
+            <span className="block font-extrabold">Übungskiste</span>
+            <span className="block text-sm text-ink-soft">
+              {practiceDue === 1 ? "1 Aufgabe" : `${Math.min(practiceDue, 8)} Aufgaben`} von neulich – nochmal probieren!
+            </span>
+          </span>
+          <ChevronRight size={20} className="text-ink-soft" />
+        </Link>
+      )}
 
       <Link href="/training/" className="mx-3.5 mt-2.5 flex items-center gap-3 rounded-[20px] bg-white px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-light text-leaf-dark">
