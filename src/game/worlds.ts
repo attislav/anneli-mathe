@@ -211,10 +211,38 @@ export const WORLDS: World[] = [
       { id: "baeckerei-boss", kind: "boss", title: "Teigmonster Knetbert", skills: ["geteilt", "umkehr", "halbieren", "backSach"], coloring: "cupcake" },
     ],
   },
+  {
+    id: "schloss",
+    index: 6,
+    name: "Uhrenschloss",
+    tagline: "Uhr & Zeit",
+    starsToEnter: 130,
+    theme: { ground: "#EEF0FF", band: "#5B6BD6", bandShade: "#3E4CB0", deco: "#C9D0FF", decoDark: "#9AA6F0" },
+    boss: { name: "Graf Tick-Tack", color: "#9B7BFF", shade: "#6F4FD8" },
+    nodes: [
+      { id: "schloss-1", kind: "lesson", title: "Uhr lesen", skills: ["uhrLesen"] },
+      { id: "schloss-2", kind: "lesson", title: "Uhr stellen", skills: ["uhrStellen"] },
+      { id: "schloss-3", kind: "trick", title: "Viertel und halb", skills: ["zeitWoerter"] },
+      chest("schloss-4", "wecker"),
+      { id: "schloss-5", kind: "lesson", title: "Stunden und Minuten", skills: ["zeitEinheiten"] },
+      { id: "schloss-6", kind: "trick", title: "Wie lange dauert es?", skills: ["zeitspanne"] },
+      { id: "schloss-7", kind: "lesson", title: "Uhr lesen & stellen", skills: ["uhrLesen", "uhrStellen"] },
+      { id: "schloss-8", kind: "review", title: "Gemischt", skills: ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne", "zeitEinheiten"] },
+      round2("schloss-9", "Uhr lesen 2", ["uhrLesen"]),
+      round2("schloss-10", "Uhr stellen 2", ["uhrStellen"]),
+      chest("schloss-11"),
+      round2("schloss-12", "Viertel und halb 2", ["zeitWoerter"]),
+      round2("schloss-13", "Wie lange? 2", ["zeitspanne"]),
+      round2("schloss-14", "Stunden und Minuten 2", ["zeitEinheiten"]),
+      chest("schloss-15"),
+      mix2("schloss-16", ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne", "zeitEinheiten"]),
+      { id: "schloss-boss", kind: "boss", title: "Graf Tick-Tack", skills: ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne"], coloring: "schloss" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Uhrenschloss", "Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
+export const COMING_SOON = ["Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

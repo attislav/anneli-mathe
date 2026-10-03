@@ -90,6 +90,11 @@ export const SCENERY: Partial<Record<WorldId, Atlas[]>> = {
     { local: "/art/welt-baeckerei-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/e0d8f50e-f594-493d-b585-39ea4e1753f5.webp", cols: 1, rows: 1 },
     { local: "/art/welt-baeckerei-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/8d42442b-3990-479d-9435-56272ad9d997.webp", cols: 1, rows: 1 },
   ],
+  schloss: [
+    { local: "/art/welt-schloss-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/b2b20d82-b67f-409f-802f-cff0fc19c699.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-schloss-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/ce3b6809-107c-46e6-beba-da1b7f0618bd.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-schloss-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/965febac-9a48-4a48-810d-007947a5c89b.webp", cols: 1, rows: 1 },
+  ],
 };
 
 // --- Ladezustand (pro Atlas) -------------------------------------------------

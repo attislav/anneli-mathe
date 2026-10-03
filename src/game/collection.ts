@@ -106,6 +106,19 @@ export const STICKERS: Sticker[] = [
   S("baeckerei", "Schoko-Keks", "#7A4E2D", "#D9B89A", "round", "cat"),
   S("baeckerei", "Goldbrezel", "#FFC531", "#FFF3BF", "wide", "horn", true),
   S("baeckerei", "Zuckerfee", "#E6DEFF", "#FFFFFF", "tall", "antenna", true),
+
+  S("schloss", "Tickli", "#5B6BD6", "#DDE2FF", "round", "antenna"),
+  S("schloss", "Tacki", "#FF5D5D", "#FFD1D1", "round", "round"),
+  S("schloss", "Zahnrädchen", "#C99A1E", "#FFF1C4", "round", "horn"),
+  S("schloss", "Sanduhri", "#F2C14E", "#FFF7CC", "tall", "none"),
+  S("schloss", "Kuckuck Kuno", "#B07A4F", "#EBD3BF", "round", "cat"),
+  S("schloss", "Pendeline", "#9B7BFF", "#E6DEFF", "tall", "antenna"),
+  S("schloss", "Burggeist Bo", "#E9EEF5", "#FFFFFF", "tall", "none"),
+  S("schloss", "Turmdrache", "#2BB673", "#D9F7D9", "wide", "horn"),
+  S("schloss", "Mondi", "#24275E", "#C9D0FF", "round", "cat"),
+  S("schloss", "Weckerle", "#FF9F1C", "#FFE2B8", "round", "round"),
+  S("schloss", "Sternenuhr", "#FFC531", "#FFF3BF", "round", "horn", true),
+  S("schloss", "Kristallkönigin", "#7FDBFF", "#E3F5FF", "tall", "antenna", true),
 ];
 
 export function stickersOf(world: WorldId): Sticker[] {

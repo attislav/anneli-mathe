@@ -7,7 +7,7 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share";
+export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set";
 
 type TaskBase = {
   id: string;
@@ -22,7 +22,7 @@ type TaskBase = {
 };
 
 /** Bild über der Aufgabe — z. B. Münzen und Scheine zum Zählen (Werte in Cent). */
-export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: number; cols: number };
+export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: number; cols: number } | { kind: "clock"; hour: number; minute: number };
 
 /** Antwort antippen. `term` ist die große Aufgabe, z.B. „38 + 7 = ?". */
 export type ChoiceTask = TaskBase & {
@@ -93,7 +93,15 @@ export type ShareTask = TaskBase & {
 
 export type Treat = "keks" | "muffin" | "brezel";
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask;
+/** Zeiger einer Uhr stellen. `step`: in welchen Minuten-Schritten der Minutenzeiger springt. */
+export type ClockSetTask = TaskBase & {
+  format: "clock-set";
+  hour: number;
+  minute: number;
+  step: 5 | 15 | 30 | 60;
+};
+
+export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

@@ -284,7 +284,8 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-5 ✓ | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
 | ✓ | **Gemalte Weltkarte** | Pro Welt 3 KI-Landschaften (9:16) hinter dem Pfad, weich überblendet; Vektor-Deko als Fallback | 15 Bilder, ~1,3 MB |
 | AP-6 ✓ | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
-| AP-7 | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |
+| AP-7 ✓ | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |
+| AP-7b | **Spielstand mitnehmen** | Eltern-Ecke: Spielstand als QR-Code + Text-Code exportieren, auf anderem Gerät scannen/einfügen (ohne Server) | Stand wandert vom Handy aufs Tablet |
 | AP-8 | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
 | AP-9 | **Übungskiste (Fehler-Wiederholung)** | falsch gelöste Aufgaben kommen nach 1/3/7 Tagen zurück | eigener Knoten „Übungskiste" auf dem Pfad |
 | AP-10 | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte | ersetzt die Startfrage im Onboarding |

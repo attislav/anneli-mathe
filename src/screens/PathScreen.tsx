@@ -314,6 +314,15 @@ function Decor({ world, height }: { world: World; height: number }) {
               <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
             </g>
           );
+        if (world.id === "schloss")
+          return (
+            <g key={i}>
+              <rect x={side - 14} y={y - 10} width="28" height="44" fill={world.theme.deco} />
+              <path d={`M${side - 18} ${y - 8} L${side} ${y - 34} L${side + 18} ${y - 8} Z`} fill={world.theme.decoDark} />
+              <circle cx={side} cy={y + 6} r="8" fill="#fff" />
+              <path d={`M${side} ${y + 6} v-5 M${side} ${y + 6} h4`} stroke="#2E3A8C" strokeWidth="2" strokeLinecap="round" />
+            </g>
+          );
         if (world.id === "baeckerei")
           return (
             <g key={i}>

@@ -58,6 +58,7 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (new Set(t.options).size !== t.options.length) fail(skill, level, "doppelte Optionen", t);
       if (t.options.length < 2) fail(skill, level, "zu wenige Optionen", t);
       if (t.options.some((o) => /^-/.test(o))) fail(skill, level, "negative Option", t);
+      if (t.options.some((o) => /:\d\d Uhr$/.test(o) && !/^(\d|1\d|2[0-3]):[0-5]\d Uhr$/.test(o))) fail(skill, level, "kaputte Uhrzeit", t);
       if (t.term?.includes("?") && t.term.includes("=")) {
         const sol = solveTerm(t.term);
         if (sol.length && !sol.includes(Number(t.answer))) fail(skill, level, `Term ergibt ${sol}`, t);
@@ -99,6 +100,9 @@ function check(skill: string, level: Level, t: TaskDraft) {
     case "money-build":
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
+      break;
+    case "clock-set":
+      if (t.hour < 1 || t.hour > 12 || t.minute < 0 || t.minute > 55 || t.minute % t.step !== 0) fail(skill, level, "Uhrzeit nicht stellbar", t);
       break;
     case "share":
       if (t.total % t.plates !== 0) fail(skill, level, "nicht gerecht teilbar", t);

@@ -5,8 +5,9 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import type { ChoiceTask, ClockSetTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
 import { PlateArt, TreatIcon } from "@/ui/Bakery";
+import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
@@ -34,6 +35,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <MoneyBuildView {...props} task={task} />;
     case "share":
       return <ShareView {...props} task={task} />;
+    case "clock-set":
+      return <ClockSetView {...props} task={task} />;
   }
 }
 
@@ -308,6 +311,13 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
 // --- Bild über der Aufgabe -------------------------------------------------
 
 function VisualCard({ visual }: { visual: Visual }) {
+  if (visual.kind === "clock") {
+    return (
+      <div className={`${card} flex justify-center py-3`}>
+        <ClockFace hour={visual.hour} minute={visual.minute} size={190} />
+      </div>
+    );
+  }
   if (visual.kind === "dots") {
     const dot = Math.min(26, Math.floor(220 / Math.max(visual.rows, visual.cols)));
     return (
@@ -436,6 +446,57 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
           Prüfen
         </Button>
       </div>
+    </div>
+  );
+}
+
+// --- Uhr stellen --------------------------------------------------------------
+
+function ClockSetView({ task, status, onAnswer }: FormatProps<ClockSetTask>) {
+  const [hour, setHour] = useState(12);
+  const [minute, setMinute] = useState(0);
+  const locked = status !== "ask";
+  const moveHour = (d: number) => {
+    if (locked) return;
+    sfx.tap();
+    setHour((h) => ((h - 1 + d + 12) % 12) + 1);
+  };
+  const moveMinute = (d: number) => {
+    if (locked) return;
+    sfx.tap();
+    setMinute((m) => (m + d * task.step + 60) % 60);
+  };
+  const row = (label: string, color: string, onMinus: () => void, onPlus: () => void, disabled = false) => (
+    <div className="flex items-center gap-3 rounded-[22px] bg-white/70 p-2">
+      <span className="h-3 w-10 shrink-0 rounded-full" style={{ background: color }} aria-hidden="true" />
+      <span className="flex-1 font-extrabold text-ink">{label}</span>
+      {[
+        ["−", onMinus, "zurück"],
+        ["+", onPlus, "vor"],
+      ].map(([sym, fn, name]) => (
+        <button
+          key={sym as string}
+          aria-label={`${label} ${name}`}
+          disabled={locked || disabled}
+          onClick={fn as () => void}
+          className="chunky flex h-12 w-12 items-center justify-center rounded-2xl font-display text-3xl font-semibold text-white disabled:opacity-40"
+          style={{ background: color, ["--shade" as string]: "#1F234755", ["--depth" as string]: "4px" }}
+        >
+          {sym as string}
+        </button>
+      ))}
+    </div>
+  );
+  return (
+    <div className="flex flex-col gap-3">
+      <div className={`${card} flex justify-center py-3`}>
+        <ClockFace hour={hour} minute={minute} size={200} />
+      </div>
+      {row("Kurzer Zeiger", HOUR_COLOR, () => moveHour(-1), () => moveHour(1))}
+      {row("Langer Zeiger", MINUTE_COLOR, () => moveMinute(-1), () => moveMinute(1), task.step === 60)}
+      <Button tone="grape" disabled={locked} onClick={() => onAnswer(hour === task.hour && minute === task.minute)}>
+        Prüfen
+      </Button>
     </div>
   );
 }
