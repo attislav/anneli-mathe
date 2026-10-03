@@ -33,7 +33,7 @@ import { loadAutoRead, saveAutoRead, useSpeech } from "@/lib/useSpeech";
 import { NumberPad } from "./NumberPad";
 import { SpeakButton } from "./SpeakButton";
 import { TrickCard } from "./TrickCard";
-import { useSoundFx } from "@/lib/useSoundFx";
+import { sfx } from "@/game/sound";
 
 /** Nach so langer Ruhe blenden wir den Tipp von selbst ein. */
 const HINT_DELAY_MS = 12000;
@@ -71,7 +71,6 @@ export function TrainingSession({
   onExit: () => void;
 }) {
   const accent = ACCENTS[module.accent];
-  const playFx = useSoundFx();
   const speech = useSpeech();
 
   // „Aufgabe automatisch vorlesen" — für Kinder, die lieber hören als lesen.
@@ -152,8 +151,8 @@ export function TrainingSession({
       completed: true,
     });
     setTraining(updated);
-    playFx("bird-chirp");
-  }, [phase, training, module.id, solved, attempts, firstTry, level, playFx]);
+    sfx.fanfare();
+  }, [phase, training, module.id, solved, attempts, firstTry, level]);
 
   // --- Nächste Aufgabe ------------------------------------------------------
 
@@ -193,7 +192,7 @@ export function TrainingSession({
       if (wrongOnTask === 0) setFirstTry((f) => f + 1);
       setPraise(pickRandom(PRAISE));
       setPhase("correct");
-      playFx("magic-chime");
+      sfx.correct();
       window.setTimeout(() => advance(nextStreak), SUCCESS_PAUSE_MS);
       return;
     }

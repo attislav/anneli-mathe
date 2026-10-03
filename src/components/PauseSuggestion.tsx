@@ -3,7 +3,7 @@
 // Pause-Mechanik nach 10 Min App-Zeit (UX-Konzept aus ROADMAP).
 //
 // Regeln:
-//  - Nach 10 Min aktiver App-Zeit auf jeder Quest-Seite blendet das Buch
+//  - Nach 10 Min aktiver App-Zeit im Kopfrechen-Training blendet die App
 //    sanft eine Pause-Empfehlung ein.
 //  - KEIN hartes Lockout. Anneli kann immer „Weiterspielen" wählen.
 //  - „Weiterspielen" resettet den Timer. Nach weiteren 10 Min kommt der
@@ -158,7 +158,7 @@ export function PauseSuggestion() {
         </h2>
 
         <p className="mb-6 text-center text-base leading-relaxed text-[var(--color-ink-soft)]">
-          Wollen wir eine kleine Pause machen? Du kannst auch weiterspielen — das Buch wartet auf dich.
+          Wollen wir eine kleine Pause machen? Du kannst auch weiterrechnen.
         </p>
 
         <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">

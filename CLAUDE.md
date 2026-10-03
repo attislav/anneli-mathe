@@ -3,13 +3,12 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > **First: read `AGENTS.md`** for the Next.js-16-breaking-changes notice.
-> **Then: read `ROADMAP.md`** — it is the source of truth for vision, sprint, and backlog. There is an **active multi-week sprint** with concrete weekly milestones; check the roadmap before deciding what to work on. Memory files hold the rationale and persona/character details; the roadmap holds the plan.
+> **Then: read `ROADMAP.md`** — it is the source of truth for vision, phases, and backlog. **Restart 2026-10-02:** the story mode is dropped; the app is now gamification-first (path, stars, coins, rewards, adaptive difficulty). Check the roadmap's current phase before deciding what to work on.
 
 ## Stack
 
 - **Next.js 16.2** (App Router) + **React 19.2** + **TypeScript 5**
 - **Tailwind CSS 4** (new engine, configured via `@tailwindcss/postcss`)
-- **MDX** via `@next/mdx` for story / quest content (`.md` and `.mdx` are page extensions; see `src/mdx-components.tsx` for global component overrides)
 - **lucide-react** for UI icons (buttons, navigation, status — anything system-level)
 - **All illustrations, characters, story art**: KI-generiert, custom. **Never** use stock icons, generic clipart, or emoji as placeholders for things meant to look polished. See [[content-pipeline-image-voice]] in memory.
 - **Hosting**: Vercel
@@ -22,7 +21,16 @@ npm run dev      # next dev
 npm run build    # next build
 npm run start    # next start (production)
 npm run lint     # eslint
+npm run smoke:game  # alle Aufgaben-Generatoren gegen Invarianten prüfen
 ```
+
+## Code-Landkarte (neue App)
+
+- `src/game/` — Engine ohne UI: Kompetenzen + Generatoren (`skills.ts`), Welten/Pfad (`worlds.ts`), Adaptivität (`adaptive.ts`), Spielstand (`state.ts`), Sammelbares, Ausmalbilder, Sound, Vorlesen
+- `src/lesson/` — Lektions-Ablauf (`engine.ts`), Aufgaben-Formate, Ergebnis, Rechentrick
+- `src/screens/`, `src/games/`, `src/ui/` — Bildschirme, Mini-Spiele, Bausteine
+- Kopfrechen-Training (aus der ersten Version, eigenständig): Route `/training`, Code in `src/components/Training*`, `src/data/training/`, `src/lib/useSpeech.ts`
+- Der alte Story-Modus liegt nur noch auf dem Branch `archive/story-mode`
 
 ## Secrets / API keys
 
@@ -35,9 +43,9 @@ If a feature requires the key in client code, the design is wrong — proxy it t
 
 ## Vision and project context
 
-The **vision, sprint plan, weekly milestones, and Definition of Done** live in `ROADMAP.md` (repo root). Read it. If you're picking work without checking the roadmap, you're guessing.
+The **vision, phases, and Definition of Done** live in `ROADMAP.md` (repo root). Read it. If you're picking work without checking the roadmap, you're guessing.
 
-The memory files hold the *why* (rationale, persona detail, design decisions):
+The memory files below describe the **old story mode** (pre-2026-10-02). Persona and pipeline notes are still useful; story/chapter notes are historical:
 
 - `project_vision` — what the app is and is explicitly not
 - `design_persona_anneli` — the North-Star kid (can the material, doesn't like drilling)
@@ -51,4 +59,7 @@ The memory index (`MEMORY.md`) lists them all and is auto-loaded.
 
 ## Legacy code
 
-The pre-greenfield Vanilla/Vite app (skill tree, error pool, gamification, achievements) lives on branch `archive/legacy-vanilla`. Pull patterns from there *as reference* — do not 1:1 port. The new UI model is different.
+- `archive/story-mode` — die Story-Version („Anneli & das verzauberte Buch"), Stand vor dem Neustart.
+- `archive/legacy-vanilla` — die Vanilla/Vite-App davor (Skill-Tree, Fehlerpool, Gamification).
+
+Nur als Referenz nutzen, nicht 1:1 portieren.

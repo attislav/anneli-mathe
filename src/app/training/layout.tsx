@@ -4,13 +4,12 @@ import { Home } from "lucide-react";
 import { PauseSuggestion } from "@/components/PauseSuggestion";
 
 /**
- * Rahmen für den Trainings-Zweig. Bewusst schlichter als das Quest-Layout:
- * hier gibt es kein sprechendes Buch und keine Geschichte — nur Rechnen.
- * Die Pause-Mechanik (10 Min) gilt aber genauso wie in der Quest.
+ * Rahmen für das Kopfrechen-Training: bewusst schlicht, nur Rechnen.
+ * Nach 10 Minuten schlägt die App eine Pause vor.
  */
 export default function TrainingLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="kopfrechnen flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-6 py-4">
         <Link
           href="/"

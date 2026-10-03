@@ -12,7 +12,7 @@
 // also „dran sein". Es gibt bewusst KEINE Fehlerquote als sichtbare Note.
 // Die Trefferquote steckt nur im Adaptive-Level und im Eltern-Blick.
 
-import type { Level } from "@/data/exercises/types";
+import type { Level } from "@/data/training/types";
 
 const STORAGE_KEY = "anneli.training.v1";
 

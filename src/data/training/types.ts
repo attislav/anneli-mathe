@@ -2,16 +2,13 @@
 //
 // Das Training ist bewusst UNABHÄNGIG vom Story-Modus:
 // eigene Route (/training), eigene Persistenz (`anneli.training.v1`),
-// eigene Aufgaben-Generatoren. Keine Vignetten, keine Brücken, keine
-// Sky-Kingdom-Welt — hier geht es um blankes, schnelles Kopfrechnen
-// mit Rechentricks. Zielgruppe: Klasse 2–3.
+// eigene Aufgaben-Generatoren. Hier geht es um blankes, schnelles
+// Kopfrechnen mit Rechentricks. Zielgruppe: Klasse 2–3.
 //
-// Level ("easy" | "normal" | "hard") teilen wir uns mit der Story-Engine,
-// damit das Adaptive-Verhalten in beiden Modi identisch gedacht ist.
 
-import type { Level } from "@/data/exercises/types";
+/** Schwierigkeit einer Trainingsaufgabe. */
+export type Level = "easy" | "normal" | "hard";
 
-export type { Level };
 
 /**
  * Eine einzelne Kopfrechen-Aufgabe.
@@ -39,4 +36,13 @@ export function taskId(prefix: string): string {
   return `${prefix}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export { randInt, pickOne } from "@/data/exercises/types";
+/** Zufallszahl in [min, max], beide inklusive. */
+export function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/** Ein zufälliges Element aus einer nicht-leeren Liste. */
+export function pickOne<T>(arr: readonly T[]): T {
+  if (arr.length === 0) throw new Error("pickOne: empty array");
+  return arr[Math.floor(Math.random() * arr.length)];
+}

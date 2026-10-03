@@ -1,36 +1,47 @@
-import type { Metadata } from "next";
-import { Nunito, Fraunces } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
+import { RegisterSW } from "@/ui/RegisterSW";
+import { ImportFromLink } from "@/ui/Transfer";
 
 const nunito = Nunito({
   subsets: ["latin"],
+  weight: ["600", "700", "800"],
   variable: "--font-body",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const fredoka = Fredoka({
   subsets: ["latin"],
-  variable: "--font-display",
+  weight: ["500", "600", "700"],
+  variable: "--font-fredoka",
   display: "swap",
-  axes: ["SOFT", "WONK"],
 });
 
 export const metadata: Metadata = {
-  title: "Anneli & das verzauberte Buch",
-  description: "Eine Quest-Lernreise für neugierige Kinder.",
+  title: "Sternenpfad",
+  description: "Mathe-Abenteuer für die 2. Klasse — Sterne sammeln, Welten entdecken.",
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
+  appleWebApp: { capable: true, title: "Sternenpfad", statusBarStyle: "default" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#7b4dff",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="de"
-      className={`${nunito.variable} ${fraunces.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="de" className={`${nunito.variable} ${fredoka.variable} h-full antialiased`}>
+      <body className="min-h-full font-sans font-bold">
+        {children}
+        <RegisterSW />
+        <ImportFromLink />
+      </body>
     </html>
   );
 }
