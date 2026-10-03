@@ -11,10 +11,20 @@
 
 import { useSyncExternalStore } from "react";
 
-export const ATLAS1 = {
+export type Atlas = { url: string; cols: number; rows: number };
+
+/** Haustiere, Eier, Bosse (Zellen à 384 px). */
+export const ATLAS1: Atlas = {
   url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/4c3602f6-051a-4d40-9e27-15a734fc408e.webp",
   cols: 5,
   rows: 3,
+};
+
+/** Die 36 Sticker, in derselben Reihenfolge wie `STICKERS` (Zellen à 192 px). */
+export const STICKER_ATLAS: Atlas = {
+  url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/e3764a9e-6efc-4e4f-9ebd-34156f1e89d3.webp",
+  cols: 6,
+  rows: 6,
 };
 
 /**
@@ -41,34 +51,33 @@ export const SPRITES = {
 
 export type SpriteKey = keyof typeof SPRITES;
 
-// --- Ladezustand ------------------------------------------------------------
+// --- Ladezustand (pro Atlas) -------------------------------------------------
 
 type Status = "loading" | "ok" | "fail";
-let status: Status = "loading";
-let started = false;
+const status = new Map<string, Status>();
 const listeners = new Set<() => void>();
 
-function start() {
-  if (started || typeof window === "undefined") return;
-  started = true;
+function load(url: string) {
+  if (status.has(url) || typeof window === "undefined") return;
+  status.set(url, "loading");
   const img = new Image();
-  img.onload = () => set("ok");
-  img.onerror = () => set("fail");
-  img.src = ATLAS1.url;
+  img.onload = () => set(url, "ok");
+  img.onerror = () => set(url, "fail");
+  img.src = url;
 }
 
-function set(s: Status) {
-  status = s;
+function set(url: string, s: Status) {
+  status.set(url, s);
   listeners.forEach((l) => l());
 }
 
 function subscribe(l: () => void) {
   listeners.add(l);
-  start();
   return () => listeners.delete(l);
 }
 
 /** `true`, sobald der Atlas geladen ist. Vorher und bei Fehlern: Vektor-Fallback. */
-export function useArtReady(): boolean {
-  return useSyncExternalStore(subscribe, () => status === "ok", () => false);
+export function useArtReady(atlas: Atlas = ATLAS1): boolean {
+  load(atlas.url);
+  return useSyncExternalStore(subscribe, () => status.get(atlas.url) === "ok", () => false);
 }

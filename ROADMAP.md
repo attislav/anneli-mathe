@@ -229,7 +229,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 - [x] Ausmalbilder v1: 6 Bilder, freies Malen + Rechen-Malbild mit Münz-Bonus
 - [x] Haustier: Ei aussuchen, schlüpfen, taufen, wächst mit dem Level
 - [x] Vorlesen (Gerätestimme) + Sound-FX (Web Audio, keine Dateien)
-- [ ] KI-Bilder für Haustiere, Sticker, Bosse, Ausmalbilder (braucht `OPENAI_API_KEY` als Environment-Variable)
+- [x] KI-Bilder für Haustiere, Eier, Bosse und 36 Sticker (GPT Image 2.5 Sunburst, als Sprite-Atlas) — Ausmalbilder folgen in AP-16
 - [ ] **DoD:** Anneli spielt eine Woche freiwillig. Beobachten, notieren, nachschärfen.
 
 ### Phase 2 — Belohnungswelt
@@ -277,8 +277,8 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 
 | # | Paket | Inhalt | Fertig, wenn … |
 |---|---|---|---|
-| AP-1 | **KI-Bilder Welle 1** | 3 Haustiere × 3 Stufen, 3 Eier, 3 Bosse | Bilder in App sichtbar, Vektor-Fallback greift |
-| AP-2 | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
+| AP-1 ✓ | **KI-Bilder Welle 1** | 3 Haustiere × 3 Stufen, 3 Eier, 3 Bosse | Bilder in App sichtbar, Vektor-Fallback greift |
+| AP-2 ✓ | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
 | AP-3 | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
 | AP-4 | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
 | AP-5 | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |

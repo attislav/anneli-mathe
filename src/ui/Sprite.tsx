@@ -1,12 +1,16 @@
-// Eine Figur aus dem Sprite-Atlas als quadratisches Bild.
+// Eine Figur aus einem Sprite-Atlas als quadratisches Bild.
 
 import type { CSSProperties } from "react";
-import { ATLAS1, SPRITES, type SpriteKey } from "@/game/art";
+import { ATLAS1, SPRITES, type Atlas, type SpriteKey } from "@/game/art";
 
-export function Sprite({ name, size, className, style }: { name: SpriteKey; size: number; className?: string; style?: CSSProperties }) {
-  const { i } = SPRITES[name];
-  const col = i % ATLAS1.cols;
-  const row = Math.floor(i / ATLAS1.cols);
+type Props = { size: number; className?: string; style?: CSSProperties } & ({ name: SpriteKey } | { atlas: Atlas; index: number });
+
+export function Sprite(props: Props) {
+  const { size, className, style } = props;
+  const atlas = "atlas" in props ? props.atlas : ATLAS1;
+  const i = "atlas" in props ? props.index : SPRITES[props.name].i;
+  const col = i % atlas.cols;
+  const row = Math.floor(i / atlas.cols);
   return (
     <div
       role="presentation"
@@ -14,8 +18,8 @@ export function Sprite({ name, size, className, style }: { name: SpriteKey; size
       style={{
         width: size,
         height: size,
-        backgroundImage: `url(${ATLAS1.url})`,
-        backgroundSize: `${ATLAS1.cols * size}px ${ATLAS1.rows * size}px`,
+        backgroundImage: `url(${atlas.url})`,
+        backgroundSize: `${atlas.cols * size}px ${atlas.rows * size}px`,
         backgroundPosition: `${-col * size}px ${-row * size}px`,
         backgroundRepeat: "no-repeat",
         ...style,

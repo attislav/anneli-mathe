@@ -3,12 +3,33 @@
 // Sticker-Wesen und Bosse. Bosse kommen als KI-Bild aus dem Sprite-Atlas,
 // mit Vektor-Figur als Fallback; Sticker sind (noch) Vektor-Figuren.
 
-import { useArtReady, type SpriteKey } from "@/game/art";
-import type { Sticker } from "@/game/collection";
+import { STICKER_ATLAS, useArtReady, type SpriteKey } from "@/game/art";
+import { STICKERS, type Sticker } from "@/game/collection";
 import { Sprite } from "./Sprite";
 import type { WorldId } from "@/game/skills";
 
-export function StickerArt({ sticker, size = 56, hidden = false }: { sticker: Sticker; size?: number; hidden?: boolean }) {
+type StickerProps = { sticker: Sticker; size?: number; hidden?: boolean };
+
+export function StickerArt(props: StickerProps) {
+  const ready = useArtReady(STICKER_ATLAS);
+  if (!ready) return <VectorSticker {...props} />;
+  const { sticker, size = 56, hidden = false } = props;
+  const index = STICKERS.indexOf(sticker);
+  // Noch nicht gefunden: dunkle Silhouette — man ahnt, wer da wartet.
+  const style = hidden ? { filter: "brightness(0) opacity(0.12)" } : undefined;
+  return (
+    <div className="relative" style={{ width: size, height: size }} aria-hidden="true">
+      <Sprite atlas={STICKER_ATLAS} index={index} size={size} style={style} />
+      {sticker.rare && !hidden && (
+        <svg viewBox="0 0 24 24" width={size * 0.3} height={size * 0.3} className="absolute -right-1 -top-1">
+          <path d="M12 2l2 7 7 3-7 3-2 7-2-7-7-3 7-3z" fill="#FFC531" stroke="#E5A100" strokeWidth="1" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function VectorSticker({ sticker, size = 56, hidden = false }: StickerProps) {
   const body = hidden ? "#E6E1D3" : sticker.color;
   const belly = hidden ? "#E6E1D3" : sticker.belly;
   const [rx, ry] = sticker.shape === "tall" ? [17, 22] : sticker.shape === "wide" ? [24, 16] : [20, 20];
