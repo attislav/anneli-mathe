@@ -267,6 +267,42 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 
 ---
 
+## 10. Arbeits-Backlog (Arbeitspakete in Reihenfolge)
+
+Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — jedes Paket ist für sich fertigstellbar, getestet und gepusht. Wer ohne Rückfrage weiterarbeitet, nimmt das oberste offene Paket.
+
+**Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
+
+**Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.
+
+| # | Paket | Inhalt | Fertig, wenn … |
+|---|---|---|---|
+| AP-1 | **KI-Bilder Welle 1** | 3 Haustiere × 3 Stufen, 3 Eier, 3 Bosse | Bilder in App sichtbar, Vektor-Fallback greift |
+| AP-2 | **KI-Sticker** | 36 Sticker-Wesen | Album zeigt Bilder, Silhouette für fehlende |
+| AP-3 | **Offline-App (PWA)** | Service Worker, PNG-Icons, Bilder cachen | App startet ohne Netz auf dem Tablet |
+| AP-4 | **Welt 4: Piratenhafen (Geld)** | Kompetenzen €/ct, neues Format „Münzen legen" | 9 Knoten spielbar, Smoke-Test grün |
+| AP-5 | **Welt 5: Einmaleins-Zirkus** | Malnehmen verstehen, Kernaufgaben, Reihen; Format „Punktefeld" | 9 Knoten spielbar |
+| AP-6 | **Welt 6: Bäckerei (Teilen)** | Aufteilen, Umkehraufgaben; Format „Verteilen auf Teller" | 9 Knoten spielbar |
+| AP-7 | **Welt 7: Uhrenschloss** | volle/halbe/Viertelstunden, Minuten, Zeitspannen; Format „Uhr stellen" | 9 Knoten spielbar |
+| AP-8 | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
+| AP-9 | **Übungskiste (Fehler-Wiederholung)** | falsch gelöste Aufgaben kommen nach 1/3/7 Tagen zurück | eigener Knoten „Übungskiste" auf dem Pfad |
+| AP-10 | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte | ersetzt die Startfrage im Onboarding |
+| AP-11 | **Saison: Halloween + Adventskalender** | Event-Rahmen; Halloween-Deko im Oktober; 24 Türchen ab 1.12. | Eltern können Kalender vorab ansehen |
+| AP-12 | **Welt 8: Formen-Ozean** | Formen, Symmetrie, Muster; Format „Spiegeln im Gitter" | 9 Knoten spielbar |
+| AP-13 | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |
+| AP-14 | **Welt 10: Detektivbüro** | Sachaufgaben, Diagramme | 9 Knoten spielbar |
+| AP-15 | **Schul-Modus** | Eltern wählen Schulthema → Empfehlung auf dem Pfad | in der Eltern-Ecke einstellbar |
+| AP-16 | **KI-Ausmalbilder** | Linienbilder + Ausmalen per Flood-Fill | 6 neue Bilder in Truhen |
+| AP-17 | **Klicktest im Repo** | Playwright-Skript `npm run e2e` | läuft lokal grün |
+| AP-18 | **Mehr Mini-Spiele** | Zehner-Turm, Sternen-Rakete | in der Spielhalle |
+| AP-19 | **Baumhaus** | Zimmer mit Möbeln aus dem Laden | unter „Ich" |
+| AP-20 | **Cloud-Sync** | Supabase, Eltern-Login, mehrere Kinder | braucht Zugangsdaten → mit Papa klären |
+
+**Blockiert / braucht Entscheidung:**
+- Alten Code löschen (`src/components`, `src/data`, `src/lib`, `/quest`, `/training`) — wartet auf Freigabe
+- Bilder ins Repo laden: `cloudfront.net` ist in der Cloud-Umgebung gesperrt → Bilder werden direkt vom CDN geladen; Freigabe der Domain würde lokale Kopien erlauben
+- Vorproduzierte Stimme (Gemini-TTS) braucht `GEMINI_API_KEY` in der Umgebung
+
 ## Offene Entscheidungen
 
 - **Name** der App (Arbeitstitel „Mathe-Sternenpfad")
