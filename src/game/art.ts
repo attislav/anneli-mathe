@@ -11,6 +11,7 @@
 // alle Komponenten ihre Vektor-Zeichnung als Fallback.
 
 import { useSyncExternalStore } from "react";
+import type { WorldId } from "./genkit";
 
 export type Atlas = { local: string; url: string; cols: number; rows: number };
 
@@ -53,6 +54,38 @@ export const SPRITES = {
 } as const;
 
 export type SpriteKey = keyof typeof SPRITES;
+
+/**
+ * Landschaften hinter dem Pfad: pro Welt drei Bilder (9:16) von oben nach
+ * unten, die ineinander überblenden. Originale in `scripts/art/backgrounds.json`.
+ */
+export const SCENERY: Record<WorldId, Atlas[]> = {
+  start: [
+    { local: "/art/welt-start-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/b86519ae-271d-47a8-9c4b-e1aba5587887.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-start-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/f627b42e-b081-4814-a831-ca9797aa21ba.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-start-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/7ee00998-1983-4976-8aa7-3fd4d98bcfbe.webp", cols: 1, rows: 1 },
+  ],
+  wald: [
+    { local: "/art/welt-wald-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/2ebc80ca-f4a1-4206-a72c-1e949626a242.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-wald-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/55ffc2c1-2932-40ff-9ed2-500edb541768.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-wald-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/f61f1940-56ad-4fbf-8054-50db938c8679.webp", cols: 1, rows: 1 },
+  ],
+  strand: [
+    { local: "/art/welt-strand-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/48eaa9bb-c8d9-49a8-82f6-c0fb521a1371.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-strand-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/e6bbd949-7f5d-4229-b3be-9800965b0b2c.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-strand-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/11fca841-bc2e-45ab-bcbe-506b373e633f.webp", cols: 1, rows: 1 },
+  ],
+  hafen: [
+    { local: "/art/welt-hafen-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/0736833a-aee0-41a4-b99e-043b22b5ea09.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-hafen-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/bbb6b32c-7767-40a3-a6ab-f6263dd9d946.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-hafen-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/adffa04f-066b-4bce-afb1-da7f85555444.webp", cols: 1, rows: 1 },
+  ],
+  zirkus: [
+    { local: "/art/welt-zirkus-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/2e998c69-8ae6-4ccd-9d2c-9289def6ce8f.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-zirkus-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/d29d5b6f-b481-44b3-8859-a6cac5f0cd12.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-zirkus-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/adc1d03b-3417-4532-a24a-5ebfed45c964.webp", cols: 1, rows: 1 },
+  ],
+};
 
 // --- Ladezustand (pro Atlas) -------------------------------------------------
 

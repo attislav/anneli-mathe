@@ -23,6 +23,7 @@ import {
 } from "@/game/state";
 import { COMING_SOON, WORLDS, type PathNode, type World } from "@/game/worlds";
 import { sfx } from "@/game/sound";
+import { artSrc, SCENERY, useArtReady } from "@/game/art";
 import { ChestArt, StarIcon, StarRow } from "@/ui/art";
 import { BottomNav, Confetti, Sheet, TopBar } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
@@ -114,6 +115,7 @@ function WorldSection({
   const pts = world.nodes.map((_, i) => [nodeX(i), TOP_Y + i * STEP_Y] as const);
   const d = pts.map(([x, y], i) => (i === 0 ? `M${x} ${y}` : `C${pts[i - 1][0]} ${pts[i - 1][1] + 60} ${x} ${y - 60} ${x} ${y}`)).join(" ");
   const level = levelInfo(save.xp).level;
+  const art = useSceneryReady(world);
 
   return (
     <section className="mt-5 pt-1" style={{ background: gate.open ? world.theme.ground : undefined }}>
@@ -137,10 +139,13 @@ function WorldSection({
           </div>
         </div>
       ) : (
-        <div className="relative mx-auto" style={{ width: COL, height }}>
-          <Decor world={world} height={height} />
+        <div className="relative">
+          <Scenery world={world} height={height} />
+          <div className="relative mx-auto" style={{ width: COL, height }}>
+          {!art && <Decor world={world} height={height} />}
           <svg width={COL} height={height} className="absolute inset-0" aria-hidden="true">
-            <path d={d} fill="none" stroke={world.theme.decoDark} strokeOpacity="0.45" strokeWidth="26" strokeLinecap="round" />
+            {art && <path d={d} fill="none" stroke="#fff" strokeOpacity="0.7" strokeWidth="38" strokeLinecap="round" />}
+            <path d={d} fill="none" stroke={world.theme.decoDark} strokeOpacity={art ? 0.55 : 0.45} strokeWidth="26" strokeLinecap="round" />
             <path d={d} fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" strokeDasharray="1 20" />
           </svg>
           {world.nodes.map((node, i) => {
@@ -158,6 +163,7 @@ function WorldSection({
               </div>
             );
           })}
+          </div>
         </div>
       )}
     </section>
@@ -229,6 +235,46 @@ function NodeButton({ save, world, node, open, current, onPick }: { save: SaveSt
       {(current || (open && !done)) && (
         <div className="mt-2 whitespace-nowrap rounded-full bg-white px-3 py-1 text-sm font-extrabold shadow-[0_3px_0_rgba(31,35,71,0.1)]">{node.title}</div>
       )}
+    </div>
+  );
+}
+
+/** `true`, sobald alle drei Landschaftsbilder der Welt geladen sind. */
+function useSceneryReady(world: World): boolean {
+  const [a, b, c] = SCENERY[world.id];
+  const ready = [useArtReady(a), useArtReady(b), useArtReady(c)];
+  return ready.every(Boolean);
+}
+
+/** Überblend-Zone zwischen zwei Landschaftsbildern (px). */
+const BLEND = 70;
+
+/**
+ * Die gemalte Landschaft hinter dem Pfad: drei Bilder übereinander, die
+ * weich ineinander übergehen. Auf breiten Bildschirmen bleibt sie mittig und
+ * läuft zu den Seiten in die Grundfarbe der Welt aus.
+ */
+function Scenery({ world, height }: { world: World; height: number }) {
+  const ready = useSceneryReady(world);
+  if (!ready) return null;
+  const panels = SCENERY[world.id];
+  const panelH = (height + BLEND * (panels.length - 1)) / panels.length;
+  const fade = `linear-gradient(to bottom, transparent, #000 ${BLEND}px, #000 calc(100% - ${BLEND}px), transparent)`;
+  return (
+    <div aria-hidden="true" className="anim-fade pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="scenery relative mx-auto h-full max-w-[600px]">
+        {panels.map((p, i) => (
+          // eslint-disable-next-line @next/next/no-img-element -- statischer Export, kein Bild-Optimierer
+          <img
+            key={p.local}
+            src={artSrc(p) ?? undefined}
+            alt=""
+            draggable={false}
+            className="absolute left-0 w-full object-cover"
+            style={{ top: i * (panelH - BLEND), height: panelH, maskImage: fade, WebkitMaskImage: fade }}
+          />
+        ))}
+      </div>
     </div>
   );
 }

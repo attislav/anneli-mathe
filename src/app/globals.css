@@ -171,3 +171,10 @@ button {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* Landschaft hinter dem Pfad: auf breiten Bildschirmen seitlich ausblenden */
+@media (min-width: 600px) {
+  .scenery {
+    mask-image: linear-gradient(to right, transparent, #000 90px, #000 calc(100% - 90px), transparent);
+  }
+}
