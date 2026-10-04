@@ -3,13 +3,13 @@
 // Lernbericht für Eltern: Was klappt, wo hakt es, wie viel wird geübt.
 // Alle Daten stammen aus diesem Gerät.
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronLeft } from "lucide-react";
 import { randInt } from "@/game/random";
 import { dailyActivity, mistakesFor, overview, skillGrowth, skillReports, weeklyProgress, type SkillReport } from "@/game/report";
 import { AccuracyChart, LevelChart } from "@/ui/ProgressCharts";
-import type { SaveState } from "@/game/state";
+import { profileList, readProfileSave, type SaveState } from "@/game/state";
 import { WORLDS } from "@/game/worlds";
 import { useBackdrop } from "@/ui/chrome";
 
@@ -52,9 +52,13 @@ function Trend({ t }: { t: number | null }) {
 
 const barColor = (r: SkillReport) => (r.status === "stark" ? "#2BB673" : r.status === "hakt" ? "#FF9F1C" : "#7B4DFF");
 
-export function ReportScreen({ save }: { save: SaveState }) {
+export function ReportScreen({ save: own }: { save: SaveState }) {
   useBackdrop("#F4F1FF");
   const [open, setOpen] = useState(false);
+  // Mehrere Kinder: Bericht umschalten, ohne das spielende Kind zu wechseln.
+  const kids = useMemo(() => profileList(), []);
+  const [viewId, setViewId] = useState<string | null>(null);
+  const save = (viewId && readProfileSave(viewId)) || own;
   if (!open) return <Gate onOpen={() => setOpen(true)} />;
 
   const name = save.profile?.name ?? "Dein Kind";
@@ -78,6 +82,18 @@ export function ReportScreen({ save }: { save: SaveState }) {
         </Link>
         <h1 className="font-display text-3xl font-semibold">Lernbericht: {name}</h1>
       </div>
+      {kids.length > 1 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {kids.map((k) => {
+            const on = viewId ? viewId === k.id : k.active;
+            return (
+              <button key={k.id} onClick={() => setViewId(k.id)} className={`h-10 rounded-full px-4 font-extrabold ${on ? "bg-grape text-white" : "bg-white"}`}>
+                {k.profile.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {ov.answers === 0 ? (
         <p className="mt-6 rounded-[22px] bg-white p-5 text-ink-soft">Noch keine Daten. Ab jetzt wird jede Aufgabe mitgeschrieben — nach ein paar Lektionen steht hier, was schon gut klappt und wo es noch hakt.</p>

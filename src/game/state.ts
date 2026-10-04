@@ -108,13 +108,60 @@ export function todayKey(d = new Date()): string {
 let state: SaveState | null = null;
 const listeners = new Set<() => void>();
 
+// --- Mehrere Kinder pro Gerät ------------------------------------------------
+//
+// Jedes Kind hat seinen eigenen Spielstand unter eigenem Schlüssel. Das
+// erste Kind („main“) nutzt den alten Schlüssel weiter, damit bestehende
+// Spielstände ohne Umzug erhalten bleiben. Ein kleiner Index merkt sich,
+// welche Kinder es gibt und wer gerade spielt.
+
+const INDEX_KEY = "sternenpfad.profiles";
+const PICKED_KEY = "sternenpfad.picked";
+const MAIN_ID = "main";
+
+type ProfileIndex = { active: string; ids: string[] };
+
+let index: ProfileIndex | null = null;
+
+const keyFor = (id: string) => (id === MAIN_ID ? KEY : `${KEY}.${id}`);
+
+function getIndex(): ProfileIndex {
+  if (index) return index;
+  index = { active: MAIN_ID, ids: [MAIN_ID] };
+  try {
+    const raw = window.localStorage.getItem(INDEX_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as ProfileIndex;
+      if (Array.isArray(parsed.ids) && parsed.ids.length > 0) {
+        index = { ids: parsed.ids, active: parsed.ids.includes(parsed.active) ? parsed.active : parsed.ids[0] };
+      }
+    }
+  } catch {
+    // dann eben nur ein Kind
+  }
+  return index;
+}
+
+function setIndex(next: ProfileIndex): void {
+  index = next;
+  try {
+    window.localStorage.setItem(INDEX_KEY, JSON.stringify(next));
+  } catch {
+    // nicht schlimm
+  }
+}
+
+function parseSave(raw: string | null): SaveState | null {
+  if (!raw) return null;
+  const parsed = JSON.parse(raw) as Partial<SaveState>;
+  if (parsed.v !== 1) return null;
+  return { ...emptyState(), ...parsed, settings: { ...emptyState().settings, ...parsed.settings } };
+}
+
 function load(): SaveState {
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<SaveState>;
-      if (parsed.v === 1) return rollDay({ ...emptyState(), ...parsed, settings: { ...emptyState().settings, ...parsed.settings } });
-    }
+    const s = parseSave(window.localStorage.getItem(keyFor(getIndex().active)));
+    if (s) return rollDay(s);
   } catch {
     // privater Modus oder kaputter Eintrag — dann eben frisch
   }
@@ -136,7 +183,7 @@ function get(): SaveState {
 export function update(fn: (s: SaveState) => SaveState): void {
   state = fn(rollDay(get()));
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(state));
+    window.localStorage.setItem(keyFor(getIndex().active), JSON.stringify(state));
   } catch {
     // Speichern fehlgeschlagen — Spiel läuft trotzdem weiter
   }
@@ -432,8 +479,113 @@ export function logAnswer(entry: AnswerLog): void {
   update((s) => ({ ...s, log: [...s.log, entry].slice(-LOG_MAX) }));
 }
 
+/** Spielstand des aktuellen Kindes löschen. Gibt es weitere Kinder, verschwindet es ganz. */
 export function resetAll(): void {
-  update(() => emptyState());
+  if (profileList().length > 1) removeProfile(getIndex().active);
+  else update(() => emptyState());
+}
+
+// ---------------------------------------------------------------------------
+// Kinder verwalten
+
+export type ProfileEntry = { id: string; profile: Profile; level: number; stars: number; equipped: string[]; active: boolean };
+
+/** Spielstand eines Kindes lesen, ohne zu wechseln (z. B. für den Lernbericht). */
+export function readProfileSave(id: string): SaveState | null {
+  if (id === getIndex().active) return get();
+  try {
+    return parseSave(window.localStorage.getItem(keyFor(id)));
+  } catch {
+    return null;
+  }
+}
+
+/** Alle Kinder mit fertigem Profil. */
+export function profileList(): ProfileEntry[] {
+  const { ids, active } = getIndex();
+  return ids.flatMap((id) => {
+    const s = readProfileSave(id);
+    if (!s?.profile) return [];
+    return [{ id, profile: s.profile, level: levelInfo(s.xp).level, stars: totalStars(s), equipped: s.equipped, active: id === active }];
+  });
+}
+
+function markPicked(): void {
+  try {
+    window.sessionStorage.setItem(PICKED_KEY, "1");
+  } catch {
+    // egal
+  }
+}
+
+/** Beim App-Start fragen „Wer spielt?“ — nur wenn es mehrere Kinder gibt, einmal pro Sitzung. */
+export function needsProfilePick(): boolean {
+  if (profileList().length < 2) return false;
+  try {
+    return window.sessionStorage.getItem(PICKED_KEY) !== "1";
+  } catch {
+    return false;
+  }
+}
+
+export function switchProfile(id: string): void {
+  const idx = getIndex();
+  if (!idx.ids.includes(id)) return;
+  markPicked();
+  setIndex({ ...idx, active: id });
+  state = null;
+  listeners.forEach((l) => l());
+}
+
+/** Neues, leeres Kind anlegen und dorthin wechseln — danach läuft das Onboarding. */
+export function addProfile(): void {
+  const idx = getIndex();
+  // Ein angefangenes, nie fertig gewordenes Kind wiederverwenden.
+  const empty = idx.ids.find((id) => !readProfileSave(id)?.profile);
+  const id = empty ?? `k${Date.now().toString(36)}`;
+  setIndex({ active: idx.active, ids: empty ? idx.ids : [...idx.ids, id] });
+  switchProfile(id);
+}
+
+/** Onboarding für ein weiteres Kind abbrechen. */
+export function cancelNewProfile(): void {
+  const idx = getIndex();
+  const back = profileList()[0];
+  if (!back || readSave().profile) return;
+  removeProfile(idx.active, back.id);
+}
+
+/** Ein Kind samt Spielstand vom Gerät entfernen. */
+export function removeProfile(id: string, next?: string): void {
+  const idx = getIndex();
+  try {
+    window.localStorage.removeItem(keyFor(id));
+  } catch {
+    // egal
+  }
+  const ids = idx.ids.filter((x) => x !== id);
+  if (ids.length === 0) ids.push(MAIN_ID);
+  const active = idx.active === id ? (next && ids.includes(next) ? next : ids[0]) : idx.active;
+  setIndex({ active, ids });
+  state = null;
+  listeners.forEach((l) => l());
+}
+
+/** Spielstand von einem anderen Gerät als weiteres Kind hinzufügen. */
+export function importAsNewProfile(incoming: Partial<SaveState>): void {
+  addProfile();
+  replaceSave(incoming);
+}
+
+/** Andere Tabs halten (z. B. nach einem Wechsel) den gleichen Stand. */
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === INDEX_KEY || e.key === keyFor(getIndex().active)) {
+      index = null;
+      state = null;
+      listeners.forEach((l) => l());
+    }
+  });
 }
 
 export function masteryOf(s: SaveState, skill: string): number {

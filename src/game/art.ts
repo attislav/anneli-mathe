@@ -105,6 +105,11 @@ export const SCENERY: Partial<Record<WorldId, Atlas[]>> = {
     { local: "/art/welt-werkstatt-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/69c3cdd8-a15e-476e-bb94-6fa5bcb9da7e.webp", cols: 1, rows: 1 },
     { local: "/art/welt-werkstatt-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/17df5836-4d83-4843-ab1c-0127b379054e.webp", cols: 1, rows: 1 },
   ],
+  detektiv: [
+    { local: "/art/welt-detektiv-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/1ab33bf0-50e8-437c-96d2-641a6f355bb8.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-detektiv-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/58978f9b-0c92-4a3a-be11-db50c672677b.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-detektiv-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/848e5c67-cdf1-4ab8-806a-6da94651a37b.webp", cols: 1, rows: 1 },
+  ],
 };
 
 // --- Ladezustand (pro Atlas) -------------------------------------------------

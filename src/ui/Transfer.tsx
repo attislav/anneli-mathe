@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 import { Check, Copy, QrCode as QrIcon, Share2 } from "lucide-react";
 import { exportCode, importLink, parseCode } from "@/game/transfer";
-import { readSave, replaceSave, type SaveState } from "@/game/state";
+import { importAsNewProfile, readSave, replaceSave, type SaveState } from "@/game/state";
 import { Button } from "./Button";
 import { Sheet } from "./chrome";
 import { QrCode } from "./QrCode";
@@ -114,23 +114,35 @@ function ConfirmImport({ incoming, onClose, onDone }: { incoming: Partial<SaveSt
         <h2 className="font-display text-2xl font-semibold">Spielstand übernehmen?</h2>
         <div className="rounded-xl bg-leaf-light p-3 font-extrabold">Neu: {summary(incoming)}</div>
         {current.profile && (
-          <p className="text-sm text-ink-soft">
-            Der Stand auf diesem Gerät (<b>{summary(current)}</b>) wird dabei ersetzt.
-          </p>
+          <>
+            <p className="text-sm text-ink-soft">
+              Spielt hier ein anderes Kind? Dann als <b>weiteres Kind</b> hinzufügen. „Ersetzen“ überschreibt den Stand von <b>{summary(current)}</b>.
+            </p>
+            <Button
+              tone="leaf"
+              size="md"
+              onClick={() => {
+                importAsNewProfile(incoming);
+                onDone();
+              }}
+            >
+              Als weiteres Kind hinzufügen
+            </Button>
+          </>
         )}
         <div className="grid grid-cols-2 gap-2">
           <Button tone="white" size="md" onClick={onClose}>
             Abbrechen
           </Button>
           <Button
-            tone="leaf"
+            tone={current.profile ? "white" : "leaf"}
             size="md"
             onClick={() => {
               replaceSave(incoming);
               onDone();
             }}
           >
-            Übernehmen
+            {current.profile ? "Ersetzen" : "Übernehmen"}
           </Button>
         </div>
       </div>

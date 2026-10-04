@@ -288,12 +288,15 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-7b ✓ | **Spielstand mitnehmen** | Eltern-Ecke: Spielstand als QR-Code + Text-Code exportieren, auf anderem Gerät scannen/einfügen (ohne Server) | Stand wandert vom Handy aufs Tablet. Hinweis: Auf dem iPad hat die Homescreen-App einen eigenen Speicher – dort den Code einfügen statt QR-Link |
 | AP-8 ✓ | **Abzeichen + Tagesschatz** | ~30 Erfolge, Truhe für die erste Lektion am Tag | Abzeichen-Seite unter „Ich" |
 | AP-9 ✓ | **Übungskiste (Fehler-Wiederholung)** | falsch gelöste Aufgaben kommen nach 1/3/7 Tagen zurück | eigener Knoten „Übungskiste" auf dem Pfad |
-| AP-10 ✓ | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte | ersetzt die Startfrage im Onboarding |
+| AP-10 ✓ | **Einstufungs-Abenteuer** | 5 Minuten, setzt Startwelt + Können-Werte. Seit 04.10.: nur noch als kleiner Link („Ich kann schon viel“), Standard ist „Los geht's“ auf der Startinsel; Ergebnis startet bewusst **eine Welt früher** (Erfolgserlebnis vor Tempo) | optional im Onboarding |
 | AP-11 ✓ | **Saison: Halloween + Adventskalender** | Event-Rahmen; Halloween-Deko im Oktober; 24 Türchen ab 1.12. | Eltern können Kalender vorab ansehen |
 | AP-12 ✓ | **Welt 8: Formen-Ozean** | Formen, Symmetrie, Muster; Format „Spiegeln im Gitter" | 9 Knoten spielbar |
 | AP-12b ✓ | **Lernbericht (pro Gerät)** | Jede erste Antwort wird mitgeschrieben (Thema, Stufe, richtig?, Zeit). Eltern-Ecke → Bericht: Stärken, Problemthemen, Trefferquote + Trend pro Thema, Zeit pro Aufgabe, Übezeit pro Tag, typische Fehler | Bericht zeigt echte Daten; zentrales Dashboard erst mit AP-20 |
+| AP-12c ✓ | **Mehrere Kinder pro Gerät** | „Wer spielt?“-Auswahl (einmal pro Sitzung, wenn >1 Kind), „Neues Kind“, Wechsel über „Ich“; eigener Spielstand pro Kind; Lernbericht mit Kind-Umschalter; Spielstand-Code „als weiteres Kind“ übernehmen | Zwei Kinder spielen getrennt auf einem Tablet |
 | AP-13 ✓ | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |
-| AP-14 | **Welt 10: Detektivbüro** | Sachaufgaben, Diagramme | 9 Knoten spielbar |
+| AP-14 ✓ | **Welt 10: Detektivbüro** | Strichlisten, Säulendiagramme (neues Format „Diagramm zeichnen"), Sachaufgaben (ab Stufe 5 zweischrittig), Möglichkeiten zählen, Fehler-Detektiv | 9 Knoten spielbar |
+| AP-14c | **„Zu leicht? Spring vor!“** | Merkt die App, dass eine Welt durchweg mit 3 Sternen auf Meister-Niveau klappt, bietet sie an, zur nächsten Welt vorzuspringen (Welten dazwischen bleiben offen) | Kind kann vorspringen, muss aber nicht |
+| AP-14d | **Side-Quests: geheime Orte** | Unterwegs taucht zufällig ein Ort neben dem Pfad auf (Höhle, Baumhaus, Leuchtturm …): „Willst du reingehen?“ Drinnen eine kleine Zwischenwelt (3–4 Lektionen) mit einem besonderen Mathe-Thema und eigener Kulisse; Belohnung: exklusive Sammelkarten/Wesen, die es nirgends sonst gibt. Belohnt Neugier, nicht Pflicht | Erste Höhle spielbar, eigene KI-Bilder (Kulisse + Wesen) |
 | AP-14b | **Puzzle-Ausmalbilder** | Geheime KI-Malvorlagen (s/w, dicke Linien) in 9 Teilen; Teile zufällig wie Sticker (Truhen, Lektionen, Tagesschatz), Doppelte → Münzen; komplett → in der App ausmalen oder auf A4 drucken | 6 Bilder sammelbar, Druck sieht sauber aus |
 | AP-15 | **Schul-Modus** | Eltern wählen Schulthema → Empfehlung auf dem Pfad | in der Eltern-Ecke einstellbar |
 | AP-16 | **KI-Ausmalbilder** | Linienbilder + Ausmalen per Flood-Fill | 6 neue Bilder in Truhen |
@@ -301,6 +304,13 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-18 | **Mehr Mini-Spiele** | Zehner-Turm, Sternen-Rakete | in der Spielhalle |
 | AP-19 | **Baumhaus** | Zimmer mit Möbeln aus dem Laden | unter „Ich" |
 | AP-20 | **Cloud-Sync** | Supabase, Eltern-Login, mehrere Kinder | braucht Zugangsdaten → mit Papa klären |
+
+**Mittelfristig: Grundschule komplett (Klasse 1–4)**
+- Heute ist alles Klasse 2. Ziel: eine Mathe-App für die ganze Grundschule.
+- **Klasse 1:** Zahlen bis 20, Mengen erfassen, Zerlegen, Plus/Minus ohne Übergang — viel davon steckt schon in der Startinsel, braucht eigene, noch sanftere Welten (mehr Bilder, weniger Text, alles vorlesen).
+- **Klasse 3:** Zahlenraum bis 1000, halbschriftlich/schriftlich addieren und subtrahieren, großes Einmaleins, Gewichte (g/kg), Zeit (Sekunden, Kalender).
+- **Klasse 4:** bis 1 Million, schriftlich multiplizieren und dividieren, Flächen und Umfang, Brüche im Alltag, Maßstab.
+- Technisch: Welten bekommen eine Klasse; Eltern-Ecke wählt die Klasse (oder Einstufung); neue Formate für schriftliches Rechnen (Stellenwerttafel, Rechnen untereinander). Aufwand grob: pro Klasse ~8–10 Welten wie bisher.
 
 **Blockiert / braucht Entscheidung:**
 - Bilder ins Repo laden: `cloudfront.net` ist freigegeben (gilt ab der nächsten Sitzung) → dort `npm run art:fetch` ausführen und `public/art/` committen. Die App bevorzugt lokale Kopien automatisch.

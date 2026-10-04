@@ -150,6 +150,19 @@ export const STICKERS: Sticker[] = [
   S("werkstatt", "Goldschraube", "#FFC531", "#FFF7CC", "round", "horn", true),
   S("werkstatt", "Erfinderin Eule", "#7B4DFF", "#E6DEFF", "round", "cat", true),
 
+  S("detektiv", "Lupinchen", "#6B4F3A", "#D8C3A5", "round", "round"),
+  S("detektiv", "Spürnase", "#D9A066", "#F7E1C4", "wide", "round"),
+  S("detektiv", "Schnüffel", "#8C5A2B", "#EBD3BF", "round", "cat"),
+  S("detektiv", "Fußspur-Fritz", "#3A3E85", "#C9CCF2", "tall", "none"),
+  S("detektiv", "Rätselrabe", "#1F2347", "#9AA6B8", "round", "horn"),
+  S("detektiv", "Notizia", "#FFE7A8", "#FFFFFF", "tall", "antenna"),
+  S("detektiv", "Strichlisti", "#7B4DFF", "#E6DEFF", "round", "antenna"),
+  S("detektiv", "Säulchen", "#FF5D9E", "#FFE0EE", "tall", "none"),
+  S("detektiv", "Codeknacker", "#2BB673", "#CFF5E1", "wide", "horn"),
+  S("detektiv", "Mantelmaus", "#C99A1E", "#FFF1C4", "round", "round"),
+  S("detektiv", "Goldene Lupe", "#FFC531", "#FFF7CC", "round", "horn", true),
+  S("detektiv", "Meisterdetektivin", "#FF9F1C", "#FFE2B8", "round", "cat", true),
+
   // Saison: Halloween (gibt es nur im Oktober)
   S("halloween", "Kürbi", "#FF9F1C", "#FFE2B8", "round", "antenna"),
   S("halloween", "Gespensti", "#F4F1FF", "#FFFFFF", "tall", "none"),

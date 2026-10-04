@@ -1,7 +1,9 @@
 // Einstufungs-Abenteuer: In ein paar Minuten herausfinden, wo ein Kind
 // einsteigt. Pro Welt kommen zwei typische Aufgaben auf Silber-Niveau.
 // Beide richtig → weiter zur nächsten Welt. Eine richtig → eine dritte
-// entscheidet. Sonst: Hier geht's los. Frühere Welten gelten als geschafft
+// entscheidet. Sonst: Hier hakt es. Gestartet wird dann bewusst EINE Welt
+// früher — lieber sanft mit Erfolgserlebnissen einsteigen als gleich an
+// Aufgaben, die noch nicht sitzen. Frühere Welten gelten als geschafft
 // (übersprungen) und ihre Kompetenzen bekommen einen guten Startwert.
 
 import { getSkill } from "./skills";
@@ -21,6 +23,7 @@ const PROBE: Record<WorldId, string[]> = {
   schloss: ["uhrLesen", "zeitWoerter"],
   ozean: ["formen", "spiegeln"],
   werkstatt: ["lineal", "einheiten"],
+  detektiv: ["strichliste", "sachaufgaben"],
 };
 
 const LEVEL: Level = 3;
@@ -54,9 +57,9 @@ export function placementAnswer(p: PlacementState, correct: boolean): PlacementS
   const passed = right >= 2;
   const failed = wrong >= 2;
   if (!passed && !failed) return { ...p, asked, right, total };
-  if (failed) return { ...p, asked, right, total, start: p.world };
+  if (failed) return { ...p, asked, right, total, start: Math.max(0, p.world - 1) };
   const nextWorld = p.world + 1;
-  if (nextWorld >= WORLDS.length) return { ...p, asked, right, total, start: WORLDS.length - 1 };
+  if (nextWorld >= WORLDS.length) return { ...p, asked, right, total, start: WORLDS.length - 2 };
   return { world: nextWorld, asked: 0, right: 0, start: null, total };
 }
 

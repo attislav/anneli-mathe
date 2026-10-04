@@ -5,7 +5,8 @@
 
 import { useState } from "react";
 import { PETS, type PetSpecies } from "@/game/collection";
-import { createProfile } from "@/game/state";
+import { cancelNewProfile, createProfile, profileList } from "@/game/state";
+import { ChevronLeft } from "lucide-react";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
 import { Egg, Pet } from "@/ui/Pet";
@@ -27,6 +28,8 @@ export function Onboarding() {
   const [name, setName] = useState("");
   const [species, setSpecies] = useState<PetSpecies | null>(null);
   const [petName, setPetName] = useState("");
+  // Weiteres Kind auf diesem Gerät? Dann darf man zurück zur Auswahl.
+  const [others] = useState(() => profileList().length > 0);
 
   const chooseEgg = (s: PetSpecies) => {
     setSpecies(s);
@@ -46,7 +49,12 @@ export function Onboarding() {
   };
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-6 bg-grape px-5 py-10 text-center text-white">
+    <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-6 bg-grape px-5 py-10 text-center text-white">
+      {others && step === "name" && (
+        <button onClick={cancelNewProfile} aria-label="Zurück" className="absolute left-4 top-5 flex h-11 w-11 items-center justify-center rounded-[14px] bg-white/15">
+          <ChevronLeft size={26} />
+        </button>
+      )}
       {step === "name" && (
         <>
           <h1 className="font-display text-4xl font-semibold">Hallo!</h1>
@@ -115,14 +123,13 @@ export function Onboarding() {
       {step === "start" && species && (
         <>
           <Pet species={species} size={110} />
-          <h1 className="font-display text-3xl font-semibold">Wo fangt ihr an?</h1>
-          <button onClick={() => setStep("placement")} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-grape">Zeig, was du kannst!</div>
-            <div className="text-ink-soft">Ein kleines Abenteuer, ca. 5 Minuten — danach weißt du, in welcher Welt du startest.</div>
-          </button>
-          <button onClick={() => finish(0)} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-coin-dark">Ganz vorne anfangen</div>
-            <div className="text-ink-soft">Startinsel: Rechnen bis 20 — zum Warmwerden</div>
+          <h1 className="font-display text-3xl font-semibold">Bereit?</h1>
+          <p className="text-lg text-white/85">Ihr startet auf der Startinsel — zum Warmwerden und Kennenlernen.</p>
+          <Button tone="sun" className="w-full max-w-sm" onClick={() => finish(0)}>
+            Los geht&apos;s!
+          </Button>
+          <button onClick={() => setStep("placement")} className="mt-2 text-sm font-extrabold text-white/75 underline">
+            Ich kann schon viel – kurzer Einstufungstest
           </button>
         </>
       )}

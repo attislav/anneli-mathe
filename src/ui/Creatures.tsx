@@ -118,6 +118,14 @@ function VectorBoss({ world, color, size = 120, mood = "grin" }: BossProps) {
         </>
       )}
       {world === "zirkus" && <path d="M34 34 L60 4 L86 34 Z" fill="#1F2347" stroke="#FFD23F" strokeWidth="3" strokeLinejoin="round" />}
+      {world === "detektiv" && (
+        <>
+          <path d="M26 40 Q30 14 60 12 Q90 14 94 40 Z" fill="#8C6B4F" stroke="#1F2347" strokeWidth="3" strokeLinejoin="round" />
+          <path d="M18 42 Q60 28 102 42" stroke="#1F2347" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <rect x="26" y="50" width="68" height="20" rx="10" fill="#1F2347" />
+          <circle cx="96" cy="96" r="9" fill="#FFC531" stroke="#1F2347" strokeWidth="2.5" />
+        </>
+      )}
       {world === "werkstatt" && (
         <>
           <line x1="60" y1="28" x2="60" y2="8" stroke="#1F2347" strokeWidth="3" />

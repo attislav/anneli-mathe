@@ -5,12 +5,13 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import type { BarBuildTask, ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
 import { PlateArt, TreatIcon } from "@/ui/Bakery";
 import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
 import { ShapeGroup, ShapeIcon, SolidArt } from "@/ui/Shapes";
 import { cmWidth, RULER_PAD, RulerItemArt, RulerScale } from "@/ui/Ruler";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
+import { BarChart, TallyTable } from "@/ui/Detective";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
 
@@ -45,6 +46,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <PatternView {...props} task={task} />;
     case "ruler":
       return <RulerView {...props} task={task} />;
+    case "bar-build":
+      return <BarBuildView {...props} task={task} />;
   }
 }
 
@@ -319,6 +322,20 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
 // --- Bild über der Aufgabe -------------------------------------------------
 
 function VisualCard({ visual }: { visual: Visual }) {
+  if (visual.kind === "tally") {
+    return (
+      <div className={`${card} px-4 py-2`}>
+        <TallyTable rows={visual.rows} />
+      </div>
+    );
+  }
+  if (visual.kind === "bars") {
+    return (
+      <div className={`${card} flex justify-center px-2 py-4`}>
+        <BarChart rows={visual.rows} step={visual.step} max={visual.max} />
+      </div>
+    );
+  }
   if (visual.kind === "shapes") {
     return (
       <div className={`${card} px-3 py-4`}>
@@ -661,6 +678,38 @@ function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
         <div className="mt-2 font-display text-lg font-semibold text-ink-soft">{end === null ? "Tippe auf das Lineal" : `${end} cm`}</div>
       </div>
       <Button tone="grape" disabled={locked || end === null} onClick={() => onAnswer(end === task.target)}>
+        Prüfen
+      </Button>
+    </div>
+  );
+}
+
+// --- Säulendiagramm zeichnen ------------------------------------------------
+
+function BarBuildView({ task, status, onAnswer }: FormatProps<BarBuildTask>) {
+  const [heights, setHeights] = useState<number[]>(() => task.rows.map(() => 0));
+  const locked = status !== "ask";
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} px-4 py-2`}>
+        <TallyTable rows={task.rows} />
+      </div>
+      <div className={`${card} flex flex-col items-center px-2 py-4`}>
+        <BarChart
+          rows={task.rows}
+          step={task.step}
+          max={task.max}
+          heights={heights}
+          ghost={status === "reveal"}
+          disabled={locked}
+          onSet={(col, value) => {
+            sfx.tap();
+            setHeights((h) => h.map((x, i) => (i === col ? value : x)));
+          }}
+        />
+        {task.step > 1 && <div className="mt-2 text-sm font-extrabold text-ink-soft">Ein Kästchen = {task.step}</div>}
+      </div>
+      <Button tone="grape" disabled={locked || heights.some((v) => v === 0)} onClick={() => onAnswer(heights.every((v, i) => v === task.rows[i].value))}>
         Prüfen
       </Button>
     </div>
