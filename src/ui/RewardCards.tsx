@@ -2,15 +2,17 @@
 
 import { STICKERS } from "@/game/collection";
 import { getPage } from "@/game/coloring";
-import type { Reward } from "@/game/state";
+import { readSave, type Reward } from "@/game/state";
 import { ChestArt, CoinIcon } from "./art";
 import { StickerArt } from "./Creatures";
 import { ColoringSvg } from "./ColoringSvg";
 import { BadgeMedal } from "./Badges";
 import { getBadge } from "@/game/badges";
+import { getPuzzle, PIECE_DUPLICATE_COINS, PIECES } from "@/game/puzzles";
+import { PuzzlePiece } from "./PuzzleArt";
 
 export function RewardCards({ rewards }: { rewards: Reward[] }) {
-  const coins = rewards.reduce((a, r) => a + (r.kind === "coins" ? r.amount : r.kind === "sticker" && r.duplicate ? 15 : 0), 0);
+  const coins = rewards.reduce((a, r) => a + (r.kind === "coins" ? r.amount : r.kind === "sticker" && r.duplicate ? 15 : r.kind === "piece" && r.duplicate ? PIECE_DUPLICATE_COINS : 0), 0);
   // Viele Abzeichen auf einmal (z. B. nach einem Update): nur zwei zeigen, Rest zusammenfassen.
   const badgeIds = rewards.filter((r) => r.kind === "badge").map((r) => r.id);
   const hiddenBadges = Math.max(0, badgeIds.length - 2);
@@ -57,6 +59,23 @@ export function RewardCards({ rewards }: { rewards: Reward[] }) {
               <div>
                 <div className="text-xs font-extrabold tracking-wider text-grape">NEUES ABZEICHEN</div>
                 <div className="font-display text-xl font-semibold">{b.title}</div>
+              </div>
+            </Card>
+          );
+        }
+        if (r.kind === "piece") {
+          const pz = getPuzzle(r.puzzle);
+          if (!pz) return null;
+          // Belohnungen sind beim Anzeigen schon verbucht.
+          const count = readSave().puzzles[r.puzzle]?.length ?? 0;
+          return (
+            <Card key={i} delay={i}>
+              <div className="flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-2xl bg-sun-light">
+                <PuzzlePiece puzzle={pz} piece={r.piece} size={56} />
+              </div>
+              <div>
+                <div className="text-xs font-extrabold tracking-wider text-coin-dark">{r.duplicate ? "PUZZLE-TEIL (HAST DU SCHON)" : "GEHEIMES PUZZLE-TEIL"}</div>
+                <div className="font-display text-xl font-semibold">{r.duplicate ? `wird zu ${PIECE_DUPLICATE_COINS} Münzen` : count >= PIECES ? "Bild komplett! Ab zum Ausmalen!" : `${count} von ${PIECES} Teilen`}</div>
               </div>
             </Card>
           );

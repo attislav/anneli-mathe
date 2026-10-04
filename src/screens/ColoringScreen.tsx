@@ -13,7 +13,7 @@ import { Button, LinkButton } from "@/ui/Button";
 import { Confetti, useBackdrop } from "@/ui/chrome";
 import { ColoringSvg } from "@/ui/ColoringSvg";
 
-const PALETTE: [string, string][] = [
+export const PALETTE: [string, string][] = [
   ["Hellblau", "#8ED8FF"],
   ["Weiß", "#FFFFFF"],
   ["Lila", "#9B7BFF"],

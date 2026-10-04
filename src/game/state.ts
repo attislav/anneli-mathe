@@ -12,6 +12,7 @@ import { STICKERS, SHOP, type CollectionGroup, type PetSpecies } from "./collect
 import { WORLDS, starNodes, type PathNode, type World } from "./worlds";
 import { pick } from "./random";
 import { activeSeason } from "./season";
+import { isComplete, PIECE_DUPLICATE_COINS, PIECES, puzzleOfWorld } from "./puzzles";
 import type { WorldId } from "./skills";
 import type { Level, TaskDraft } from "./types";
 
@@ -53,7 +54,13 @@ export type SaveState = {
   advent: { year: number; opened: number[] };
   /** Antwort-Protokoll für den Lernbericht (nur erste Versuche, die neuesten zuletzt). */
   log: AnswerLog[];
+  /** Puzzle-Ausmalbilder: gesammelte Teile (0–8) pro Bild. */
+  puzzles: Record<string, number[]>;
+  /** Ausgemalte Puzzle-Bilder: Farbeimer-Klicks [x, y, Farbe] in Bild-Pixeln. */
+  paint: Record<string, PaintOp[]>;
 };
+
+export type PaintOp = [number, number, string];
 
 /**
  * Eine erste Antwort. Kurz gehalten, weil es viele werden:
@@ -95,6 +102,8 @@ export function emptyState(): SaveState {
     practice: [],
     advent: { year: 0, opened: [] },
     log: [],
+    puzzles: {},
+    paint: {},
   };
 }
 
@@ -304,7 +313,9 @@ export type Reward =
   | { kind: "page"; id: string }
   | { kind: "badge"; id: string }
   /** Tagesschatz: die erste Lektion des Tages gibt extra. */
-  | { kind: "daily" };
+  | { kind: "daily" }
+  /** Ein Teil eines Puzzle-Ausmalbilds (0–8). */
+  | { kind: "piece"; puzzle: string; piece: number; duplicate: boolean };
 
 const DUPLICATE_COINS = 15;
 
@@ -316,8 +327,25 @@ export function rollSticker(s: SaveState, world: CollectionGroup, allowRare: boo
   return { kind: "sticker", id: chosen.id, duplicate: (s.stickers[chosen.id] ?? 0) > 0 };
 }
 
+/** Würfelt ein Puzzle-Teil der Welt — fehlende Teile sind wahrscheinlicher. Komplett → nichts mehr. */
+export function rollPiece(s: SaveState, world: WorldId): Reward | null {
+  const puzzle = puzzleOfWorld(world);
+  if (!puzzle) return null;
+  const have = s.puzzles[puzzle.id] ?? [];
+  if (isComplete(have)) return null;
+  const missing = Array.from({ length: PIECES }, (_, i) => i).filter((i) => !have.includes(i));
+  const piece = Math.random() < 0.75 ? pick(missing) : Math.floor(Math.random() * PIECES);
+  return { kind: "piece", puzzle: puzzle.id, piece, duplicate: have.includes(piece) };
+}
+
+/** Puzzle-Teil anhängen, falls die Welt eins hat (würfelt gegen den Stand inkl. bisheriger Belohnungen). */
+function addPiece(s: SaveState, rewards: Reward[], world: WorldId): void {
+  const r = rollPiece(applyRewards(s, rewards), world);
+  if (r) rewards.push(r);
+}
+
 export function applyRewards(s: SaveState, rewards: Reward[]): SaveState {
-  let next = { ...s, stickers: { ...s.stickers }, pages: [...s.pages] };
+  let next = { ...s, stickers: { ...s.stickers }, pages: [...s.pages], puzzles: { ...s.puzzles } };
   for (const r of rewards) {
     if (r.kind === "coins") next = { ...next, coins: next.coins + r.amount };
     if (r.kind === "sticker") {
@@ -326,6 +354,11 @@ export function applyRewards(s: SaveState, rewards: Reward[]): SaveState {
     }
     if (r.kind === "page" && !next.pages.includes(r.id)) next.pages.push(r.id);
     if (r.kind === "daily") next = { ...next, dailyChests: next.dailyChests + 1 };
+    if (r.kind === "piece") {
+      const have = next.puzzles[r.puzzle] ?? [];
+      if (r.duplicate || have.includes(r.piece)) next = { ...next, coins: next.coins + PIECE_DUPLICATE_COINS };
+      else next.puzzles[r.puzzle] = [...have, r.piece];
+    }
   }
   return next;
 }
@@ -390,16 +423,19 @@ export function lessonRewards(s: SaveState, node: PathNode, world: World, firstT
   if (dailyChestWaiting(s)) {
     rewards.push({ kind: "daily" }, rollSticker(s, halloween ? "halloween" : world.id, true), { kind: "coins", amount: DAILY_COINS });
     if (halloween && !s.pages.includes("kuerbis")) rewards.push({ kind: "page", id: "kuerbis" });
+    addPiece(s, rewards, world.id);
     // Folgende Sticker gegen den Stand NACH dem Tagesschatz würfeln (sonst zweimal „neu").
     s = applyRewards(s, rewards);
   }
   if (node.kind === "boss") {
     if (firstTime && node.coloring) rewards.push({ kind: "page", id: node.coloring });
     rewards.push(rollSticker(s, world.id, true));
+    addPiece(s, rewards, world.id);
     rewards.push({ kind: "coins", amount: 50 });
     return rewards;
   }
   if (firstTime || Math.random() < 0.45) rewards.push(rollSticker(s, halloween && Math.random() < 0.35 ? "halloween" : world.id, false));
+  if (Math.random() < (firstTime ? 0.5 : 0.2)) addPiece(s, rewards, world.id);
   rewards.push({ kind: "coins", amount: firstTime ? 20 : 10 });
   return rewards;
 }
@@ -410,6 +446,7 @@ export function openChest(node: PathNode, world: World): Reward[] {
   const rewards: Reward[] = [];
   if (node.coloring) rewards.push({ kind: "page", id: node.coloring });
   rewards.push(rollSticker(s, world.id, true));
+  addPiece(s, rewards, world.id);
   rewards.push({ kind: "coins", amount: 40 });
   update((cur) => markPlayedToday({ ...applyRewards(cur, rewards), chests: [...cur.chests, node.id] }));
   return rewards;
@@ -473,6 +510,10 @@ export function updateSettings(patch: Partial<SaveState["settings"]>): void {
 /** Spielstand von einem anderen Gerät übernehmen (ersetzt den aktuellen). */
 export function replaceSave(incoming: Partial<SaveState>): void {
   update(() => ({ ...emptyState(), ...incoming, v: 1, settings: { ...emptyState().settings, ...incoming.settings } }));
+}
+
+export function savePaint(puzzleId: string, ops: PaintOp[]): void {
+  update((s) => ({ ...s, paint: { ...s.paint, [puzzleId]: ops } }));
 }
 
 export function logAnswer(entry: AnswerLog): void {

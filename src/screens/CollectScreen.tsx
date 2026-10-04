@@ -8,6 +8,8 @@ import type { CollectionGroup } from "@/game/collection";
 const SEASON_GROUPS = (Object.keys(SEASON_NAMES) as SeasonId[]).map((id) => ({ id: id as CollectionGroup, name: SEASON_NAMES[id] }));
 import Link from "next/link";
 import { useState } from "react";
+import { isComplete, PIECES, PUZZLES } from "@/game/puzzles";
+import { PuzzleGrid } from "@/ui/PuzzleArt";
 import { Lock } from "lucide-react";
 import { petStage, SHOP, stickersOf } from "@/game/collection";
 import { COLORING_PAGES } from "@/game/coloring";
@@ -96,26 +98,63 @@ function Stickers({ save }: { save: SaveState }) {
   );
 }
 
+function Puzzles({ save }: { save: SaveState }) {
+  if (PUZZLES.length === 0) return null;
+  return (
+    <div className="mb-4">
+      <h2 className="mb-1 font-display text-2xl font-semibold">Geheime Puzzle-Bilder</h2>
+      <p className="mb-3 text-sm text-ink-soft">Sammle alle 9 Teile — dann zeigt sich das Bild und du kannst es ausmalen oder ausdrucken.</p>
+      <div className="grid grid-cols-2 gap-3">
+        {PUZZLES.map((pz) => {
+          const have = save.puzzles[pz.id] ?? [];
+          const done = isComplete(have);
+          const world = WORLDS.find((w) => w.id === pz.world);
+          const body = (
+            <>
+              <PuzzleGrid puzzle={pz} have={have} width={132} />
+              <div className="text-center font-extrabold leading-tight">{done ? pz.title : `${have.length} / ${PIECES} Teile`}</div>
+              {!done && world && <div className="text-center text-xs text-ink-soft">Welt {world.index + 1}: {world.name}</div>}
+            </>
+          );
+          return done ? (
+            <Link key={pz.id} href={`/malen/?p=${pz.id}`} className="chunky flex flex-col items-center gap-2 rounded-[22px] bg-white p-3" style={{ ["--shade" as string]: "#F2D58A" }}>
+              {body}
+            </Link>
+          ) : (
+            <div key={pz.id} className="flex flex-col items-center gap-2 rounded-[22px] bg-white/70 p-3">
+              {body}
+            </div>
+          );
+        })}
+      </div>
+      <h2 className="mb-2 mt-5 font-display text-2xl font-semibold">Ausmalbilder</h2>
+    </div>
+  );
+}
+
 function Pages({ save }: { save: SaveState }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {COLORING_PAGES.map((page) => {
-        const unlocked = save.pages.includes(page.id);
-        const world = WORLDS.find((w) => w.id === page.world);
-        const hint = world ? `Versteckt in einer Truhe im ${world.name}` : page.world === "halloween" ? "Gibt's nur im Oktober im Tagesschatz" : "Versteckt im Adventskalender";
-        return unlocked ? (
-          <Link key={page.id} href={`/ausmalen?b=${page.id}`} className="chunky flex flex-col items-center gap-2 rounded-[22px] bg-white p-3" style={{ ["--shade" as string]: "#F2D58A" }}>
-            <ColoringSvg page={page} fills={save.fills[page.id] ?? {}} size={140} />
-            <div className="text-center font-extrabold leading-tight">{page.title}</div>
-          </Link>
-        ) : (
-          <div key={page.id} className="flex flex-col items-center justify-center gap-2 rounded-[22px] bg-white/60 p-3 text-center" style={{ minHeight: 200 }}>
-            <Lock className="text-ink-soft" size={30} />
-            <div className="text-sm font-extrabold text-ink-soft">{hint}</div>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <Puzzles save={save} />
+      <div className="grid grid-cols-2 gap-3">
+        {COLORING_PAGES.map((page) => {
+          const unlocked = save.pages.includes(page.id);
+          const world = WORLDS.find((w) => w.id === page.world);
+          const hint = world ? `Versteckt in einer Truhe im ${world.name}` : page.world === "halloween" ? "Gibt's nur im Oktober im Tagesschatz" : "Versteckt im Adventskalender";
+          return unlocked ? (
+            <Link key={page.id} href={`/ausmalen?b=${page.id}`} className="chunky flex flex-col items-center gap-2 rounded-[22px] bg-white p-3" style={{ ["--shade" as string]: "#F2D58A" }}>
+              <ColoringSvg page={page} fills={save.fills[page.id] ?? {}} size={140} />
+              <div className="text-center font-extrabold leading-tight">{page.title}</div>
+            </Link>
+          ) : (
+            <div key={page.id} className="flex flex-col items-center justify-center gap-2 rounded-[22px] bg-white/60 p-3 text-center" style={{ minHeight: 200 }}>
+              <Lock className="text-ink-soft" size={30} />
+              <div className="text-sm font-extrabold text-ink-soft">{hint}</div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
