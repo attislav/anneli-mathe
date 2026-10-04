@@ -5,9 +5,11 @@
 
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
-import type { ChoiceTask, ClockSetTask, CompareTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
+import type { ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
 import { PlateArt, TreatIcon } from "@/ui/Bakery";
 import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
+import { ShapeGroup, ShapeIcon, SolidArt } from "@/ui/Shapes";
+import { cmWidth, RULER_PAD, RulerItemArt, RulerScale } from "@/ui/Ruler";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
@@ -37,6 +39,12 @@ export function TaskView(props: FormatProps<Task>) {
       return <ShareView {...props} task={task} />;
     case "clock-set":
       return <ClockSetView {...props} task={task} />;
+    case "mirror":
+      return <MirrorView {...props} task={task} />;
+    case "pattern":
+      return <PatternView {...props} task={task} />;
+    case "ruler":
+      return <RulerView {...props} task={task} />;
   }
 }
 
@@ -281,11 +289,11 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-center gap-3">
-        <div className={`${card} flex h-[110px] flex-1 items-center justify-center font-display text-[clamp(1.8rem,8vw,2.8rem)] font-semibold`}>{task.left}</div>
+        <div className={`${card} flex h-[110px] flex-1 items-center justify-center px-2 text-center font-display font-semibold leading-tight ${task.left.length > 7 ? "text-[clamp(1.2rem,5.5vw,1.9rem)]" : "text-[clamp(1.8rem,8vw,2.8rem)]"}`}>{task.left}</div>
         <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full border-4 border-dashed border-grape font-display text-5xl font-semibold" style={{ background: shown ? c.bg : "transparent", color: shown ? c.fg : "#7B4DFF", borderStyle: shown ? "solid" : "dashed" }}>
           {shown ?? ""}
         </div>
-        <div className={`${card} flex h-[110px] flex-1 items-center justify-center font-display text-[clamp(1.8rem,8vw,2.8rem)] font-semibold`}>{task.right}</div>
+        <div className={`${card} flex h-[110px] flex-1 items-center justify-center px-2 text-center font-display font-semibold leading-tight ${task.right.length > 7 ? "text-[clamp(1.2rem,5.5vw,1.9rem)]" : "text-[clamp(1.8rem,8vw,2.8rem)]"}`}>{task.right}</div>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {(["<", "=", ">"] as const).map((sym) => (
@@ -311,6 +319,28 @@ function CompareView({ task, status, onAnswer }: FormatProps<CompareTask>) {
 // --- Bild über der Aufgabe -------------------------------------------------
 
 function VisualCard({ visual }: { visual: Visual }) {
+  if (visual.kind === "shapes") {
+    return (
+      <div className={`${card} px-3 py-4`}>
+        <ShapeGroup items={visual.items} scatter={visual.scatter} />
+      </div>
+    );
+  }
+  if (visual.kind === "ruler") {
+    return (
+      <div className={`${card} flex flex-col items-center px-2 py-4`}>
+        <RulerItemArt item={visual.item} from={visual.from} to={visual.to} max={visual.max} width={RULER_W} />
+        <RulerScale max={visual.max} width={RULER_W} />
+      </div>
+    );
+  }
+  if (visual.kind === "solid") {
+    return (
+      <div className={`${card} flex justify-center py-3`}>
+        <SolidArt solid={visual.solid} size={150} />
+      </div>
+    );
+  }
   if (visual.kind === "clock") {
     return (
       <div className={`${card} flex justify-center py-3`}>
@@ -495,6 +525,142 @@ function ClockSetView({ task, status, onAnswer }: FormatProps<ClockSetTask>) {
       {row("Kurzer Zeiger", HOUR_COLOR, () => moveHour(-1), () => moveHour(1))}
       {row("Langer Zeiger", MINUTE_COLOR, () => moveMinute(-1), () => moveMinute(1), task.step === 60)}
       <Button tone="grape" disabled={locked} onClick={() => onAnswer(hour === task.hour && minute === task.minute)}>
+        Prüfen
+      </Button>
+    </div>
+  );
+}
+
+// --- Spiegeln im Gitter -------------------------------------------------------
+
+function MirrorView({ task, status, onAnswer }: FormatProps<MirrorTask>) {
+  const [picked, setPicked] = useState<Set<string>>(() => new Set());
+  const locked = status !== "ask";
+  const cols = task.half * 2;
+  const left = new Set(task.cells.map(([r, c]) => `${r},${c}`));
+  const target = new Set(task.cells.map(([r, c]) => `${r},${cols - 1 - c}`));
+  const cell = Math.min(44, Math.floor(300 / cols));
+  const toggle = (key: string) => {
+    if (locked) return;
+    sfx.tap();
+    setPicked((p) => {
+      const next = new Set(p);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+  const check = () => onAnswer(picked.size === target.size && [...target].every((k) => picked.has(k)));
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} flex justify-center p-4`}>
+        <div className="relative grid" style={{ gridTemplateColumns: `repeat(${cols}, ${cell}px)` }}>
+          {Array.from({ length: task.rows * cols }, (_, i) => {
+            const r = Math.floor(i / cols);
+            const c = i % cols;
+            const key = `${r},${c}`;
+            const isLeft = c < task.half;
+            const filled = isLeft ? left.has(key) : picked.has(key);
+            const showMiss = !isLeft && status === "reveal" && target.has(key) && !picked.has(key);
+            return (
+              <button
+                key={key}
+                disabled={isLeft || locked}
+                aria-label={isLeft ? undefined : `Kästchen Reihe ${r + 1}, Spalte ${c - task.half + 1}`}
+                onClick={() => toggle(key)}
+                className="border border-[#C9D3E3]"
+                style={{ width: cell, height: cell, background: filled ? task.color : showMiss ? `${task.color}55` : isLeft ? "#F4F1FF" : "#fff" }}
+              />
+            );
+          })}
+          <div className="pointer-events-none absolute inset-y-[-6px] w-1 rounded-full bg-grape" style={{ left: task.half * cell - 2 }} aria-hidden="true" />
+        </div>
+      </div>
+      <Button tone="grape" disabled={locked || picked.size === 0} onClick={check}>
+        Prüfen
+      </Button>
+    </div>
+  );
+}
+
+// --- Muster fortsetzen ----------------------------------------------------------
+
+function PatternView({ task, status, onAnswer }: FormatProps<PatternTask>) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const locked = status !== "ask";
+  const shown = status === "right" || status === "reveal" ? task.options[task.answer] : null;
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} flex flex-wrap items-center justify-center gap-1.5 px-3 py-5`}>
+        {task.items.map((it, i) => (
+          <ShapeIcon key={i} shape={it.shape} color={it.color} size={38} />
+        ))}
+        <span className={`flex h-[46px] w-[46px] items-center justify-center rounded-xl border-4 border-dashed ${shown ? "border-leaf" : "border-grape"}`}>
+          {shown ? <ShapeIcon shape={shown.shape} color={shown.color} size={34} /> : <span className="font-display text-2xl font-semibold text-grape">?</span>}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {task.options.map((o, i) => {
+          const isPicked = picked === i;
+          const c = isPicked ? pickedColors(status) : pickedColors("ask");
+          return (
+            <button
+              key={i}
+              disabled={locked}
+              aria-label={`Antwort ${i + 1}`}
+              onClick={() => {
+                setPicked(i);
+                onAnswer(i === task.answer);
+              }}
+              className="chunky flex h-20 items-center justify-center rounded-[22px]"
+              style={{ background: c.bg, ["--shade" as string]: c.shade }}
+            >
+              <ShapeIcon shape={o.shape} color={o.color} size={50} />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// --- Linie am Lineal zeichnen -----------------------------------------------
+
+const RULER_W = 320;
+
+function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
+  const [end, setEnd] = useState<number | null>(null);
+  const locked = status !== "ask";
+  const u = cmWidth(RULER_W, task.max);
+  const shown = status === "reveal" ? task.target : end;
+  return (
+    <div className="flex flex-col gap-4">
+      <div className={`${card} flex flex-col items-center px-2 py-4`}>
+        <svg viewBox={`0 0 ${RULER_W} 24`} width={RULER_W} height={24} aria-hidden="true" className="block">
+          {shown !== null && <line x1={RULER_PAD} x2={RULER_PAD + shown * u} y1={12} y2={12} stroke={status === "reveal" ? "#FFB648" : "#7B4DFF"} strokeWidth="6" strokeLinecap="round" />}
+          <circle cx={RULER_PAD} cy={12} r={5} fill="#7B4DFF" />
+        </svg>
+        <div className="relative" style={{ width: RULER_W }}>
+          <RulerScale max={task.max} width={RULER_W} />
+          <div className="absolute inset-0 flex" style={{ paddingLeft: RULER_PAD - u / 2 }}>
+            {Array.from({ length: task.max }, (_, i) => i + 1).map((cm) => (
+              <button
+                key={cm}
+                aria-label={`${cm} Zentimeter`}
+                disabled={locked}
+                onClick={() => {
+                  sfx.tap();
+                  setEnd(cm);
+                }}
+                className="h-full"
+                style={{ width: u, marginLeft: cm === 1 ? u : 0 }}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mt-2 font-display text-lg font-semibold text-ink-soft">{end === null ? "Tippe auf das Lineal" : `${end} cm`}</div>
+      </div>
+      <Button tone="grape" disabled={locked || end === null} onClick={() => onAnswer(end === task.target)}>
         Prüfen
       </Button>
     </div>

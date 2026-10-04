@@ -341,6 +341,22 @@ function Decor({ world, height }: { world: World; height: number }) {
               <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
             </g>
           );
+        if (world.id === "werkstatt")
+          return (
+            <g key={i}>
+              <rect x={side - 26} y={y - 8} width="52" height="16" rx="3" fill={world.theme.deco} stroke={world.theme.decoDark} strokeWidth="2" />
+              <path d={`M${side - 18} ${y - 8} v6 M${side - 9} ${y - 8} v4 M${side} ${y - 8} v6 M${side + 9} ${y - 8} v4 M${side + 18} ${y - 8} v6`} stroke={world.theme.decoDark} strokeWidth="2" />
+              <circle cx={side + (side < COL / 2 ? 18 : -18)} cy={y + 32} r="10" fill="none" stroke={world.theme.decoDark} strokeWidth="5" strokeDasharray="5 4" />
+            </g>
+          );
+        if (world.id === "ozean")
+          return (
+            <g key={i}>
+              <path d={`M${side} ${y - 22} l7 14 15 2 -11 10 3 15 -14 -7 -14 7 3 -15 -11 -10 15 -2z`} fill={world.theme.decoDark} />
+              <circle cx={side + (side < COL / 2 ? 24 : -24)} cy={y + 30} r="7" fill="none" stroke={world.theme.decoDark} strokeWidth="3" />
+              <circle cx={side + (side < COL / 2 ? 14 : -14)} cy={y + 44} r="4" fill="none" stroke={world.theme.decoDark} strokeWidth="2.5" />
+            </g>
+          );
         if (world.id === "schloss")
           return (
             <g key={i}>

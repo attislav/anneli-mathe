@@ -242,10 +242,66 @@ export const WORLDS: World[] = [
       { id: "schloss-boss", kind: "boss", title: "Graf Tick-Tack", skills: ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne"], coloring: "schloss" },
     ],
   },
+  {
+    id: "ozean",
+    index: 7,
+    name: "Formen-Ozean",
+    tagline: "Formen & Muster",
+    starsToEnter: 152,
+    theme: { ground: "#E3F7FA", band: "#1C9AAE", bandShade: "#137585", deco: "#9BE3EC", decoDark: "#5CC6D6" },
+    boss: { name: "Krake Kringel", color: "#FF5D9E", shade: "#C93B77" },
+    nodes: [
+      { id: "ozean-1", kind: "lesson", title: "Formen erkennen", skills: ["formen"] },
+      { id: "ozean-2", kind: "lesson", title: "Formen zählen", skills: ["formenZaehlen"] },
+      { id: "ozean-3", kind: "trick", title: "Spiegeln", skills: ["spiegeln"] },
+      chest("ozean-4", "qualle"),
+      { id: "ozean-5", kind: "lesson", title: "Muster", skills: ["muster"] },
+      { id: "ozean-6", kind: "lesson", title: "Körper", skills: ["koerper"] },
+      { id: "ozean-7", kind: "lesson", title: "Spiegeln & Muster", skills: ["spiegeln", "muster"] },
+      { id: "ozean-8", kind: "review", title: "Gemischt", skills: ["formen", "formenZaehlen", "spiegeln", "muster", "koerper"] },
+      round2("ozean-9", "Formen erkennen 2", ["formen"]),
+      round2("ozean-10", "Spiegeln 2", ["spiegeln"]),
+      chest("ozean-11"),
+      round2("ozean-12", "Formen zählen 2", ["formenZaehlen"]),
+      round2("ozean-13", "Muster 2", ["muster"]),
+      round2("ozean-14", "Körper 2", ["koerper"]),
+      chest("ozean-15"),
+      mix2("ozean-16", ["formen", "formenZaehlen", "spiegeln", "muster", "koerper"]),
+      { id: "ozean-boss", kind: "boss", title: "Krake Kringel", skills: ["formen", "spiegeln", "muster", "koerper"], coloring: "seestern" },
+    ],
+  },
+  {
+    id: "werkstatt",
+    index: 8,
+    name: "Mess-Werkstatt",
+    tagline: "Längen messen",
+    starsToEnter: 174,
+    theme: { ground: "#FFF4E6", band: "#D9822B", bandShade: "#A85F17", deco: "#F7C99B", decoDark: "#C98A4B" },
+    boss: { name: "Roboter Bolzi", color: "#9AA6B8", shade: "#6E7A8E" },
+    nodes: [
+      { id: "werkstatt-1", kind: "trick", title: "Lineal anlegen", skills: ["lineal"] },
+      { id: "werkstatt-2", kind: "lesson", title: "Längen schätzen", skills: ["schaetzen"] },
+      { id: "werkstatt-3", kind: "lesson", title: "Meter und Zentimeter", skills: ["einheiten"] },
+      chest("werkstatt-4", "roboter"),
+      { id: "werkstatt-5", kind: "lesson", title: "Mit Längen rechnen", skills: ["laengenRechnen"] },
+      { id: "werkstatt-6", kind: "lesson", title: "Längen vergleichen", skills: ["laengenVergleichen"] },
+      { id: "werkstatt-7", kind: "lesson", title: "Messen & schätzen", skills: ["lineal", "schaetzen"] },
+      { id: "werkstatt-8", kind: "review", title: "Gemischt", skills: ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"] },
+      round2("werkstatt-9", "Lineal 2", ["lineal"]),
+      round2("werkstatt-10", "Meter und Zentimeter 2", ["einheiten"]),
+      chest("werkstatt-11"),
+      round2("werkstatt-12", "Längen schätzen 2", ["schaetzen"]),
+      round2("werkstatt-13", "Mit Längen rechnen 2", ["laengenRechnen"]),
+      round2("werkstatt-14", "Längen vergleichen 2", ["laengenVergleichen"]),
+      chest("werkstatt-15"),
+      mix2("werkstatt-16", ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"]),
+      { id: "werkstatt-boss", kind: "boss", title: "Roboter Bolzi", skills: ["lineal", "einheiten", "laengenRechnen", "laengenVergleichen"], coloring: "werkzeugkiste" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Formen-Ozean", "Mess-Werkstatt", "Detektivbüro", "Sternen-Expedition"];
+export const COMING_SOON = ["Detektivbüro", "Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

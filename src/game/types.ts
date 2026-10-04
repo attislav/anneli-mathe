@@ -7,7 +7,7 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set";
+export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set" | "mirror" | "pattern" | "ruler";
 
 type TaskBase = {
   id: string;
@@ -22,7 +22,18 @@ type TaskBase = {
 };
 
 /** Bild über der Aufgabe — z. B. Münzen und Scheine zum Zählen (Werte in Cent). */
-export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: number; cols: number } | { kind: "clock"; hour: number; minute: number };
+export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: number; cols: number } | { kind: "clock"; hour: number; minute: number }
+  | { kind: "shapes"; items: ShapeItem[]; scatter?: boolean }
+  | { kind: "solid"; solid: SolidId }
+  /** Ein Gegenstand liegt am Lineal, von `from` bis `to` (cm). */
+  | { kind: "ruler"; from: number; to: number; max: number; item: RulerItem };
+
+export type RulerItem = "stift" | "band" | "wurm" | "nagel";
+
+export type ShapeId = "kreis" | "dreieck" | "quadrat" | "rechteck" | "fuenfeck" | "sechseck";
+export type SolidId = "wuerfel" | "quader" | "kugel" | "zylinder" | "kegel" | "pyramide";
+/** Eine Form mit Farbe (und Größe 1 = normal). */
+export type ShapeItem = { shape: ShapeId; color: string; size?: number };
 
 /** Antwort antippen. `term` ist die große Aufgabe, z.B. „38 + 7 = ?". */
 export type ChoiceTask = TaskBase & {
@@ -93,6 +104,32 @@ export type ShareTask = TaskBase & {
 
 export type Treat = "keks" | "muffin" | "brezel";
 
+/** Spiegeln im Gitter: links ist ein Muster, rechts soll das Spiegelbild hin. */
+export type MirrorTask = TaskBase & {
+  format: "mirror";
+  rows: number;
+  /** Spalten pro Hälfte. */
+  half: number;
+  /** Ausgemalte Kästchen der linken Hälfte als [Zeile, Spalte]. */
+  cells: [number, number][];
+  color: string;
+};
+
+/** Muster fortsetzen: Was kommt als Nächstes? `answer` ist der Index in `options`. */
+export type PatternTask = TaskBase & {
+  format: "pattern";
+  items: ShapeItem[];
+  options: ShapeItem[];
+  answer: number;
+};
+
+/** Am Lineal eine Linie zeichnen: bis zum richtigen Strich tippen. */
+export type RulerTask = TaskBase & {
+  format: "ruler";
+  target: number;
+  max: number;
+};
+
 /** Zeiger einer Uhr stellen. `step`: in welchen Minuten-Schritten der Minutenzeiger springt. */
 export type ClockSetTask = TaskBase & {
   format: "clock-set";
@@ -101,7 +138,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask;
+export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

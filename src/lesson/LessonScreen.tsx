@@ -9,7 +9,7 @@ import { Volume2, X } from "lucide-react";
 import { starsFor, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import { getSkill } from "@/game/skills";
-import { bestStars, lessonRewards, levelInfo, readSave, recordLesson, type Reward, type SaveState } from "@/game/state";
+import { bestStars, lessonRewards, levelInfo, logAnswer, readSave, recordLesson, type Reward, type SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
 import { speak, stopSpeaking } from "@/game/speech";
 import type { Task } from "@/game/types";
@@ -51,6 +51,11 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   const [phase, setPhase] = useState<"intro" | "play" | "result">(trick ? "intro" : "play");
   const [run, setRun] = useState<Run>(() => startRun(node, tier, save.mastery));
   const [task, setTask] = useState<Task>(() => nextTask(startRun(node, tier, save.mastery)));
+  // Wann die aktuelle Aufgabe erschienen ist — für die Antwortzeit im Lernbericht.
+  const shownAt = useRef(0);
+  useEffect(() => {
+    shownAt.current = Date.now();
+  }, [task, phase]);
   const [attempt, setAttempt] = useState(0);
   const [retry, setRetry] = useState(0);
   const [status, setStatus] = useState<Status>("ask");
@@ -130,6 +135,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   const onAnswer = (correct: boolean) => {
     if (status !== "ask") return;
     if (attempt === 0) {
+      logAnswer({ t: Math.round(Date.now() / 1000), s: task.skillId, l: task.level, ok: correct ? 1 : 0, ms: Math.min(600000, Date.now() - shownAt.current), ...(node.practice ? { p: 1 as const } : {}) });
       if (node.practice) reviewPractice(task, correct);
       else notePractice(task, correct);
       const res = firstAnswer(run, task, correct);

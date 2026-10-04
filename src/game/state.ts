@@ -51,7 +51,17 @@ export type SaveState = {
   practice: PracticeItem[];
   /** Adventskalender: geöffnete Türchen im Jahr `year`. */
   advent: { year: number; opened: number[] };
+  /** Antwort-Protokoll für den Lernbericht (nur erste Versuche, die neuesten zuletzt). */
+  log: AnswerLog[];
 };
+
+/**
+ * Eine erste Antwort. Kurz gehalten, weil es viele werden:
+ * t = Zeitpunkt (Sekunden), s = Kompetenz, l = Stufe, ok = 1/0,
+ * ms = Antwortzeit, p = 1 in der Übungskiste.
+ */
+export type AnswerLog = { t: number; s: string; l: number; ok: 0 | 1; ms: number; p?: 1 };
+export const LOG_MAX = 1500;
 
 /** Eine Aufgabe in der Übungskiste. `box` 0–2: nach 1, 3, 7 Tagen wieder dran. */
 export type PracticeItem = { key: string; task: TaskDraftWithSkill; box: number; due: string };
@@ -84,6 +94,7 @@ export function emptyState(): SaveState {
     dailyChests: 0,
     practice: [],
     advent: { year: 0, opened: [] },
+    log: [],
   };
 }
 
@@ -415,6 +426,10 @@ export function updateSettings(patch: Partial<SaveState["settings"]>): void {
 /** Spielstand von einem anderen Gerät übernehmen (ersetzt den aktuellen). */
 export function replaceSave(incoming: Partial<SaveState>): void {
   update(() => ({ ...emptyState(), ...incoming, v: 1, settings: { ...emptyState().settings, ...incoming.settings } }));
+}
+
+export function logAnswer(entry: AnswerLog): void {
+  update((s) => ({ ...s, log: [...s.log, entry].slice(-LOG_MAX) }));
 }
 
 export function resetAll(): void {
