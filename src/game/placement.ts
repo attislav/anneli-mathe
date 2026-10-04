@@ -21,6 +21,7 @@ const PROBE: Record<WorldId, string[]> = {
   schloss: ["uhrLesen", "zeitWoerter"],
   ozean: ["formen", "spiegeln"],
   werkstatt: ["lineal", "einheiten"],
+  detektiv: ["strichliste", "sachaufgaben"],
 };
 
 const LEVEL: Level = 3;

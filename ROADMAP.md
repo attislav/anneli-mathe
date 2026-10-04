@@ -294,7 +294,7 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-12b ✓ | **Lernbericht (pro Gerät)** | Jede erste Antwort wird mitgeschrieben (Thema, Stufe, richtig?, Zeit). Eltern-Ecke → Bericht: Stärken, Problemthemen, Trefferquote + Trend pro Thema, Zeit pro Aufgabe, Übezeit pro Tag, typische Fehler | Bericht zeigt echte Daten; zentrales Dashboard erst mit AP-20 |
 | AP-12c ✓ | **Mehrere Kinder pro Gerät** | „Wer spielt?“-Auswahl (einmal pro Sitzung, wenn >1 Kind), „Neues Kind“, Wechsel über „Ich“; eigener Spielstand pro Kind; Lernbericht mit Kind-Umschalter; Spielstand-Code „als weiteres Kind“ übernehmen | Zwei Kinder spielen getrennt auf einem Tablet |
 | AP-13 ✓ | **Welt 9: Mess-Werkstatt** | cm/m, Lineal; Format „Lineal anlegen" | 9 Knoten spielbar |
-| AP-14 | **Welt 10: Detektivbüro** | Sachaufgaben, Diagramme | 9 Knoten spielbar |
+| AP-14 ✓ | **Welt 10: Detektivbüro** | Strichlisten, Säulendiagramme (neues Format „Diagramm zeichnen"), Sachaufgaben (ab Stufe 5 zweischrittig), Möglichkeiten zählen, Fehler-Detektiv | 9 Knoten spielbar |
 | AP-14b | **Puzzle-Ausmalbilder** | Geheime KI-Malvorlagen (s/w, dicke Linien) in 9 Teilen; Teile zufällig wie Sticker (Truhen, Lektionen, Tagesschatz), Doppelte → Münzen; komplett → in der App ausmalen oder auf A4 drucken | 6 Bilder sammelbar, Druck sieht sauber aus |
 | AP-15 | **Schul-Modus** | Eltern wählen Schulthema → Empfehlung auf dem Pfad | in der Eltern-Ecke einstellbar |
 | AP-16 | **KI-Ausmalbilder** | Linienbilder + Ausmalen per Flood-Fill | 6 neue Bilder in Truhen |

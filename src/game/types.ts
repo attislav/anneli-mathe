@@ -7,7 +7,7 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set" | "mirror" | "pattern" | "ruler";
+export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set" | "mirror" | "pattern" | "ruler" | "bar-build";
 
 type TaskBase = {
   id: string;
@@ -26,7 +26,15 @@ export type Visual = { kind: "money"; items: number[] } | { kind: "dots"; rows: 
   | { kind: "shapes"; items: ShapeItem[]; scatter?: boolean }
   | { kind: "solid"; solid: SolidId }
   /** Ein Gegenstand liegt am Lineal, von `from` bis `to` (cm). */
-  | { kind: "ruler"; from: number; to: number; max: number; item: RulerItem };
+  | { kind: "ruler"; from: number; to: number; max: number; item: RulerItem }
+  /** Strichliste: pro Zeile ein Ding und wie oft es gezählt wurde. */
+  | { kind: "tally"; rows: DataRow[] }
+  /** Säulendiagramm. `step`: Wert pro Kästchen. */
+  | { kind: "bars"; rows: DataRow[]; step: number; max: number };
+
+export type DataIcon = "apfel" | "banane" | "birne" | "kirsche" | "traube" | "hund" | "katze" | "hase" | "vogel" | "sonne" | "regen" | "wolke";
+/** Eine Zeile Daten für Strichliste oder Diagramm. */
+export type DataRow = { label: string; icon: DataIcon; value: number };
 
 export type RulerItem = "stift" | "band" | "wurm" | "nagel";
 
@@ -130,6 +138,14 @@ export type RulerTask = TaskBase & {
   max: number;
 };
 
+/** Säulendiagramm zeichnen: Säulen auf die Werte aus der Strichliste ziehen. */
+export type BarBuildTask = TaskBase & {
+  format: "bar-build";
+  rows: DataRow[];
+  step: number;
+  max: number;
+};
+
 /** Zeiger einer Uhr stellen. `step`: in welchen Minuten-Schritten der Minutenzeiger springt. */
 export type ClockSetTask = TaskBase & {
   format: "clock-set";
@@ -138,7 +154,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask;
+export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

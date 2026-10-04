@@ -298,10 +298,38 @@ export const WORLDS: World[] = [
       { id: "werkstatt-boss", kind: "boss", title: "Roboter Bolzi", skills: ["lineal", "einheiten", "laengenRechnen", "laengenVergleichen"], coloring: "werkzeugkiste" },
     ],
   },
+  {
+    id: "detektiv",
+    index: 9,
+    name: "Detektivbüro",
+    tagline: "Spuren lesen",
+    starsToEnter: 196,
+    theme: { ground: "#F3EEE6", band: "#6B4F3A", bandShade: "#4A3424", deco: "#D8C3A5", decoDark: "#8C6B4F" },
+    boss: { name: "Elster Klauzi", color: "#3A3E85", shade: "#262A63" },
+    nodes: [
+      { id: "detektiv-1", kind: "trick", title: "Strichlisten", skills: ["strichliste"] },
+      { id: "detektiv-2", kind: "lesson", title: "Diagramme lesen", skills: ["diagramm"] },
+      { id: "detektiv-3", kind: "lesson", title: "Fehler-Detektiv", skills: ["fehlerDetektiv"] },
+      chest("detektiv-4", "lupe"),
+      { id: "detektiv-5", kind: "lesson", title: "Sachaufgaben", skills: ["sachaufgaben"] },
+      { id: "detektiv-6", kind: "lesson", title: "Wie viele Möglichkeiten?", skills: ["kombinatorik"] },
+      { id: "detektiv-7", kind: "lesson", title: "Strichliste & Diagramm", skills: ["strichliste", "diagramm"] },
+      { id: "detektiv-8", kind: "review", title: "Gemischt", skills: ["strichliste", "diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"] },
+      round2("detektiv-9", "Strichlisten 2", ["strichliste"]),
+      round2("detektiv-10", "Diagramme 2", ["diagramm"]),
+      chest("detektiv-11"),
+      round2("detektiv-12", "Sachaufgaben 2", ["sachaufgaben"]),
+      round2("detektiv-13", "Fehler-Detektiv 2", ["fehlerDetektiv"]),
+      round2("detektiv-14", "Möglichkeiten 2", ["kombinatorik"]),
+      chest("detektiv-15"),
+      mix2("detektiv-16", ["strichliste", "diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"]),
+      { id: "detektiv-boss", kind: "boss", title: "Elster Klauzi", skills: ["diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"], coloring: "detektiv" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Detektivbüro", "Sternen-Expedition"];
+export const COMING_SOON = ["Sternen-Expedition"];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {
