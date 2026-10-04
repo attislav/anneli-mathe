@@ -2,7 +2,7 @@
 
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
-import { chooseFormat, numeric, type Skill } from "./genkit";
+import { numeric, type Skill } from "./genkit";
 
 export const SHAPE_NAMES: Record<ShapeId, string> = { kreis: "Kreis", dreieck: "Dreieck", quadrat: "Quadrat", rechteck: "Rechteck", fuenfeck: "Fünfeck", sechseck: "Sechseck" };
 const SHAPE_PLURAL: Record<ShapeId, string> = { kreis: "Kreise", dreieck: "Dreiecke", quadrat: "Quadrate", rechteck: "Rechtecke", fuenfeck: "Fünfecke", sechseck: "Sechsecke" };

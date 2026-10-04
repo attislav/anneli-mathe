@@ -5,7 +5,7 @@
 import { TransferSection } from "@/ui/Transfer";
 import { BadgesSection } from "@/ui/Badges";
 import { useState } from "react";
-import { ChevronRight, Heart, Lock, Volume2, VolumeX } from "lucide-react";
+import { ChevronRight, Heart, Lock, Users, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { START_MASTERY } from "@/game/adaptive";
 import { PET_STAGE_NAMES, PETS, petStage } from "@/game/collection";
@@ -82,6 +82,13 @@ export function MeScreen({ save }: { save: SaveState }) {
         <Toggle label="Töne" on={save.settings.sound} onChange={(v) => updateSettings({ sound: v })} icon={save.settings.sound ? <Volume2 /> : <VolumeX />} />
         <Toggle label="Aufgaben automatisch vorlesen" on={save.settings.autoRead} onChange={(v) => updateSettings({ autoRead: v })} />
       </div>
+
+      <Link href="/wer/" className="mt-4 flex items-center justify-between rounded-[24px] bg-white p-4 font-extrabold">
+        <span className="flex items-center gap-2">
+          <Users size={22} className="text-grape" /> Kind wechseln oder neues Kind
+        </span>
+        <ChevronRight size={20} className="text-ink-soft" />
+      </Link>
 
       <button onClick={() => setParent(true)} className="mx-auto mt-6 flex items-center gap-2 font-extrabold text-ink-soft">
         <Lock size={18} /> Eltern-Ecke
@@ -192,11 +199,11 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
           <TransferSection />
           {!confirmReset ? (
             <button onClick={() => setConfirmReset(true)} className="self-start text-sm font-extrabold text-rose-dark underline">
-              Spielstand zurücksetzen
+              Spielstand von {save.profile?.name} löschen
             </button>
           ) : (
             <div className="rounded-2xl bg-rose-light p-3">
-              <p className="mb-2 text-sm font-extrabold">Wirklich alles löschen? Das kann man nicht rückgängig machen.</p>
+              <p className="mb-2 text-sm font-extrabold">Wirklich den ganzen Spielstand von {save.profile?.name} löschen? Das kann man nicht rückgängig machen.</p>
               <div className="flex gap-2">
                 <Button tone="rose" size="md" onClick={resetAll}>
                   Ja, löschen
