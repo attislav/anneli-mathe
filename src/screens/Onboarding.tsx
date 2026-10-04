@@ -123,14 +123,13 @@ export function Onboarding() {
       {step === "start" && species && (
         <>
           <Pet species={species} size={110} />
-          <h1 className="font-display text-3xl font-semibold">Wo fangt ihr an?</h1>
-          <button onClick={() => setStep("placement")} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-grape">Zeig, was du kannst!</div>
-            <div className="text-ink-soft">Ein kleines Abenteuer, ca. 5 Minuten — danach weißt du, in welcher Welt du startest.</div>
-          </button>
-          <button onClick={() => finish(0)} className="chunky w-full max-w-sm rounded-[24px] bg-white p-5 text-left text-ink" style={{ ["--shade" as string]: "#5A2FE0" }}>
-            <div className="font-display text-2xl font-semibold text-coin-dark">Ganz vorne anfangen</div>
-            <div className="text-ink-soft">Startinsel: Rechnen bis 20 — zum Warmwerden</div>
+          <h1 className="font-display text-3xl font-semibold">Bereit?</h1>
+          <p className="text-lg text-white/85">Ihr startet auf der Startinsel — zum Warmwerden und Kennenlernen.</p>
+          <Button tone="sun" className="w-full max-w-sm" onClick={() => finish(0)}>
+            Los geht&apos;s!
+          </Button>
+          <button onClick={() => setStep("placement")} className="mt-2 text-sm font-extrabold text-white/75 underline">
+            Ich kann schon viel – kurzer Einstufungstest
           </button>
         </>
       )}

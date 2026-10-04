@@ -32,6 +32,10 @@ export function MeScreen({ save }: { save: SaveState }) {
   return (
     <div className="mx-auto min-h-dvh max-w-xl bg-rose-light px-4 pb-28 pt-5">
       <div className="relative flex flex-col items-center rounded-[28px] bg-white px-4 pb-5 pt-4 shadow-[0_6px_0_#FFC2DD]">
+        <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-coin-light py-1.5 pl-2 pr-3 font-display text-lg font-semibold" aria-label={`Du hast ${save.coins} Münzen`}>
+          <CoinIcon size={22} />
+          {save.coins}
+        </div>
         {Array.from({ length: hearts }, (_, i) => (
           <Heart key={i} className="anim-float absolute fill-rose text-rose" size={28} style={{ left: `${30 + ((i * 17) % 40)}%`, top: 60, animationDelay: `${(i % 4) * 0.1}s` }} />
         ))}
