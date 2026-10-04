@@ -100,6 +100,11 @@ export const SCENERY: Partial<Record<WorldId, Atlas[]>> = {
     { local: "/art/welt-ozean-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/d1ad941e-d748-4f9f-8e2d-648300d4ca6a.webp", cols: 1, rows: 1 },
     { local: "/art/welt-ozean-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/5816a4e7-1eb0-4740-b98f-0da9f58e48e9.webp", cols: 1, rows: 1 },
   ],
+  werkstatt: [
+    { local: "/art/welt-werkstatt-1.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/8a04ee7f-4e85-4f82-aabb-3d7acbc168d3.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-werkstatt-2.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/69c3cdd8-a15e-476e-bb94-6fa5bcb9da7e.webp", cols: 1, rows: 1 },
+    { local: "/art/welt-werkstatt-3.webp", url: "https://d2ol7oe51mr4n9.cloudfront.net/user_34CpzANSYTN5lT5oWjDUu48FOVp/17df5836-4d83-4843-ab1c-0127b379054e.webp", cols: 1, rows: 1 },
+  ],
 };
 
 // --- Ladezustand (pro Atlas) -------------------------------------------------
