@@ -1,9 +1,39 @@
-// Kleine, eigene Grafiken: Stern, Münze, Truhe, Flamme.
+"use client";
+
+// Kleine Grafiken: Stern, Münze, Truhe, Flamme. Als KI-Bild aus dem
+// Icon-Atlas (`npm run gen:icons`); bis er geladen ist (und falls er nicht
+// lädt), die gezeichnete Vektor-Version.
 // System-Icons (Schließen, Lautsprecher …) kommen aus lucide-react.
+
+import { artSrc, ICON_ATLAS, ICONS, useArtReady } from "@/game/art";
 
 type P = { size?: number; className?: string };
 
+/** Ein Icon aus dem Atlas — als <span>, damit es auch mitten im Text sitzen darf. */
+function AtlasIcon({ icon, size, className }: { icon: keyof typeof ICONS; size: number; className?: string }) {
+  const i = ICONS[icon];
+  const { cols, rows } = ICON_ATLAS;
+  return (
+    <span
+      aria-hidden="true"
+      className={className}
+      style={{
+        display: "inline-block",
+        verticalAlign: "middle",
+        flexShrink: 0,
+        width: size,
+        height: size,
+        backgroundImage: `url(${artSrc(ICON_ATLAS)})`,
+        backgroundSize: `${cols * size}px ${rows * size}px`,
+        backgroundPosition: `${-(i % cols) * size}px ${-Math.floor(i / cols) * size}px`,
+        backgroundRepeat: "no-repeat",
+      }}
+    />
+  );
+}
+
 export function StarIcon({ size = 24, className, empty = false }: P & { empty?: boolean }) {
+  if (useArtReady(ICON_ATLAS)) return <AtlasIcon icon={empty ? "star-empty" : "star"} size={size} className={className} />;
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden="true">
       <path
@@ -18,6 +48,7 @@ export function StarIcon({ size = 24, className, empty = false }: P & { empty?: 
 }
 
 export function CoinIcon({ size = 24, className }: P) {
+  if (useArtReady(ICON_ATLAS)) return <AtlasIcon icon="coin" size={size} className={className} />;
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden="true">
       <circle cx="12" cy="12" r="9.5" fill="#FF9F1C" stroke="#D97B00" strokeWidth="1.5" />
@@ -27,6 +58,7 @@ export function CoinIcon({ size = 24, className }: P) {
 }
 
 export function FlameIcon({ size = 24, className, off = false }: P & { off?: boolean }) {
+  if (useArtReady(ICON_ATLAS)) return <AtlasIcon icon={off ? "flame-off" : "flame"} size={size} className={className} />;
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden="true">
       <path
@@ -41,6 +73,7 @@ export function FlameIcon({ size = 24, className, off = false }: P & { off?: boo
 }
 
 export function ChestArt({ size = 120, open = false, className }: P & { open?: boolean }) {
+  if (useArtReady(ICON_ATLAS)) return <AtlasIcon icon={open ? "chest-open" : "chest"} size={size} className={className} />;
   return (
     <svg viewBox="0 0 120 110" width={size} height={(size * 110) / 120} className={className} aria-hidden="true">
       {open ? (
