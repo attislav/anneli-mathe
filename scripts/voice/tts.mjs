@@ -38,9 +38,9 @@ export async function tts(text, style, voice) {
   return Buffer.from(b64, "base64");
 }
 
-export async function transcribe(file) {
+export async function transcribe(file, prompt = "Transcribe this German audio exactly, word for word. Output only the transcript.") {
   const json = await gemini(CHECK_MODEL, {
-    contents: [{ parts: [{ inlineData: { mimeType: "audio/mp3", data: readFileSync(file).toString("base64") } }, { text: "Transcribe this German audio exactly, word for word. Output only the transcript." }] }],
+    contents: [{ parts: [{ inlineData: { mimeType: "audio/mp3", data: readFileSync(file).toString("base64") } }, { text: prompt }] }],
   });
   return json.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 }
@@ -123,7 +123,8 @@ export async function record(text, out, { style, voice, number, log = () => {} }
     try {
       encode(await tts(text, style, voice), out);
       const secs = duration(out);
-      const heard = await transcribe(out);
+      // Einzelne Zahlwörter verhört die Kontrolle sonst leicht („zehn" → „Sinn").
+      const heard = await transcribe(out, number !== undefined ? "This audio should contain one German number word (0 to 1000), possibly with extra speech. Transcribe everything you hear; write the number as digits." : undefined);
       const digits = heard.replace(/[^0-9]/g, "");
       const okText = number !== undefined ? digits === String(number) || (digits === "" && matches(heard, text)) : matches(heard, text);
       // Zu lang = Regie-Text wurde (leise) mitgesprochen oder Geräusche davor.
