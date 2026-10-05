@@ -154,7 +154,9 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
         setGain({ n: res.coinsGained, key: Date.now() });
         if (res.combo) sfx.combo();
         else sfx.correct();
-        void say(res.combo ? "combo" : "praise");
+        // Nicht nach jeder Aufgabe reden — Combos immer, sonst ab und zu.
+        if (res.combo) void say("combo");
+        else if (Math.random() < 0.3) void say("praise");
         if (isBoss) sfx.hit();
       } else {
         setStatus("wrong");

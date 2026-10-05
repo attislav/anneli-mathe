@@ -23,6 +23,10 @@ export const ATLAS1: Atlas = {
   rows: 3,
 };
 
+/** Belohnungs-Icons (Zellen à 256 px), Reihenfolge wie `scripts/art/icons.json`. Liegt nur lokal. */
+export const ICON_ATLAS: Atlas = { local: "/art/icons.webp", url: "/art/icons.webp", cols: 4, rows: 2 };
+export const ICONS = { chest: 0, "chest-open": 1, coin: 2, star: 3, "star-empty": 4, flame: 5, "flame-off": 6 } as const;
+
 /** Die 36 Sticker, in derselben Reihenfolge wie `STICKERS` (Zellen à 192 px). */
 export const STICKER_ATLAS: Atlas = {
   local: "/art/sticker.webp",

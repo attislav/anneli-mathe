@@ -1,0 +1,35 @@
+{
+  "_info": "Belohnungs-Icons als ein Bild-Atlas (public/art/icons.webp, Zellen à 256 px, Reihenfolge = cells). Erzeugen: npm run gen:icons (GPT Image 2.5 Sunburst, quality low, transparenter Hintergrund). `from` = aus einem anderen Icon abgeleitet (grau).",
+  "style": "Cute cartoon children game UI icon, glossy, soft shading, bright friendly colors, chunky rounded shapes, centered, isolated on a fully transparent background, no ground shadow, no text. Subject:",
+  "cols": 4,
+  "cells": [
+    {
+      "id": "chest",
+      "prompt": "a single closed treasure chest, wooden with golden metal bands and a heart-shaped golden lock, front three-quarter view."
+    },
+    {
+      "id": "chest-open",
+      "prompt": "a single open treasure chest, wooden with golden metal bands, lid open, overflowing with shiny gold coins and a few sparkles, front three-quarter view."
+    },
+    {
+      "id": "coin",
+      "prompt": "a single shiny gold coin seen from the front, with an embossed star in the middle and a raised rim."
+    },
+    {
+      "id": "star",
+      "prompt": "a single plump golden star with rounded tips and a small shine highlight, seen from the front. A plain object without face, eyes or mouth."
+    },
+    {
+      "id": "star-empty",
+      "from": "star"
+    },
+    {
+      "id": "flame",
+      "prompt": "a single orange and yellow fire flame, like a streak flame icon, seen from the front. A plain object without face, eyes or mouth."
+    },
+    {
+      "id": "flame-off",
+      "from": "flame"
+    }
+  ]
+}

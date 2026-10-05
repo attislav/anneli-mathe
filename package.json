@@ -13,7 +13,8 @@
     "smoke:game": "tsx scripts/smoke-game.ts",
     "art:fetch": "node scripts/fetch-art.mjs",
     "gen:malvorlagen": "node --env-file-if-exists=.env.local scripts/gen-malvorlagen.mjs",
-    "gen:voice": "node --env-file-if-exists=.env.local scripts/gen-voice.mjs"
+    "gen:voice": "node --env-file-if-exists=.env.local scripts/gen-voice.mjs",
+    "gen:icons": "node --env-file-if-exists=.env.local scripts/gen-icons.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

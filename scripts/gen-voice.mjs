@@ -9,7 +9,7 @@
 // Stimme die Regie-Anweisung mit oder verschluckt etwas, wird neu erzeugt.
 // Braucht ffmpeg (Stille abschneiden, Lautstärke angleichen, mp3).
 
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 const KEY = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
@@ -87,13 +87,39 @@ function duration(file) {
   return Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString());
 }
 
+/** Wo ist hörbarer Ton? Liste von [start, ende] in Sekunden (aus ffmpeg silencedetect). */
+function soundParts(raw, total) {
+  const log = spawnSync("ffmpeg", ["-hide_banner", "-f", "s16le", "-ar", "24000", "-ac", "1", "-i", raw, "-af", "silencedetect=n=-45dB:d=0.08", "-f", "null", "-"], { encoding: "utf8" }).stderr;
+  const starts = [...log.matchAll(/silence_start: ([\d.]+)/g)].map((m) => Number(m[1]));
+  const ends = [...log.matchAll(/silence_end: ([\d.]+)/g)].map((m) => Number(m[1]));
+  const parts = [];
+  let t = 0;
+  starts.forEach((a, i) => {
+    if (a > t + 0.001) parts.push([t, a]);
+    t = ends[i] ?? total;
+  });
+  if (t < total - 0.001) parts.push([t, total]);
+  return parts;
+}
+
 function encode(pcm, out) {
   const raw = `${out}.pcm`;
   writeFileSync(raw, pcm);
-  // Stille vorne/hinten weg, Lautstärke angleichen, kleine mp3 (Mono).
+  const total = pcm.length / 48000;
+  // Gemini hängt oft einen kurzen, lauten Rausch-Stoß ans Ende (und manchmal
+  // einen Knacks an den Anfang), jeweils durch eine Pause abgesetzt. Solche
+  // winzigen Stücke vorne/hinten weglassen, dann nur die Sprache behalten.
+  let parts = soundParts(raw, total);
+  // Nur wenn eine echte Pause (≥ 0,15 s) davor/dahinter liegt — sonst wäre es
+  // z. B. das „P“ von „Prima“.
+  while (parts.length > 1 && parts[0][1] - parts[0][0] < 0.12 && parts[1][0] - parts[0][1] >= 0.15) parts = parts.slice(1);
+  while (parts.length > 1 && parts.at(-1)[1] - parts.at(-1)[0] < 0.3 && parts.at(-1)[0] - parts.at(-2)[1] >= 0.15) parts = parts.slice(0, -1);
+  const from = parts.length ? Math.max(0, parts[0][0] - 0.03) : 0;
+  const to = parts.length ? Math.min(total, parts.at(-1)[1] + 0.06) : total;
+  const len = to - from;
   execFileSync("ffmpeg", [
     "-loglevel", "error", "-y", "-f", "s16le", "-ar", "24000", "-ac", "1", "-i", raw,
-    "-af", "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,loudnorm=I=-16:TP=-1.5,apad=pad_dur=0.05",
+    "-af", `atrim=${from.toFixed(3)}:${to.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.02,afade=t=out:st=${Math.max(0, len - 0.06).toFixed(3)}:d=0.06,loudnorm=I=-16:TP=-1.5,apad=pad_dur=0.05`,
     "-ar", "24000", "-b:a", "64k", out,
   ]);
   rmSync(raw);
