@@ -27,6 +27,8 @@ import { TaskView, type Status } from "./formats";
 import { ResultView, type Outcome } from "./ResultView";
 import { TrickIntro } from "./TrickIntro";
 import { HelpSheet } from "./HelpSheet";
+import { jumpsFor } from "@/game/jumps";
+import { NumberJump } from "@/ui/NumberJump";
 
 const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
 const CHEERS = ["Du schaffst das!", "Schau genau hin.", "Ich glaub an dich!", "Los geht's!", "Denk an den Trick!"];
@@ -349,6 +351,7 @@ function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Stat
     );
   }
   const reveal = status === "reveal";
+  const jumps = jumpsFor("term" in task ? task.term : undefined);
   return (
     <div className="anim-sheet fixed inset-x-0 bottom-0 z-40 mx-auto max-w-xl rounded-t-[28px] border-t-4 border-[#FFB648] bg-[#FFF1DB] px-5 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
       <div className="mb-4 flex items-start gap-3">
@@ -360,6 +363,11 @@ function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Stat
         <div className="flex-1">
           <div className="font-display text-2xl font-semibold text-[#8A4B00]">{reveal ? "So geht's:" : "Fast! Kleiner Tipp:"}</div>
           <div className="mt-0.5 text-[17px] leading-snug text-[#6B3A00]">{reveal ? task.solution : task.hint}</div>
+          {!reveal && jumps && (
+            <div className="mt-2 rounded-[16px] bg-white/80 px-2 pt-1">
+              <NumberJump jumps={jumps} />
+            </div>
+          )}
         </div>
         {canReadText(reveal ? task.solution : task.hint) && (
           <button aria-label="Vorlesen" onClick={() => void readText(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">

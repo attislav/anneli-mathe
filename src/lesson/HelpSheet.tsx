@@ -9,11 +9,13 @@ import { useState } from "react";
 import { Volume2 } from "lucide-react";
 import { petStage } from "@/game/collection";
 import { explanationFor } from "@/game/explain";
+import { jumpsFor } from "@/game/jumps";
 import { levelInfo, type SaveState } from "@/game/state";
 import { canReadText, readText, stopReading } from "@/game/taskVoice";
 import type { Task } from "@/game/types";
 import { Button } from "@/ui/Button";
 import { Sheet } from "@/ui/chrome";
+import { NumberJump } from "@/ui/NumberJump";
 import { Pet } from "@/ui/Pet";
 
 export function HelpSheet({ task, save, showHint, onClose }: { task: Task; save: SaveState; showHint: boolean; onClose: () => void }) {
@@ -21,6 +23,7 @@ export function HelpSheet({ task, save, showHint, onClose }: { task: Task; save:
   const steps = ex?.steps ?? [];
   const [shown, setShown] = useState(1);
   const all = shown >= steps.length;
+  const jumps = jumpsFor("term" in task ? task.term : undefined);
 
   const close = () => {
     stopReading();
@@ -59,6 +62,11 @@ export function HelpSheet({ task, save, showHint, onClose }: { task: Task; save:
           <div className="anim-pop rounded-[18px] border-4 border-[#FFB648] bg-[#FFF1DB] p-3">
             <div className="font-display text-lg font-semibold text-[#8A4B00]">Bei deiner Aufgabe:</div>
             <div className="text-[17px] leading-snug text-[#6B3A00]">{task.hint}</div>
+            {jumps && (
+              <div className="mt-2 flex justify-center rounded-[14px] bg-white px-2 pt-1">
+                <NumberJump jumps={jumps} />
+              </div>
+            )}
           </div>
         )}
 
