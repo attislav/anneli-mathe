@@ -11,5 +11,6 @@
   "boss": 1,
   "levelup": 1,
   "chest": 1,
-  "greet": 3
+  "greet": 3,
+  "help": 2
 }
