@@ -1,0 +1,66 @@
+{
+  "_info": "Feste Sätze der App-Stimme. Gruppen: die App spielt zufällig einen Satz der Gruppe. Erzeugen: npm run gen:voice (Gemini TTS, braucht GEMINI_API_KEY und ffmpeg). Ergebnis: public/stimme/<id>.mp3 und src/game/voiceLines.json.",
+  "voice": "Aoede",
+  "style": "A kind, warm primary school teacher cheering on a seven year old child. Natural German, smiling voice, not too fast.",
+  "lines": {
+    "praise": [
+      "Juhu!",
+      "Super!",
+      "Klasse!",
+      "Stark!",
+      "Richtig!",
+      "Wow, toll gemacht!",
+      "Genau so!",
+      "Spitze!"
+    ],
+    "combo": [
+      "Du bist ja nicht zu bremsen!",
+      "Eine Combo! Weiter so!",
+      "Wow, schon wieder richtig!"
+    ],
+    "late": [
+      "Geschafft!",
+      "Jetzt hast du's!",
+      "Gut, dass du drangeblieben bist!"
+    ],
+    "wrong": [
+      "Fast! Probier's nochmal.",
+      "Kein Problem, hier ist ein Tipp.",
+      "Hmm, schau nochmal genau hin."
+    ],
+    "reveal": [
+      "Schau mal, so geht's. Beim nächsten Mal klappt's!",
+      "So geht das. Das schaffst du beim nächsten Mal!"
+    ],
+    "trick": [
+      "Ich zeig dir einen Trick!"
+    ],
+    "result1": [
+      "Geschafft!"
+    ],
+    "result2": [
+      "Super gemacht!"
+    ],
+    "result3": [
+      "Perfekt! Alle drei Sterne!"
+    ],
+    "boss": [
+      "Hurra, du hast den Boss besiegt!"
+    ],
+    "levelup": [
+      "Juhu, ein neues Level!"
+    ],
+    "chest": [
+      "Mal sehen, was in der Truhe ist!"
+    ],
+    "greet": [
+      "Hallo! Schön, dass du da bist.",
+      "Hallo! Bereit für ein neues Abenteuer?",
+      "Da bist du ja! Los geht's!"
+    ],
+    "greet-anneli": [
+      "Hallo Anneli! Schön, dass du da bist.",
+      "Hallo Anneli! Bereit für ein neues Abenteuer?"
+    ]
+  }
+}

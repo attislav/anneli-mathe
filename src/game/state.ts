@@ -41,7 +41,7 @@ export type SaveState = {
   pet: { lastFed: string | null; love: number };
   days: string[];
   today: { day: string; lessons: number; arcadeSeconds: number };
-  settings: { sound: boolean; autoRead: boolean; arcadeMinutes: number };
+  settings: { sound: boolean; voice: boolean; autoRead: boolean; arcadeMinutes: number };
   stats: { tasks: number; firstTry: number; lessons: number };
   games: Record<string, number>;
   /** Verliehene Abzeichen (IDs). */
@@ -94,7 +94,7 @@ export function emptyState(): SaveState {
     pet: { lastFed: null, love: 0 },
     days: [],
     today: { day: "", lessons: 0, arcadeSeconds: 0 },
-    settings: { sound: true, autoRead: false, arcadeMinutes: 15 },
+    settings: { sound: true, voice: true, autoRead: false, arcadeMinutes: 15 },
     stats: { tasks: 0, firstTry: 0, lessons: 0 },
     games: {},
     badges: [],

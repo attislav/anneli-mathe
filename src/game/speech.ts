@@ -2,6 +2,10 @@
 
 // Vorlesen über die Sprachausgabe des Geräts.
 //
+// Abgeschaltet (DEVICE_VOICE): Die Gerätestimmen klingen zu schlecht. Aufgaben
+// sollen später aus aufgenommenen Bausteinen (Zahlen + Satzteile) vorgelesen
+// werden; bis dahin gibt es keine Vorlese-Knöpfe. Lob & Co. spricht `voice.ts`.
+//
 // Mathe-Zeichen werden in Wörter übersetzt, damit „38 + 7 = ?" als
 // „38 plus 7 gleich wie viel" ankommt. Vorproduzierte Stimmen (wie im
 // alten Training) kommen später dazu — die Gerätestimme ist der Boden.
@@ -18,6 +22,8 @@ const WORDS: [RegExp, string][] = [
   [/\bZ\b/g, " Zehner "],
   [/\bE\b/g, " Einer "],
 ];
+
+export const DEVICE_VOICE = false;
 
 export function toSpeech(text: string): string {
   let out = text;
@@ -36,7 +42,7 @@ function germanVoice(): SpeechSynthesisVoice | null {
 }
 
 export function speak(...parts: (string | undefined)[]): void {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  if (!DEVICE_VOICE || typeof window === "undefined" || !("speechSynthesis" in window)) return;
   const text = parts.filter(Boolean).map((p) => toSpeech(p!)).join(". ");
   if (!text) return;
   window.speechSynthesis.cancel();
