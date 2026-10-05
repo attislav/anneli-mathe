@@ -118,15 +118,30 @@ export function encode(pcm, out) {
  * `number`: der Text ist eine Zahl — dann zählt die Zahl im Transkript.
  * Gibt zurück, ob eine gute Aufnahme unter `out` liegt.
  */
+const ONES = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "neunzehn"];
+const TENS = ["", "", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig", "neunzig"];
+
+/** Zahl als deutsches Wort (0–1000). */
+export function numberWord(n) {
+  if (n === 1000) return "tausend";
+  if (n >= 100) {
+    const h = Math.floor(n / 100);
+    const rest = n % 100;
+    return `${h === 1 ? "" : ONES[h]}hundert${rest ? numberWord(rest) : ""}`;
+  }
+  if (n < 20) return ONES[n];
+  const o = n % 10;
+  return o ? `${o === 1 ? "ein" : ONES[o]}und${TENS[Math.floor(n / 10)]}` : TENS[Math.floor(n / 10)];
+}
+
 export async function record(text, out, { style, voice, number, log = () => {} }) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       encode(await tts(text, style, voice), out);
       const secs = duration(out);
-      // Einzelne Zahlwörter verhört die Kontrolle sonst leicht („zehn" → „Sinn").
-      const heard = await transcribe(out, number !== undefined ? "This audio should contain one German number word (0 to 1000), possibly with extra speech. Transcribe everything you hear; write the number as digits." : undefined);
-      const digits = heard.replace(/[^0-9]/g, "");
-      const okText = number !== undefined ? digits === String(number) || (digits === "" && matches(heard, text)) : matches(heard, text);
+      const heard = await transcribe(out);
+      // Ziffern im Transkript zurück in Wörter: „6 und 30" → „sechs und dreißig".
+      const okText = matches(heard.replace(/\d+/g, (d) => (Number(d) <= 1000 ? numberWord(Number(d)) : d)), text) || (number !== undefined && heard.replace(/[^0-9]/g, "") === String(number));
       // Zu lang = Regie-Text wurde (leise) mitgesprochen oder Geräusche davor.
       if (okText && secs <= 1.5 + text.length * 0.11) return true;
       log(`(gehört: „${heard.trim()}“, ${secs.toFixed(1)} s, nochmal) `);

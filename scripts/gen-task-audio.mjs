@@ -9,7 +9,7 @@
 // Bausteine ALLE da sind, bekommen in der App einen Vorlese-Knopf).
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { record } from "./voice/tts.mjs";
+import { numberWord, record } from "./voice/tts.mjs";
 
 const { voice } = JSON.parse(readFileSync("scripts/voice/lines.json", "utf8"));
 const manifest = JSON.parse(readFileSync("scripts/voice/task-manifest.json", "utf8"));
@@ -23,21 +23,6 @@ const STYLE = {
   whole: `${BASE} ${ONLY}`,
   part: `${BASE} Neutral, even intonation. ${ONLY}`,
 };
-
-/** Zahl als deutsches Wort (0–1000) — Ziffern liest das Modell unzuverlässig. */
-const ONES = ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "neunzehn"];
-const TENS = ["", "", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig", "neunzig"];
-function numberWord(n) {
-  if (n === 1000) return "tausend";
-  if (n >= 100) {
-    const h = Math.floor(n / 100);
-    const rest = n % 100;
-    return `${h === 1 ? "" : ONES[h]}hundert${rest ? numberWord(rest) : ""}`;
-  }
-  if (n < 20) return ONES[n];
-  const o = n % 10;
-  return o ? `${o === 1 ? "ein" : ONES[o]}und${TENS[Math.floor(n / 10)]}` : TENS[Math.floor(n / 10)];
-}
 
 mkdirSync("public/stimme/aufgabe/n", { recursive: true });
 mkdirSync("public/stimme/aufgabe/t", { recursive: true });
