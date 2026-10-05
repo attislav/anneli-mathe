@@ -4,7 +4,8 @@
 
 import { claimBadges } from "@/game/badges";
 import { notePractice, practiceNode, PRACTICE_ID, reviewPractice } from "@/game/practice";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Volume2, X } from "lucide-react";
 import { starsFor, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
@@ -18,7 +19,7 @@ import type { Task } from "@/game/types";
 import { findNode, type PathNode, type World } from "@/game/worlds";
 import { CoinIcon, FlameIcon } from "@/ui/art";
 import { Button, LinkButton } from "@/ui/Button";
-import { Sheet, useBackdrop } from "@/ui/chrome";
+import { Sheet, Splash, useBackdrop } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
 import { Pet, type Mood } from "@/ui/Pet";
 import { completeTask, firstAnswer, isFinished, lateRight, nextTask, startRun, taskCount, BOSS_HP, type Run } from "./engine";
@@ -30,17 +31,31 @@ const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
 const CHEERS = ["Du schaffst das!", "Schau genau hin.", "Ich glaub an dich!", "Los geht's!", "Denk an den Trick!"];
 
 export function LessonScreen({ save, nodeId, tier }: { save: SaveState; nodeId: string; tier: Tier }) {
-  // Einmal festhalten: die Übungskiste ändert sich, während man sie spielt.
-  const [found] = useState(() => (nodeId === PRACTICE_ID ? practiceNode(save) : findNode(nodeId)));
+  const router = useRouter();
+  // Die Übungskiste einmal pro Aufruf festhalten — sie ändert sich, während man sie spielt.
+  // Normale Lektionen bei jedem Render suchen (die Adresse kann beim Laden kurz leer sein).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const practice = useMemo(() => (nodeId === PRACTICE_ID ? practiceNode(save) : null), [nodeId]);
+  const found = nodeId === PRACTICE_ID ? practice : nodeId ? findNode(nodeId) : null;
+  const missing = !found || found.node.kind === "chest";
+
+  // Keine Sackgasse: z. B. nach „Zurück" in eine schon geleerte Übungskiste.
+  useEffect(() => {
+    if (!missing) return;
+    const t = setTimeout(() => router.replace("/"), 1800);
+    return () => clearTimeout(t);
+  }, [missing, nodeId, router]);
+
+  if (!nodeId) return <Splash />;
   if (!found || found.node.kind === "chest") {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6 text-center">
-        <p className="font-display text-2xl">Diese Lektion gibt es nicht.</p>
+        <p className="font-display text-2xl">{nodeId === PRACTICE_ID ? "Die Übungskiste ist leer – super!" : "Diese Lektion gibt es nicht."}</p>
         <LinkButton href="/">Zum Pfad</LinkButton>
       </main>
     );
   }
-  return <Replayable save={save} node={found.node} world={found.world} tier={tier} />;
+  return <Replayable key={nodeId} save={save} node={found.node} world={found.world} tier={tier} />;
 }
 
 function Replayable(props: { save: SaveState; node: PathNode; world: World; tier: Tier }) {
