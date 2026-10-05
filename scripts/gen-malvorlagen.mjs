@@ -8,6 +8,7 @@
 // Ergebnis: public/malen/<id>.png und die Liste fertiger Bilder in
 // src/game/puzzleImages.json (nur die tauchen im Spiel auf).
 
+import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const KEY = process.env.OPENAI_API_KEY;
@@ -48,7 +49,18 @@ for (const page of cfg.pages) {
   }
   writeFileSync(out, Buffer.from(b64, "base64"));
   done.add(page.id);
-  console.log("ok");
+  console.log(shrink(out) ? "ok (verkleinert)" : "ok");
+}
+
+// Linienbild auf 16 Graustufen reduzieren (~2 MB → ~200 KB, Kanten bleiben weich).
+// Braucht ImageMagick; fehlt es, bleibt das Original liegen.
+function shrink(file) {
+  try {
+    execFileSync("convert", [file, "-colorspace", "gray", "-colors", "16", "-define", "png:compression-level=9", `PNG8:${file}`]);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const order = cfg.pages.map((p) => p.id).filter((id) => done.has(id));
