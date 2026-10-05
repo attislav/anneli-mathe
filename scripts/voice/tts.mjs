@@ -100,7 +100,7 @@ export function encode(pcm, out) {
   // Nur wenn eine echte Pause (≥ 0,15 s) davor/dahinter liegt — sonst wäre es
   // z. B. das „P“ von „Prima“.
   while (parts.length > 1 && parts[0][1] - parts[0][0] < 0.12 && parts[1][0] - parts[0][1] >= 0.15) parts = parts.slice(1);
-  while (parts.length > 1 && parts.at(-1)[1] - parts.at(-1)[0] < 0.3 && parts.at(-1)[0] - parts.at(-2)[1] >= 0.15) parts = parts.slice(0, -1);
+  while (parts.length > 1 && parts.at(-1)[1] - parts.at(-1)[0] < 0.18 && parts.at(-1)[0] - parts.at(-2)[1] >= 0.15) parts = parts.slice(0, -1);
   const from = parts.length ? Math.max(0, parts[0][0] - 0.03) : 0;
   const to = parts.length ? Math.min(total, parts.at(-1)[1] + 0.06) : total;
   const len = to - from;
@@ -139,7 +139,8 @@ export async function record(text, out, { style, voice, number, log = () => {} }
     try {
       encode(await tts(text, style, voice), out);
       const secs = duration(out);
-      const heard = await transcribe(out);
+      // Kurze Stücke verhört die Kontrolle ohne Zusammenhang leicht („Brezeln" → „Bremsen").
+      const heard = await transcribe(out, text.length < 25 ? "This is a short German word or phrase spoken in a children's math app (about money, time, baking, shapes or numbers). Transcribe exactly what is spoken, nothing else." : undefined);
       // Ziffern im Transkript zurück in Wörter: „6 und 30" → „sechs und dreißig".
       const okText = matches(heard.replace(/\d+/g, (d) => (Number(d) <= 1000 ? numberWord(Number(d)) : d)), text) || (number !== undefined && heard.replace(/[^0-9]/g, "") === String(number));
       // Zu lang = Regie-Text wurde (leise) mitgesprochen oder Geräusche davor.

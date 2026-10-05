@@ -24,12 +24,15 @@ const STYLE = {
   part: `${BASE} Neutral, even intonation. ${ONLY}`,
 };
 
+/** Stücke, die das Modell sonst „ergänzt" („mal wie viel" → „Schau mal, wie viel"): anders schreiben. */
+const SAY_AS = { "mal wie viel": "… mal wie viel …" };
+
 mkdirSync("public/stimme/aufgabe/n", { recursive: true });
 mkdirSync("public/stimme/aufgabe/t", { recursive: true });
 
 const jobs = [
   ...manifest.numbers.map((n) => ({ out: `public/stimme/aufgabe/n/${n}.mp3`, text: `${numberWord(n)}.`, opts: { style: STYLE.part, number: n } })),
-  ...manifest.texts.map((t) => ({ out: `public/stimme/aufgabe/t/${t.key}.mp3`, text: t.text, opts: { style: t.whole ? STYLE.whole : STYLE.part } })),
+  ...manifest.texts.map((t) => ({ out: `public/stimme/aufgabe/t/${t.key}.mp3`, text: SAY_AS[t.text] ?? t.text, opts: { style: t.whole ? STYLE.whole : STYLE.part } })),
 ].filter((j) => force || !existsSync(j.out));
 
 console.log(`${jobs.length} Aufnahmen …`);

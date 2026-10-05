@@ -153,13 +153,13 @@
    "whole": false
   },
   {
-   "key": "euro-1retpg",
-   "text": "Euro",
+   "key": "plus-wie-viel-ist-10gtgh",
+   "text": "plus wie viel ist",
    "whole": false
   },
   {
-   "key": "plus-wie-viel-ist-10gtgh",
-   "text": "plus wie viel ist",
+   "key": "euro-1retpg",
+   "text": "Euro",
    "whole": false
   },
   {
@@ -223,13 +223,13 @@
    "whole": true
   },
   {
-   "key": "wie-viel-ist-die-haelfte-von-1ef8oy",
-   "text": "Wie viel ist die Hälfte von",
+   "key": "von-1wzx0r",
+   "text": "Von",
    "whole": false
   },
   {
-   "key": "von-1wzx0r",
-   "text": "Von",
+   "key": "wie-viel-ist-die-haelfte-von-1ef8oy",
+   "text": "Wie viel ist die Hälfte von",
    "whole": false
   },
   {
@@ -308,6 +308,11 @@
    "whole": true
   },
   {
+   "key": "uhr-bis-bignxs",
+   "text": "Uhr bis",
+   "whole": false
+  },
+  {
    "key": "welche-zahl-ist-das-zy6pmh",
    "text": "Welche Zahl ist das?",
    "whole": true
@@ -315,11 +320,6 @@
   {
    "key": "z-plus-sc8zqj",
    "text": "Z plus",
-   "whole": false
-  },
-  {
-   "key": "uhr-bis-bignxs",
-   "text": "Uhr bis",
    "whole": false
   },
   {
@@ -338,13 +338,8 @@
    "whole": false
   },
   {
-   "key": "zeichne-eine-linie-die-3ee9a5",
-   "text": "Zeichne eine Linie, die",
-   "whole": false
-  },
-  {
-   "key": "zentimeter-lang-ist-10qxf5",
-   "text": "Zentimeter lang ist",
+   "key": "welche-zahl-kommt-direkt-nach-1ah34q",
+   "text": "Welche Zahl kommt direkt nach",
    "whole": false
   },
   {
@@ -398,8 +393,8 @@
    "whole": false
   },
   {
-   "key": "std-und-minuten-nut2nz",
-   "text": "Std. und Minuten",
+   "key": "stunden-und-minuten-e7j37n",
+   "text": "Stunden und Minuten",
    "whole": false
   },
   {
@@ -418,13 +413,18 @@
    "whole": false
   },
   {
-   "key": "welche-zahl-kommt-direkt-nach-1ah34q",
-   "text": "Welche Zahl kommt direkt nach",
+   "key": "ist-wie-viel-cent-1x79ua",
+   "text": "ist wie viel Cent",
    "whole": false
   },
   {
-   "key": "ist-wie-viel-cent-1x79ua",
-   "text": "ist wie viel Cent",
+   "key": "zeichne-eine-linie-die-3ee9a5",
+   "text": "Zeichne eine Linie, die",
+   "whole": false
+  },
+  {
+   "key": "zentimeter-lang-ist-10qxf5",
+   "text": "Zentimeter lang ist",
    "whole": false
   },
   {
@@ -433,23 +433,23 @@
    "whole": false
   },
   {
-   "key": "e-ist-wie-viel-15asby",
-   "text": "E ist wie viel",
-   "whole": false
-  },
-  {
    "key": "lege-die-zahl-p55m2t",
    "text": "Lege die Zahl",
    "whole": false
   },
   {
-   "key": "brezeln-gerecht-auf-1hri8y",
-   "text": "Brezeln gerecht auf",
+   "key": "e-ist-wie-viel-15asby",
+   "text": "E ist wie viel",
    "whole": false
   },
   {
    "key": "kekse-gerecht-auf-fk9poc",
    "text": "Kekse gerecht auf",
+   "whole": false
+  },
+  {
+   "key": "brezeln-gerecht-auf-1hri8y",
+   "text": "Brezeln gerecht auf",
    "whole": false
   },
   {
@@ -463,23 +463,23 @@
    "whole": false
   },
   {
-   "key": "welche-zahl-ist-gerade-11ek52",
-   "text": "Welche Zahl ist gerade?",
-   "whole": true
-  },
-  {
    "key": "wie-viel-geteilt-durch-dd9ssu",
    "text": "wie viel geteilt durch",
    "whole": false
   },
   {
-   "key": "minus-wie-viel-ist-sa8cr8",
-   "text": "minus wie viel ist",
-   "whole": false
+   "key": "welche-zahl-ist-gerade-11ek52",
+   "text": "Welche Zahl ist gerade?",
+   "whole": true
   },
   {
    "key": "welche-uhrzeit-ist-halb-r2h2dr",
    "text": "Welche Uhrzeit ist halb",
+   "whole": false
+  },
+  {
+   "key": "minus-wie-viel-ist-sa8cr8",
+   "text": "minus wie viel ist",
    "whole": false
   },
   {
@@ -518,8 +518,8 @@
    "whole": false
   },
   {
-   "key": "welche-zahl-kommt-direkt-vor-qskosm",
-   "text": "Welche Zahl kommt direkt vor",
+   "key": "wie-viel-plus-n2pn6g",
+   "text": "wie viel plus",
    "whole": false
   },
   {
@@ -663,9 +663,9 @@
    "whole": false
   },
   {
-   "key": "wie-viel-plus-n2pn6g",
-   "text": "wie viel plus",
-   "whole": false
+   "key": "wie-viele-kreise-siehst-du-1rror0",
+   "text": "Wie viele Kreise siehst du?",
+   "whole": true
   },
   {
    "key": "das-brett-ist-16v8hn",
@@ -693,28 +693,8 @@
    "whole": false
   },
   {
-   "key": "wie-viele-kreise-siehst-du-1rror0",
-   "text": "Wie viele Kreise siehst du?",
-   "whole": true
-  },
-  {
-   "key": "muffins-gerecht-auf-12kpgo",
-   "text": "Muffins gerecht auf",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-rechtecke-siehst-du-1eq9t2",
-   "text": "Wie viele Rechtecke siehst du?",
-   "whole": true
-  },
-  {
-   "key": "clowns-jeder-jongliert-mit-1b86kb",
-   "text": "Clowns. Jeder jongliert mit",
-   "whole": false
-  },
-  {
-   "key": "baellen-wie-viele-zusammen-p5c026",
-   "text": "Bällen. Wie viele zusammen",
+   "key": "welche-zahl-kommt-direkt-vor-qskosm",
+   "text": "Welche Zahl kommt direkt vor",
    "whole": false
   },
   {
@@ -728,8 +708,13 @@
    "whole": true
   },
   {
-   "key": "welche-uhrzeit-ist-bllwhe",
-   "text": "Welche Uhrzeit ist",
+   "key": "akrobaten-jeder-schwingt-17vus8",
+   "text": "Akrobaten. Jeder schwingt",
+   "whole": false
+  },
+  {
+   "key": "baender-wie-viele-zusammen-2dsut0",
+   "text": "Bänder. Wie viele zusammen",
    "whole": false
   },
   {
@@ -743,23 +728,13 @@
    "whole": false
   },
   {
-   "key": "seeloewen-jeder-balanciert-1jkw93",
-   "text": "Seelöwen. Jeder balanciert",
+   "key": "clowns-jeder-jongliert-mit-1b86kb",
+   "text": "Clowns. Jeder jongliert mit",
    "whole": false
   },
   {
-   "key": "ringe-wie-viele-zusammen-1frkal",
-   "text": "Ringe. Wie viele zusammen",
-   "whole": false
-  },
-  {
-   "key": "akrobaten-jeder-schwingt-17vus8",
-   "text": "Akrobaten. Jeder schwingt",
-   "whole": false
-  },
-  {
-   "key": "baender-wie-viele-zusammen-2dsut0",
-   "text": "Bänder. Wie viele zusammen",
+   "key": "baellen-wie-viele-zusammen-p5c026",
+   "text": "Bällen. Wie viele zusammen",
    "whole": false
   },
   {
@@ -778,13 +753,48 @@
    "whole": false
   },
   {
+   "key": "muffins-gerecht-auf-12kpgo",
+   "text": "Muffins gerecht auf",
+   "whole": false
+  },
+  {
+   "key": "welche-uhrzeit-ist-bllwhe",
+   "text": "Welche Uhrzeit ist",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-rechtecke-siehst-du-1eq9t2",
+   "text": "Wie viele Rechtecke siehst du?",
+   "whole": true
+  },
+  {
+   "key": "seeloewen-jeder-balanciert-1jkw93",
+   "text": "Seelöwen. Jeder balanciert",
+   "whole": false
+  },
+  {
+   "key": "ringe-wie-viele-zusammen-1frkal",
+   "text": "Ringe. Wie viele zusammen",
+   "whole": false
+  },
+  {
    "key": "wie-geht-das-zahlenmuster-weiter-1avapq",
    "text": "Wie geht das Zahlenmuster weiter?",
    "whole": true
   },
   {
-   "key": "wie-lang-ist-der-wurm-1u7b5w",
-   "text": "Wie lang ist der Wurm?",
+   "key": "wie-lang-ist-der-nagel-18nxex",
+   "text": "Wie lang ist der Nagel?",
+   "whole": true
+  },
+  {
+   "key": "muffins-77u8k5",
+   "text": "Muffins",
+   "whole": false
+  },
+  {
+   "key": "wie-lang-ist-das-band-1w4vlu",
+   "text": "Wie lang ist das Band?",
    "whole": true
   },
   {
@@ -793,28 +803,8 @@
    "whole": false
   },
   {
-   "key": "brezeln-zqihjv",
-   "text": "Brezeln",
-   "whole": false
-  },
-  {
-   "key": "muffins-77u8k5",
-   "text": "Muffins",
-   "whole": false
-  },
-  {
-   "key": "kekse-immer-sywskq",
-   "text": "Kekse. Immer",
-   "whole": false
-  },
-  {
-   "key": "kommen-in-eine-tuete-wie-viele-tueten-we-xwc7ak",
-   "text": "kommen in eine Tüte. Wie viele Tüten werden voll",
-   "whole": false
-  },
-  {
-   "key": "wie-lang-ist-der-nagel-18nxex",
-   "text": "Wie lang ist der Nagel?",
+   "key": "wie-lang-ist-der-wurm-1u7b5w",
+   "text": "Wie lang ist der Wurm?",
    "whole": true
   },
   {
@@ -823,38 +813,18 @@
    "whole": true
   },
   {
-   "key": "wie-lang-ist-das-band-1w4vlu",
-   "text": "Wie lang ist das Band?",
-   "whole": true
-  },
-  {
-   "key": "broetchen-gerecht-auf-1do7jb",
-   "text": "Brötchen gerecht auf",
-   "whole": false
-  },
-  {
-   "key": "koerbe-wie-viele-kommen-in-jeden-korb-dpl6t1",
-   "text": "Körbe. Wie viele kommen in jeden Korb",
-   "whole": false
-  },
-  {
-   "key": "muffins-immer-1mkcqy",
-   "text": "Muffins. Immer",
-   "whole": false
-  },
-  {
-   "key": "kommen-in-eine-schachtel-wie-viele-schac-gv0sci",
-   "text": "kommen in eine Schachtel. Wie viele Schachteln werden voll",
-   "whole": false
-  },
-  {
-   "key": "e-1haat8",
-   "text": "E",
+   "key": "brezeln-zqihjv",
+   "text": "Brezeln",
    "whole": false
   },
   {
    "key": "dosen-wie-viele-kommen-in-jede-dose-1byu8v",
    "text": "Dosen. Wie viele kommen in jede Dose",
+   "whole": false
+  },
+  {
+   "key": "tueten-wie-viele-kommen-in-jede-tuete-kqiy05",
+   "text": "Tüten. Wie viele kommen in jede Tüte",
    "whole": false
   },
   {
@@ -868,13 +838,43 @@
    "whole": false
   },
   {
-   "key": "tueten-wie-viele-kommen-in-jede-tuete-kqiy05",
-   "text": "Tüten. Wie viele kommen in jede Tüte",
+   "key": "muffins-immer-1mkcqy",
+   "text": "Muffins. Immer",
+   "whole": false
+  },
+  {
+   "key": "kommen-in-eine-schachtel-wie-viele-schac-gv0sci",
+   "text": "kommen in eine Schachtel. Wie viele Schachteln werden voll",
+   "whole": false
+  },
+  {
+   "key": "kekse-immer-sywskq",
+   "text": "Kekse. Immer",
+   "whole": false
+  },
+  {
+   "key": "kommen-in-eine-tuete-wie-viele-tueten-we-xwc7ak",
+   "text": "kommen in eine Tüte. Wie viele Tüten werden voll",
+   "whole": false
+  },
+  {
+   "key": "broetchen-gerecht-auf-1do7jb",
+   "text": "Brötchen gerecht auf",
+   "whole": false
+  },
+  {
+   "key": "koerbe-wie-viele-kommen-in-jeden-korb-dpl6t1",
+   "text": "Körbe. Wie viele kommen in jeden Korb",
    "whole": false
   },
   {
    "key": "wie-viele-minuten-ai4jut",
    "text": "Wie viele Minuten",
+   "whole": false
+  },
+  {
+   "key": "e-1haat8",
+   "text": "E",
    "whole": false
   },
   {
@@ -893,9 +893,9 @@
    "whole": false
   },
   {
-   "key": "vor-xvx9i8",
-   "text": "vor",
-   "whole": false
+   "key": "wie-viele-minuten-hat-eine-halbe-stunde-1hgezd",
+   "text": "Wie viele Minuten hat eine halbe Stunde?",
+   "whole": true
   },
   {
    "key": "wie-viele-minuten-hat-eine-stunde-15r1jc",
@@ -903,53 +903,13 @@
    "whole": true
   },
   {
-   "key": "wie-viele-minuten-hat-eine-halbe-stunde-1hgezd",
-   "text": "Wie viele Minuten hat eine halbe Stunde?",
-   "whole": true
-  },
-  {
-   "key": "nach-13fnic",
-   "text": "nach",
+   "key": "vor-xvx9i8",
+   "text": "vor",
    "whole": false
-  },
-  {
-   "key": "wie-viele-minuten-hat-eine-viertelstunde-125yuz",
-   "text": "Wie viele Minuten hat eine Viertelstunde?",
-   "whole": true
   },
   {
    "key": "der-muffin-kostet-yk2cqf",
    "text": "Der Muffin kostet",
-   "whole": false
-  },
-  {
-   "key": "die-banane-kostet-vndxhu",
-   "text": "Die Banane kostet",
-   "whole": false
-  },
-  {
-   "key": "stunden-und-6k5d11",
-   "text": "Stunden und",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-ecken-haben-beide-formen-zusam-kg1s1y",
-   "text": "Wie viele Ecken haben beide Formen zusammen?",
-   "whole": true
-  },
-  {
-   "key": "der-ball-kostet-hdr54f",
-   "text": "Der Ball kostet",
-   "whole": false
-  },
-  {
-   "key": "uhr-x4g1g6",
-   "text": "Uhr“",
-   "whole": false
-  },
-  {
-   "key": "die-brezel-kostet-mb6m0z",
-   "text": "Die Brezel kostet",
    "whole": false
   },
   {
@@ -958,8 +918,63 @@
    "whole": false
   },
   {
+   "key": "nach-13fnic",
+   "text": "nach",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-zehner-hat-die-1irciq",
+   "text": "Wie viele Zehner hat die",
+   "whole": false
+  },
+  {
+   "key": "der-stift-kostet-1m24op",
+   "text": "Der Stift kostet",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-einer-hat-die-n1fxyz",
+   "text": "Wie viele Einer hat die",
+   "whole": false
+  },
+  {
+   "key": "die-brezel-kostet-mb6m0z",
+   "text": "Die Brezel kostet",
+   "whole": false
+  },
+  {
+   "key": "welche-zahl-wurde-verdoppelt-67euhl",
+   "text": "Welche Zahl wurde verdoppelt?",
+   "whole": true
+  },
+  {
+   "key": "mal-wie-viel-ist-17ay8n",
+   "text": "mal wie viel ist",
+   "whole": false
+  },
+  {
+   "key": "stunden-und-6k5d11",
+   "text": "Stunden und",
+   "whole": false
+  },
+  {
+   "key": "fuer-wie-viele-reicht-das-o4bw80",
+   "text": "Für wie viele reicht das",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-ecken-haben-beide-formen-zusam-kg1s1y",
+   "text": "Wie viele Ecken haben beide Formen zusammen?",
+   "whole": true
+  },
+  {
    "key": "das-eis-kostet-b3l7bo",
    "text": "Das Eis kostet",
+   "whole": false
+  },
+  {
+   "key": "der-saft-kostet-n69yp2",
+   "text": "Der Saft kostet",
    "whole": false
   },
   {
@@ -978,33 +993,8 @@
    "whole": false
   },
   {
-   "key": "wie-viele-einer-hat-die-n1fxyz",
-   "text": "Wie viele Einer hat die",
-   "whole": false
-  },
-  {
-   "key": "fuer-wie-viele-reicht-das-o4bw80",
-   "text": "Für wie viele reicht das",
-   "whole": false
-  },
-  {
-   "key": "der-stift-kostet-1m24op",
-   "text": "Der Stift kostet",
-   "whole": false
-  },
-  {
-   "key": "welche-zahl-wurde-verdoppelt-67euhl",
-   "text": "Welche Zahl wurde verdoppelt?",
-   "whole": true
-  },
-  {
-   "key": "mal-wie-viel-ist-17ay8n",
-   "text": "mal wie viel ist",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-zehner-hat-die-1irciq",
-   "text": "Wie viele Zehner hat die",
+   "key": "uhr-x4g1g6",
+   "text": "Uhr“",
    "whole": false
   },
   {
@@ -1013,13 +1003,23 @@
    "whole": false
   },
   {
-   "key": "der-saft-kostet-n69yp2",
-   "text": "Der Saft kostet",
-   "whole": false
+   "key": "wie-viele-minuten-hat-eine-viertelstunde-125yuz",
+   "text": "Wie viele Minuten hat eine Viertelstunde?",
+   "whole": true
   },
   {
    "key": "der-lolli-kostet-dk0ff0",
    "text": "Der Lolli kostet",
+   "whole": false
+  },
+  {
+   "key": "die-banane-kostet-vndxhu",
+   "text": "Die Banane kostet",
+   "whole": false
+  },
+  {
+   "key": "der-ball-kostet-hdr54f",
+   "text": "Der Ball kostet",
    "whole": false
   },
   {
@@ -1028,78 +1028,18 @@
    "whole": false
   },
   {
-   "key": "welche-uhrzeit-ist-viertel-vor-fxj0qq",
-   "text": "Welche Uhrzeit ist Viertel vor",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-sechsecke-siehst-du-11rf93",
-   "text": "Wie viele Sechsecke siehst du?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-haustiere-sind-es-insgesamt-1iyjyq",
-   "text": "Wie viele Haustiere sind es insgesamt?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-regentage-gab-es-f5iqau",
-   "text": "Wie viele Regentage gab es?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-wurden-insgesamt-gefrag-bfpz7t",
-   "text": "Wie viele Kinder wurden insgesamt gefragt?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-sonnentage-gab-es-10j02y",
-   "text": "Wie viele Sonnentage gab es?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-tage-wurden-insgesamt-notiert-d7d66k",
    "text": "Wie viele Tage wurden insgesamt notiert?",
    "whole": true
   },
   {
-   "key": "es-ist-nachmittags-wie-spaet-ist-es-wtui21",
-   "text": "Es ist nachmittags. Wie spät ist es?",
-   "whole": true
+   "key": "welche-uhrzeit-ist-viertel-vor-fxj0qq",
+   "text": "Welche Uhrzeit ist Viertel vor",
+   "whole": false
   },
   {
-   "key": "wie-viele-wolkentage-gab-es-2cj0yp",
-   "text": "Wie viele Wolkentage gab es?",
-   "whole": true
-  },
-  {
-   "key": "wie-lang-ist-ein-bleistift-ungefaehr-181rh0",
-   "text": "Wie lang ist ein Bleistift ungefähr?",
-   "whole": true
-  },
-  {
-   "key": "wie-lang-ist-eine-tuer-ungefaehr-l48499",
-   "text": "Wie lang ist eine Tür ungefähr?",
-   "whole": true
-  },
-  {
-   "key": "wie-lang-ist-dein-daumen-ungefaehr-1k6snn",
-   "text": "Wie lang ist dein Daumen ungefähr?",
-   "whole": true
-  },
-  {
-   "key": "wie-lang-ist-eine-giraffe-ungefaehr-189kpe",
-   "text": "Wie lang ist eine Giraffe ungefähr?",
-   "whole": true
-  },
-  {
-   "key": "wie-lang-ist-ein-bus-ungefaehr-175fgp",
-   "text": "Wie lang ist ein Bus ungefähr?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-fuenfecke-siehst-du-1f3zsg",
-   "text": "Wie viele Fünfecke siehst du?",
+   "key": "wie-viele-regentage-gab-es-f5iqau",
+   "text": "Wie viele Regentage gab es?",
    "whole": true
   },
   {
@@ -1108,9 +1048,29 @@
    "whole": true
   },
   {
-   "key": "ich-habe-1vykqe",
-   "text": "Ich habe",
-   "whole": false
+   "key": "wie-lang-ist-ein-heft-ungefaehr-vfjk59",
+   "text": "Wie lang ist ein Heft ungefähr?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-fuenfecke-siehst-du-1f3zsg",
+   "text": "Wie viele Fünfecke siehst du?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-wolkentage-gab-es-2cj0yp",
+   "text": "Wie viele Wolkentage gab es?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-sonnentage-gab-es-10j02y",
+   "text": "Wie viele Sonnentage gab es?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-haustiere-sind-es-insgesamt-1iyjyq",
+   "text": "Wie viele Haustiere sind es insgesamt?",
+   "whole": true
   },
   {
    "key": "wie-lang-ist-ein-tisch-ungefaehr-1ig7g6",
@@ -1118,13 +1078,53 @@
    "whole": true
   },
   {
-   "key": "wie-lang-ist-ein-heft-ungefaehr-vfjk59",
-   "text": "Wie lang ist ein Heft ungefähr?",
+   "key": "wie-viele-sechsecke-siehst-du-11rf93",
+   "text": "Wie viele Sechsecke siehst du?",
+   "whole": true
+  },
+  {
+   "key": "wie-lang-ist-eine-giraffe-ungefaehr-189kpe",
+   "text": "Wie lang ist eine Giraffe ungefähr?",
    "whole": true
   },
   {
    "key": "wie-lang-ist-ein-lineal-ungefaehr-1ytxyg",
    "text": "Wie lang ist ein Lineal ungefähr?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-wurden-insgesamt-gefrag-bfpz7t",
+   "text": "Wie viele Kinder wurden insgesamt gefragt?",
+   "whole": true
+  },
+  {
+   "key": "es-ist-nachmittags-wie-spaet-ist-es-wtui21",
+   "text": "Es ist nachmittags. Wie spät ist es?",
+   "whole": true
+  },
+  {
+   "key": "wie-lang-ist-ein-bleistift-ungefaehr-181rh0",
+   "text": "Wie lang ist ein Bleistift ungefähr?",
+   "whole": true
+  },
+  {
+   "key": "ich-habe-1vykqe",
+   "text": "Ich habe",
+   "whole": false
+  },
+  {
+   "key": "wie-lang-ist-dein-daumen-ungefaehr-1k6snn",
+   "text": "Wie lang ist dein Daumen ungefähr?",
+   "whole": true
+  },
+  {
+   "key": "wie-lang-ist-eine-tuer-ungefaehr-l48499",
+   "text": "Wie lang ist eine Tür ungefähr?",
+   "whole": true
+  },
+  {
+   "key": "wie-lang-ist-ein-bus-ungefaehr-175fgp",
+   "text": "Wie lang ist ein Bus ungefähr?",
    "whole": true
   },
   {
@@ -1138,18 +1138,13 @@
    "whole": false
   },
   {
-   "key": "wie-viele-hasen-haben-die-kinder-gwuuj0",
-   "text": "Wie viele Hasen haben die Kinder?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-hunde-haben-die-kinder-o0va8f",
    "text": "Wie viele Hunde haben die Kinder?",
    "whole": true
   },
   {
-   "key": "wie-viele-katzen-haben-die-kinder-y5wqag",
-   "text": "Wie viele Katzen haben die Kinder?",
+   "key": "wie-viele-hasen-haben-die-kinder-gwuuj0",
+   "text": "Wie viele Hasen haben die Kinder?",
    "whole": true
   },
   {
@@ -1163,8 +1158,8 @@
    "whole": true
   },
   {
-   "key": "welches-obst-moegen-die-meisten-kinder-lsr8ew",
-   "text": "Welches Obst mögen die meisten Kinder?",
+   "key": "wie-viele-katzen-haben-die-kinder-y5wqag",
+   "text": "Wie viele Katzen haben die Kinder?",
    "whole": true
   },
   {
@@ -1173,53 +1168,18 @@
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-moegen-trauben-am-liebs-1nliih",
-   "text": "Wie viele Kinder mögen Trauben am liebsten?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-hat-ein-rechteck-lxnue0",
-   "text": "Wie viele Ecken hat ein Rechteck?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-flaechen-hat-der-wuerfel-1mmlre",
-   "text": "Wie viele Flächen hat der Würfel?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-hat-ein-kreis-1f2vu0",
-   "text": "Wie viele Ecken hat ein Kreis?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-hat-ein-quadrat-88d2wz",
-   "text": "Wie viele Ecken hat ein Quadrat?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-flaechen-hat-der-zylinder-a4bys7",
-   "text": "Wie viele Flächen hat der Zylinder?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-kinder-moegen-bananen-am-liebs-xf3crh",
    "text": "Wie viele Kinder mögen Bananen am liebsten?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-moegen-aepfel-am-liebst-18vwme",
-   "text": "Wie viele Kinder mögen Äpfel am liebsten?",
+   "key": "welches-obst-moegen-die-meisten-kinder-lsr8ew",
+   "text": "Welches Obst mögen die meisten Kinder?",
    "whole": true
   },
   {
-   "key": "uhr-wie-viele-minuten-sind-das-nkmizw",
-   "text": "Uhr. Wie viele Minuten sind das",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-flaechen-hat-die-pyramide-1yxnuq",
-   "text": "Wie viele Flächen hat die Pyramide?",
+   "key": "wie-viele-ecken-hat-ein-dreieck-mmopl2",
+   "text": "Wie viele Ecken hat ein Dreieck?",
    "whole": true
   },
   {
@@ -1228,8 +1188,13 @@
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-moegen-birnen-am-liebst-ywdd4i",
-   "text": "Wie viele Kinder mögen Birnen am liebsten?",
+   "key": "wie-viele-ecken-hat-ein-kreis-1f2vu0",
+   "text": "Wie viele Ecken hat ein Kreis?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-flaechen-hat-der-kegel-17a2nj",
+   "text": "Wie viele Flächen hat der Kegel?",
    "whole": true
   },
   {
@@ -1253,13 +1218,53 @@
    "whole": true
   },
   {
-   "key": "wie-viele-ecken-hat-ein-dreieck-mmopl2",
-   "text": "Wie viele Ecken hat ein Dreieck?",
+   "key": "wie-viele-flaechen-hat-der-quader-q7waa2",
+   "text": "Wie viele Flächen hat der Quader?",
    "whole": true
   },
   {
-   "key": "wie-viele-flaechen-hat-der-kegel-17a2nj",
-   "text": "Wie viele Flächen hat der Kegel?",
+   "key": "wie-viele-flaechen-hat-der-wuerfel-1mmlre",
+   "text": "Wie viele Flächen hat der Würfel?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-moegen-birnen-am-liebst-ywdd4i",
+   "text": "Wie viele Kinder mögen Birnen am liebsten?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-moegen-aepfel-am-liebst-18vwme",
+   "text": "Wie viele Kinder mögen Äpfel am liebsten?",
+   "whole": true
+  },
+  {
+   "key": "uhr-wie-viele-minuten-sind-das-nkmizw",
+   "text": "Uhr. Wie viele Minuten sind das",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-flaechen-hat-der-zylinder-a4bys7",
+   "text": "Wie viele Flächen hat der Zylinder?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-flaechen-hat-die-pyramide-1yxnuq",
+   "text": "Wie viele Flächen hat die Pyramide?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-moegen-trauben-am-liebs-1nliih",
+   "text": "Wie viele Kinder mögen Trauben am liebsten?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-ecken-hat-ein-quadrat-88d2wz",
+   "text": "Wie viele Ecken hat ein Quadrat?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-ecken-hat-ein-rechteck-lxnue0",
+   "text": "Wie viele Ecken hat ein Rechteck?",
    "whole": true
   },
   {
@@ -1268,18 +1273,8 @@
    "whole": true
   },
   {
-   "key": "wie-viele-flaechen-hat-der-quader-q7waa2",
-   "text": "Wie viele Flächen hat der Quader?",
-   "whole": true
-  },
-  {
    "key": "stell-die-uhr-auf-viertel-nach-ryoahd",
    "text": "Stell die Uhr auf Viertel nach",
-   "whole": false
-  },
-  {
-   "key": "stell-die-uhr-auf-halb-10xgt6",
-   "text": "Stell die Uhr auf halb",
    "whole": false
   },
   {
@@ -1288,13 +1283,13 @@
    "whole": false
   },
   {
-   "key": "wie-viele-minuten-hat-eine-dreiviertelst-1yhoe6",
-   "text": "Wie viele Minuten hat eine Dreiviertelstunde?",
-   "whole": true
+   "key": "stell-die-uhr-auf-halb-10xgt6",
+   "text": "Stell die Uhr auf halb",
+   "whole": false
   },
   {
-   "key": "welches-obst-moegen-die-wenigsten-kinder-8mx8vv",
-   "text": "Welches Obst mögen die wenigsten Kinder?",
+   "key": "wie-viele-minuten-hat-eine-dreiviertelst-1yhoe6",
+   "text": "Wie viele Minuten hat eine Dreiviertelstunde?",
    "whole": true
   },
   {
@@ -1308,6 +1303,11 @@
    "whole": true
   },
   {
+   "key": "welches-obst-moegen-die-wenigsten-kinder-8mx8vv",
+   "text": "Welches Obst mögen die wenigsten Kinder?",
+   "whole": true
+  },
+  {
    "key": "welches-haustier-gibt-es-am-seltensten-16td6h",
    "text": "Welches Haustier gibt es am seltensten?",
    "whole": true
@@ -1318,13 +1318,8 @@
    "whole": true
   },
   {
-   "key": "wie-viele-regentage-mehr-als-sonnentage--qfzuya",
-   "text": "Wie viele Regentage mehr als Sonnentage gab es?",
-   "whole": true
-  },
-  {
-   "key": "misst-man-dein-daumen-besser-in-zentimet-7fwftg",
-   "text": "Misst man dein Daumen besser in Zentimetern oder in Metern?",
+   "key": "wie-viele-sonnentage-mehr-als-wolkentage-1i6p7y",
+   "text": "Wie viele Sonnentage mehr als Wolkentage gab es?",
    "whole": true
   },
   {
@@ -1333,183 +1328,18 @@
    "whole": true
   },
   {
-   "key": "misst-man-eine-tuer-besser-in-zentimeter-g8s905",
-   "text": "Misst man eine Tür besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "kann-die-kugel-rollen-lxcyui",
-   "text": "Kann die Kugel rollen?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-sonnentage-mehr-als-regentage--pdqvxu",
    "text": "Wie viele Sonnentage mehr als Regentage gab es?",
    "whole": true
   },
   {
-   "key": "federn-zu-jedem-pferd-gehoeren-1xzac5",
-   "text": "Federn. Zu jedem Pferd gehören",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-wolkentage-mehr-als-sonnentage-t02hxt",
-   "text": "Wie viele Wolkentage mehr als Sonnentage gab es?",
-   "whole": true
-  },
-  {
-   "key": "der-lolli-p761js",
-   "text": "der Lolli",
-   "whole": false
-  },
-  {
-   "key": "misst-man-ein-lineal-besser-in-zentimete-1eqzkw",
-   "text": "Misst man ein Lineal besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "kann-der-quader-rollen-8325oz",
-   "text": "Kann der Quader rollen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-sonnentage-mehr-als-wolkentage-1i6p7y",
-   "text": "Wie viele Sonnentage mehr als Wolkentage gab es?",
-   "whole": true
-  },
-  {
-   "key": "baender-zu-jedem-akrobat-gehoeren-yxxxbp",
-   "text": "Bänder. Zu jedem Akrobat gehören",
-   "whole": false
-  },
-  {
-   "key": "cent-der-lolli-1hanse",
-   "text": "Cent, der Lolli",
-   "whole": false
-  },
-  {
-   "key": "ecken-aber-zwei-lange-und-zwei-kurze-sei-8ijshx",
-   "text": "Ecken, aber zwei lange und zwei kurze Seiten. Wer bin ich",
-   "whole": false
-  },
-  {
-   "key": "misst-man-ein-heft-besser-in-zentimetern-1jtujv",
-   "text": "Misst man ein Heft besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "cent-das-heft-atpf8y",
-   "text": "Cent, das Heft",
-   "whole": false
-  },
-  {
-   "key": "ecken-wie-eine-bienenwabe-wer-bin-ich-8awfp2",
-   "text": "Ecken, wie eine Bienenwabe. Wer bin ich",
-   "whole": false
-  },
-  {
-   "key": "misst-man-ein-bus-besser-in-zentimetern--8b6f40",
-   "text": "Misst man ein Bus besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "ich-bin-rund-und-habe-keine-ecke-wer-bin-1wqa86",
-   "text": "Ich bin rund und habe keine Ecke. Wer bin ich?",
-   "whole": true
-  },
-  {
-   "key": "der-saft-kun3a2",
-   "text": "der Saft",
-   "whole": false
-  },
-  {
-   "key": "der-muffin-17lw2w",
-   "text": "der Muffin",
-   "whole": false
-  },
-  {
-   "key": "cent-der-ball-14s5pt",
-   "text": "Cent, der Ball",
-   "whole": false
-  },
-  {
-   "key": "der-ball-1pjydj",
-   "text": "der Ball",
-   "whole": false
-  },
-  {
-   "key": "cent-der-saft-8fhfqs",
-   "text": "Cent, der Saft",
-   "whole": false
-  },
-  {
-   "key": "kann-der-pyramide-rollen-0ksiz4",
-   "text": "Kann der Pyramide rollen?",
-   "whole": true
-  },
-  {
-   "key": "die-brezel-mydebl",
-   "text": "die Brezel",
-   "whole": false
-  },
-  {
-   "key": "misst-man-ein-fussballtor-besser-in-zent-npfzco",
-   "text": "Misst man ein Fußballtor besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "kann-der-wuerfel-rollen-1sdrip",
-   "text": "Kann der Würfel rollen?",
-   "whole": true
-  },
-  {
-   "key": "cent-der-apfel-e508p2",
-   "text": "Cent, der Apfel",
-   "whole": false
-  },
-  {
-   "key": "cent-die-banane-1cfv4j",
-   "text": "Cent, die Banane",
-   "whole": false
-  },
-  {
-   "key": "die-banane-iaptji",
-   "text": "die Banane",
-   "whole": false
-  },
-  {
-   "key": "der-apfel-19h5zp",
-   "text": "der Apfel",
-   "whole": false
-  },
-  {
-   "key": "cent-der-muffin-1hitb0",
-   "text": "Cent, der Muffin",
-   "whole": false
-  },
-  {
-   "key": "der-stift-zepyww",
-   "text": "der Stift",
-   "whole": false
-  },
-  {
-   "key": "misst-man-ein-bleistift-besser-in-zentim-umyo5e",
-   "text": "Misst man ein Bleistift besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "cent-das-eis-18i37h",
-   "text": "Cent, das Eis",
-   "whole": false
-  },
-  {
-   "key": "ringe-zu-jedem-seeloewe-gehoeren-1kjpn5",
-   "text": "Ringe. Zu jedem Seelöwe gehören",
-   "whole": false
-  },
-  {
    "key": "misst-man-ein-schluessel-besser-in-zenti-byap1j",
    "text": "Misst man ein Schlüssel besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-regentage-mehr-als-sonnentage--qfzuya",
+   "text": "Wie viele Regentage mehr als Sonnentage gab es?",
    "whole": true
   },
   {
@@ -1518,34 +1348,44 @@
    "whole": false
   },
   {
-   "key": "das-heft-1lsulw",
-   "text": "das Heft",
+   "key": "cent-der-lolli-1hanse",
+   "text": "Cent, der Lolli",
    "whole": false
   },
   {
-   "key": "kann-der-kegel-rollen-wf2vhj",
-   "text": "Kann der Kegel rollen?",
-   "whole": true
-  },
-  {
-   "key": "misst-man-eine-giraffe-besser-in-zentime-o6uvjn",
-   "text": "Misst man eine Giraffe besser in Zentimetern oder in Metern?",
-   "whole": true
-  },
-  {
-   "key": "cent-der-stift-5d9v26",
-   "text": "Cent, der Stift",
+   "key": "cent-die-banane-1cfv4j",
+   "text": "Cent, die Banane",
    "whole": false
   },
   {
-   "key": "kann-der-zylinder-rollen-144cmj",
-   "text": "Kann der Zylinder rollen?",
+   "key": "baelle-zu-jedem-clown-gehoeren-109870",
+   "text": "Bälle. Zu jedem Clown gehören",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-wolkentage-mehr-als-sonnentage-t02hxt",
+   "text": "Wie viele Wolkentage mehr als Sonnentage gab es?",
    "whole": true
   },
   {
-   "key": "misst-man-ein-tisch-besser-in-zentimeter-7ltf01",
-   "text": "Misst man ein Tisch besser in Zentimetern oder in Metern?",
+   "key": "kann-der-quader-rollen-8325oz",
+   "text": "Kann der Quader rollen?",
    "whole": true
+  },
+  {
+   "key": "misst-man-ein-lineal-besser-in-zentimete-1eqzkw",
+   "text": "Misst man ein Lineal besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "kann-der-pyramide-rollen-0ksiz4",
+   "text": "Kann der Pyramide rollen?",
+   "whole": true
+  },
+  {
+   "key": "ringe-zu-jedem-seeloewe-gehoeren-1kjpn5",
+   "text": "Ringe. Zu jedem Seelöwe gehören",
+   "whole": false
   },
   {
    "key": "ecken-und-sqaa2k",
@@ -1555,11 +1395,6 @@
   {
    "key": "seiten-wer-bin-ich-15rpw9",
    "text": "Seiten. Wer bin ich",
-   "whole": false
-  },
-  {
-   "key": "baelle-zu-jedem-clown-gehoeren-109870",
-   "text": "Bälle. Zu jedem Clown gehören",
    "whole": false
   },
   {
@@ -1573,9 +1408,204 @@
    "whole": false
   },
   {
+   "key": "das-eis-1db5yn",
+   "text": "das Eis",
+   "whole": false
+  },
+  {
+   "key": "misst-man-eine-tuer-besser-in-zentimeter-g8s905",
+   "text": "Misst man eine Tür besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "der-saft-kun3a2",
+   "text": "der Saft",
+   "whole": false
+  },
+  {
+   "key": "der-lolli-p761js",
+   "text": "der Lolli",
+   "whole": false
+  },
+  {
+   "key": "der-stift-zepyww",
+   "text": "der Stift",
+   "whole": false
+  },
+  {
+   "key": "der-ball-1pjydj",
+   "text": "der Ball",
+   "whole": false
+  },
+  {
+   "key": "das-heft-1lsulw",
+   "text": "das Heft",
+   "whole": false
+  },
+  {
+   "key": "kann-der-wuerfel-rollen-1sdrip",
+   "text": "Kann der Würfel rollen?",
+   "whole": true
+  },
+  {
+   "key": "cent-der-stift-5d9v26",
+   "text": "Cent, der Stift",
+   "whole": false
+  },
+  {
+   "key": "der-apfel-19h5zp",
+   "text": "der Apfel",
+   "whole": false
+  },
+  {
+   "key": "die-brezel-mydebl",
+   "text": "die Brezel",
+   "whole": false
+  },
+  {
+   "key": "federn-zu-jedem-pferd-gehoeren-1xzac5",
+   "text": "Federn. Zu jedem Pferd gehören",
+   "whole": false
+  },
+  {
+   "key": "cent-der-ball-14s5pt",
+   "text": "Cent, der Ball",
+   "whole": false
+  },
+  {
+   "key": "cent-der-apfel-e508p2",
+   "text": "Cent, der Apfel",
+   "whole": false
+  },
+  {
+   "key": "ich-bin-rund-und-habe-keine-ecke-wer-bin-1wqa86",
+   "text": "Ich bin rund und habe keine Ecke. Wer bin ich?",
+   "whole": true
+  },
+  {
+   "key": "misst-man-dein-daumen-besser-in-zentimet-7fwftg",
+   "text": "Misst man dein Daumen besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "kann-die-kugel-rollen-lxcyui",
+   "text": "Kann die Kugel rollen?",
+   "whole": true
+  },
+  {
+   "key": "misst-man-ein-fussballtor-besser-in-zent-npfzco",
+   "text": "Misst man ein Fußballtor besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
    "key": "plaetze-zu-jedem-platz-auf-der-bank-geho-1a9gpu",
    "text": "Plätze. Zu jedem Platz auf der Bank gehören",
    "whole": false
+  },
+  {
+   "key": "misst-man-ein-bus-besser-in-zentimetern--8b6f40",
+   "text": "Misst man ein Bus besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "cent-der-saft-8fhfqs",
+   "text": "Cent, der Saft",
+   "whole": false
+  },
+  {
+   "key": "cent-das-heft-atpf8y",
+   "text": "Cent, das Heft",
+   "whole": false
+  },
+  {
+   "key": "cent-das-eis-18i37h",
+   "text": "Cent, das Eis",
+   "whole": false
+  },
+  {
+   "key": "der-muffin-17lw2w",
+   "text": "der Muffin",
+   "whole": false
+  },
+  {
+   "key": "ecken-aber-zwei-lange-und-zwei-kurze-sei-8ijshx",
+   "text": "Ecken, aber zwei lange und zwei kurze Seiten. Wer bin ich",
+   "whole": false
+  },
+  {
+   "key": "ecken-wie-eine-bienenwabe-wer-bin-ich-8awfp2",
+   "text": "Ecken, wie eine Bienenwabe. Wer bin ich",
+   "whole": false
+  },
+  {
+   "key": "baender-zu-jedem-akrobat-gehoeren-yxxxbp",
+   "text": "Bänder. Zu jedem Akrobat gehören",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-ecken-haben-alle-quadrate-zusa-p1aaub",
+   "text": "Wie viele Ecken haben alle Quadrate zusammen?",
+   "whole": true
+  },
+  {
+   "key": "cent-der-muffin-1hitb0",
+   "text": "Cent, der Muffin",
+   "whole": false
+  },
+  {
+   "key": "wie-viele-ecken-hat-der-wuerfel-1ligsn",
+   "text": "Wie viele Ecken hat der Würfel?",
+   "whole": true
+  },
+  {
+   "key": "kann-der-zylinder-rollen-144cmj",
+   "text": "Kann der Zylinder rollen?",
+   "whole": true
+  },
+  {
+   "key": "misst-man-ein-tisch-besser-in-zentimeter-7ltf01",
+   "text": "Misst man ein Tisch besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "misst-man-eine-giraffe-besser-in-zentime-o6uvjn",
+   "text": "Misst man eine Giraffe besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "die-banane-iaptji",
+   "text": "die Banane",
+   "whole": false
+  },
+  {
+   "key": "misst-man-ein-bleistift-besser-in-zentim-umyo5e",
+   "text": "Misst man ein Bleistift besser in Zentimetern oder in Metern?",
+   "whole": true
+  },
+  {
+   "key": "kann-der-kegel-rollen-wf2vhj",
+   "text": "Kann der Kegel rollen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-ecken-haben-alle-sechsecke-zus-qadgwo",
+   "text": "Wie viele Ecken haben alle Sechsecke zusammen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-ecken-haben-alle-rechtecke-zus-1scvr1",
+   "text": "Wie viele Ecken haben alle Rechtecke zusammen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-ecken-hat-die-pyramide-v9ym3m",
+   "text": "Wie viele Ecken hat die Pyramide?",
+   "whole": true
+  },
+  {
+   "key": "misst-man-ein-heft-besser-in-zentimetern-1jtujv",
+   "text": "Misst man ein Heft besser in Zentimetern oder in Metern?",
+   "whole": true
   },
   {
    "key": "wie-viele-ecken-haben-alle-fuenfecke-zus-1ys40e",
@@ -1588,48 +1618,8 @@
    "whole": true
   },
   {
-   "key": "wie-viele-ecken-hat-die-pyramide-v9ym3m",
-   "text": "Wie viele Ecken hat die Pyramide?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-ecken-hat-die-kugel-1r3a3w",
    "text": "Wie viele Ecken hat die Kugel?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-hat-der-zylinder-1rjz00",
-   "text": "Wie viele Ecken hat der Zylinder?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-hat-der-wuerfel-1ligsn",
-   "text": "Wie viele Ecken hat der Würfel?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-haben-alle-sechsecke-zus-qadgwo",
-   "text": "Wie viele Ecken haben alle Sechsecke zusammen?",
-   "whole": true
-  },
-  {
-   "key": "das-eis-1db5yn",
-   "text": "das Eis",
-   "whole": false
-  },
-  {
-   "key": "wie-viele-ecken-haben-alle-rechtecke-zus-1scvr1",
-   "text": "Wie viele Ecken haben alle Rechtecke zusammen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-haben-alle-quadrate-zusa-p1aaub",
-   "text": "Wie viele Ecken haben alle Quadrate zusammen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-ecken-haben-alle-dreiecke-zusa-1e9wvr",
-   "text": "Wie viele Ecken haben alle Dreiecke zusammen?",
    "whole": true
   },
   {
@@ -1638,13 +1628,13 @@
    "whole": true
   },
   {
-   "key": "wie-viele-katzen-mehr-als-voegel-gibt-es-11ki9n",
-   "text": "Wie viele Katzen mehr als Vögel gibt es?",
+   "key": "wie-viele-ecken-hat-der-zylinder-1rjz00",
+   "text": "Wie viele Ecken hat der Zylinder?",
    "whole": true
   },
   {
-   "key": "wie-viele-voegel-mehr-als-hunde-gibt-es-nhl5uu",
-   "text": "Wie viele Vögel mehr als Hunde gibt es?",
+   "key": "wie-viele-ecken-haben-alle-dreiecke-zusa-1e9wvr",
+   "text": "Wie viele Ecken haben alle Dreiecke zusammen?",
    "whole": true
   },
   {
@@ -1653,8 +1643,8 @@
    "whole": true
   },
   {
-   "key": "wie-viele-hunde-mehr-als-katzen-gibt-es-4tndj7",
-   "text": "Wie viele Hunde mehr als Katzen gibt es?",
+   "key": "wie-viele-hunde-mehr-als-voegel-gibt-es-v4ltqe",
+   "text": "Wie viele Hunde mehr als Vögel gibt es?",
    "whole": true
   },
   {
@@ -1668,13 +1658,13 @@
    "whole": true
   },
   {
-   "key": "wie-viele-hunde-mehr-als-hasen-gibt-es-10sd7x",
-   "text": "Wie viele Hunde mehr als Hasen gibt es?",
+   "key": "wie-viele-voegel-mehr-als-hunde-gibt-es-nhl5uu",
+   "text": "Wie viele Vögel mehr als Hunde gibt es?",
    "whole": true
   },
   {
-   "key": "wie-viele-hunde-mehr-als-voegel-gibt-es-v4ltqe",
-   "text": "Wie viele Hunde mehr als Vögel gibt es?",
+   "key": "wie-viele-hunde-mehr-als-katzen-gibt-es-4tndj7",
+   "text": "Wie viele Hunde mehr als Katzen gibt es?",
    "whole": true
   },
   {
@@ -1688,68 +1678,23 @@
    "whole": true
   },
   {
-   "key": "wie-viele-voegel-mehr-als-katzen-gibt-es-17cxsu",
-   "text": "Wie viele Vögel mehr als Katzen gibt es?",
-   "whole": true
-  },
-  {
    "key": "wie-viele-katzen-mehr-als-hunde-gibt-es-072lxp",
    "text": "Wie viele Katzen mehr als Hunde gibt es?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-bananen-als-qr5etz",
-   "text": "Wie viele Kinder mehr mögen Bananen als Birnen?",
+   "key": "wie-viele-voegel-mehr-als-katzen-gibt-es-17cxsu",
+   "text": "Wie viele Vögel mehr als Katzen gibt es?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-klgt1e",
-   "text": "Wie viele Kinder mehr mögen Kirschen als Bananen?",
+   "key": "wie-viele-katzen-mehr-als-voegel-gibt-es-11ki9n",
+   "text": "Wie viele Katzen mehr als Vögel gibt es?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-oqsc8z",
-   "text": "Wie viele Kinder mehr mögen Kirschen als Birnen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--1kedbn",
-   "text": "Wie viele Kinder mehr mögen Äpfel als Kirschen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-bananen-als-ctigcm",
-   "text": "Wie viele Kinder mehr mögen Bananen als Trauben?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-bananen-als-7si9u4",
-   "text": "Wie viele Kinder mehr mögen Bananen als Kirschen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-birnen-als--148gkf",
-   "text": "Wie viele Kinder mehr mögen Birnen als Äpfel?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-bananen-als-1d6bwc",
-   "text": "Wie viele Kinder mehr mögen Bananen als Äpfel?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-birnen-als--rhz9at",
-   "text": "Wie viele Kinder mehr mögen Birnen als Bananen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-trauben-als-ql7d06",
-   "text": "Wie viele Kinder mehr mögen Trauben als Bananen?",
-   "whole": true
-  },
-  {
-   "key": "wie-viele-kinder-mehr-moegen-trauben-als-1arugq",
-   "text": "Wie viele Kinder mehr mögen Trauben als Birnen?",
+   "key": "wie-viele-hunde-mehr-als-hasen-gibt-es-10sd7x",
+   "text": "Wie viele Hunde mehr als Hasen gibt es?",
    "whole": true
   },
   {
@@ -1758,18 +1703,33 @@
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-1godkl",
-   "text": "Wie viele Kinder mehr mögen Kirschen als Äpfel?",
+   "key": "wie-viele-kinder-mehr-moegen-birnen-als--148gkf",
+   "text": "Wie viele Kinder mehr mögen Birnen als Äpfel?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--g6tbw0",
-   "text": "Wie viele Kinder mehr mögen Äpfel als Bananen?",
+   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--1kedbn",
+   "text": "Wie viele Kinder mehr mögen Äpfel als Kirschen?",
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-trauben-als-1edu2l",
-   "text": "Wie viele Kinder mehr mögen Trauben als Kirschen?",
+   "key": "wie-viele-kinder-mehr-moegen-trauben-als-ql7d06",
+   "text": "Wie viele Kinder mehr mögen Trauben als Bananen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-birnen-als--1w18e6",
+   "text": "Wie viele Kinder mehr mögen Birnen als Trauben?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-oqsc8z",
+   "text": "Wie viele Kinder mehr mögen Kirschen als Birnen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--1aewyx",
+   "text": "Wie viele Kinder mehr mögen Äpfel als Birnen?",
    "whole": true
   },
   {
@@ -1778,8 +1738,43 @@
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--1aewyx",
-   "text": "Wie viele Kinder mehr mögen Äpfel als Birnen?",
+   "key": "wie-viele-kinder-mehr-moegen-aepfel-als--g6tbw0",
+   "text": "Wie viele Kinder mehr mögen Äpfel als Bananen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-bananen-als-1d6bwc",
+   "text": "Wie viele Kinder mehr mögen Bananen als Äpfel?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-bananen-als-ctigcm",
+   "text": "Wie viele Kinder mehr mögen Bananen als Trauben?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-trauben-als-1edu2l",
+   "text": "Wie viele Kinder mehr mögen Trauben als Kirschen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-bananen-als-qr5etz",
+   "text": "Wie viele Kinder mehr mögen Bananen als Birnen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-bananen-als-7si9u4",
+   "text": "Wie viele Kinder mehr mögen Bananen als Kirschen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-trauben-als-1arugq",
+   "text": "Wie viele Kinder mehr mögen Trauben als Birnen?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-birnen-als--rhz9at",
+   "text": "Wie viele Kinder mehr mögen Birnen als Bananen?",
    "whole": true
   },
   {
@@ -1793,8 +1788,13 @@
    "whole": true
   },
   {
-   "key": "wie-viele-kinder-mehr-moegen-birnen-als--1w18e6",
-   "text": "Wie viele Kinder mehr mögen Birnen als Trauben?",
+   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-1godkl",
+   "text": "Wie viele Kinder mehr mögen Kirschen als Äpfel?",
+   "whole": true
+  },
+  {
+   "key": "wie-viele-kinder-mehr-moegen-kirschen-al-klgt1e",
+   "text": "Wie viele Kinder mehr mögen Kirschen als Bananen?",
    "whole": true
   }
  ]

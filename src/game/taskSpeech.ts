@@ -33,6 +33,8 @@ export function speakable(raw: string): string {
       .replace(/(\d|\?)\s*cm\b/g, "$1 Zentimeter")
       .replace(/(\d|\?)\s*m\b/g, "$1 Meter")
       .replace(/→/g, " bis ")
+      .replace(/\bStd\./g, "Stunden")
+      .replace(/\bMin\./g, "Minuten")
       // Reihen „11, 12, 13, ?" → „… 13, und dann?"
       .replace(/,\s*\?\s*$/, ", und dann")
   );
