@@ -6,7 +6,7 @@ import { claimBadges } from "@/game/badges";
 import { notePractice, practiceNode, PRACTICE_ID, reviewPractice } from "@/game/practice";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Volume2, X } from "lucide-react";
+import { Lightbulb, Volume2, X } from "lucide-react";
 import { starsFor, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import { getSkill } from "@/game/skills";
@@ -26,6 +26,7 @@ import { completeTask, firstAnswer, isFinished, lateRight, nextTask, startRun, t
 import { TaskView, type Status } from "./formats";
 import { ResultView, type Outcome } from "./ResultView";
 import { TrickIntro } from "./TrickIntro";
+import { HelpSheet } from "./HelpSheet";
 
 const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
 const CHEERS = ["Du schaffst das!", "Schau genau hin.", "Ich glaub an dich!", "Los geht's!", "Denk an den Trick!"];
@@ -81,6 +82,11 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   const [gain, setGain] = useState<{ n: number; key: number } | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [quit, setQuit] = useState(false);
+  // Hilfe: Feststecken erkennen (2× hintereinander falsch oder lange keine Antwort).
+  const [wrongInRow, setWrongInRow] = useState(0);
+  const [idleAt, setIdleAt] = useState<string | null>(null);
+  const [help, setHelp] = useState(false);
+  const [helpTask, setHelpTask] = useState<string | null>(null);
   const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Sperre gegen doppeltes Weiterschalten (Auto-Weiter und Tippen gleichzeitig).
   const advancing = useRef(false);
@@ -148,6 +154,27 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
     advancing.current = false;
   }, [task, status, retry]);
 
+  // Lange keine Antwort? Dann bietet das Haustier Hilfe an.
+  const idleKey = `${task.id}-${retry}`;
+  useEffect(() => {
+    if (status !== "ask" || phase !== "play") return;
+    const t = setTimeout(() => setIdleAt(idleKey), 45000);
+    return () => clearTimeout(t);
+  }, [idleKey, status, phase]);
+  const idle = idleAt === idleKey;
+
+  const stuck = status === "ask" && (wrongInRow >= 2 || idle) && helpTask !== task.id;
+  useEffect(() => {
+    if (stuck) void say("help");
+  }, [stuck]);
+
+  const openHelp = () => {
+    stopReading();
+    setHelpTask(task.id);
+    setWrongInRow(0);
+    setHelp(true);
+  };
+
   useEffect(() => {
     if (status !== "right") return;
     autoNext.current = setTimeout(advance, 1300);
@@ -160,6 +187,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
     if (status !== "ask") return;
     stopReading();
     if (attempt === 0) {
+      setWrongInRow((n) => (correct ? 0 : n + 1));
       logAnswer({ t: Math.round(Date.now() / 1000), s: task.skillId, l: task.level, ok: correct ? 1 : 0, ms: Math.min(600000, Date.now() - shownAt.current), ...(node.practice ? { p: 1 as const } : {}) });
       if (node.practice) reviewPractice(task, correct);
       else notePractice(task, correct);
@@ -252,23 +280,36 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
 
       <div className="flex items-end gap-2.5 px-4 pt-1">
         {save.profile && <Pet species={save.profile.pet} stage={petStage(level)} mood={petMood} equipped={save.equipped} size={isBoss ? 60 : 72} className={status === "right" ? "anim-pop" : status === "wrong" ? "anim-wiggle" : ""} />}
-        <div className="mb-5 rounded-[18px] rounded-bl-[4px] bg-white px-4 py-2.5 font-extrabold text-ink shadow-[0_3px_0_#E4E0F5]">{bubble}</div>
+        {stuck ? (
+          <button onClick={openHelp} className="anim-pop mb-5 flex items-center gap-2 rounded-[18px] rounded-bl-[4px] bg-sun px-4 py-2.5 font-extrabold text-ink shadow-[0_3px_0_#E5A100]">
+            <Lightbulb size={20} strokeWidth={2.6} /> Soll ich&apos;s dir zeigen?
+          </button>
+        ) : (
+          <div className="mb-5 rounded-[18px] rounded-bl-[4px] bg-white px-4 py-2.5 font-extrabold text-ink shadow-[0_3px_0_#E4E0F5]">{bubble}</div>
+        )}
       </div>
 
       <div className="flex items-start justify-between gap-3 px-4 pb-4 pt-2">
         <h1 className={`font-display text-[1.75rem] font-semibold leading-tight ${isBoss ? "text-white" : ""}`}>{task.question}</h1>
+        <div className="flex shrink-0 gap-2">
+        <button aria-label="Hilfe" onClick={openHelp} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sun-light text-[#B36B00]">
+          <Lightbulb size={22} strokeWidth={2.5} />
+        </button>
         {canRead({ question: task.question, term }) && (
           <button aria-label="Vorlesen" onClick={() => void readTask({ question: task.question, term })} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-grape-light text-grape">
             <Volume2 size={22} strokeWidth={2.5} />
           </button>
         )}
+        </div>
       </div>
 
       <div className="px-4">
         <TaskView key={task.format === "input" || task.format === "wall" ? `${task.id}-${retry}` : task.id} task={task} status={status} onAnswer={onAnswer} />
       </div>
 
-      {status !== "ask" && <Feedback status={status} task={task} praise={praise} gain={gain?.n ?? 0} onNext={advance} />}
+      {status !== "ask" && <Feedback status={status} task={task} praise={praise} gain={gain?.n ?? 0} onNext={advance} onHelp={openHelp} />}
+
+      {help && <HelpSheet task={task} save={save} showHint={status !== "reveal"} onClose={() => setHelp(false)} />}
 
       <Sheet open={quit} onClose={() => setQuit(false)}>
         <div className="flex flex-col gap-3 text-center">
@@ -286,7 +327,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   );
 }
 
-function Feedback({ status, task, praise, gain, onNext }: { status: Status; task: Task; praise: string; gain: number; onNext: () => void }) {
+function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Status; task: Task; praise: string; gain: number; onNext: () => void; onHelp: () => void }) {
   if (status === "right") {
     return (
       <div className="anim-sheet fixed inset-x-0 bottom-0 z-40 mx-auto max-w-xl rounded-t-[28px] border-t-4 border-leaf bg-leaf-light px-5 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
@@ -326,6 +367,9 @@ function Feedback({ status, task, praise, gain, onNext }: { status: Status; task
           </button>
         )}
       </div>
+      <button onClick={onHelp} className="mb-3 flex w-full items-center justify-center gap-2 rounded-full bg-white/70 py-2.5 font-extrabold text-[#8A4B00]">
+        <Lightbulb size={20} strokeWidth={2.5} /> Zeig mir, wie&apos;s geht
+      </button>
       <Button tone="coin" className="w-full" onClick={onNext}>
         {reveal ? "Weiter" : "Nochmal probieren"}
       </Button>

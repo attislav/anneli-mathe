@@ -57,6 +57,10 @@
       "Hallo! Schön, dass du da bist.",
       "Hallo! Bereit für ein neues Abenteuer?",
       "Da bist du ja! Los geht's!"
+    ],
+    "help": [
+      "Soll ich dir zeigen, wie es geht?",
+      "Komm, ich zeig dir einen Weg!"
     ]
   }
 }
