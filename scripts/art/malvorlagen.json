@@ -1,5 +1,5 @@
 {
-  "_info": "Puzzle-Ausmalbilder: pro Welt eine geheime Malvorlage (s/w Linienbild, A4 hochkant). Erzeugen: npm run gen:malvorlagen (braucht OPENAI_API_KEY). Stil-Vorgabe steht in `style`, die Szene pro Bild in `scene`.",
+  "_info": "Puzzle-Ausmalbilder: pro Welt eine geheime Malvorlage (s/w Linienbild, A4 hochkant). Erzeugen: npm run gen:malvorlagen (GPT Image 2.5 Sunburst, braucht OPENAI_API_KEY). Stil-Vorgabe steht in `style`, die Szene pro Bild in `scene`.",
   "style": "Printable coloring page for children aged 6 to 8. Black and white line art only: clean, bold black outlines of even thickness on a pure white background. No shading, no gray tones, no hatching, no color, no text, no letters, no numbers, no border or frame. Every shape is closed so it can be filled with color; rich, detailed and charming, but no tiny fiddly areas. Cute, friendly cartoon style. Portrait composition that fills the whole page. Scene:",
   "pages": [
     { "id": "insel", "world": "start", "title": "Die Sterneninsel", "scene": "a small round island with a striped lighthouse, palm trees, a friendly turtle and a seagull on the beach, a little wooden pier with a rowing boat, gentle waves and big fluffy clouds, a big smiling sun." },

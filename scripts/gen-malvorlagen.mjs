@@ -15,7 +15,7 @@ if (!KEY) {
   console.error("OPENAI_API_KEY fehlt. In .env.local eintragen oder als Umgebungsvariable setzen.");
   process.exit(1);
 }
-const MODEL = process.env.OPENAI_IMAGE_MODEL ?? "gpt-image-2";
+const MODEL = process.env.OPENAI_IMAGE_MODEL ?? "gpt-image-2.5-sunburst";
 const QUALITY = process.env.OPENAI_IMAGE_QUALITY ?? "medium";
 
 mkdirSync("public/malen", { recursive: true });
