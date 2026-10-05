@@ -7,6 +7,7 @@
 import { SKILLS } from "../src/game/skills";
 import type { Format, Level, TaskDraft } from "../src/game/types";
 import { breakDown } from "../src/game/money";
+import { parseTerm, resultOf, tricksFor } from "../src/game/tricks";
 
 /** „1,20 €", „2 € 5 ct", „35 ct", „3 €" → Cent. */
 function cents(s: string): number {
@@ -156,6 +157,23 @@ function check(skill: string, level: Level, t: TaskDraft) {
   }
 }
 
+/** Kopfrechentricks: jede Zwischenrechnung stimmt, der letzte Schritt ergibt genau das Ergebnis. */
+const calc = (e: string): number => Function(`return (${e.replace(/−/g, "-").replace(/·/g, "*").replace(/:/g, "/")})`)();
+function checkTricks(skill: string, level: number, t: TaskDraft) {
+  const term = "term" in t ? (t.term as string | undefined) : undefined;
+  const p = parseTerm(term);
+  if (!p) return;
+  const result = resultOf(p);
+  for (const k of tricksFor(term)) {
+    const last = k.steps[k.steps.length - 1].match(/(\d+(?: [+−·:] \d+)+) = \?$/);
+    if (!last || Math.abs(calc(last[1]) - result) > 1e-9) fail(skill, level, `Trick „${k.id}“ führt nicht zum Ergebnis ${result}`, t);
+    for (const step of k.steps) {
+      for (const q of step.matchAll(/(\d+(?: [+−·:] \d+)+) = (\d+)(?! [+−·:])(?!\d)/g)) if (calc(q[1]) !== Number(q[2])) fail(skill, level, `Trick „${k.id}“ rechnet falsch: ${q[0]}`, t);
+      if (/NaN|undefined/.test(step)) fail(skill, level, `Trick „${k.id}“ kaputt: ${step}`, t);
+    }
+  }
+}
+
 for (const skill of Object.values(SKILLS)) {
   formats.set(skill.id, new Set());
   for (const level of [1, 2, 3, 4, 5] as Level[]) {
@@ -169,6 +187,7 @@ for (const skill of Object.values(SKILLS)) {
       }
       formats.get(skill.id)!.add(t.format);
       check(skill.id, level, t);
+      checkTricks(skill.id, level, t);
     }
   }
 }

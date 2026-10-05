@@ -28,6 +28,7 @@ import { ResultView, type Outcome } from "./ResultView";
 import { TrickIntro } from "./TrickIntro";
 import { HelpSheet } from "./HelpSheet";
 import { jumpsFor } from "@/game/jumps";
+import { tricksFor } from "@/game/tricks";
 import { NumberJump } from "@/ui/NumberJump";
 
 const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
@@ -376,7 +377,7 @@ function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Stat
         )}
       </div>
       <button onClick={onHelp} className="mb-3 flex w-full items-center justify-center gap-2 rounded-full bg-white/70 py-2.5 font-extrabold text-[#8A4B00]">
-        <Lightbulb size={20} strokeWidth={2.5} /> Zeig mir, wie&apos;s geht
+        <Lightbulb size={20} strokeWidth={2.5} /> {tricksFor("term" in task ? task.term : undefined).length ? "Zeig mir einen Trick" : "Zeig mir, wie's geht"}
       </button>
       <Button tone="coin" className="w-full" onClick={onNext}>
         {reveal ? "Weiter" : "Nochmal probieren"}
