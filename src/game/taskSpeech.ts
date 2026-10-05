@@ -29,6 +29,8 @@ export function speakable(raw: string): string {
       // „2,50 €" → „2 Euro 50"
       .replace(/\b(\d+),(\d{2})\s*€/g, (_, e: string, c: string) => (c === "00" ? `${e} Euro` : `${e} Euro ${Number(c)}`))
       .replace(/€/g, " Euro ")
+      .replace(/\bin cm\b/g, "in Zentimetern")
+      .replace(/\bin m\b/g, "in Metern")
       .replace(/(\d|\?)\s*ct\b/g, "$1 Cent")
       .replace(/(\d|\?)\s*cm\b/g, "$1 Zentimeter")
       .replace(/(\d|\?)\s*m\b/g, "$1 Meter")
