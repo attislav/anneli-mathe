@@ -107,7 +107,7 @@ export function encode(pcm, out) {
   execFileSync("ffmpeg", [
     "-loglevel", "error", "-y", "-f", "s16le", "-ar", "24000", "-ac", "1", "-i", raw,
     "-af", `atrim=${from.toFixed(3)}:${to.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.02,afade=t=out:st=${Math.max(0, len - 0.06).toFixed(3)}:d=0.06,loudnorm=I=-16:TP=-1.5,apad=pad_dur=0.05`,
-    "-ar", "24000", "-b:a", "64k", out,
+    "-ar", "24000", "-b:a", "32k", out,
   ]);
   rmSync(raw);
 }
