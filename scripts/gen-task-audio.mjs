@@ -14,7 +14,7 @@ import { record } from "./voice/tts.mjs";
 const { voice } = JSON.parse(readFileSync("scripts/voice/lines.json", "utf8"));
 const manifest = JSON.parse(readFileSync("scripts/voice/task-manifest.json", "utf8"));
 const force = process.argv.includes("--force");
-const PARALLEL = 4;
+const PARALLEL = 6;
 // Kurz halten und „nur den Text" betonen — bei langen Regie-Texten und kurzen
 // Wörtern erfindet das Modell sonst ganze Sätze dazu.
 const BASE = "A kind, calm primary school teacher. Natural German, clear and friendly.";
