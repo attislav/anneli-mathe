@@ -7,7 +7,8 @@ import { Volume2 } from "lucide-react";
 import { petStage } from "@/game/collection";
 import type { Trick } from "@/game/skills";
 import { levelInfo, type SaveState } from "@/game/state";
-import { speak } from "@/game/speech";
+import { DEVICE_VOICE, speak } from "@/game/speech";
+import { say } from "@/game/voice";
 import { Button, LinkButton } from "@/ui/Button";
 import { Pet } from "@/ui/Pet";
 import { useBackdrop } from "@/ui/chrome";
@@ -16,6 +17,10 @@ export function TrickIntro({ trick, save, onDone }: { trick: Trick; save: SaveSt
   const [shown, setShown] = useState(1);
   useBackdrop("#E3F5FF");
   const all = shown >= trick.steps.length;
+
+  useEffect(() => {
+    void say("trick");
+  }, []);
 
   useEffect(() => {
     if (save.settings.autoRead) speak(trick.steps[shown - 1]);
@@ -40,9 +45,11 @@ export function TrickIntro({ trick, save, onDone }: { trick: Trick; save: SaveSt
           <li key={i} className="anim-pop flex items-center gap-3 rounded-[20px] bg-white p-4 text-lg">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky font-display text-lg font-semibold text-white">{i + 1}</span>
             <span className="flex-1">{step}</span>
-            <button aria-label="Vorlesen" onClick={() => speak(step)} className="text-sky-dark">
-              <Volume2 size={22} />
-            </button>
+            {DEVICE_VOICE && (
+              <button aria-label="Vorlesen" onClick={() => speak(step)} className="text-sky-dark">
+                <Volume2 size={22} />
+              </button>
+            )}
           </li>
         ))}
       </ol>

@@ -12,6 +12,7 @@ import { PET_STAGE_NAMES, PETS, petStage } from "@/game/collection";
 import { SKILLS } from "@/game/skills";
 import { FEED_COST, feedPet, levelInfo, resetAll, streak, todayKey, totalStars, updateSettings, type SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
+import { DEVICE_VOICE } from "@/game/speech";
 import { randInt } from "@/game/random";
 import { WORLDS } from "@/game/worlds";
 import { CoinIcon } from "@/ui/art";
@@ -84,7 +85,8 @@ export function MeScreen({ save }: { save: SaveState }) {
 
       <div className="mt-4 flex flex-col gap-2 rounded-[24px] bg-white p-4">
         <Toggle label="Töne" on={save.settings.sound} onChange={(v) => updateSettings({ sound: v })} icon={save.settings.sound ? <Volume2 /> : <VolumeX />} />
-        <Toggle label="Aufgaben automatisch vorlesen" on={save.settings.autoRead} onChange={(v) => updateSettings({ autoRead: v })} />
+        <Toggle label="Stimme (Lob & Begrüßung)" on={save.settings.voice} onChange={(v) => updateSettings({ voice: v })} />
+        {DEVICE_VOICE && <Toggle label="Aufgaben automatisch vorlesen" on={save.settings.autoRead} onChange={(v) => updateSettings({ autoRead: v })} />}
       </div>
 
       <Link href="/wer/" className="mt-4 flex items-center justify-between rounded-[24px] bg-white p-4 font-extrabold">

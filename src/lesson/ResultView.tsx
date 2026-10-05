@@ -2,12 +2,13 @@
 
 // Ergebnis einer Lektion: Sterne, Werte, Level-Balken, Truhe zum Antippen.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, RotateCcw } from "lucide-react";
 import type { Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import type { Reward, SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
+import { say } from "@/game/voice";
 import type { PathNode, World } from "@/game/worlds";
 import { ChestArt, CoinIcon, StarIcon } from "@/ui/art";
 import { Button, LinkButton } from "@/ui/Button";
@@ -36,6 +37,10 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
   const levelUp = outcome.levelAfter.level > outcome.levelBefore;
   const page = outcome.rewards.find((r) => r.kind === "page");
   const isBoss = node.kind === "boss";
+
+  useEffect(() => {
+    void say(isBoss ? "boss" : levelUp ? "levelup" : `result${outcome.stars}`);
+  }, [isBoss, levelUp, outcome.stars]);
 
   return (
     <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col items-center gap-3 overflow-hidden bg-grape px-4 pb-6 pt-6 text-white">
@@ -90,6 +95,7 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
           <button
             onClick={() => {
               sfx.chest();
+              void say("chest");
               setOpen(true);
             }}
             className="flex flex-col items-center gap-2"

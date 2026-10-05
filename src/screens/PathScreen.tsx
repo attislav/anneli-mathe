@@ -2,6 +2,7 @@
 
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
+import { greet } from "@/game/voice";
 import { activeSeason, adventDay } from "@/game/season";
 import { duePractice, PRACTICE_ID } from "@/game/practice";
 import { claimBadges } from "@/game/badges";
@@ -52,6 +53,26 @@ export function PathScreen({ save }: { save: SaveState }) {
   useEffect(() => {
     currentRef.current?.scrollIntoView({ block: "center" });
   }, []);
+
+  // Einmal pro Besuch begrüßen (pro Kind). Blockt der Browser den Ton,
+  // weil noch nicht getippt wurde, versuchen wir es beim nächsten Mal.
+  const name = save.profile?.name;
+  useEffect(() => {
+    const key = `sternenpfad.greeted.${name ?? ""}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+    } catch {
+      return;
+    }
+    void greet(name).then((ok) => {
+      if (!ok) return;
+      try {
+        sessionStorage.setItem(key, "1");
+      } catch {
+        // Ohne Speicher eben jedes Mal begrüßen.
+      }
+    });
+  }, [name]);
 
   const dailyWaiting = dailyChestWaiting(save);
   const practiceDue = duePractice(save).length;

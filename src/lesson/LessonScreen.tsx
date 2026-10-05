@@ -11,7 +11,8 @@ import { petStage } from "@/game/collection";
 import { getSkill } from "@/game/skills";
 import { bestStars, lessonRewards, levelInfo, logAnswer, readSave, recordLesson, type Reward, type SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
-import { speak, stopSpeaking } from "@/game/speech";
+import { DEVICE_VOICE, speak, stopSpeaking } from "@/game/speech";
+import { say, stopVoice } from "@/game/voice";
 import type { Task } from "@/game/types";
 import { findNode, type PathNode, type World } from "@/game/worlds";
 import { CoinIcon, FlameIcon } from "@/ui/art";
@@ -78,7 +79,13 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
     if (phase === "play" && readSave().settings.autoRead) speak(task.question, "term" in task ? task.term : undefined);
   }, [task, phase]);
 
-  useEffect(() => () => stopSpeaking(), []);
+  useEffect(
+    () => () => {
+      stopSpeaking();
+      stopVoice();
+    },
+    [],
+  );
 
   const finish = useCallback(
     (r: Run) => {
@@ -147,11 +154,13 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
         setGain({ n: res.coinsGained, key: Date.now() });
         if (res.combo) sfx.combo();
         else sfx.correct();
+        void say(res.combo ? "combo" : "praise");
         if (isBoss) sfx.hit();
       } else {
         setStatus("wrong");
         setAttempt(1);
         sfx.wrong();
+        void say("wrong");
       }
       return;
     }
@@ -162,10 +171,12 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
       setPraise("Geschafft!");
       setGain({ n: res.coinsGained, key: Date.now() });
       sfx.correct();
+      void say("late");
       if (isBoss) sfx.hit();
     } else {
       setStatus("reveal");
       sfx.wrong();
+      void say("reveal");
     }
   };
 
@@ -226,9 +237,11 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
 
       <div className="flex items-start justify-between gap-3 px-4 pb-4 pt-2">
         <h1 className={`font-display text-[1.75rem] font-semibold leading-tight ${isBoss ? "text-white" : ""}`}>{task.question}</h1>
-        <button aria-label="Vorlesen" onClick={() => speak(task.question, term)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-grape-light text-grape">
-          <Volume2 size={22} strokeWidth={2.5} />
-        </button>
+        {DEVICE_VOICE && (
+          <button aria-label="Vorlesen" onClick={() => speak(task.question, term)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-grape-light text-grape">
+            <Volume2 size={22} strokeWidth={2.5} />
+          </button>
+        )}
       </div>
 
       <div className="px-4">
@@ -287,9 +300,11 @@ function Feedback({ status, task, praise, gain, onNext }: { status: Status; task
           <div className="font-display text-2xl font-semibold text-[#8A4B00]">{reveal ? "So geht's:" : "Fast! Kleiner Tipp:"}</div>
           <div className="mt-0.5 text-[17px] leading-snug text-[#6B3A00]">{reveal ? task.solution : task.hint}</div>
         </div>
-        <button aria-label="Vorlesen" onClick={() => speak(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
-          <Volume2 size={20} />
-        </button>
+        {DEVICE_VOICE && (
+          <button aria-label="Vorlesen" onClick={() => speak(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
+            <Volume2 size={20} />
+          </button>
+        )}
       </div>
       <Button tone="coin" className="w-full" onClick={onNext}>
         {reveal ? "Weiter" : "Nochmal probieren"}
