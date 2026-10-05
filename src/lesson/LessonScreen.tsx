@@ -11,8 +11,8 @@ import { petStage } from "@/game/collection";
 import { getSkill } from "@/game/skills";
 import { bestStars, lessonRewards, levelInfo, logAnswer, readSave, recordLesson, type Reward, type SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
-import { DEVICE_VOICE, speak, stopSpeaking } from "@/game/speech";
-import { canRead, readTask, stopReading } from "@/game/taskVoice";
+import { stopSpeaking } from "@/game/speech";
+import { canRead, canReadText, readTask, readText, stopReading } from "@/game/taskVoice";
 import { say, stopVoice } from "@/game/voice";
 import type { Task } from "@/game/types";
 import { findNode, type PathNode, type World } from "@/game/worlds";
@@ -143,6 +143,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
 
   const onAnswer = (correct: boolean) => {
     if (status !== "ask") return;
+    stopReading();
     if (attempt === 0) {
       logAnswer({ t: Math.round(Date.now() / 1000), s: task.skillId, l: task.level, ok: correct ? 1 : 0, ms: Math.min(600000, Date.now() - shownAt.current), ...(node.practice ? { p: 1 as const } : {}) });
       if (node.practice) reviewPractice(task, correct);
@@ -304,8 +305,8 @@ function Feedback({ status, task, praise, gain, onNext }: { status: Status; task
           <div className="font-display text-2xl font-semibold text-[#8A4B00]">{reveal ? "So geht's:" : "Fast! Kleiner Tipp:"}</div>
           <div className="mt-0.5 text-[17px] leading-snug text-[#6B3A00]">{reveal ? task.solution : task.hint}</div>
         </div>
-        {DEVICE_VOICE && (
-          <button aria-label="Vorlesen" onClick={() => speak(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
+        {canReadText(reveal ? task.solution : task.hint) && (
+          <button aria-label="Vorlesen" onClick={() => void readText(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
             <Volume2 size={20} />
           </button>
         )}

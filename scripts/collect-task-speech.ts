@@ -1,4 +1,4 @@
-// Sammelt alle Bausteine ein, die zum Vorlesen der Aufgaben nötig sind, und
+// Sammelt alle Bausteine ein, die zum Vorlesen der Aufgaben, Tipps und Lösungen nötig sind, und
 // schreibt sie nach scripts/voice/task-manifest.json (Vorlage für
 // `npm run gen:task-audio`). Würfelt dafür sehr viele Aufgaben pro
 // Kompetenz und Stufe — die Texte sind Schablonen, die Menge ist endlich.
@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import { SKILLS } from "../src/game/skills";
 import type { Level } from "../src/game/types";
-import { taskPieces } from "../src/game/taskSpeech";
+import { taskPieces, textPieces } from "../src/game/taskSpeech";
 
 /** Sachaufgaben und Kombinatorik haben hunderte Namen/Dinge-Kombinationen — kommen später. */
 const LATER = new Set(["sachaufgaben", "kombinatorik"]);
@@ -22,8 +22,8 @@ for (const skill of Object.values(SKILLS)) {
   for (const level of [1, 2, 3, 4, 5] as Level[]) {
     for (let i = 0; i < RUNS; i++) {
       const t = skill.gen({ level, avoid: [] });
-      const pieces = taskPieces({ question: t.question, term: "term" in t ? (t.term as string | undefined) : undefined });
-      for (const p of pieces) {
+      const all = [taskPieces({ question: t.question, term: "term" in t ? (t.term as string | undefined) : undefined }), textPieces(t.hint), textPieces(t.solution)];
+      for (const pieces of all) for (const p of pieces) {
         if (p.kind === "number") numbers.add(p.value);
         if (p.kind === "text") {
           const e = texts.get(p.key);

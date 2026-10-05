@@ -35,8 +35,7 @@ export function stopVoice(): void {
   current = null;
 }
 
-/** Begrüßung, mit Namen, wenn es für diesen Namen eigene Aufnahmen gibt. */
-export function greet(name?: string): Promise<boolean> {
-  const slug = (name ?? "").trim().toLowerCase().replace(/[^a-z]/g, "");
-  return say(COUNTS[`greet-${slug}`] ? `greet-${slug}` : "greet");
+/** Begrüßung — bewusst ohne Namen, die App spielen mehrere Kinder. */
+export function greet(): Promise<boolean> {
+  return say("greet");
 }
