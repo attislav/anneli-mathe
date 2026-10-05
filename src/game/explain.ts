@@ -177,9 +177,29 @@ const EXPLAIN: Record<string, Explanation> = {
   },
 };
 
-/** Erklärung für ein Thema: der Rechentrick, sonst die Erklärung von oben. */
-export function explanationFor(skillId: string): Explanation | null {
+/**
+ * Minus wird anders erklärt als Plus: rückwärts gehen, wegnehmen, Pause am
+ * Zehner auf dem Weg nach unten. Gilt für Minus-Aufgaben in Themen, deren
+ * Trick bzw. Erklärung von Plus handelt.
+ */
+const MINUS_SMALL: Explanation = {
+  title: "Rückwärts mit Zehner-Pause",
+  example: "13 − 5",
+  steps: ["Minus heißt: wegnehmen — du gehst rückwärts.", "Geh erst zurück bis zur 10: 13 − 3 = 10. Pause am Zehner!", "Von der 5 musst du noch 2 wegnehmen: 10 − 2 = 8."],
+};
+const MINUS_BIG: Explanation = {
+  title: "Minus: erst Zehner weg, dann Einer",
+  example: "63 − 27",
+  steps: ["Minus heißt: wegnehmen. Zerlege die 27 in 20 und 7.", "Erst die Zehner weg: 63 − 20 = 43.", "Dann die 7 Einer weg — mit Pause am Zehner: 43 − 3 = 40, 40 − 4 = 36."],
+};
+
+/** Erklärung für ein Thema: der Rechentrick, sonst die Erklärung von oben. Bei Minus-Aufgaben die Minus-Erklärung. */
+export function explanationFor(skillId: string, term?: string): Explanation | null {
   const trick = getSkill(skillId).trick;
-  if (trick) return { title: trick.title, example: trick.example, steps: trick.steps };
-  return EXPLAIN[skillId] ?? null;
+  const base: Explanation | null = trick ? { title: trick.title, example: trick.example, steps: trick.steps } : (EXPLAIN[skillId] ?? null);
+  const minus = term?.match(/^(\d+)(?: \w+)? − (\d+)/);
+  if (minus && base && !/−/.test(`${base.example ?? ""} ${base.steps.join(" ")}`)) {
+    return Number(minus[2]) >= 10 ? MINUS_BIG : MINUS_SMALL;
+  }
+  return base;
 }

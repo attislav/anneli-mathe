@@ -55,31 +55,65 @@ const prevTen = (n: number) => Math.floor(n / 10) * 10;
 
 function plusTricks(a: number, b: number): Trick[] {
   const out: Trick[] = [];
+  const [big, small] = a >= b ? [a, b] : [b, a];
+  const tens = prevTen(small);
+  const ones = small % 10;
+  // Zwei zweistellige Zahlen: Zehner zu Zehnern, Einer zu Einern
+  if (a >= 10 && b >= 10 && a % 10 && b % 10) {
+    const z = prevTen(a) + prevTen(b);
+    const e = (a % 10) + (b % 10);
+    out.push({ id: "stellen", title: "Zehner und Einer getrennt", steps: [`Erst die Zehner: ${prevTen(a)} + ${prevTen(b)} = ${z}.`, `Dann die Einer: ${a % 10} + ${b % 10} = ${e}.${e >= 10 ? ` Das ist mehr als 10 — da steckt noch ein Zehner drin!` : ""}`, `Jetzt beides zusammen: ${z} + ${e} = ?`] });
+  }
   // Große Zahl zuerst
   if (a < b && a < 10 && b >= 10) {
     out.push({ id: "tauschen", title: "Große Zahl zuerst", steps: [`Bei Plus darfst du tauschen: ${a} + ${b} ist dasselbe wie ${b} + ${a}.`, `Fang bei der großen Zahl an und zähl ${a} weiter.`, `${b} + ${a} = ?`] });
   }
-  const [big, small] = a >= b ? [a, b] : [b, a];
-  // Zahlenfreunde in den Einern
-  if ((a >= 10 || b >= 10) && a % 10 && b % 10 && (a % 10) + (b % 10) === 10) {
-    out.push({ id: "freunde", title: "Zahlenfreunde finden", steps: [`Schau auf die Einer: ${a % 10} und ${b % 10} sind Zahlenfreunde — zusammen 10!`, `Also gibt es einen Zehner mehr und die Einer sind weg.`, `${prevTen(a)} + ${prevTen(b)} + 10 = ?`] });
-  }
-  // Zehner-Pause
+  // Zehner-Pause (kleine Zahl einstellig)
   if (small < 10 && (big % 10) + small > 10) {
     const ten = nextTen(big);
     const k = ten - big;
     out.push({ id: "zehnerpause", title: "Zehner-Pause", steps: [`Von ${big} bis zum Zehner ${ten} fehlen ${k}.`, `${big} + ${k} = ${ten}. Pause am Zehner!`, `Von der ${small} sind noch ${small - k} übrig: ${ten} + ${small - k} = ?`] });
   }
-  // Fast 10: +9 = +10 − 1, +8 = +10 − 2
-  if (small % 10 >= 8) {
-    const round = small + (10 - (small % 10));
-    const d = round - small;
-    out.push({ id: "fast10", title: `Fast ${round}`, steps: [`${small} ist fast ${round}. Rechne erst mit ${round} — das ist leichter.`, `${big} + ${round} = ${big + round}.`, `Das war ${d} zu viel, also ${d} zurück: ${big + round} − ${d} = ?`] });
+  // Zweistellig: erst die Zehner, dann die Einer — mit Pause am Zehner, wenn nötig.
+  // Angefangen wird bei der ersten Zahl, so wie die Aufgabe dasteht.
+  if (small >= 10 && ones) {
+    const [start, add] = a >= 10 ? [a, b] : [big, small];
+    return [...out, ...stepTricks(start, add), ...plusRest(a, b, big, small)];
   }
-  // Erst Zehner, dann Einer
-  if (small >= 10 && small % 10) {
-    const tens = prevTen(small);
-    out.push({ id: "zehnerEiner", title: "Erst die Zehner, dann die Einer", steps: [`Zerlege die ${small} in ${tens} und ${small % 10}.`, `Erst die Zehner: ${big} + ${tens} = ${big + tens}.`, `Dann die Einer: ${big + tens} + ${small % 10} = ?`] });
+  return [...out, ...plusRest(a, b, big, small)];
+}
+
+function stepTricks(big: number, small: number): Trick[] {
+  const out: Trick[] = [];
+  const tens = prevTen(small);
+  const ones = small % 10;
+  if (ones) {
+    const mid = big + tens;
+    if ((mid % 10) + ones > 10) {
+      const ten = nextTen(mid);
+      const k = ten - mid;
+      out.push({ id: "zehnerpause", title: "Erst die Zehner, dann Zehner-Pause", steps: [`Zerlege die ${small} in ${tens} und ${ones}. Erst die Zehner: ${big} + ${tens} = ${mid}.`, `Jetzt die ${ones} Einer — bis zum Zehner fehlen ${k}: ${mid} + ${k} = ${ten}. Pause!`, `Von den ${ones} Einern sind noch ${ones - k} übrig: ${ten} + ${ones - k} = ?`] });
+    } else {
+      out.push({ id: "zehnerEiner", title: "Erst die Zehner, dann die Einer", steps: [`Zerlege die ${small} in ${tens} und ${ones}.`, `Erst die Zehner: ${big} + ${tens} = ${mid}.`, `Dann die Einer: ${mid} + ${ones} = ?`] });
+    }
+  }
+  return out;
+}
+
+function plusRest(a: number, b: number, big: number, small: number): Trick[] {
+  const out: Trick[] = [];
+  // Runden: +9 = +10 − 1, +37 = +40 − 3 (die Zahl, die fast ein Zehner ist)
+  const nearly = (x: number) => x % 10 >= 8 || (x >= 10 && x % 10 >= 7);
+  const r = nearly(b) ? b : nearly(a) ? a : 0;
+  if (r) {
+    const other = r === b ? a : b;
+    const round = r + (10 - (r % 10));
+    const d = round - r;
+    out.push({ id: "fast10", title: `Fast ${round}`, steps: [`${r} ist fast ${round}. Rechne erst plus ${round} — das ist leichter.`, `${other} + ${round} = ${other + round}.`, `Das war ${d} zu viel, also ${d} zurück: ${other + round} − ${d} = ?`] });
+  }
+  // Zahlenfreunde in den Einern
+  if ((a >= 10 || b >= 10) && a % 10 && b % 10 && (a % 10) + (b % 10) === 10) {
+    out.push({ id: "freunde", title: "Zahlenfreunde finden", steps: [`Schau auf die Einer: ${a % 10} und ${b % 10} sind Zahlenfreunde — zusammen 10!`, `Also gibt es einen Zehner mehr und die Einer sind weg.`, `${prevTen(a)} + ${prevTen(b)} + 10 = ?`] });
   }
   // Fast verdoppeln
   if (big <= 20 && big - small <= 2) {
@@ -89,26 +123,40 @@ function plusTricks(a: number, b: number): Trick[] {
   return out;
 }
 
+// Minus wird anders erklärt als Plus: rückwärts, „weg“, und Zehner und Einer
+// getrennt nur dann, wenn bei den Einern genug zum Wegnehmen da ist.
 function minusTricks(a: number, b: number): Trick[] {
   const out: Trick[] = [];
-  // Zehner-Pause rückwärts
+  const tens = prevTen(b);
+  const ones = b % 10;
+  // Zehner-Pause rückwärts (einstellig)
   if (b < 10 && a % 10 < b && a % 10 > 0) {
     const ten = prevTen(a);
     const k = a - ten;
-    out.push({ id: "zehnerpause", title: "Zehner-Pause", steps: [`Von ${a} zurück bis zum Zehner ${ten} sind es ${k}.`, `${a} − ${k} = ${ten}. Pause am Zehner!`, `Von der ${b} sind noch ${b - k} übrig: ${ten} − ${b - k} = ?`] });
+    out.push({ id: "zehnerpause", title: "Rückwärts mit Zehner-Pause", steps: [`Minus heißt: rückwärts gehen. Von ${a} zurück bis zum Zehner ${ten} sind es ${k}.`, `${a} − ${k} = ${ten}. Pause am Zehner!`, `Von der ${b} musst du noch ${b - k} wegnehmen: ${ten} − ${b - k} = ?`] });
   }
-  // Fast 10: −9 = −10 + 1
-  if (b % 10 >= 8 && a >= b + 2) {
-    const round = b + (10 - (b % 10));
+  if (b >= 10 && ones) {
+    const mid = a - tens;
+    if (mid % 10 < ones && mid % 10 > 0) {
+      // Erst Zehner weg, dann rückwärts mit Pause am Zehner
+      const ten = prevTen(mid);
+      const k = mid - ten;
+      out.push({ id: "zehnerpause", title: "Erst die Zehner weg, dann Zehner-Pause", steps: [`Zerlege die ${b} in ${tens} und ${ones}. Erst die Zehner weg: ${a} − ${tens} = ${mid}.`, `Jetzt ${ones} Einer weg — rückwärts bis zum Zehner sind es ${k}: ${mid} − ${k} = ${ten}. Pause!`, `Von den ${ones} Einern musst du noch ${ones - k} wegnehmen: ${ten} − ${ones - k} = ?`] });
+    } else {
+      out.push({ id: "zehnerEiner", title: "Erst die Zehner weg, dann die Einer", steps: [`Zerlege die ${b} in ${tens} und ${ones}.`, `Erst die Zehner weg: ${a} − ${tens} = ${mid}.`, `Dann die Einer weg: ${mid} − ${ones} = ?`] });
+    }
+    // Zehner und Einer getrennt — nur ohne Leihen
+    if (a % 10 >= ones && a >= 10) {
+      out.push({ id: "stellen", title: "Zehner und Einer getrennt", steps: [`Hier geht das: Von ${a % 10} Einern kannst du ${ones} wegnehmen.`, `Zehner: ${prevTen(a)} − ${tens} = ${prevTen(a) - tens}. Einer: ${a % 10} − ${ones} = ${(a % 10) - ones}.`, `Zusammen: ${prevTen(a) - tens} + ${(a % 10) - ones} = ?`] });
+    }
+  }
+  // Runden: −9 = −10 + 1, −27 = −30 + 3
+  if ((ones >= 8 || (b >= 10 && ones >= 7)) && a >= b + 2) {
+    const round = b + (10 - ones);
     const d = round - b;
     if (a - round >= 0) out.push({ id: "fast10", title: `Fast ${round}`, steps: [`${b} ist fast ${round}. Nimm erst ${round} weg — das ist leichter.`, `${a} − ${round} = ${a - round}.`, `Das war ${d} zu viel weg, also ${d} wieder dazu: ${a - round} + ${d} = ?`] });
   }
-  // Erst Zehner, dann Einer
-  if (b >= 10 && b % 10) {
-    const tens = prevTen(b);
-    out.push({ id: "zehnerEiner", title: "Erst die Zehner, dann die Einer", steps: [`Zerlege die ${b} in ${tens} und ${b % 10}.`, `Erst die Zehner weg: ${a} − ${tens} = ${a - tens}.`, `Dann die Einer weg: ${a - tens} − ${b % 10} = ?`] });
-  }
-  // Ergänzen: nah beieinander → von b nach a hochzählen
+  // Hochzählen: nah beieinander → von b nach a
   if (b >= 10 && a - b <= 15 && a - b > 0) {
     const ten = b % 10 ? nextTen(b) : b;
     if (ten < a) out.push({ id: "ergaenzen", title: "Hochzählen statt wegnehmen", steps: [`${a} und ${b} liegen nah beieinander. Frag: Wie weit ist es von ${b} bis ${a}?`, ten > b ? `Von ${b} bis ${ten} sind es ${ten - b}. Von ${ten} bis ${a} sind es ${a - ten}.` : `Von ${b} bis ${a} zählst du hoch.`, `${ten - b} + ${a - ten} = ?`] });

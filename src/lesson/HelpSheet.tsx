@@ -25,7 +25,7 @@ import { Pet } from "@/ui/Pet";
 
 export function HelpSheet({ task, save, showHint, onClose }: { task: Task; save: SaveState; showHint: boolean; onClose: () => void }) {
   const term = "term" in task ? task.term : undefined;
-  const ex = explanationFor(task.skillId);
+  const ex = explanationFor(task.skillId, term);
   const tricks = tricksFor(term);
   const jumps = jumpsFor(term);
   const [pick, setPick] = useState(0);
