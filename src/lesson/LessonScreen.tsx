@@ -12,6 +12,7 @@ import { getSkill } from "@/game/skills";
 import { bestStars, lessonRewards, levelInfo, logAnswer, readSave, recordLesson, type Reward, type SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
 import { DEVICE_VOICE, speak, stopSpeaking } from "@/game/speech";
+import { canRead, readTask, stopReading } from "@/game/taskVoice";
 import { say, stopVoice } from "@/game/voice";
 import type { Task } from "@/game/types";
 import { findNode, type PathNode, type World } from "@/game/worlds";
@@ -76,13 +77,14 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
 
   // Neue Aufgabe vorlesen, wenn „automatisch vorlesen" an ist.
   useEffect(() => {
-    if (phase === "play" && readSave().settings.autoRead) speak(task.question, "term" in task ? task.term : undefined);
+    if (phase === "play" && readSave().settings.autoRead) void readTask({ question: task.question, term: "term" in task ? task.term : undefined });
   }, [task, phase]);
 
   useEffect(
     () => () => {
       stopSpeaking();
       stopVoice();
+      stopReading();
     },
     [],
   );
@@ -239,8 +241,8 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
 
       <div className="flex items-start justify-between gap-3 px-4 pb-4 pt-2">
         <h1 className={`font-display text-[1.75rem] font-semibold leading-tight ${isBoss ? "text-white" : ""}`}>{task.question}</h1>
-        {DEVICE_VOICE && (
-          <button aria-label="Vorlesen" onClick={() => speak(task.question, term)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-grape-light text-grape">
+        {canRead({ question: task.question, term }) && (
+          <button aria-label="Vorlesen" onClick={() => void readTask({ question: task.question, term })} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-grape-light text-grape">
             <Volume2 size={22} strokeWidth={2.5} />
           </button>
         )}

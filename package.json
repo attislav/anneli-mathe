@@ -14,7 +14,9 @@
     "art:fetch": "node scripts/fetch-art.mjs",
     "gen:malvorlagen": "node --env-file-if-exists=.env.local scripts/gen-malvorlagen.mjs",
     "gen:voice": "node --env-file-if-exists=.env.local scripts/gen-voice.mjs",
-    "gen:icons": "node --env-file-if-exists=.env.local scripts/gen-icons.mjs"
+    "gen:icons": "node --env-file-if-exists=.env.local scripts/gen-icons.mjs",
+    "collect:task-speech": "tsx scripts/collect-task-speech.ts",
+    "gen:task-audio": "node --env-file-if-exists=.env.local scripts/gen-task-audio.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
