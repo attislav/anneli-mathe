@@ -33,6 +33,9 @@ export function speakable(raw: string): string {
       .replace(/(\d|\?)\s*cm\b/g, "$1 Zentimeter")
       .replace(/(\d|\?)\s*m\b/g, "$1 Meter")
       .replace(/→/g, " bis ")
+      // „in 5er-Schritten" → „in Schritten von je 5", „3-mal" → „3 mal"
+      .replace(/(\d+)er-Schritten/g, "Schritten von je $1")
+      .replace(/(\d+)-mal\b/g, "$1 mal")
       .replace(/\bStd\./g, "Stunden")
       .replace(/\bMin\./g, "Minuten")
       // Reihen „11, 12, 13, ?" → „… 13, und dann?"
