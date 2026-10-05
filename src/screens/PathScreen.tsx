@@ -64,7 +64,7 @@ export function PathScreen({ save }: { save: SaveState }) {
     } catch {
       return;
     }
-    void greet(name).then((ok) => {
+    void greet().then((ok) => {
       if (!ok) return;
       try {
         sessionStorage.setItem(key, "1");
