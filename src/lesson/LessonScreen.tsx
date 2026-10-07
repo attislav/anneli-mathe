@@ -17,7 +17,7 @@ import { canRead, canReadText, readTask, readText, stopReading } from "@/game/ta
 import { say, stopVoice } from "@/game/voice";
 import type { Task } from "@/game/types";
 import { findNode, type PathNode, type World } from "@/game/worlds";
-import { CoinIcon, FlameIcon } from "@/ui/art";
+import { CoinIcon } from "@/ui/art";
 import { Button, LinkButton } from "@/ui/Button";
 import { Sheet, Splash, useBackdrop } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
@@ -31,7 +31,7 @@ import { jumpsFor } from "@/game/jumps";
 import { tricksFor } from "@/game/tricks";
 import { NumberJump } from "@/ui/NumberJump";
 
-const PRAISE = ["Juhu!", "Super!", "Klasse!", "Stark!", "Richtig!", "Wow!"];
+const PRAISE = ["Juhu!", "Super!", "Prima!", "Stark!", "Richtig!", "Genau!"];
 const CHEERS = ["Du schaffst das!", "Schau genau hin.", "Ich glaub an dich!", "Los geht's!", "Denk an den Trick!"];
 
 export function LessonScreen({ save, nodeId, tier }: { save: SaveState; nodeId: string; tier: Tier }) {
@@ -63,15 +63,15 @@ export function LessonScreen({ save, nodeId, tier }: { save: SaveState; nodeId: 
 }
 
 function Replayable(props: { save: SaveState; node: PathNode; world: World; tier: Tier }) {
-  const [round, setRound] = useState(0);
-  return <Lesson key={round} {...props} onReplay={() => setRound((r) => r + 1)} />;
+  const [round, setRound] = useState({ n: 0, easier: false });
+  return <Lesson key={round.n} {...props} easier={round.easier} onReplay={(easier) => setRound((r) => ({ n: r.n + 1, easier }))} />;
 }
 
-function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: PathNode; world: World; tier: Tier; onReplay: () => void }) {
+function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState; node: PathNode; world: World; tier: Tier; easier: boolean; onReplay: (easier: boolean) => void }) {
   const trick = node.kind === "trick" ? getSkill(node.skills[0]).trick : undefined;
   const [phase, setPhase] = useState<"intro" | "play" | "result">(trick ? "intro" : "play");
-  const [run, setRun] = useState<Run>(() => startRun(node, tier, save.mastery));
-  const [task, setTask] = useState<Task>(() => nextTask(startRun(node, tier, save.mastery)));
+  const [run, setRun] = useState<Run>(() => startRun(node, tier, save.mastery, easier));
+  const [task, setTask] = useState<Task>(() => nextTask(startRun(node, tier, save.mastery, easier)));
   // Wann die aktuelle Aufgabe erschienen ist — für die Antwortzeit im Lernbericht.
   const shownAt = useRef(0);
   useEffect(() => {
@@ -81,8 +81,6 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   const [retry, setRetry] = useState(0);
   const [status, setStatus] = useState<Status>("ask");
   const [praise, setPraise] = useState("");
-  const [combo, setCombo] = useState<number | null>(null);
-  const [gain, setGain] = useState<{ n: number; key: number } | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [quit, setQuit] = useState(false);
   // Hilfe: Feststecken erkennen (2× hintereinander falsch oder lange keine Antwort).
@@ -117,14 +115,17 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
     (r: Run) => {
       const s = readSave();
       const firstTime = isBoss ? !s.bosses.includes(node.id) : bestStars(s, node.id) === 0;
-      const stars = starsFor(r.firstTry, r.done);
-      const rewards: Reward[] = lessonRewards(s, node, world, firstTime);
-      const xp = 10 + r.firstTry * 3 + (isBoss ? 20 : 0);
+      // Der Boss ist geschafft, sobald er besiegt ist. Sonst gilt: weniger als die
+      // Hälfte gleich richtig → 0 Sterne, keine Truhe, nichts freigeschaltet.
+      const stars = isBoss ? Math.max(1, starsFor(r.firstTry, r.done)) : starsFor(r.firstTry, r.done);
+      const passed = stars > 0;
+      const rewards: Reward[] = passed ? lessonRewards(s, node, world, firstTime) : [];
+      const xp = passed ? 10 + r.firstTry * 3 + (isBoss ? 20 : 0) : r.firstTry * 2;
       const before = levelInfo(s.xp);
-      recordLesson({ node, world, tier, stars, coins: r.coins, xp, tasks: r.done, firstTry: r.firstTry, mastery: r.mastery, rewards });
-      rewards.push(...claimBadges(readSave()));
+      recordLesson({ node, world, tier, stars, coins: r.coins, xp, tasks: r.done, firstTry: r.firstTry, mastery: r.mastery, rewards, passed });
+      if (passed) rewards.push(...claimBadges(readSave()));
       const after = levelInfo(readSave().xp);
-      sfx.fanfare();
+      if (passed) sfx.fanfare();
       setOutcome({ stars, coins: r.coins, xp, firstTry: r.firstTry, done: r.done, rewards, levelBefore: before.level, levelAfter: after, bestStreak: r.bestStreak });
       setPhase("result");
     },
@@ -150,7 +151,6 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
     setTask(nextTask(r));
     setAttempt(0);
     setStatus("ask");
-    setCombo(null);
   }, [status, run, finish]);
 
   useEffect(() => {
@@ -198,20 +198,12 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
       setRun(res.run);
       if (correct) {
         setStatus("right");
-        setPraise(res.combo ? `${res.combo}er-Combo!` : PRAISE[Math.floor(Math.random() * PRAISE.length)]);
-        setCombo(res.combo);
-        setGain({ n: res.coinsGained, key: Date.now() });
-        if (res.combo) sfx.combo();
-        else sfx.correct();
-        // Nicht nach jeder Aufgabe reden — Combos immer, sonst ab und zu.
-        if (res.combo) void say("combo");
-        else if (Math.random() < 0.3) void say("praise");
-        if (isBoss) sfx.hit();
+        setPraise(PRAISE[Math.floor(Math.random() * PRAISE.length)]);
+        // Während der Aufgaben bewusst leise: Töne und Lob lenken ab.
+        // Belohnung (Sterne, Münzen, Fanfare) gibt es gesammelt am Ende.
       } else {
         setStatus("wrong");
         setAttempt(1);
-        sfx.wrong();
-        void say("wrong");
       }
       return;
     }
@@ -220,14 +212,8 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
       setRun(res.run);
       setStatus("right");
       setPraise("Geschafft!");
-      setGain({ n: res.coinsGained, key: Date.now() });
-      sfx.correct();
-      void say("late");
-      if (isBoss) sfx.hit();
     } else {
       setStatus("reveal");
-      sfx.wrong();
-      void say("reveal");
     }
   };
 
@@ -250,23 +236,11 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
         </div>
         <div className="relative flex shrink-0 items-center gap-1.5 rounded-full bg-coin-light py-1.5 pl-2 pr-3 font-display text-lg font-semibold text-ink">
           <CoinIcon size={22} />
-          {save.coins + run.coins}
-          {gain && (
-            <span key={gain.key} className="anim-float absolute -top-2 right-1 font-display text-lg font-semibold text-coin-dark">
-              +{gain.n}
-            </span>
-          )}
+          {save.coins}
         </div>
       </div>
 
-      <div className="flex h-8 justify-center">
-        {combo && (
-          <div className="anim-pop flex items-center gap-1.5 rounded-full bg-flame px-4 py-1 font-display text-base font-semibold text-white">
-            <FlameIcon size={18} />
-            {combo}er-Combo! +5
-          </div>
-        )}
-      </div>
+      <div className="h-8" />
 
       {isBoss && (
         <div className="flex flex-col items-center gap-2 px-4">
@@ -310,7 +284,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
         <TaskView key={task.format === "input" || task.format === "wall" ? `${task.id}-${retry}` : task.id} task={task} status={status} onAnswer={onAnswer} />
       </div>
 
-      {status !== "ask" && <Feedback status={status} task={task} praise={praise} gain={gain?.n ?? 0} onNext={advance} onHelp={openHelp} />}
+      {status !== "ask" && <Feedback status={status} task={task} praise={praise} onNext={advance} onHelp={openHelp} />}
 
       {help && <HelpSheet task={task} save={save} showHint={status !== "reveal"} onClose={() => setHelp(false)} />}
 
@@ -330,7 +304,7 @@ function Lesson({ save, node, world, tier, onReplay }: { save: SaveState; node: 
   );
 }
 
-function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Status; task: Task; praise: string; gain: number; onNext: () => void; onHelp: () => void }) {
+function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; task: Task; praise: string; onNext: () => void; onHelp: () => void }) {
   if (status === "right") {
     return (
       <div className="anim-sheet fixed inset-x-0 bottom-0 z-40 mx-auto max-w-xl rounded-t-[28px] border-t-4 border-leaf bg-leaf-light px-5 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
@@ -340,10 +314,7 @@ function Feedback({ status, task, praise, gain, onNext, onHelp }: { status: Stat
               <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <div>
-            <div className="font-display text-2xl font-semibold text-leaf-dark">{praise}</div>
-            <div className="text-sm font-extrabold text-leaf-dark">+{gain} Münzen</div>
-          </div>
+          <div className="font-display text-2xl font-semibold text-leaf-dark">{praise}</div>
         </div>
         <Button tone="leaf" className="w-full" onClick={onNext}>
           Weiter

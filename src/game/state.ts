@@ -387,6 +387,8 @@ export type LessonOutcome = {
   firstTry: number;
   mastery: Record<string, number>;
   rewards: Reward[];
+  /** Nicht geschafft (0 Sterne): zählt nicht fürs Tagesziel und nicht als Lektion. */
+  passed: boolean;
 };
 
 export function recordLesson(o: LessonOutcome): void {
@@ -400,8 +402,8 @@ export function recordLesson(o: LessonOutcome): void {
       coins: s.coins + o.coins,
       mastery: { ...s.mastery, ...o.mastery },
       nodes: o.node.practice ? s.nodes : { ...s.nodes, [o.node.id]: { stars, plays: (s.nodes[o.node.id]?.plays ?? 0) + 1 } },
-      today: { ...s.today, lessons: s.today.lessons + 1 },
-      stats: { tasks: s.stats.tasks + o.tasks, firstTry: s.stats.firstTry + o.firstTry, lessons: s.stats.lessons + 1 },
+      today: { ...s.today, lessons: s.today.lessons + (o.passed ? 1 : 0) },
+      stats: { tasks: s.stats.tasks + o.tasks, firstTry: s.stats.firstTry + o.firstTry, lessons: s.stats.lessons + (o.passed ? 1 : 0) },
     };
     if (o.node.kind === "boss" && !next.bosses.includes(o.node.id)) next.bosses = [...next.bosses, o.node.id];
     next = applyRewards(next, o.rewards);
