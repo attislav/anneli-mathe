@@ -20,7 +20,8 @@ const KEY = "sternenpfad.v1";
 
 export type Profile = { name: string; pet: PetSpecies; petName: string };
 
-export type NodeProgress = { stars: [number, number, number]; plays: number };
+/** `fails`: nicht geschaffte Versuche hintereinander (für „erst die Lektion davor wiederholen"). */
+export type NodeProgress = { stars: [number, number, number]; plays: number; fails?: number };
 
 export type SaveState = {
   v: 1;
@@ -401,7 +402,7 @@ export function recordLesson(o: LessonOutcome): void {
       xp: s.xp + o.xp,
       coins: s.coins + o.coins,
       mastery: { ...s.mastery, ...o.mastery },
-      nodes: o.node.practice ? s.nodes : { ...s.nodes, [o.node.id]: { stars, plays: (s.nodes[o.node.id]?.plays ?? 0) + 1 } },
+      nodes: o.node.practice ? s.nodes : { ...s.nodes, [o.node.id]: { stars, plays: (s.nodes[o.node.id]?.plays ?? 0) + 1, fails: o.passed ? 0 : (s.nodes[o.node.id]?.fails ?? 0) + 1 } },
       today: { ...s.today, lessons: s.today.lessons + (o.passed ? 1 : 0) },
       stats: { tasks: s.stats.tasks + o.tasks, firstTry: s.stats.firstTry + o.firstTry, lessons: s.stats.lessons + (o.passed ? 1 : 0) },
     };

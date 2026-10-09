@@ -9,7 +9,7 @@ import { petStage } from "@/game/collection";
 import type { Reward, SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
 import { say } from "@/game/voice";
-import type { PathNode, World } from "@/game/worlds";
+import { findNode, type PathNode, type World } from "@/game/worlds";
 import { ChestArt, CoinIcon, StarIcon } from "@/ui/art";
 import { Button, LinkButton } from "@/ui/Button";
 import { Confetti, useBackdrop } from "@/ui/chrome";
@@ -42,7 +42,7 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
     void say(isBoss ? "boss" : levelUp ? "levelup" : `result${outcome.stars}`);
   }, [isBoss, levelUp, outcome.stars]);
 
-  if (outcome.stars === 0 && !isBoss) return <NotYet outcome={outcome} save={save} onReplay={onReplay} />;
+  if (outcome.stars === 0 && !isBoss) return <NotYet outcome={outcome} save={save} node={node} onReplay={onReplay} />;
 
   return (
     <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col items-center gap-3 overflow-hidden bg-grape px-4 pb-6 pt-6 text-white">
@@ -130,8 +130,11 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
 }
 
 /** Nicht geschafft: keine Sterne, keine Truhe — freundlich, und gleich etwas leichter nochmal. */
-function NotYet({ outcome, save, onReplay }: { outcome: Outcome; save: SaveState; onReplay: (easier: boolean) => void }) {
+function NotYet({ outcome, save, node, onReplay }: { outcome: Outcome; save: SaveState; node: PathNode; onReplay: (easier: boolean) => void }) {
   const need = Math.ceil(outcome.done * PASS_SHARE);
+  // Zweimal hintereinander nicht geschafft → erst die Lektion davor wiederholen.
+  const fails = save.nodes[node.id]?.fails ?? 0;
+  const prev = fails >= 2 ? previousLesson(node.id) : null;
   return (
     <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-5 bg-grape px-5 pb-8 pt-8 text-center text-white">
       {save.profile && <Pet species={save.profile.pet} stage={petStage(outcome.levelAfter.level)} mood="think" equipped={save.equipped} size={110} />}
@@ -146,10 +149,19 @@ function NotYet({ outcome, save, onReplay }: { outcome: Outcome; save: SaveState
         <br />
         Für Sterne und die Truhe brauchst du mindestens {need}.
       </p>
-      <p className="text-white/85">Lass uns nochmal üben — diesmal etwas leichter. Wenn du nicht weiterweißt, hilft dir die Glühbirne!</p>
+      <p className="text-white/85">
+        {prev
+          ? `Das ist gerade ganz schön schwer. Lass uns erst „${prev.title}“ wiederholen — danach klappt es hier bestimmt besser!`
+          : "Lass uns nochmal üben — diesmal etwas leichter. Wenn du nicht weiterweißt, hilft dir die Glühbirne!"}
+      </p>
       <div className="mt-2 flex w-full flex-col gap-3">
-        <Button tone="sun" className="w-full" onClick={() => onReplay(true)}>
-          Nochmal üben
+        {prev && (
+          <LinkButton href={`/lektion?n=${prev.id}&t=0`} tone="sun" className="w-full">
+            Erst „{prev.title}“ üben
+          </LinkButton>
+        )}
+        <Button tone={prev ? "white" : "sun"} className={`w-full ${prev ? "!text-grape" : ""}`} onClick={() => onReplay(true)}>
+          {prev ? "Hier nochmal probieren" : "Nochmal üben"}
         </Button>
         <LinkButton href="/" tone="white" className="w-full !text-grape">
           Zum Pfad
@@ -157,6 +169,17 @@ function NotYet({ outcome, save, onReplay }: { outcome: Outcome; save: SaveState
       </div>
     </main>
   );
+}
+
+/** Die letzte richtige Lektion vor diesem Knoten in derselben Welt (keine Truhe, kein Boss). */
+function previousLesson(nodeId: string): PathNode | null {
+  const found = findNode(nodeId);
+  if (!found) return null;
+  for (let i = found.index - 1; i >= 0; i--) {
+    const n = found.world.nodes[i];
+    if (n.kind !== "chest" && n.kind !== "boss") return n;
+  }
+  return null;
 }
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
