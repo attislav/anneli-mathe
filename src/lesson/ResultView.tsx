@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, RotateCcw } from "lucide-react";
-import type { Tier } from "@/game/adaptive";
+import { PASS_SHARE, type Tier } from "@/game/adaptive";
 import { petStage } from "@/game/collection";
 import type { Reward, SaveState } from "@/game/state";
 import { sfx } from "@/game/sound";
@@ -31,7 +31,7 @@ export type Outcome = {
 
 const TITLES = ["", "Geschafft!", "Super gemacht!", "Perfekt!"];
 
-export function ResultView({ outcome, node, world, save, onReplay }: { outcome: Outcome; node: PathNode; world: World; tier: Tier; save: SaveState; onReplay: () => void }) {
+export function ResultView({ outcome, node, world, save, onReplay }: { outcome: Outcome; node: PathNode; world: World; tier: Tier; save: SaveState; onReplay: (easier: boolean) => void }) {
   const [open, setOpen] = useState(false);
   useBackdrop("#7B4DFF");
   const levelUp = outcome.levelAfter.level > outcome.levelBefore;
@@ -41,6 +41,8 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
   useEffect(() => {
     void say(isBoss ? "boss" : levelUp ? "levelup" : `result${outcome.stars}`);
   }, [isBoss, levelUp, outcome.stars]);
+
+  if (outcome.stars === 0 && !isBoss) return <NotYet outcome={outcome} save={save} onReplay={onReplay} />;
 
   return (
     <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col items-center gap-3 overflow-hidden bg-grape px-4 pb-6 pt-6 text-white">
@@ -115,13 +117,43 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
           </LinkButton>
         )}
         <div className="flex gap-3">
-          <Button tone="white" className="w-20 shrink-0" onClick={onReplay} aria-label="Nochmal spielen">
+          <Button tone="white" className="w-20 shrink-0" onClick={() => onReplay(false)} aria-label="Nochmal spielen">
             <RotateCcw size={26} strokeWidth={3} className="text-grape" />
           </Button>
           <LinkButton href="/" tone="white" className="flex-1 !text-grape">
             Weiter
           </LinkButton>
         </div>
+      </div>
+    </main>
+  );
+}
+
+/** Nicht geschafft: keine Sterne, keine Truhe — freundlich, und gleich etwas leichter nochmal. */
+function NotYet({ outcome, save, onReplay }: { outcome: Outcome; save: SaveState; onReplay: (easier: boolean) => void }) {
+  const need = Math.ceil(outcome.done * PASS_SHARE);
+  return (
+    <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-5 bg-grape px-5 pb-8 pt-8 text-center text-white">
+      {save.profile && <Pet species={save.profile.pet} stage={petStage(outcome.levelAfter.level)} mood="think" equipped={save.equipped} size={110} />}
+      <h1 className="font-display text-4xl font-semibold">Noch nicht ganz!</h1>
+      <div className="flex items-end gap-1.5 opacity-70">
+        {[0, 1, 2].map((i) => (
+          <StarIcon key={i} size={i === 1 ? 64 : 50} empty />
+        ))}
+      </div>
+      <p className="text-lg font-extrabold">
+        {outcome.firstTry} von {outcome.done} gleich richtig.
+        <br />
+        Für Sterne und die Truhe brauchst du mindestens {need}.
+      </p>
+      <p className="text-white/85">Lass uns nochmal üben — diesmal etwas leichter. Wenn du nicht weiterweißt, hilft dir die Glühbirne!</p>
+      <div className="mt-2 flex w-full flex-col gap-3">
+        <Button tone="sun" className="w-full" onClick={() => onReplay(true)}>
+          Nochmal üben
+        </Button>
+        <LinkButton href="/" tone="white" className="w-full !text-grape">
+          Zum Pfad
+        </LinkButton>
       </div>
     </main>
   );

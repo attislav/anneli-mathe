@@ -51,9 +51,12 @@ export function pickWeakSkill(skills: string[], mastery: Record<string, number>)
 }
 
 /** Sterne aus der Erst-Versuch-Quote. */
-export function starsFor(firstTry: number, total: number): 1 | 2 | 3 {
+/** Sterne für eine Lektion. 0 = nicht geschafft (weniger als die Hälfte gleich richtig) — dann gibt es auch keine Belohnung. */
+export const PASS_SHARE = 0.5;
+export function starsFor(firstTry: number, total: number): 0 | 1 | 2 | 3 {
   const q = total === 0 ? 0 : firstTry / total;
   if (q >= 0.85) return 3;
-  if (q >= 0.6) return 2;
-  return 1;
+  if (q >= 0.7) return 2;
+  if (q >= PASS_SHARE) return 1;
+  return 0;
 }

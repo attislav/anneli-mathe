@@ -23,7 +23,7 @@ export type Run = {
   node: PathNode;
   tier: Tier;
   mastery: Record<string, number>;
-  /** Schwung innerhalb der Lektion: −1, 0 oder +1 Stufe. */
+  /** Schwung innerhalb der Lektion: −2 … +1 Stufe. Bei Fehlern geht es schnell leichter. */
   bias: number;
   rightStreak: number;
   wrongStreak: number;
@@ -35,10 +35,11 @@ export type Run = {
   bestStreak: number;
 };
 
-export function startRun(node: PathNode, tier: Tier, mastery: Record<string, number>): Run {
+/** `easier`: nach einer nicht geschafften Runde startet die nächste eine Stufe leichter. */
+export function startRun(node: PathNode, tier: Tier, mastery: Record<string, number>, easier = false): Run {
   const m: Record<string, number> = {};
   for (const s of node.skills) m[s] = mastery[s] ?? START_MASTERY;
-  return { node, tier, mastery: m, bias: 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0 };
+  return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0 };
 }
 
 export function nextTask(run: Run): Task {
@@ -63,7 +64,7 @@ export function firstAnswer(run: Run, task: Task, correct: boolean): AnswerResul
   const formats = [...run.formats, task.format];
   if (!correct) {
     const wrongStreak = run.wrongStreak + 1;
-    const bias = wrongStreak >= 2 ? Math.max(-1, run.bias - 1) : run.bias;
+    const bias = wrongStreak >= 2 ? Math.max(-2, run.bias - 1) : run.bias;
     return { run: { ...run, mastery, formats, rightStreak: 0, wrongStreak: wrongStreak >= 2 ? 0 : wrongStreak, bias }, coinsGained: 0, combo: null };
   }
   const rightStreak = run.rightStreak + 1;
