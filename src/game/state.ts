@@ -318,7 +318,7 @@ export type Reward =
   /** Ein Teil eines Puzzle-Ausmalbilds (0–8). */
   | { kind: "piece"; puzzle: string; piece: number; duplicate: boolean };
 
-const DUPLICATE_COINS = 15;
+const DUPLICATE_COINS = 5;
 
 /** Würfelt einen Sticker der Welt — neue sind wahrscheinlicher, seltene seltener. */
 export function rollSticker(s: SaveState, world: CollectionGroup, allowRare: boolean): Reward {
@@ -406,21 +406,26 @@ export function recordLesson(o: LessonOutcome): void {
       today: { ...s.today, lessons: s.today.lessons + (o.passed ? 1 : 0) },
       stats: { tasks: s.stats.tasks + o.tasks, firstTry: s.stats.firstTry + o.firstTry, lessons: s.stats.lessons + (o.passed ? 1 : 0) },
     };
-    if (o.node.kind === "boss" && !next.bosses.includes(o.node.id)) next.bosses = [...next.bosses, o.node.id];
+    if (o.node.kind === "boss" && o.passed && !next.bosses.includes(o.node.id)) next.bosses = [...next.bosses, o.node.id];
     next = applyRewards(next, o.rewards);
     return markPlayedToday(next);
   });
 }
 
-export const DAILY_COINS = 25;
+export const DAILY_COINS = 15;
 
 /** Ist heute noch keine Lektion geschafft? Dann wartet der Tagesschatz. */
 export function dailyChestWaiting(s: SaveState): boolean {
   return s.today.day !== todayKey() || s.today.lessons === 0;
 }
 
-/** Belohnung fürs Lektionsende — wird VOR dem Öffnen der Truhe gewürfelt. */
-export function lessonRewards(s: SaveState, node: PathNode, world: World, firstTime: boolean): Reward[] {
+/**
+ * Belohnung fürs Lektionsende — wird VOR dem Öffnen der Truhe gewürfelt.
+ * Bewusst sparsam (Papa, 21.11.): Der Fokus soll aufs Rechnen. Sticker und
+ * Puzzleteile gibt es vor allem beim ersten Mal oder wenn man sich verbessert —
+ * eine schon perfekte Lektion nur zum Sammeln zu wiederholen lohnt kaum.
+ */
+export function lessonRewards(s: SaveState, node: PathNode, world: World, firstTime: boolean, improved = firstTime): Reward[] {
   const rewards: Reward[] = [];
   const halloween = activeSeason() === "halloween";
   if (dailyChestWaiting(s)) {
@@ -432,14 +437,16 @@ export function lessonRewards(s: SaveState, node: PathNode, world: World, firstT
   }
   if (node.kind === "boss") {
     if (firstTime && node.coloring) rewards.push({ kind: "page", id: node.coloring });
-    rewards.push(rollSticker(s, world.id, true));
-    addPiece(s, rewards, world.id);
-    rewards.push({ kind: "coins", amount: 50 });
+    if (improved) {
+      rewards.push(rollSticker(s, world.id, true));
+      addPiece(s, rewards, world.id);
+    }
+    rewards.push({ kind: "coins", amount: firstTime ? 30 : 10 });
     return rewards;
   }
-  if (firstTime || Math.random() < 0.45) rewards.push(rollSticker(s, halloween && Math.random() < 0.35 ? "halloween" : world.id, false));
-  if (Math.random() < (firstTime ? 0.5 : 0.2)) addPiece(s, rewards, world.id);
-  rewards.push({ kind: "coins", amount: firstTime ? 20 : 10 });
+  if (firstTime || (improved && Math.random() < 0.5) || Math.random() < 0.1) rewards.push(rollSticker(s, halloween && Math.random() < 0.35 ? "halloween" : world.id, false));
+  if (Math.random() < (firstTime ? 0.35 : improved ? 0.15 : 0.05)) addPiece(s, rewards, world.id);
+  rewards.push({ kind: "coins", amount: firstTime ? 10 : improved ? 5 : 2 });
   return rewards;
 }
 
@@ -450,7 +457,7 @@ export function openChest(node: PathNode, world: World): Reward[] {
   if (node.coloring) rewards.push({ kind: "page", id: node.coloring });
   rewards.push(rollSticker(s, world.id, true));
   addPiece(s, rewards, world.id);
-  rewards.push({ kind: "coins", amount: 40 });
+  rewards.push({ kind: "coins", amount: 20 });
   update((cur) => markPlayedToday({ ...applyRewards(cur, rewards), chests: [...cur.chests, node.id] }));
   return rewards;
 }

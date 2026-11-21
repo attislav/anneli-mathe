@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { ChevronLeft, Coins, Image as ImageIcon, Sparkles, Sticker } from "lucide-react";
 import Link from "next/link";
-import { canOpen, DOOR_ORDER, doorLabel, doorPlan, openDoor, openedDoors } from "@/game/advent";
+import { canOpen, DOOR_ORDER, doorLabel, doorPlan, lessonDoneToday, openDoor, openedDoors } from "@/game/advent";
 import { adventDay } from "@/game/season";
 import { sfx } from "@/game/sound";
 import type { Reward, SaveState } from "@/game/state";
@@ -44,6 +44,9 @@ export function AdventScreen({ save, preview }: { save: SaveState; preview: bool
       <p className="mt-2 text-white/80">
         {preview ? "Eltern-Vorschau: So ist der Kalender gefüllt." : today === 0 ? "Ab dem 1. Dezember öffnet sich jeden Tag ein Türchen." : `Heute ist der ${today}. Dezember. Verpasste Türchen darfst du nachholen!`}
       </p>
+      {!preview && today > 0 && !lessonDoneToday(save) && (
+        <div className="mt-3 rounded-[18px] bg-sun px-4 py-3 font-extrabold text-ink">Erst eine Lektion schaffen — dann darfst du dein Türchen öffnen!</div>
+      )}
 
       <div className="mt-5 grid grid-cols-4 gap-2.5">
         {DOOR_ORDER.map((n, i) => {

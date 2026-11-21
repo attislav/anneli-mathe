@@ -27,6 +27,8 @@ export type Outcome = {
   levelBefore: number;
   levelAfter: { level: number; into: number; need: number };
   bestStreak: number;
+  /** Viel zu schnell falsch getippt — geraten statt gerechnet. */
+  guessed?: boolean;
 };
 
 const TITLES = ["", "Geschafft!", "Super gemacht!", "Perfekt!"];
@@ -42,7 +44,7 @@ export function ResultView({ outcome, node, world, save, onReplay }: { outcome: 
     void say(isBoss ? "boss" : levelUp ? "levelup" : `result${outcome.stars}`);
   }, [isBoss, levelUp, outcome.stars]);
 
-  if (outcome.stars === 0 && !isBoss) return <NotYet outcome={outcome} save={save} node={node} onReplay={onReplay} />;
+  if (outcome.stars === 0) return <NotYet outcome={outcome} save={save} node={node} onReplay={onReplay} />;
 
   return (
     <main className="relative mx-auto flex min-h-dvh max-w-xl flex-col items-center gap-3 overflow-hidden bg-grape px-4 pb-6 pt-6 text-white">
@@ -144,11 +146,19 @@ function NotYet({ outcome, save, node, onReplay }: { outcome: Outcome; save: Sav
           <StarIcon key={i} size={i === 1 ? 64 : 50} empty />
         ))}
       </div>
-      <p className="text-lg font-extrabold">
-        {outcome.firstTry} von {outcome.done} gleich richtig.
-        <br />
-        Für Sterne und die Truhe brauchst du mindestens {need}.
-      </p>
+      {outcome.guessed ? (
+        <p className="text-lg font-extrabold">
+          Hui, da wurde ganz schön schnell getippt!
+          <br />
+          Sterne und Truhe gibt es nur fürs Rechnen, nicht fürs Raten. Lies jede Aufgabe in Ruhe.
+        </p>
+      ) : (
+        <p className="text-lg font-extrabold">
+          {outcome.firstTry} von {outcome.done} gleich richtig.
+          <br />
+          Für Sterne und die Truhe brauchst du mindestens {need}.
+        </p>
+      )}
       <p className="text-white/85">
         {prev
           ? `Das ist gerade ganz schön schwer. Lass uns erst „${prev.title}“ wiederholen — danach klappt es hier bestimmt besser!`

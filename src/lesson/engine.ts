@@ -33,13 +33,20 @@ export type Run = {
   coins: number;
   bossHp: number;
   bestStreak: number;
+  /** Schnell falsch getippt (geraten statt gerechnet). Zu viele → keine Belohnung. */
+  guesses: number;
 };
+
+/** Ab so vielen geratenen Antworten gibt es keine Sterne und keine Belohnung. */
+export const MAX_GUESSES = 3;
+/** Falsche Antwort schneller als das (ms) gilt als geraten. */
+export const GUESS_MS = 2500;
 
 /** `easier`: nach einer nicht geschafften Runde startet die nächste eine Stufe leichter. */
 export function startRun(node: PathNode, tier: Tier, mastery: Record<string, number>, easier = false): Run {
   const m: Record<string, number> = {};
   for (const s of node.skills) m[s] = mastery[s] ?? START_MASTERY;
-  return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0 };
+  return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0, guesses: 0 };
 }
 
 export function nextTask(run: Run): Task {
@@ -70,7 +77,8 @@ export function firstAnswer(run: Run, task: Task, correct: boolean): AnswerResul
   const rightStreak = run.rightStreak + 1;
   const bias = rightStreak % 3 === 0 ? Math.min(1, run.bias + 1) : run.bias;
   const combo = rightStreak >= 3 && rightStreak % 2 === 1 ? rightStreak : null;
-  const coinsGained = 5 + (combo ? 5 : 0);
+  // Bewusst sparsam: Der Fokus soll aufs Rechnen, nicht aufs Münzen-Sammeln.
+  const coinsGained = 2 + (combo ? 2 : 0);
   return {
     run: { ...run, mastery, formats, rightStreak, wrongStreak: 0, bias, firstTry: run.firstTry + 1, coins: run.coins + coinsGained, bestStreak: Math.max(run.bestStreak, rightStreak) },
     coinsGained,
@@ -78,9 +86,19 @@ export function firstAnswer(run: Run, task: Task, correct: boolean): AnswerResul
   };
 }
 
-/** Richtig im zweiten Versuch: ein bisschen Münzen, aber kein Können-Plus. */
+/** Richtig im zweiten Versuch: eine Münze, aber kein Können-Plus. */
 export function lateRight(run: Run): AnswerResult {
-  return { run: { ...run, coins: run.coins + 2 }, coinsGained: 2, combo: null };
+  return { run: { ...run, coins: run.coins + 1 }, coinsGained: 1, combo: null };
+}
+
+/** Falsche Antwort in Windeseile → zählt als geraten. */
+export function noteGuess(run: Run): Run {
+  return { ...run, guesses: run.guesses + 1 };
+}
+
+/** Geschafft = genug gleich richtig UND nicht durchgeraten. */
+export function passedRun(run: Run, stars: number): boolean {
+  return stars > 0 && run.guesses < MAX_GUESSES;
 }
 
 /** Aufgabe abgeschlossen (egal wie) — zählt und trifft ggf. den Boss. */
