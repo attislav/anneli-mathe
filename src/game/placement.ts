@@ -24,6 +24,7 @@ const PROBE: Record<WorldId, string[]> = {
   ozean: ["formen", "spiegeln"],
   werkstatt: ["lineal", "einheiten"],
   detektiv: ["strichliste", "sachaufgaben"],
+  expedition: ["hunderter", "hunderterRechnen"],
 };
 
 const LEVEL: Level = 3;
