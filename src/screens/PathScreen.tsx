@@ -362,6 +362,14 @@ function Decor({ world, height }: { world: World; height: number }) {
               <path d={`M${side - 30} ${y + 34} q8 -8 16 0 t16 0 t16 0 t16 0`} stroke={world.theme.decoDark} strokeWidth="4" fill="none" strokeLinecap="round" />
             </g>
           );
+        if (world.id === "expedition")
+          return (
+            <g key={i}>
+              <path d={`M${side} ${y - 18} l5 11 12 1.5 -9 8 2.5 12 -10.5 -6 -10.5 6 2.5 -12 -9 -8 12 -1.5z`} fill={world.theme.deco} />
+              <circle cx={side + (side < COL / 2 ? 22 : -22)} cy={y + 30} r="12" fill={world.theme.decoDark} />
+              <ellipse cx={side + (side < COL / 2 ? 22 : -22)} cy={y + 30} rx="20" ry="5" fill="none" stroke={world.theme.deco} strokeWidth="3" />
+            </g>
+          );
         if (world.id === "detektiv")
           return (
             <g key={i}>

@@ -18,6 +18,7 @@ export function arcadeSecondsLeft(save: SaveState): number {
 const GAMES = [
   { href: "/spielen/ballons", name: "Ballon-Platzen", color: "#FF5D9E", shade: "#C93B77", art: "balloons" },
   { href: "/spielen/memory", name: "Rechen-Memory", color: "#4CC3FF", shade: "#2A9FD9", art: "cards" },
+  { href: "/spielen/zehnerturm", name: "Zehner-Turm", color: "#2BB673", shade: "#1E8F57", art: "tower" },
 ] as const;
 
 export function ArcadeScreen({ save }: { save: SaveState }) {
@@ -60,6 +61,18 @@ export function ArcadeScreen({ save }: { save: SaveState }) {
                 <text x="22" y="28" fontFamily="var(--font-fredoka)" fontWeight="600" fontSize="16" fill="#1F2347" textAnchor="middle">7</text>
                 <text x="52" y="24" fontFamily="var(--font-fredoka)" fontWeight="600" fontSize="15" fill="#1F2347" textAnchor="middle">12</text>
               </svg>
+            ) : g.art === "tower" ? (
+              <svg viewBox="0 0 80 60" width="84" height="62" aria-hidden="true">
+                <rect x="8" y="2" width="26" height="56" rx="6" fill="#1E8F57" />
+                <rect x="11" y="30" width="20" height="25" rx="4" fill="#4CC3FF" />
+                <text x="21" y="47" fontFamily="var(--font-fredoka)" fontWeight="600" fontSize="13" fill="#fff" textAnchor="middle">3</text>
+                <rect x="11" y="6" width="20" height="22" rx="4" fill="#fff" opacity="0.25" />
+                <rect x="46" y="2" width="26" height="56" rx="6" fill="#1E8F57" />
+                <rect x="49" y="38" width="20" height="17" rx="4" fill="#FFC531" />
+                <text x="59" y="51" fontFamily="var(--font-fredoka)" fontWeight="600" fontSize="12" fill="#1F2347" textAnchor="middle">4</text>
+                <rect x="22" y="4" width="20" height="20" rx="4" fill="#7B4DFF" transform="rotate(-10 32 14)" />
+                <text x="32" y="19" fontFamily="var(--font-fredoka)" fontWeight="600" fontSize="13" fill="#fff" textAnchor="middle" transform="rotate(-10 32 14)">7</text>
+              </svg>
             ) : (
               <svg viewBox="0 0 80 60" width="84" height="62" aria-hidden="true">
                 <rect x="4" y="8" width="30" height="42" rx="6" fill="#fff" transform="rotate(-8 19 28)" />
@@ -77,7 +90,7 @@ export function ArcadeScreen({ save }: { save: SaveState }) {
             </div>
           </Link>
         ))}
-        {["Zehner-Turm", "Sternen-Rakete"].map((name) => (
+        {["Sternen-Rakete"].map((name) => (
           <div key={name} className="flex h-[170px] flex-col justify-between rounded-[24px] border-[3px] border-dashed border-[#5B60A8] bg-night-light p-3.5 text-[#C3C6F0]">
             <Lock size={36} />
             <div>

@@ -4,7 +4,7 @@
 import { STICKERS } from "./collection";
 import { getPage } from "./coloring";
 import { adventDay } from "./season";
-import { applyRewards, readSave, rollSticker, update, type Reward, type SaveState } from "./state";
+import { applyRewards, readSave, rollSticker, todayKey, update, type Reward, type SaveState } from "./state";
 
 type DoorPlan = { kind: "coins"; amount: number } | { kind: "sticker"; rare: boolean } | { kind: "page"; id: string } | { kind: "finale" };
 
@@ -32,8 +32,13 @@ export function openedDoors(s: SaveState, year = new Date().getFullYear()): numb
   return s.advent.year === year ? s.advent.opened : [];
 }
 
+/** Erst rechnen, dann Türchen: Heute muss schon eine Lektion geschafft sein. */
+export function lessonDoneToday(s: SaveState, d = new Date()): boolean {
+  return s.today.day === todayKey(d) && s.today.lessons > 0;
+}
+
 export function canOpen(s: SaveState, n: number, d = new Date()): boolean {
-  return n <= adventDay(d) && !openedDoors(s, d.getFullYear()).includes(n);
+  return n <= adventDay(d) && !openedDoors(s, d.getFullYear()).includes(n) && lessonDoneToday(s, d);
 }
 
 export function openDoor(n: number): Reward[] {

@@ -46,9 +46,25 @@ function fail(skill: string, level: number, msg: string, t: TaskDraft) {
 }
 
 /** Rechnet einen Term mit genau einem „?" aus, indem es alle Kandidaten probiert. */
-function solveTerm(term: string): number[] {
+function solveTerm(term: string, expected?: number): number[] {
   const hits: number[] = [];
   if (!term.includes("=")) return hits;
+  // Große Zahlen (Sternen-Expedition bis 1000): die erwartete Antwort und Nachbarn direkt prüfen.
+  const big = /\d{3}/.test(term);
+  const candidates = big && expected !== undefined ? [expected, expected - 1, expected + 1, expected - 10, expected + 10, expected - 100, expected + 100] : null;
+  if (candidates) {
+    for (const x of candidates) {
+      if (x < 0) continue;
+      const expr = term.replace("?", String(x)).replace(/−/g, "-").replace(/·/g, "*").replace(/:/g, "/");
+      const [l, r] = expr.split("=");
+      try {
+        if (Function(`return (${l}) === (${r})`)()) hits.push(x);
+      } catch {
+        return [];
+      }
+    }
+    return hits.length ? hits : [NaN];
+  }
   for (let x = 0; x <= 200; x++) {
     const expr = term.replace("?", String(x)).replace(/−/g, "-").replace(/·/g, "*").replace(/:/g, "/");
     const [l, r] = expr.split("=");
@@ -86,14 +102,14 @@ function check(skill: string, level: Level, t: TaskDraft) {
         if (odd.length !== 1 || odd[0] !== t.answer) fail(skill, level, "Fehler-Detektiv: nicht genau eine passende Rechnung", t);
       }
       if (t.term?.includes("?") && t.term.includes("=")) {
-        const sol = solveTerm(t.term);
+        const sol = solveTerm(t.term, Number(t.answer));
         if (sol.length && !sol.includes(Number(t.answer))) fail(skill, level, `Term ergibt ${sol}`, t);
       }
       break;
     case "input": {
       if (!t.term.includes("?")) fail(skill, level, "kein ? im Term", t);
       if (t.answer < 0 || !Number.isInteger(t.answer)) fail(skill, level, "Antwort keine natürliche Zahl", t);
-      const sol = solveTerm(t.term);
+      const sol = solveTerm(t.term, t.answer);
       if (sol.length && !sol.includes(t.answer)) fail(skill, level, `Term ergibt ${sol}`, t);
       break;
     }

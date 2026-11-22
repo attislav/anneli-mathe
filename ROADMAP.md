@@ -240,7 +240,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 - [x] Tagesziel, Serie (Flamme)
 - [x] Boss-Kämpfe (3 Bosse)
 - [ ] Baumhaus, Avatar, Abzeichen, Tagesschatz
-- [ ] Mehr Mini-Spiele (Zehner-Turm, Sternen-Rakete)
+- [~] Mehr Mini-Spiele: Zehner-Turm ✓ (21.11.), Sternen-Rakete offen
 - [ ] **Adventskalender bis 1. Dezember**
 
 ### Phase 3 — Voller Lehrplan (~4–6 Wochen)
@@ -259,7 +259,7 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 
 ### Phase 5 — Wachstum (laufend)
 
-- [ ] Sternen-Expedition (Klasse 3)
+- [~] Sternen-Expedition (Klasse 3): Welt 11 „Zahlen bis 1000“ spielbar (21.11.), halbschriftlich + großes Einmaleins offen
 - [ ] Weitere Events und Mini-Spiele
 - [ ] Geschwister-/Freunde-Challenges
 - [ ] Klasse 1 und 3 als eigene Pfade
@@ -301,9 +301,12 @@ Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — je
 | AP-15 | **Schul-Modus** | Eltern wählen Schulthema → Empfehlung auf dem Pfad | in der Eltern-Ecke einstellbar |
 | AP-16 | **KI-Ausmalbilder** | Linienbilder + Ausmalen per Flood-Fill | 6 neue Bilder in Truhen |
 | AP-17 | **Klicktest im Repo** | Playwright-Skript `npm run e2e` | läuft lokal grün |
-| AP-18 | **Mehr Mini-Spiele** | Zehner-Turm, Sternen-Rakete | in der Spielhalle |
+| AP-18 (Zehner-Turm ✓) | **Mehr Mini-Spiele** | Zehner-Turm ✓, Sternen-Rakete offen | in der Spielhalle |
 | AP-19 | **Baumhaus** | Zimmer mit Möbeln aus dem Laden | unter „Ich" |
 | AP-20 | **Cloud-Sync** | Supabase, Eltern-Login, mehrere Kinder | braucht Zugangsdaten → mit Papa klären |
+
+| AP-21 ✓ | **Belohnung bremsen** (Papa, 21.11.: Fokus lag zu sehr auf Belohnungen, es wurde durchgeklickt) | Münzen pro Aufgabe 2 statt 5; nicht geschafft → gar nichts; Raten (falsch in < 2,5 s) zählt, ab 3× keine Sterne/Truhe; „Weiter“ nach Tipp/Lösung erst nach Lesepause; Boss ohne Mindest-Sterne; Truhen/Tagesschatz sparsamer; Wiederholen perfekter Lektionen bringt kaum etwas; Adventstürchen erst nach einer Lektion | Durchklicken bringt 0 Münzen (Playwright geprüft). **Beobachten**, ob es jetzt zu wenig ist |
+| AP-22 ✓ | **Welt 11: Sternen-Expedition** | Zahlen bis 1000: H/Z/E, Zahlenstrahl, Vergleichen, Hunderter rechnen, Ergänzen; Boss Komet Kalle; 12 Sticker (Vektor), 2 Ausmalbilder. **Offen:** KI-Kulisse + Sticker-Bilder | 17 Knoten spielbar |
 
 **Mittelfristig: Grundschule komplett (Klasse 1–4)**
 - Heute ist alles Klasse 2. Ziel: eine Mathe-App für die ganze Grundschule.

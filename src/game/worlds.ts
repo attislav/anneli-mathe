@@ -326,10 +326,39 @@ export const WORLDS: World[] = [
       { id: "detektiv-boss", kind: "boss", title: "Elster Klauzi", skills: ["diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"], coloring: "detektiv" },
     ],
   },
+  {
+    // Klasse-3-Vorschau für Überflieger: Zahlen bis 1000.
+    id: "expedition",
+    index: 10,
+    name: "Sternen-Expedition",
+    tagline: "Zahlen bis 1000",
+    starsToEnter: 218,
+    theme: { ground: "#E6E4FF", band: "#4B3FB8", bandShade: "#30268A", deco: "#FFE27A", decoDark: "#B9B3F5" },
+    boss: { name: "Komet Kalle", color: "#4CC3FF", shade: "#1C7BB0" },
+    nodes: [
+      { id: "expedition-1", kind: "trick", title: "Hunderter, Zehner, Einer", skills: ["hunderter"] },
+      { id: "expedition-2", kind: "lesson", title: "Zahlenstrahl bis 1000", skills: ["zahlenstrahl1000"] },
+      { id: "expedition-3", kind: "lesson", title: "Größer, kleiner?", skills: ["vergleichen1000"] },
+      chest("expedition-4", "astronaut"),
+      { id: "expedition-5", kind: "trick", title: "Hunderter wie Einer", skills: ["hunderterRechnen"] },
+      { id: "expedition-6", kind: "lesson", title: "Ergänzen bis 1000", skills: ["ergaenzen1000"] },
+      { id: "expedition-7", kind: "lesson", title: "Zahlen & Strahl", skills: ["hunderter", "zahlenstrahl1000"] },
+      { id: "expedition-8", kind: "review", title: "Gemischt", skills: ["hunderter", "zahlenstrahl1000", "vergleichen1000", "hunderterRechnen", "ergaenzen1000"] },
+      round2("expedition-9", "Hunderter, Zehner, Einer 2", ["hunderter"]),
+      round2("expedition-10", "Zahlenstrahl 2", ["zahlenstrahl1000"]),
+      chest("expedition-11"),
+      round2("expedition-12", "Größer, kleiner? 2", ["vergleichen1000"]),
+      round2("expedition-13", "Rechnen mit Hundertern 2", ["hunderterRechnen"]),
+      round2("expedition-14", "Ergänzen 2", ["ergaenzen1000"]),
+      chest("expedition-15"),
+      mix2("expedition-16", ["hunderter", "zahlenstrahl1000", "vergleichen1000", "hunderterRechnen", "ergaenzen1000"]),
+      { id: "expedition-boss", kind: "boss", title: "Komet Kalle", skills: ["hunderter", "vergleichen1000", "hunderterRechnen", "ergaenzen1000"], coloring: "komet" },
+    ],
+  },
 ];
 
 /** Welten, die als Nebel-Vorschau am Pfadende warten. */
-export const COMING_SOON = ["Sternen-Expedition"];
+export const COMING_SOON: string[] = [];
 
 export function findNode(nodeId: string): { world: World; node: PathNode; index: number } | null {
   for (const world of WORLDS) {

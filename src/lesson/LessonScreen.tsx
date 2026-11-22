@@ -22,7 +22,7 @@ import { Button, LinkButton } from "@/ui/Button";
 import { Sheet, Splash, useBackdrop } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
 import { Pet, type Mood } from "@/ui/Pet";
-import { completeTask, firstAnswer, isFinished, lateRight, nextTask, startRun, taskCount, BOSS_HP, type Run } from "./engine";
+import { completeTask, firstAnswer, isFinished, lateRight, nextTask, noteGuess, passedRun, MAX_GUESSES, startRun, taskCount, BOSS_HP, GUESS_MS, type Run } from "./engine";
 import { TaskView, type Status } from "./formats";
 import { ResultView, type Outcome } from "./ResultView";
 import { TrickIntro } from "./TrickIntro";
@@ -77,6 +77,8 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   useEffect(() => {
     shownAt.current = Date.now();
   }, [task, phase]);
+  // Wann zuletzt eine Antwort möglich wurde (auch nach „Nochmal probieren") — fürs Erkennen von Raten.
+  const askAt = useRef(0);
   const [attempt, setAttempt] = useState(0);
   const [retry, setRetry] = useState(0);
   const [status, setStatus] = useState<Status>("ask");
@@ -115,18 +117,21 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
     (r: Run) => {
       const s = readSave();
       const firstTime = isBoss ? !s.bosses.includes(node.id) : bestStars(s, node.id) === 0;
-      // Der Boss ist geschafft, sobald er besiegt ist. Sonst gilt: weniger als die
-      // Hälfte gleich richtig → 0 Sterne, keine Truhe, nichts freigeschaltet.
-      const stars = isBoss ? Math.max(1, starsFor(r.firstTry, r.done)) : starsFor(r.firstTry, r.done);
-      const passed = stars > 0;
-      const rewards: Reward[] = passed ? lessonRewards(s, node, world, firstTime) : [];
-      const xp = passed ? 10 + r.firstTry * 3 + (isBoss ? 20 : 0) : r.firstTry * 2;
+      // Weniger als die Hälfte gleich richtig — oder viel geraten → 0 Sterne,
+      // keine Münzen, keine Truhe, nichts freigeschaltet. Das gilt auch für den Boss:
+      // Belohnung gibt es nur fürs echte Rechnen, nicht fürs Durchtippen.
+      const passed = passedRun(r, starsFor(r.firstTry, r.done));
+      const stars = passed ? starsFor(r.firstTry, r.done) : 0;
+      const firstOrBetter = firstTime || stars > (s.nodes[node.id]?.stars?.[tier] ?? 0);
+      const rewards: Reward[] = passed ? lessonRewards(s, node, world, firstTime, firstOrBetter) : [];
+      const xp = passed ? 10 + r.firstTry * 2 + (isBoss ? 20 : 0) : 0;
+      const coins = passed ? r.coins : 0;
       const before = levelInfo(s.xp);
-      recordLesson({ node, world, tier, stars, coins: r.coins, xp, tasks: r.done, firstTry: r.firstTry, mastery: r.mastery, rewards, passed });
+      recordLesson({ node, world, tier, stars, coins, xp, tasks: r.done, firstTry: r.firstTry, mastery: r.mastery, rewards, passed });
       if (passed) rewards.push(...claimBadges(readSave()));
       const after = levelInfo(readSave().xp);
       if (passed) sfx.fanfare();
-      setOutcome({ stars, coins: r.coins, xp, firstTry: r.firstTry, done: r.done, rewards, levelBefore: before.level, levelAfter: after, bestStreak: r.bestStreak });
+      setOutcome({ stars, coins, xp, firstTry: r.firstTry, done: r.done, rewards, levelBefore: before.level, levelAfter: after, bestStreak: r.bestStreak, guessed: r.guesses >= MAX_GUESSES });
       setPhase("result");
     },
     [isBoss, node, world, tier],
@@ -138,6 +143,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
     if (autoNext.current) clearTimeout(autoNext.current);
     autoNext.current = null;
     if (status === "wrong") {
+      askAt.current = Date.now();
       setStatus("ask");
       setRetry((n) => n + 1);
       return;
@@ -148,6 +154,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
       finish(r);
       return;
     }
+    askAt.current = Date.now();
     setTask(nextTask(r));
     setAttempt(0);
     setStatus("ask");
@@ -189,13 +196,16 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   const onAnswer = (correct: boolean) => {
     if (status !== "ask") return;
     stopReading();
+    // Falsch in Windeseile = geraten. Das merkt sich die Runde (zu viel → keine Belohnung).
+    const since = Date.now() - Math.max(askAt.current, shownAt.current);
+    const guessed = !correct && since < GUESS_MS;
     if (attempt === 0) {
       setWrongInRow((n) => (correct ? 0 : n + 1));
       logAnswer({ t: Math.round(Date.now() / 1000), s: task.skillId, l: task.level, ok: correct ? 1 : 0, ms: Math.min(600000, Date.now() - shownAt.current), ...(node.practice ? { p: 1 as const } : {}) });
       if (node.practice) reviewPractice(task, correct);
       else notePractice(task, correct);
       const res = firstAnswer(run, task, correct);
-      setRun(res.run);
+      setRun(guessed ? noteGuess(res.run) : res.run);
       if (correct) {
         setStatus("right");
         setPraise(PRAISE[Math.floor(Math.random() * PRAISE.length)]);
@@ -213,6 +223,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
       setStatus("right");
       setPraise("Geschafft!");
     } else {
+      if (guessed) setRun(noteGuess(run));
       setStatus("reveal");
     }
   };
@@ -291,7 +302,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
       <Sheet open={quit} onClose={() => setQuit(false)}>
         <div className="flex flex-col gap-3 text-center">
           <h2 className="font-display text-2xl font-semibold">Wirklich aufhören?</h2>
-          <p className="text-ink-soft">Deine Münzen aus dieser Runde gehen dann verloren.</p>
+          <p className="text-ink-soft">Wer mittendrin aufhört, bekommt für diese Runde nichts.</p>
           <Button tone="leaf" onClick={() => setQuit(false)}>
             Weiterspielen
           </Button>
@@ -305,6 +316,14 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
 }
 
 function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; task: Task; praise: string; onNext: () => void; onHelp: () => void }) {
+  const reveal = status === "reveal";
+  // Erst lesen, dann weiter: Bei Tipp und Lösung wird der Knopf erst nach kurzer
+  // Pause aktiv — so kann man sie nicht einfach wegklicken.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), reveal ? 2500 : 1500);
+    return () => clearTimeout(t);
+  }, [reveal]);
   if (status === "right") {
     return (
       <div className="anim-sheet fixed inset-x-0 bottom-0 z-40 mx-auto max-w-xl rounded-t-[28px] border-t-4 border-leaf bg-leaf-light px-5 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
@@ -322,7 +341,6 @@ function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; ta
       </div>
     );
   }
-  const reveal = status === "reveal";
   const jumps = jumpsFor("term" in task ? task.term : undefined);
   return (
     <div className="anim-sheet fixed inset-x-0 bottom-0 z-40 mx-auto max-w-xl rounded-t-[28px] border-t-4 border-[#FFB648] bg-[#FFF1DB] px-5 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
@@ -350,7 +368,7 @@ function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; ta
       <button onClick={onHelp} className="mb-3 flex w-full items-center justify-center gap-2 rounded-full bg-white/70 py-2.5 font-extrabold text-[#8A4B00]">
         <Lightbulb size={20} strokeWidth={2.5} /> {tricksFor("term" in task ? task.term : undefined).length ? "Zeig mir einen Trick" : "Zeig mir, wie's geht"}
       </button>
-      <Button tone="coin" className="w-full" onClick={onNext}>
+      <Button tone="coin" className={`w-full transition-opacity ${ready ? "" : "opacity-50"}`} onClick={() => ready && onNext()} aria-disabled={!ready}>
         {reveal ? "Weiter" : "Nochmal probieren"}
       </Button>
     </div>
