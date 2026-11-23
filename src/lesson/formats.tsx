@@ -5,6 +5,8 @@
 
 import { useState } from "react";
 import { NumPad } from "./NumPad";
+import { DigitBuildView, PairView, RuleView } from "./NumberPuzzles";
+import { GridRoute } from "./GridRoute";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
 import type { BarBuildTask, ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
@@ -25,6 +27,14 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "grid-route":
+      return <GridRoute {...props} task={task} />;
+    case "digit-build":
+      return <DigitBuildView {...props} task={task} />;
+    case "number-pairs":
+      return <PairView {...props} task={task} />;
+    case "sequence-rule":
+      return <RuleView {...props} task={task} />;
     case "two-step":
       return <TwoStepView {...props} task={task} />;
     case "story-math":
@@ -114,10 +124,10 @@ function StoryMathView({ task, status, onAnswer }: FormatProps<Extract<Task, { f
     <div className={`${card} p-5 text-center`}>
       <p className="text-lg font-semibold">Die Rechnung passt. Rechne aus.</p>
       <p className="mt-2 font-display text-3xl">{calculation} = <output>{value || "?"}</output></p>
-      <p className="mt-2">{value || "?"} {task.unit}</p>
+      {task.unit && <p className="mt-2">{value || "?"} {task.unit}</p>}
     </div>
     <NumPad value={value} onChange={setValue} disabled={locked} onOk={() => onAnswer(Number(value) === task.answer,
-      `Deine Rechnung passt zur Geschichte. Prüfe noch einmal, wie viel ${calculation} ergibt.`)} />
+      `Deine Rechnung passt. Prüfe noch einmal, wie viel ${calculation} ergibt.`)} />
   </div>;
 }
 

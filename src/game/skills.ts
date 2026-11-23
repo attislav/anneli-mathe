@@ -10,6 +10,7 @@
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
 import { chance, pick, randInt, shuffle } from "./random";
+import { numberPairs, sequenceRule } from "./numberPuzzles";
 import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genkit";
 import { HAFEN_SKILLS } from "./skillsHafen";
 import { ZIRKUS_SKILLS } from "./skillsZirkus";
@@ -32,6 +33,7 @@ const freunde10: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const target = level >= 4 ? 20 : 10;
+    if (!ctx.avoid.includes("number-pairs") && chance(0.35)) return numberPairs(target, "+");
     const a = target === 10 ? randInt(1, 9) : level === 4 ? randInt(11, 19) : randInt(1, 19);
     const ans = target - a;
     const hint =
@@ -320,6 +322,7 @@ const reihen: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     let step: number, start: number;
+    if (!ctx.avoid.includes("sequence-rule") && chance(0.45)) return sequenceRule(level);
     if (level === 1) [step, start] = [1, randInt(1, 15)];
     else if (level === 2) [step, start] = [2, randInt(0, 12)];
     else if (level === 3) {
@@ -402,6 +405,15 @@ const zehnerPlus: Skill = {
     const res = plus ? a + b : a - b;
     const sym = plus ? "+" : "−";
     const hint = `Nur die Zehner ändern sich, die ${o} hinten bleibt stehen.`;
+    if (level >= 3 && chance(0.3)) {
+      const offset = plus ? 10 : -10;
+      const shifted = a + offset;
+      const missing = b - 10;
+      return numeric(ctx, `${a} ${sym} ${b} = ${shifted} ${sym} ?`, missing, {
+        question: "Beide Seiten sollen gleich viel ergeben. Was fehlt?",
+        hint: `Rechne links zuerst ${a} ${sym} ${b}. Wie kommst du rechts von ${shifted} auf dasselbe Ergebnis?`,
+        solution: `Links erhältst du ${res}. Rechts gilt ${shifted} ${sym} ${missing} = ${res}.` });
+    }
     if (level === 5) return numeric(ctx, `${a} ${sym} ? = ${res}`, b, { question: "Welche Zahl fehlt?", hint: `Die Einer sind gleich geblieben. Wie viele Zehner sind ${plus ? "dazugekommen" : "weggegangen"}?`, solution: `${a} ${sym} ${b} = ${res}.` });
     return numeric(ctx, `${a} ${sym} ${b} = ?`, res, { hint, solution: `${a} ${sym} ${b} = ${res}.` });
   },
@@ -447,6 +459,7 @@ const ergaenzen: Skill = {
   world: "strand",
   gen: (ctx) => {
     const { level } = ctx;
+    if (level >= 2 && !ctx.avoid.includes("number-pairs") && chance(0.35)) return numberPairs(100, "+", level <= 3 ? 10 : 1);
     const form = level === 1 ? "ten" : level === 2 ? "hundredTens" : level === 3 ? pick(["ten", "hundredTens"] as const) : level === 4 ? "hundred" : pick(["hundred", "minus"] as const);
     if (form === "ten") {
       const a = randInt(11, 98);

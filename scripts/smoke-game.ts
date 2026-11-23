@@ -88,6 +88,33 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "grid-route":
+      if (t.stops.length < 3 || t.stops[0] === t.stops[t.stops.length - 1] ||
+          t.stops.some(n => n < 0 || n >= t.size * t.size) ||
+          t.stops.slice(1).some((n, i) => n === t.stops[i] ||
+            (Math.floor(n / t.size) !== Math.floor(t.stops[i] / t.size) && n % t.size !== t.stops[i] % t.size)))
+        fail(skill, level, "Weg enthält einen ungültigen Schritt", t);
+      break;
+    case "number-pairs": {
+      const valid = t.cards.flatMap((a, i) => t.cards.slice(i + 1).filter(b =>
+        (t.operation === "+" ? a + b : a * b) === t.target));
+      if (new Set(t.cards).size !== t.cards.length || valid.length < 2)
+        fail(skill, level, "Es fehlen zwei verschiedene Zahlenpaare", t);
+      break;
+    }
+    case "sequence-rule": {
+      const jumps = t.numbers.slice(1).map((n, i) => n - t.numbers[i]);
+      if (t.missing <= 2 || t.missing >= t.numbers.length - 1 || !t.options.includes(t.rule) ||
+          new Set(t.options).size !== 2 || jumps.some((n, i) => n !== jumps[i % 2]) ||
+          t.numbers.some(n => n < 0 || n > 100))
+        fail(skill, level, "Regel oder Lücke passt nicht zur Zahlenreihe", t);
+      break;
+    }
+    case "digit-build":
+      if (t.digits.length < 2 || t.digits.length > 3 || new Set(t.digits).size !== t.digits.length ||
+          t.digits.some(n => !Number.isInteger(n) || n < 1 || n > 9))
+        fail(skill, level, "Ungültige Ziffernkarten", t);
+      break;
     case "two-step": {
       const first = t.intermediate;
       if (new Set(first.choices).size !== 2 || !first.choices.includes(first.question) ||

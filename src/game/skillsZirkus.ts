@@ -4,6 +4,7 @@
 // was Malnehmen IST: Reihen mal Spalten — bevor es ans Auswendigwissen geht.
 
 import type { TaskDraft } from "./types";
+import { numberPairs } from "./numberPuzzles";
 import { chance, numberOptions, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill, type Texts } from "./genkit";
 
@@ -107,8 +108,22 @@ const malReihen: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const row = level === 1 ? pick([3, 4]) : level === 2 ? pick([3, 4]) : level === 3 ? pick([6, 7]) : level === 4 ? pick([8, 9]) : pick([3, 4, 6, 7, 8, 9]);
+    if (level >= 3 && !ctx.avoid.includes("number-pairs") && chance(0.35)) return numberPairs(pick([12, 18, 24, 30, 40]), "·");
     const n = level === 1 ? randInt(1, 5) : randInt(2, 10);
     const [a, b] = [n, row];
+    if (level >= 2 && !ctx.avoid.includes("story-math") && chance(0.3)) {
+      const anchor = pick([5, 10]);
+      const direction = anchor === 10 ? -1 : pick([-1, 1]);
+      const known = anchor * row;
+      const wanted = anchor + direction;
+      const plus = `${known} + ${row}`;
+      const minus = `${known} − ${row}`;
+      const calculation = direction > 0 ? plus : minus;
+      return { format: "story-math", question: `Du weißt: ${anchor} · ${row} = ${known}. Wie findest du damit ${wanted} · ${row}?`,
+        options: shuffle([plus, minus]), calculation, answer: wanted * row, unit: "",
+        hint: `Stelle dir ${anchor} Reihen mit je ${row} Punkten vor. Für ${wanted} Reihen brauchst du eine Reihe ${direction > 0 ? "mehr" : "weniger"}.`,
+        solution: `${calculation} = ${wanted * row}. Also ist ${wanted} · ${row} = ${wanted * row}.` };
+    }
     if (level === 5 && chance(0.4)) {
       return numeric(ctx, `? · ${row} = ${n * row}`, n, { question: "Welche Zahl fehlt?", hint: `Geh die ${row}er-Reihe entlang, bis du bei ${n * row} bist.`, solution: `${n} · ${row} = ${n * row}.` });
     }

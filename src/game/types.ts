@@ -8,6 +8,10 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type PairTask = TaskBase & { format: "number-pairs"; operation: "+" | "·"; target: number; cards: number[] };
+export type RuleTask = TaskBase & { format: "sequence-rule"; numbers: number[]; missing: number; rule: string; options: string[] };
+export type DigitBuildTask = TaskBase & { format: "digit-build"; digits: number[] };
+export type GridRouteTask = TaskBase & { format: "grid-route"; size: number; stops: number[]; findStart: boolean };
 
 type JumpTask = TaskBase & { format: "ten-jump"; start: number; delta: number };
 type ExchangeTask = TaskBase & { format: "exchange"; start: number; take: number };
@@ -178,7 +182,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

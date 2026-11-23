@@ -355,6 +355,13 @@ const kombinatorik: Skill = {
         solution: `${a} · ${b} = ${ans} Möglichkeiten.`,
       }, [1, Math.max(30, ans + 6)]);
     };
+    if (!ctx.avoid.includes("digit-build") && chance(0.35)) {
+      const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, level <= 2 ? 2 : 3);
+      const all = digits.flatMap(a => digits.filter(b => b !== a).map(b => 10 * a + b)).sort((a, b) => a - b);
+      return { format: "digit-build", digits, question: "Welche zweistelligen Zahlen kannst du legen? Nutze jede Karte pro Zahl nur einmal.",
+        hint: "Lass die erste Karte liegen. Probiere dahinter jede andere Karte aus. Dann wechsle die erste Karte.",
+        solution: `Du kannst ${all.length} Zahlen legen: ${all.join(", ")}.` };
+    }
     if (level === 1) return pair(2, 2);
     if (level === 2) {
       const [a, b] = pick([[2, 3], [3, 2], [3, 3], [2, 4]] as const);

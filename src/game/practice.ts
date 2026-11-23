@@ -27,6 +27,10 @@ function strip(task: Task): TaskDraftWithSkill {
 }
 
 function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "grid-route") return JSON.stringify([t.skillId, t.format, t.size, t.stops, t.findStart]);
+  if (t.format === "digit-build") return JSON.stringify([t.skillId, t.format, [...t.digits].sort()]);
+  if (t.format === "number-pairs") return JSON.stringify([t.skillId, t.operation, t.target, [...t.cards].sort((a, b) => a - b)]);
+  if (t.format === "sequence-rule") return JSON.stringify([t.skillId, t.format, t.numbers, t.missing]);
   if (t.format === "bar-build" && t.initialHeights) return JSON.stringify([t.skillId, t.format, t.rows, t.initialHeights]);
   if (t.format === "ten-jump") return JSON.stringify([t.skillId, t.format, t.start, t.delta]);
   if (t.format === "exchange") return JSON.stringify([t.skillId, t.format, t.start, t.take]);

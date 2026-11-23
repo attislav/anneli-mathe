@@ -293,6 +293,10 @@ Im Detektivbüro wählen Kinder bei Sachaufgaben auf den Stufen 1–4 zuerst die
 
 Bei den Säulendiagrammen im Detektivbüro prüfen Kinder ab Stufe 3 eine fertige Zeichnung anhand der Strichliste und korrigieren die Höhe einer einzelnen Säule.
 
+Auf der Startinsel und am Plus-Minus-Strand finden Kinder zwei verschiedene Zahlenpaare für dieselbe Summe. Am Strand ergänzen sie auch gleichwertige Rechenausdrücke. Im Zahlenwald bestimmen sie die Regel einer Reihe und schließen eine Lücke im Inneren. Im Einmaleins-Zirkus suchen sie verschiedene Faktorpaare oder leiten eine Nachbaraufgabe aus einer bekannten Reihe ab. Im Detektivbüro legen sie mit Ziffernkarten systematisch alle möglichen zweistelligen Zahlen.
+
+Im Formen-Ozean wird die räumliche Orientierung als eigene Kompetenz erfasst. Beim Knoten „Wege, Spiegel & Muster“ sowie in den Wiederholungen führen Pfeile über ein Kästchenfeld. Auf höheren Stufen kann auch der Startpunkt gesucht sein.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.

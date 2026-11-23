@@ -38,7 +38,8 @@ const formen: Skill = {
       if (level === 5) {
         const other = pick(ALL.filter((s) => s !== shape));
         const sum = corners + CORNERS[other];
-        return numeric(ctx, `? Ecken`, sum, { question: "Wie viele Ecken haben beide Formen zusammen?", hint: `Zähl erst die Ecken der einen Form, dann der anderen, und rechne plus.`, solution: `${SHAPE_NAMES[shape]}: ${corners}, ${SHAPE_NAMES[other]}: ${CORNERS[other]} — zusammen ${sum}.` });
+        const task = numeric(ctx, `? Ecken`, sum, { question: "Wie viele Ecken haben beide Formen zusammen?", hint: "Zähl erst die Ecken der einen Form, dann der anderen, und rechne plus.", solution: `${SHAPE_NAMES[shape]}: ${corners}, ${SHAPE_NAMES[other]}: ${CORNERS[other]} — zusammen ${sum}.` });
+        return { ...task, visual: { kind: "shapes", items: [{ shape, color }, { shape: other, color: pick(COLORS) }] } } as TaskDraft;
       }
       const d = numeric(ctx, `? Ecken`, corners, { question: `Wie viele Ecken hat ein ${SHAPE_NAMES[shape]}?`, hint: cornerHint, solution: `Ein ${SHAPE_NAMES[shape]} hat ${corners} Ecken.` });
       return { ...d, visual } as TaskDraft;
@@ -177,4 +178,28 @@ const koerper: Skill = {
   },
 };
 
-export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper];
+const rasterwege: Skill = {
+  id: "rasterwege", title: "Wege im Raster", world: "ozean",
+  gen: ({ level }) => {
+    const size = level <= 2 ? 3 : level === 3 ? 4 : 5;
+    const stops = [randInt(0, size * size - 1)];
+    let horizontal = chance(0.5);
+    const turns = level <= 2 ? 2 : level <= 4 ? 3 : 4;
+    for (let i = 0; i < turns; i++) {
+      const at = stops[i];
+      const row = Math.floor(at / size), col = at % size;
+      const choices = Array.from({ length: size }, (_, n) => horizontal ? row * size + n : n * size + col)
+        .filter(cell => cell !== at && cell !== stops[0]);
+      stops.push(pick(choices));
+      horizontal = !horizontal;
+    }
+    const findStart = level >= 4 && chance(0.5);
+    const target = findStart ? stops[0] : stops[turns];
+    return { format: "grid-route", size, stops, findStart,
+      question: findStart ? "Die Fahne zeigt das Ziel. Wo begann der Weg?" : "Beginne am Stern. Auf welchem Feld endet der Weg?",
+      hint: findStart ? "Beginne an der Fahne. Lies die Pfeile von hinten und gehe jeden in die Gegenrichtung." : "Starte am Stern. Zähle ein Feld pro Schritt und wechsle dann zum nächsten Pfeil.",
+      solution: `${findStart ? "Der Start" : "Das Ziel"} liegt in Reihe ${Math.floor(target / size) + 1}, Spalte ${target % size + 1}.` };
+  },
+};
+
+export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege];
