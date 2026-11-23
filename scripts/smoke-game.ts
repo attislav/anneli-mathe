@@ -176,6 +176,10 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
       break;
     case "bar-build":
+      if (t.initialHeights && (t.initialHeights.length !== t.rows.length ||
+          t.initialHeights.some(h => h <= 0 || h > t.max || h % t.step !== 0) ||
+          t.initialHeights.filter((h, i) => h !== t.rows[i].value).length !== 1))
+        fail(skill, level, "Diagramm muss genau eine korrigierbare Säule enthalten", t);
       if (t.rows.some((r) => r.value <= 0 || r.value > t.max || r.value % t.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
       if (t.max / t.step > 12) fail(skill, level, "zu viele Kästchen", t);
       break;

@@ -761,7 +761,7 @@ function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
 // --- Säulendiagramm zeichnen ------------------------------------------------
 
 function BarBuildView({ task, status, onAnswer }: FormatProps<BarBuildTask>) {
-  const [heights, setHeights] = useState<number[]>(() => task.rows.map(() => 0));
+  const [heights, setHeights] = useState<number[]>(() => task.initialHeights ?? task.rows.map(() => 0));
   const locked = status !== "ask";
   return (
     <div className="flex flex-col gap-4">

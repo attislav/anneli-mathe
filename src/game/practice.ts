@@ -27,6 +27,7 @@ function strip(task: Task): TaskDraftWithSkill {
 }
 
 function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "bar-build" && t.initialHeights) return JSON.stringify([t.skillId, t.format, t.rows, t.initialHeights]);
   if (t.format === "ten-jump") return JSON.stringify([t.skillId, t.format, t.start, t.delta]);
   if (t.format === "exchange") return JSON.stringify([t.skillId, t.format, t.start, t.take]);
   if (t.format === "turn-array") return JSON.stringify([t.skillId, t.format, t.rows, t.cols]);

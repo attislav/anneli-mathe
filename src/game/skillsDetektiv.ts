@@ -144,6 +144,16 @@ const diagramm: Skill = {
       const step = level >= 4 ? 2 : 1;
       const max = level >= 4 ? 16 : level === 3 ? 10 : 8;
       const rows = makeRows(theme, level >= 3 ? 4 : 3, step, max, step);
+      if (level >= 3 && chance(0.55)) {
+        const index = randInt(0, rows.length - 1);
+        const target = rows[index].value;
+        const offset = pick([-step, step].filter(d => target + d >= step && target + d <= max));
+        return { format: "bar-build", rows, step, max,
+          initialHeights: rows.map((row, i) => row.value + (i === index ? offset : 0)),
+          question: "Eine Säule passt nicht zur Strichliste. Finde sie und stelle ihre Höhe richtig ein.",
+          hint: "Prüfe die Säulen der Reihe nach. Zähle die Striche und vergleiche sie mit der Zahl am oberen Ende der Säule.",
+          solution: `Bei „${rows[index].label}“ sind es ${target} Striche. Die Säule gehört auf ${target}.` };
+      }
       return {
         format: "bar-build",
         question: "Zeichne das Säulendiagramm zur Strichliste.",

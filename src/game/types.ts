@@ -163,6 +163,7 @@ export type RulerTask = TaskBase & {
 /** Säulendiagramm zeichnen: Säulen auf die Werte aus der Strichliste ziehen. */
 export type BarBuildTask = TaskBase & {
   format: "bar-build";
+  initialHeights?: number[];
   rows: DataRow[];
   step: number;
   max: number;

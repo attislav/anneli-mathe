@@ -291,6 +291,8 @@ Im Detektivbüro wählen Kinder bei Sachaufgaben auf den Stufen 1–4 zuerst die
 
 **Beim Spieltest mit Anneli beobachten:** Findet sie nach dem Legen bei neuen Zahlen selbst einen Rechenweg? Versteht sie am Punktefeld, warum beim Drehen die Gesamtzahl gleich bleibt? Gelingt nach einem Tipp ein zweiter Versuch ohne Hilfe?
 
+Bei den Säulendiagrammen im Detektivbüro prüfen Kinder ab Stufe 3 eine fertige Zeichnung anhand der Strichliste und korrigieren die Höhe einer einzelnen Säule.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
