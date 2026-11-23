@@ -5,7 +5,7 @@
 
 import { levelFor, pickWeakSkill, START_MASTERY, updateMastery, type Tier } from "@/game/adaptive";
 import { getSkill } from "@/game/skills";
-import type { Format, Task } from "@/game/types";
+import type { Format, Level, Task } from "@/game/types";
 import type { PathNode } from "@/game/worlds";
 import { pick, uid } from "@/game/random";
 import { fmtLength } from "@/game/skillsWerkstatt";
@@ -30,6 +30,7 @@ export type Run = {
   wrongStreak: number;
   formats: Format[];
   done: number;
+  usedSupportTask: boolean;
   firstTry: number;
   coins: number;
   bossHp: number;
@@ -47,7 +48,7 @@ export const GUESS_MS = 2500;
 export function startRun(node: PathNode, tier: Tier, mastery: Record<string, number>, easier = false): Run {
   const m: Record<string, number> = {};
   for (const s of node.skills) m[s] = mastery[s] ?? START_MASTERY;
-  return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0, guesses: 0 };
+  return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, usedSupportTask: false, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0, guesses: 0 };
 }
 
 /** Gleiche Strategie mit neuen Zahlen, diesmal ohne Material. */
@@ -108,6 +109,10 @@ export function nextTask(run: Run, solvedTask?: Task): Task {
   const [a, b] = run.formats.slice(-2);
   // Zweimal dasselbe Format hintereinander → jetzt bitte etwas anderes.
   const avoid = a && a === b ? [a] : [];
+  return generateTask(skillId, level, avoid);
+}
+
+function generateTask(skillId: string, level: Level, avoid: Format[]): Task {
   const draft = getSkill(skillId).gen({ level, avoid });
   return { ...draft, id: uid(), skillId, level } as Task;
 }
@@ -159,4 +164,19 @@ export function completeTask(run: Run, solved: boolean): Run {
 export function isFinished(run: Run): boolean {
   if (run.node.kind === "boss") return run.bossHp <= 0;
   return run.done >= taskCount(run.node);
+}
+
+/** Nach der Auflösung belegt eine leichtere Aufgabe höchstens einmal den nächsten Platz. */
+export function advanceTask(run: Run, previous: Task, outcome: "right" | "reveal"): { run: Run; task: Task | null } {
+  const completed = completeTask(run, outcome === "right");
+  if (isFinished(completed)) return { run: completed, task: null };
+  const { kind, practice } = run.node;
+  if (outcome === "reveal" && !run.usedSupportTask && !practice && (kind === "lesson" || kind === "trick")) {
+    const level = Math.max(1, previous.level - 1) as Level;
+    return {
+      run: { ...completed, usedSupportTask: true },
+      task: generateTask(previous.skillId, level, [previous.format]),
+    };
+  }
+  return { run: completed, task: nextTask(completed, outcome === "right" ? previous : undefined) };
 }

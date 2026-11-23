@@ -22,7 +22,7 @@ import { Button, LinkButton } from "@/ui/Button";
 import { Sheet, Splash, useBackdrop } from "@/ui/chrome";
 import { BossArt } from "@/ui/Creatures";
 import { Pet, type Mood } from "@/ui/Pet";
-import { completeTask, firstAnswer, isFinished, lateRight, nextTask, noteGuess, passedRun, MAX_GUESSES, startRun, taskCount, BOSS_HP, GUESS_MS, type Run } from "./engine";
+import { advanceTask, firstAnswer, lateRight, nextTask, noteGuess, passedRun, MAX_GUESSES, startRun, taskCount, BOSS_HP, GUESS_MS, type Run } from "./engine";
 import { TaskView, type Status } from "./formats";
 import { ResultView, type Outcome } from "./ResultView";
 import { TrickIntro } from "./TrickIntro";
@@ -139,7 +139,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   );
 
   const advance = useCallback(() => {
-    if (advancing.current) return;
+    if (advancing.current || status === "ask") return;
     advancing.current = true;
     if (autoNext.current) clearTimeout(autoNext.current);
     autoNext.current = null;
@@ -149,14 +149,14 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
       setRetry((n) => n + 1);
       return;
     }
-    const r = completeTask(run, status === "right");
+    const { run: r, task: upcoming } = advanceTask(run, task, status);
     setRun(r);
-    if (isFinished(r)) {
+    if (!upcoming) {
       finish(r);
       return;
     }
     askAt.current = Date.now();
-    setTask(nextTask(r, status === "right" ? task : undefined));
+    setTask(upcoming);
     setAttempt(0);
     setStatus("ask");
   }, [status, run, finish, task]);

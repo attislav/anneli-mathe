@@ -303,6 +303,8 @@ In der Bäckerei verteilen Kinder ganze Kekse gerecht und bestimmen den Rest. Im
 
 Im Eltern-Lernbericht erhalten Themen unter 60 % richtigen Erstversuchen ab fünf Antworten eine passende freigeschaltete Lektion, sofern es eine gibt. Eine Lektion mit nur diesem Thema hat Vorrang. Beim aktiven Kind lässt sie sich direkt starten. Bei Geschwistern zeigt der Bericht die Empfehlung für deren eigenen Pfad.
 
+Sieht ein Kind nach zwei Versuchen die Lösung, übt es in normalen Lektionen und Tricklektionen dieselbe Kompetenz einmal mit einer leichteren Aufgabe. Sie belegt den nächsten freien Aufgabenplatz. Auf Stufe 1 bleibt die Schwierigkeit gleich.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
