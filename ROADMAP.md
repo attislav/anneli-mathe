@@ -2,6 +2,8 @@
 
 > Diese Datei ist die **Quelle der Wahrheit** für Vision, Plan und Backlog. Wenn etwas hier nicht steht, ist es noch nicht entschieden.
 >
+> **Priorität ab 23.11.2026:** Wir erweitern zuerst die interaktiven Mathe-Aufgaben für Klasse 2. Kinder sollen Rechenwege selbst ausprobieren und das Gelernte mit anderen Zahlen anwenden können. Neue Ausmalbilder, Mini-Spiele und Sammelinhalte sind zurückgestellt. Für neue Aufgaben produzieren wir keine Sprachaufnahmen.
+>
 > **Neustart 2026-10-02.** Der Story-Modus („Anneli & das verzauberte Buch") hat bei Anneli nicht gezündet. Die alte Roadmap liegt in der Git-History (Commit `fa45a19`).
 
 ---
@@ -270,6 +272,24 @@ Geschützt durch Eltern-Gate (Rechenaufgabe für Erwachsene oder PIN).
 ## 10. Arbeits-Backlog (Arbeitspakete in Reihenfolge)
 
 Die Phasen oben sagen *was*, dieses Backlog sagt *in welcher Reihenfolge* — jedes Paket ist für sich fertigstellbar, getestet und gepusht. Wer ohne Rückfrage weiterarbeitet, nimmt das oberste offene Paket.
+
+### Aktueller Schwerpunkt: Kompetenzen in Klasse 2 vertiefen
+
+Diese drei Aufgabenpakete haben Vorrang vor den offenen Paketen in der bisherigen Tabelle. Jedes erscheint in den passenden bestehenden Lektionen. Die Aufgaben beginnen mit sichtbarem Material. Danach löst das Kind eine verwandte Aufgabe mit neuen Zahlen und weniger Hilfe. Kurze Aufträge und visuelle Hinweise machen jeden Schritt ohne neue Vertonung verständlich.
+
+| Reihenfolge | Lernziel | Was das Kind tut | Woran wir Fortschritt erkennen |
+|---|---|---|---|
+| 1 | Beim Addieren und Subtrahieren bis 100 den Zehner als Zwischenziel nutzen | Bei 38 + 7 teilt das Kind sieben Plättchen auf zwei Sprünge auf und landet über 40 auf 45. Bei 43 − 6 baut es die Sprünge rückwärts. Verändert es den ersten Sprung, sieht es sofort, wie viele Schritte übrig sind. | Bei neuen Zahlen findet das Kind den Zwischenzehner und die passende Zerlegung selbst. |
+| 2 | Stellenwerte verstehen und Zehner entbündeln | Das Kind legt 42 mit Stangen und Einern. Um 6 wegzunehmen, tauscht es eine Stange in zehn Einer. Beide Darstellungen zeigen während des Tauschs dieselbe Zahl. | Bei einer neuen Minusaufgabe entscheidet das Kind selbst, ob es tauschen muss, und nimmt die richtige Menge weg. |
+| 3 | Den Zusammenhang zwischen Malnehmen und Teilen erkennen | Das Kind legt 4 Reihen mit je 3 Punkten, dreht das Punktefeld und ordnet die passenden Malaufgaben zu. Dann verteilt es dieselben 12 Punkte auf 3 gleich große Gruppen. | Zu einem neuen Punktefeld findet es selbst eine passende Mal- und eine passende Geteiltaufgabe. |
+
+**Entwicklungsstand:** Auf dem Plus-Minus-Strand lassen sich Zehnersprünge zerlegen und Zehnerstangen tauschen. In der Bäckerei bauen und drehen Kinder ein Punktefeld und bestimmen die Anzahl pro Gruppe. Wenn in einer normalen Lektion oder Trick-Lektion noch Platz ist, folgt auf eine gelöste Materialaufgabe eine Kopfrechenaufgabe mit anderen Zahlen. Im Piratenhafen können Kinder Rückgeld in Münzen herausgeben, im Uhrenschloss die Ankunftszeit einer Busfahrt einstellen.
+
+Im Formen-Ozean kommen ab Stufe 3 waagerechte Spiegelachsen hinzu. In der Mess-Werkstatt zeichnet das Kind ab Stufe 3 auch Strecken mit versetztem Anfang, etwa 5 cm vom Strich bei 3 cm aus.
+
+**Beim Spieltest mit Anneli beobachten:** Findet sie nach dem Legen bei neuen Zahlen selbst einen Rechenweg? Versteht sie am Punktefeld, warum beim Drehen die Gesamtzahl gleich bleibt? Gelingt nach einem Tipp ein zweiter Versuch ohne Hilfe?
+
+### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 

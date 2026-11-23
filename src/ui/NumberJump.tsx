@@ -8,7 +8,9 @@ export function NumberJump({ jumps }: { jumps: Jump[] }) {
   const stops = [jumps[0].from, ...jumps.map((j) => j.to)];
   const W = 320;
   const pad = 26;
-  const x = (i: number) => pad + (i * (W - 2 * pad)) / (stops.length - 1);
+  const backwards = stops[0] > stops[stops.length - 1];
+  const x = (i: number) => pad + ((backwards ? jumps.length - i : i) * (W - 2 * pad)) / jumps.length;
+  const direction = backwards ? -1 : 1;
   return (
     <svg viewBox={`0 0 ${W} 96`} width="100%" className="max-w-[360px]" role="img" aria-label="Sprünge auf dem Zahlenstrahl">
       <line x1={8} y1={62} x2={W - 8} y2={62} stroke="#9AA6B8" strokeWidth={3} strokeLinecap="round" />
@@ -20,7 +22,7 @@ export function NumberJump({ jumps }: { jumps: Jump[] }) {
         return (
           <g key={i}>
             <path d={`M${x1} 58 Q${mid} 10 ${x2} 58`} fill="none" stroke="#FF9F1C" strokeWidth={3.5} strokeLinecap="round" />
-            <path d={`M${x2 - 7} 50 L${x2} 58 L${x2 + 2} 48`} fill="none" stroke="#FF9F1C" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={`M${x2 - 7 * direction} 50 L${x2} 58 L${x2 + 2 * direction} 48`} fill="none" stroke="#FF9F1C" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" />
             <rect x={mid - 22} y={14} width={44} height={24} rx={12} fill="#FFF1DB" />
             <text x={mid} y={32} textAnchor="middle" fontSize={17} fontWeight={800} fill="#B35F00">
               {d > 0 ? `+${d}` : `−${-d}`}

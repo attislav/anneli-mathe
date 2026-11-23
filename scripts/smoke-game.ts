@@ -5,6 +5,7 @@
 //   npm run smoke:game
 
 import { SKILLS } from "../src/game/skills";
+import { transferTask } from "../src/lesson/engine";
 import type { Format, Level, TaskDraft } from "../src/game/types";
 import { breakDown } from "../src/game/money";
 import { parseTerm, resultOf, tricksFor } from "../src/game/tricks";
@@ -87,6 +88,21 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "ten-jump": {
+      const end = t.start + t.delta;
+      const ten = t.delta > 0 ? Math.ceil(t.start / 10) * 10 : Math.floor(t.start / 10) * 10;
+      if (ten <= Math.min(t.start, end) || ten >= Math.max(t.start, end) || end < 0 || end > 100 || Math.abs(t.delta) > 9)
+        fail(skill, level, "Zehner liegt nicht innerhalb der Sprungstrecke", t);
+      break;
+    }
+    case "exchange":
+      if (t.start < 10 || t.start > 99 || t.take < 1 || t.take > 9 || t.start % 10 + 10 < t.take)
+        fail(skill, level, "Einer lassen sich nicht wegnehmen", t);
+      break;
+    case "turn-array":
+      if (t.rows === t.cols || t.rows < 2 || t.rows > 7 || t.cols < 2 || t.cols > 6)
+        fail(skill, level, "Punktefeld passt nicht zum Drehauftrag", t);
+      break;
     case "choice":
       if (!t.options.includes(t.answer)) fail(skill, level, "Antwort nicht unter den Optionen", t);
       if (new Set(t.options).size !== t.options.length) fail(skill, level, "doppelte Optionen", t);
@@ -141,6 +157,8 @@ function check(skill: string, level: Level, t: TaskDraft) {
       break;
     }
     case "money-build":
+      if (t.purchase && (t.purchase.price + t.target !== t.purchase.paid || t.purchase.price <= 0))
+        fail(skill, level, "Rückgeld passt nicht zum Kauf", t);
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
       break;
@@ -149,6 +167,7 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (t.max / t.step > 12) fail(skill, level, "zu viele Kästchen", t);
       break;
     case "ruler":
+      if (t.start !== undefined && (t.start < 0 || t.start >= t.target)) fail(skill, level, "Start liegt außerhalb der Strecke", t);
       if (t.target < 1 || t.target > t.max || t.max > 20) fail(skill, level, "Lineal-Ziel ungültig", t);
       break;
     case "mirror": {
@@ -164,6 +183,11 @@ function check(skill: string, level: Level, t: TaskDraft) {
       break;
     }
     case "clock-set":
+      if (t.trip) {
+        const arrival = t.trip.startHour * 60 + t.trip.startMinute + t.trip.duration;
+        if (arrival !== t.hour * 60 + t.minute || t.trip.duration % t.step !== 0 || t.trip.duration <= 0 || t.trip.duration > 120)
+          fail(skill, level, "Ankunft passt nicht zur Fahrzeit", t);
+      }
       if (t.hour < 1 || t.hour > 12 || t.minute < 0 || t.minute > 55 || t.minute % t.step !== 0) fail(skill, level, "Uhrzeit nicht stellbar", t);
       break;
     case "share":
@@ -204,6 +228,16 @@ for (const skill of Object.values(SKILLS)) {
       formats.get(skill.id)!.add(t.format);
       check(skill.id, level, t);
       checkTricks(skill.id, level, t);
+      if (t.format === "turn-array" || t.format === "exchange" || t.format === "ten-jump") {
+        const next = transferTask({ ...t, id: "material", skillId: skill.id, level });
+        if (!next || next.format !== "input" || next.skillId !== skill.id) {
+          fail(skill.id, level, "passende Kopfrechenaufgabe fehlt", t);
+        } else {
+          check(skill.id, level, next);
+          const previousAnswer = t.format === "turn-array" ? t.rows : t.format === "exchange" ? t.start - t.take : t.start + t.delta;
+          if (next.answer === previousAnswer) fail(skill.id, level, "Transfer wiederholt das Ergebnis", next);
+        }
+      }
     }
   }
 }

@@ -29,6 +29,14 @@ const lineal: Skill = {
     const item = pick(Object.keys(RULER_ITEMS) as RulerItem[]);
     const format = chooseFormat(ctx, level <= 2 ? ["ruler", "choice"] : ["ruler", "choice", "input"]);
     if (format === "ruler") {
+      if (level >= 3 && chance(0.6)) {
+        const start = randInt(2, 6);
+        const length = randInt(2, max - start);
+        return { format, start, target: start + length, max,
+          question: `Starte bei ${start} cm. Zeichne eine Strecke von ${length} cm nach rechts.`,
+          hint: `Lege den Finger auf die ${start}. Gehe von dort ${length} Zentimeter nach rechts.`,
+          solution: `Die Strecke beginnt bei ${start} und endet bei ${start + length}. Ihre Länge ist ${start + length} − ${start} = ${length} cm.` };
+      }
       const target = randInt(2, max - 1);
       return {
         format: "ruler",

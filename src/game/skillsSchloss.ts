@@ -174,6 +174,13 @@ const zeitspanne: Skill = {
     const a = 60 - step * randInt(1, level === 3 ? 3 : 6);
     const b = step * randInt(level === 3 ? 0 : 1, level === 3 ? 3 : 6);
     const dur = 60 - a + b;
+    if (!ctx.avoid.includes("clock-set") && chance(0.45)) {
+      return { format: "clock-set", hour: h + 1, minute: b, step,
+        trip: { startHour: h, startMinute: a, duration: dur },
+        question: `Der Bus fährt um ${fmtTime(h, a)} los. Stelle die Uhr auf die Ankunft nach ${dur} Minuten.`,
+        hint: `Bis ${fmtTime(h + 1, 0)} sind es ${60 - a} Minuten. Wie lange fährt der Bus dann noch?`,
+        solution: `Nach ${60 - a} Minuten ist es ${fmtTime(h + 1, 0)}. Weitere ${b} Minuten später ist es ${fmtTime(h + 1, b)}.` };
+    }
     if (level === 5 && chance(0.5)) {
       const start = fmtTime(h, a);
       const correct = fmtTime(h + 1, b);

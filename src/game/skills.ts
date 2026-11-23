@@ -419,6 +419,7 @@ const einerPlus: Skill = {
       const o = plus ? randInt(0, 7) : randInt(2, 9);
       const a = t + o;
       const b = plus ? randInt(1, 9 - o) : randInt(1, o);
+      if (!plus && !ctx.avoid.includes("exchange") && chance(0.4)) return exchangeTask(a, b);
       const res = plus ? a + b : a - b;
       const sym = plus ? "+" : "−";
       return numeric(ctx, `${a} ${sym} ${b} = ?`, res, { hint: `Die Zehner bleiben stehen: ${o} ${sym} ${b} = ${plus ? o + b : o - b}.`, solution: `${a} ${sym} ${b} = ${res}.` });
@@ -485,6 +486,24 @@ const mauern: Skill = {
   },
 };
 
+function jumpTask(start: number, delta: number) {
+  const sign = delta > 0 ? "+" : "−";
+  const ten = delta > 0 ? nextTen(start) : tensOf(start);
+  const first = Math.abs(start - ten);
+  const rest = Math.abs(delta) - first;
+  return { format: "ten-jump" as const, start, delta, question: "Spring über den Zehner.",
+    hint: `Von ${start} bis ${ten} sind es ${first} Schritte. Wie viele bleiben übrig?`,
+    solution: `${start} ${sign} ${first} = ${ten}. Dann ${ten} ${sign} ${rest} = ${start + delta}.` };
+}
+
+function exchangeTask(start: number, take: number) {
+  const ones = start % 10;
+  const exchange = ones < take;
+  return { format: "exchange" as const, start, take, question: "Nimm die Einer weg.",
+    hint: exchange ? `Du brauchst ${take} Einer. Tausche eine Zehnerstange gegen zehn Einer.` : `Du hast schon ${ones} Einer. Davon kannst du ${take} wegnehmen.`,
+    solution: `${exchange ? "Tausche einen Zehner. " : ""}${exchange ? ones + 10 : ones} − ${take} = ${(start - take) % 10}. Es bleibt ${start - take}.` };
+}
+
 const uebergang100: Skill = {
   id: "uebergang100",
   title: "Über den Zehner",
@@ -503,6 +522,7 @@ const uebergang100: Skill = {
       if (o < 2) return uebergang100.gen(ctx);
       const b = randInt(11 - o, 9);
       const to = 10 - o;
+      if (!ctx.avoid.includes("ten-jump") && chance(0.55)) return jumpTask(a, b);
       return numeric(ctx, `${a} + ${b} = ?`, a + b, { hint: `Erst bis zum Zehner: ${a} + ${to} = ${a + to}. Dann noch ${b - to}.`, solution: `${a} + ${to} = ${a + to}, ${a + to} + ${b - to} = ${a + b}.` });
     }
     if (form === "minusE") {
@@ -510,6 +530,9 @@ const uebergang100: Skill = {
       const o = a % 10;
       if (o === 0 || o === 9) return uebergang100.gen(ctx);
       const b = randInt(o + 1, 9);
+      const format = chooseFormat(ctx, ["exchange", "ten-jump", "input"]);
+      if (format === "exchange") return exchangeTask(a, b);
+      if (format === "ten-jump") return jumpTask(a, -b);
       return numeric(ctx, `${a} − ${b} = ?`, a - b, { hint: `Erst runter zum Zehner: ${a} − ${o} = ${a - o}. Dann noch ${b - o} weg.`, solution: `${a} − ${o} = ${a - o}, ${a - o} − ${b - o} = ${a - b}.` });
     }
     if (form === "plusZE") {

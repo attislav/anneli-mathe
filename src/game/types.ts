@@ -7,7 +7,11 @@
 /** Schwierigkeit 1 (sehr leicht) bis 5 (Meister). */
 export type Level = 1 | 2 | 3 | 4 | 5;
 
-export type Format = "choice" | "input" | "tens-ones" | "number-line" | "wall" | "compare" | "money-build" | "share" | "clock-set" | "mirror" | "pattern" | "ruler" | "bar-build";
+export type Format = Task["format"];
+
+type JumpTask = TaskBase & { format: "ten-jump"; start: number; delta: number };
+type ExchangeTask = TaskBase & { format: "exchange"; start: number; take: number };
+type ArrayTask = TaskBase & { format: "turn-array"; rows: number; cols: number };
 
 type TaskBase = {
   id: string;
@@ -98,6 +102,7 @@ export type CompareTask = TaskBase & {
 export type MoneyBuildTask = TaskBase & {
   format: "money-build";
   target: number;
+  purchase?: { price: number; paid: number };
   /** Welche Münzen/Scheine zur Auswahl stehen. */
   pieces: number[];
 };
@@ -115,6 +120,7 @@ export type Treat = "keks" | "muffin" | "brezel";
 /** Spiegeln im Gitter: links ist ein Muster, rechts soll das Spiegelbild hin. */
 export type MirrorTask = TaskBase & {
   format: "mirror";
+  axis?: "horizontal";
   rows: number;
   /** Spalten pro Hälfte. */
   half: number;
@@ -134,6 +140,7 @@ export type PatternTask = TaskBase & {
 /** Am Lineal eine Linie zeichnen: bis zum richtigen Strich tippen. */
 export type RulerTask = TaskBase & {
   format: "ruler";
+  start?: number;
   target: number;
   max: number;
 };
@@ -149,12 +156,13 @@ export type BarBuildTask = TaskBase & {
 /** Zeiger einer Uhr stellen. `step`: in welchen Minuten-Schritten der Minutenzeiger springt. */
 export type ClockSetTask = TaskBase & {
   format: "clock-set";
+  trip?: { startHour: number; startMinute: number; duration: number };
   hour: number;
   minute: number;
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

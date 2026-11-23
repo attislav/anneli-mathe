@@ -96,6 +96,14 @@ const umkehr: Skill = {
   world: "baeckerei",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("turn-array") && chance(level <= 2 ? 0.55 : 0.3)) {
+      const rows = randInt(2, level <= 2 ? 3 : 5);
+      const cols = pick([2, 3, 4, 5, 6].filter(n => n !== rows));
+      const total = rows * cols;
+      return { format: "turn-array", rows, cols, question: "Baue ein Punktefeld.",
+        hint: `Lege ${rows} Reihen mit je ${cols} Punkten. Nach dem Drehen hat jede Reihe ${rows} Punkte.`,
+        solution: `${rows} · ${cols} = ${total}. Gedreht: ${cols} · ${rows} = ${total}. Also ${total} : ${cols} = ${rows}.` };
+    }
     const a = level === 1 ? randInt(1, 5) : randInt(2, level <= 2 ? 6 : 10);
     const b = level === 1 ? pick([2, 5, 10]) : randInt(2, level <= 2 ? 6 : 10);
     const p = a * b;

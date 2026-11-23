@@ -26,7 +26,12 @@ function strip(task: Task): TaskDraftWithSkill {
   return rest as TaskDraftWithSkill;
 }
 
-const keyOf = (t: TaskDraftWithSkill) => JSON.stringify([t.skillId, t.format, t.question, "term" in t ? t.term : "", "answer" in t ? t.answer : ""]);
+function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "ten-jump") return JSON.stringify([t.skillId, t.format, t.start, t.delta]);
+  if (t.format === "exchange") return JSON.stringify([t.skillId, t.format, t.start, t.take]);
+  if (t.format === "turn-array") return JSON.stringify([t.skillId, t.format, t.rows, t.cols]);
+  return JSON.stringify([t.skillId, t.format, t.question, "term" in t ? t.term : "", "answer" in t ? t.answer : ""]);
+}
 
 /** Nach dem ERSTEN Versuch einer normalen Lektionsaufgabe. */
 export function notePractice(task: Task, correct: boolean): void {

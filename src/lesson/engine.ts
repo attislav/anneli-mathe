@@ -7,7 +7,7 @@ import { levelFor, pickWeakSkill, START_MASTERY, updateMastery, type Tier } from
 import { getSkill } from "@/game/skills";
 import type { Format, Task } from "@/game/types";
 import type { PathNode } from "@/game/worlds";
-import { uid } from "@/game/random";
+import { pick, uid } from "@/game/random";
 
 export const BOSS_HP = 7;
 
@@ -49,9 +49,46 @@ export function startRun(node: PathNode, tier: Tier, mastery: Record<string, num
   return { node, tier, mastery: m, bias: easier ? -1 : 0, rightStreak: 0, wrongStreak: 0, formats: [], done: 0, firstTry: 0, coins: 0, bossHp: BOSS_HP, bestStreak: 0, guesses: 0 };
 }
 
-export function nextTask(run: Run): Task {
+/** Gleiche Strategie mit neuen Zahlen, diesmal ohne Material. */
+export function transferTask(previous: Task): Task | undefined {
+  const base = { id: uid(), skillId: previous.skillId, level: previous.level, format: "input" as const };
+  if (previous.format === "turn-array") {
+    const groups = previous.cols;
+    const each = pick([2, 3, 4, 5, 6].filter(n => n !== previous.rows));
+    const total = groups * each;
+    return { ...base, question: `${total} Punkte in ${groups} gleich großen Gruppen. Wie viele je Gruppe?`,
+      term: `${total} : ${groups} = ?`, answer: each, hint: `Welche Zahl ergibt mal ${groups} genau ${total}?`,
+      solution: `${groups} · ${each} = ${total}. Also ${total} : ${groups} = ${each}.` };
+  }
+  if (previous.format !== "ten-jump" && previous.format !== "exchange") return;
+  const delta = previous.format === "ten-jump" ? previous.delta : -previous.take;
+  const ones = previous.start % 10;
+  const crossing = ones + delta < 0 || ones + delta >= 10;
+  const starts = Array.from({ length: 80 }, (_, i) => 10 + i).filter(start => {
+    const unit = start % 10;
+    const end = unit + delta;
+    if (start === previous.start) return false;
+    return crossing ? unit > 0 && (end < 0 || end > 10) : end >= 0 && end < 10;
+  });
+  const different = starts.filter(start => start % 10 !== ones);
+  const a = pick(different.length ? different : starts);
+  const answer = a + delta;
+  const sign = delta < 0 ? "−" : "+";
+  const term = `${a} ${sign} ${Math.abs(delta)}`;
+  const ten = delta < 0 ? a - a % 10 : a + 10 - a % 10;
+  const rest = Math.abs(answer - ten);
+  return { ...base, question: "Rechne jetzt im Kopf.", term: `${term} = ?`, answer,
+    hint: crossing ? `Rechne zuerst von ${a} bis ${ten}. Wie viele Schritte fehlen dann?` : `Von ${a % 10} Einern kannst du ${-delta} wegnehmen.`,
+    solution: crossing ? `${a} ${sign} ${Math.abs(a - ten)} = ${ten}. Dann ${ten} ${sign} ${rest} = ${answer}.` : `${term} = ${answer}.` };
+}
+
+export function nextTask(run: Run, solvedTask?: Task): Task {
   const fixed = run.node.practice?.[run.done];
   if (fixed) return { ...fixed, id: uid() } as Task;
+  if (solvedTask && (run.node.kind === "lesson" || run.node.kind === "trick")) {
+    const transfer = transferTask(solvedTask);
+    if (transfer) return transfer;
+  }
   const skillId = run.node.skills.length === 1 ? run.node.skills[0] : pickWeakSkill(run.node.skills, run.mastery);
   // Zweite Runde (`boost`): eine Stufe schwerer, aber höchstens Meister.
   const tier = Math.min(2, run.tier + (run.node.boost ?? 0)) as Tier;

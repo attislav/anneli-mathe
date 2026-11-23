@@ -83,6 +83,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   const [retry, setRetry] = useState(0);
   const [status, setStatus] = useState<Status>("ask");
   const [praise, setPraise] = useState("");
+  const [answerHint, setAnswerHint] = useState<string>();
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [quit, setQuit] = useState(false);
   // Hilfe: Feststecken erkennen (2× hintereinander falsch oder lange keine Antwort).
@@ -155,10 +156,10 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
       return;
     }
     askAt.current = Date.now();
-    setTask(nextTask(r));
+    setTask(nextTask(r, status === "right" ? task : undefined));
     setAttempt(0);
     setStatus("ask");
-  }, [status, run, finish]);
+  }, [status, run, finish, task]);
 
   useEffect(() => {
     advancing.current = false;
@@ -193,8 +194,9 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
     };
   }, [status, advance]);
 
-  const onAnswer = (correct: boolean) => {
+  const onAnswer = (correct: boolean, hint?: string) => {
     if (status !== "ask") return;
+    setAnswerHint(hint);
     stopReading();
     // Falsch in Windeseile = geraten. Das merkt sich die Runde (zu viel → keine Belohnung).
     const since = Date.now() - Math.max(askAt.current, shownAt.current);
@@ -295,7 +297,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
         <TaskView key={task.format === "input" || task.format === "wall" ? `${task.id}-${retry}` : task.id} task={task} status={status} onAnswer={onAnswer} />
       </div>
 
-      {status !== "ask" && <Feedback status={status} task={task} praise={praise} onNext={advance} onHelp={openHelp} />}
+      {status !== "ask" && <Feedback status={status} task={task} hint={answerHint} praise={praise} onNext={advance} onHelp={openHelp} />}
 
       {help && <HelpSheet task={task} save={save} showHint={status !== "reveal"} onClose={() => setHelp(false)} />}
 
@@ -315,8 +317,9 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   );
 }
 
-function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; task: Task; praise: string; onNext: () => void; onHelp: () => void }) {
+function Feedback({ status, task, hint, praise, onNext, onHelp }: { status: Status; task: Task; hint?: string; praise: string; onNext: () => void; onHelp: () => void }) {
   const reveal = status === "reveal";
+  const feedback = reveal ? task.solution : hint ?? task.hint;
   // Erst lesen, dann weiter: Bei Tipp und Lösung wird der Knopf erst nach kurzer
   // Pause aktiv — so kann man sie nicht einfach wegklicken.
   const [ready, setReady] = useState(false);
@@ -352,15 +355,15 @@ function Feedback({ status, task, praise, onNext, onHelp }: { status: Status; ta
         </div>
         <div className="flex-1">
           <div className="font-display text-2xl font-semibold text-[#8A4B00]">{reveal ? "So geht's:" : "Fast! Kleiner Tipp:"}</div>
-          <div className="mt-0.5 text-[17px] leading-snug text-[#6B3A00]">{reveal ? task.solution : task.hint}</div>
+          <div className="mt-0.5 text-[17px] leading-snug text-[#6B3A00]">{feedback}</div>
           {!reveal && jumps && (
             <div className="mt-2 rounded-[16px] bg-white/80 px-2 pt-1">
               <NumberJump jumps={jumps} />
             </div>
           )}
         </div>
-        {canReadText(reveal ? task.solution : task.hint) && (
-          <button aria-label="Vorlesen" onClick={() => void readText(reveal ? task.solution : task.hint)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
+        {canReadText(feedback) && (
+          <button aria-label="Vorlesen" onClick={() => void readText(feedback)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#8A4B00]">
             <Volume2 size={20} />
           </button>
         )}

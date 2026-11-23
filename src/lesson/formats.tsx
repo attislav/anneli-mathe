@@ -3,25 +3,34 @@
 // Die Aufgaben-Formate. Jedes bekommt seine Aufgabe und meldet über
 // `onAnswer(richtig)` zurück. Während Rückmeldung läuft, ist `locked` an.
 
-import { useEffect, useState } from "react";
-import { Delete } from "lucide-react";
+import { useState } from "react";
+import { NumPad } from "./NumPad";
+export { NumPad } from "./NumPad";
+import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
 import type { BarBuildTask, ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
 import { PlateArt, TreatIcon } from "@/ui/Bakery";
 import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
 import { ShapeGroup, ShapeIcon, SolidArt } from "@/ui/Shapes";
 import { cmWidth, RULER_PAD, RulerItemArt, RulerScale } from "@/ui/Ruler";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
+import { fmtMoney } from "@/game/money";
 import { BarChart, TallyTable } from "@/ui/Detective";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
 
 export type Status = "ask" | "right" | "wrong" | "reveal";
 
-type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (correct: boolean) => void };
+export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (correct: boolean, hint?: string) => void };
 
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "ten-jump":
+      return <JumpView {...props} task={task} />;
+    case "exchange":
+      return <ExchangeView {...props} task={task} />;
+    case "turn-array":
+      return <ArrayView {...props} task={task} />;
     case "choice":
       return <ChoiceView {...props} task={task} />;
     case "input":
@@ -107,44 +116,6 @@ function renderTerm(term: string, entry?: string) {
 }
 
 // --- Eintippen --------------------------------------------------------------
-
-export function NumPad({ value, onChange, onOk, disabled }: { value: string; onChange: (v: string) => void; onOk: () => void; disabled: boolean }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (disabled) return;
-      if (/^[0-9]$/.test(e.key) && value.length < 3) onChange(value + e.key);
-      else if (e.key === "Backspace") onChange(value.slice(0, -1));
-      else if (e.key === "Enter" && value) onOk();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [value, onChange, onOk, disabled]);
-
-  const key = "chunky h-[60px] rounded-[18px] bg-white font-display text-3xl font-semibold text-ink";
-  const press = (d: string) => {
-    if (disabled || value.length >= 3) return;
-    sfx.tap();
-    onChange(value + d);
-  };
-  return (
-    <div className="grid grid-cols-3 gap-2.5">
-      {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((d) => (
-        <button key={d} className={key} style={{ ["--shade" as string]: "#DCD6F5", ["--depth" as string]: "5px" }} onClick={() => press(d)} disabled={disabled}>
-          {d}
-        </button>
-      ))}
-      <button aria-label="Löschen" className={`${key} flex items-center justify-center text-ink-soft`} style={{ ["--shade" as string]: "#DCD6F5", ["--depth" as string]: "5px" }} onClick={() => onChange(value.slice(0, -1))} disabled={disabled}>
-        <Delete size={30} />
-      </button>
-      <button className={key} style={{ ["--shade" as string]: "#DCD6F5", ["--depth" as string]: "5px" }} onClick={() => press("0")} disabled={disabled}>
-        0
-      </button>
-      <button className="chunky h-[60px] rounded-[18px] bg-grape font-display text-2xl font-semibold text-white disabled:opacity-60" style={{ ["--shade" as string]: "#5A2FE0", ["--depth" as string]: "5px" }} onClick={() => value && onOk()} disabled={disabled || !value}>
-        OK
-      </button>
-    </div>
-  );
-}
 
 function InputView({ task, status, onAnswer }: FormatProps<InputTask>) {
   const [entry, setEntry] = useState("");
@@ -389,6 +360,7 @@ function VisualCard({ visual }: { visual: Visual }) {
 function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>) {
   const [laid, setLaid] = useState<{ id: number; v: number }[]>([]);
   const [nextId, setNextId] = useState(0);
+  const sum = laid.reduce((amount, coin) => amount + coin.v, 0);
   const locked = status !== "ask";
   const add = (v: number) => {
     if (locked || laid.length >= 20) return;
@@ -398,6 +370,13 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
   };
   return (
     <div className="flex flex-col gap-4">
+      {task.purchase && <div className={`${card} grid grid-cols-2 gap-2 p-4 text-center`}>
+        <div>Preis <strong className="block text-2xl">{fmtMoney(task.purchase.price)}</strong></div>
+        <div>Bezahlt <strong className="block text-2xl">{fmtMoney(task.purchase.paid)}</strong></div>
+        <p aria-live="polite" className="col-span-2 rounded-xl bg-grape/10 p-2">
+          Preis + deine Münzen = {fmtMoney(task.purchase.price + sum)}
+        </p>
+      </div>}
       <div className={`${card} flex min-h-[170px] flex-wrap content-center items-center justify-center gap-2 p-4`}>
         {laid.length === 0 && <span className="font-extrabold text-ink-soft">Tippe unten auf Münzen und Scheine.</span>}
         {laid.map((p) => (
@@ -413,7 +392,10 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
           </button>
         ))}
       </div>
-      <Button tone="grape" disabled={locked || laid.length === 0} onClick={() => onAnswer(laid.reduce((a, p) => a + p.v, 0) === task.target)}>
+      <Button tone="grape" disabled={locked || laid.length === 0} onClick={() => {
+        const hint = task.purchase ? `Preis und Münzen ergeben ${fmtMoney(task.purchase.price + sum)}. Bezahlt wurde mit ${fmtMoney(task.purchase.paid)}. ${sum > task.target ? "Nimm Geld zurück." : "Lege noch Geld dazu."}` : undefined;
+        onAnswer(sum === task.target, hint);
+      }}>
         Prüfen
       </Button>
     </div>
@@ -499,7 +481,33 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
 
 // --- Uhr stellen --------------------------------------------------------------
 
-function ClockSetView({ task, status, onAnswer }: FormatProps<ClockSetTask>) {
+function ClockSetView(props: FormatProps<ClockSetTask>) {
+  const { trip } = props.task;
+  if (trip) return <TripClock {...props} trip={trip} />;
+  return <SetHands {...props} />;
+}
+
+function TripClock({ task, trip, status, onAnswer }: FormatProps<ClockSetTask> & { trip: NonNullable<ClockSetTask["trip"]> }) {
+  const [elapsed, setElapsed] = useState(0);
+  const current = trip.startHour * 60 + trip.startMinute + elapsed;
+  const hour = Math.floor(current / 60) % 12 || 12;
+  const minute = current % 60;
+  const locked = status !== "ask";
+  return <div className="grid gap-4">
+    <div className={`${card} grid justify-items-center gap-2 p-4`}>
+      <ClockFace hour={hour} minute={minute} size={200} />
+      <p aria-live="polite" className="font-display text-2xl">{hour}:{String(minute).padStart(2, "0")} Uhr</p>
+    </div>
+    <div className="flex justify-center gap-3">
+      <Button size="md" tone="white" disabled={locked || elapsed === 0} onClick={() => setElapsed(elapsed - task.step)}>− {task.step} min</Button>
+      <Button size="md" tone="sky" disabled={locked || elapsed >= 120} onClick={() => setElapsed(elapsed + task.step)}>+ {task.step} min</Button>
+    </div>
+    <Button disabled={locked || elapsed === 0} onClick={() => onAnswer(elapsed === trip.duration,
+      `Du bist ${elapsed} Minuten weitergefahren. Die Fahrt dauert ${trip.duration} Minuten. Stelle die Uhr ein Stück ${elapsed < trip.duration ? "vor" : "zurück"}.`)}>Ankunft prüfen</Button>
+  </div>;
+}
+
+function SetHands({ task, status, onAnswer }: FormatProps<ClockSetTask>) {
   const [hour, setHour] = useState(12);
   const [minute, setMinute] = useState(0);
   const locked = status !== "ask";
@@ -554,9 +562,11 @@ function MirrorView({ task, status, onAnswer }: FormatProps<MirrorTask>) {
   const [picked, setPicked] = useState<Set<string>>(() => new Set());
   const locked = status !== "ask";
   const cols = task.half * 2;
+  const horizontal = task.axis === "horizontal";
+  const displayCols = horizontal ? task.rows : cols;
   const left = new Set(task.cells.map(([r, c]) => `${r},${c}`));
   const target = new Set(task.cells.map(([r, c]) => `${r},${cols - 1 - c}`));
-  const cell = Math.min(44, Math.floor(300 / cols));
+  const cell = Math.min(44, Math.floor(300 / displayCols));
   const toggle = (key: string) => {
     if (locked) return;
     sfx.tap();
@@ -571,10 +581,12 @@ function MirrorView({ task, status, onAnswer }: FormatProps<MirrorTask>) {
   return (
     <div className="flex flex-col gap-4">
       <div className={`${card} flex justify-center p-4`}>
-        <div className="relative grid" style={{ gridTemplateColumns: `repeat(${cols}, ${cell}px)` }}>
+        <div className="relative grid" style={{ gridTemplateColumns: `repeat(${displayCols}, ${cell}px)` }}>
           {Array.from({ length: task.rows * cols }, (_, i) => {
-            const r = Math.floor(i / cols);
-            const c = i % cols;
+            const displayRow = Math.floor(i / displayCols);
+            const displayCol = i % displayCols;
+            const r = horizontal ? displayCol : displayRow;
+            const c = horizontal ? displayRow : displayCol;
             const key = `${r},${c}`;
             const isLeft = c < task.half;
             const filled = isLeft ? left.has(key) : picked.has(key);
@@ -583,14 +595,16 @@ function MirrorView({ task, status, onAnswer }: FormatProps<MirrorTask>) {
               <button
                 key={key}
                 disabled={isLeft || locked}
-                aria-label={isLeft ? undefined : `Kästchen Reihe ${r + 1}, Spalte ${c - task.half + 1}`}
+                aria-pressed={isLeft ? undefined : filled}
+                aria-label={isLeft ? undefined : `Kästchen Reihe ${displayRow + 1 - (horizontal ? task.half : 0)}, Spalte ${displayCol + 1 - (horizontal ? 0 : task.half)}`}
                 onClick={() => toggle(key)}
                 className="border border-[#C9D3E3]"
                 style={{ width: cell, height: cell, background: filled ? task.color : showMiss ? `${task.color}55` : isLeft ? "#F4F1FF" : "#fff" }}
               />
             );
           })}
-          <div className="pointer-events-none absolute inset-y-[-6px] w-1 rounded-full bg-grape" style={{ left: task.half * cell - 2 }} aria-hidden="true" />
+          <div className={`pointer-events-none absolute rounded-full bg-grape ${horizontal ? "inset-x-[-6px] h-1" : "inset-y-[-6px] w-1"}`}
+            style={horizontal ? { top: task.half * cell - 2 } : { left: task.half * cell - 2 }} aria-hidden="true" />
         </div>
       </div>
       <Button tone="grape" disabled={locked || picked.size === 0} onClick={check}>
@@ -649,13 +663,14 @@ function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
   const [end, setEnd] = useState<number | null>(null);
   const locked = status !== "ask";
   const u = cmWidth(RULER_W, task.max);
+  const start = task.start ?? 0;
   const shown = status === "reveal" ? task.target : end;
   return (
     <div className="flex flex-col gap-4">
       <div className={`${card} flex flex-col items-center px-2 py-4`}>
         <svg viewBox={`0 0 ${RULER_W} 24`} width={RULER_W} height={24} aria-hidden="true" className="block">
-          {shown !== null && <line x1={RULER_PAD} x2={RULER_PAD + shown * u} y1={12} y2={12} stroke={status === "reveal" ? "#FFB648" : "#7B4DFF"} strokeWidth="6" strokeLinecap="round" />}
-          <circle cx={RULER_PAD} cy={12} r={5} fill="#7B4DFF" />
+          {shown !== null && <line x1={RULER_PAD + start * u} x2={RULER_PAD + shown * u} y1={12} y2={12} stroke={status === "reveal" ? "#FFB648" : "#7B4DFF"} strokeWidth="6" strokeLinecap="round" />}
+          <circle cx={RULER_PAD + start * u} cy={12} r={5} fill="#7B4DFF" />
         </svg>
         <div className="relative" style={{ width: RULER_W }}>
           <RulerScale max={task.max} width={RULER_W} />
@@ -675,7 +690,7 @@ function RulerView({ task, status, onAnswer }: FormatProps<RulerTask>) {
             ))}
           </div>
         </div>
-        <div className="mt-2 font-display text-lg font-semibold text-ink-soft">{end === null ? "Tippe auf das Lineal" : `${end} cm`}</div>
+        <div className="mt-2 font-display text-lg font-semibold text-ink-soft">{shown === null ? "Tippe auf das Lineal" : start ? `Von ${start} bis ${shown} cm` : `${shown} cm`}</div>
       </div>
       <Button tone="grape" disabled={locked || end === null} onClick={() => onAnswer(end === task.target)}>
         Prüfen

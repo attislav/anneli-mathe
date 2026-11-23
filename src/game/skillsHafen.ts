@@ -140,6 +140,15 @@ const einkaufen: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const a = item();
+    if ((level === 2 || level === 5) && !ctx.avoid.includes("money-build") && chance(0.55)) {
+      const paid = level === 2 ? 100 : 200;
+      const price = paid - randInt(2, 17) * 5;
+      const target = paid - price;
+      return { format: "money-build", purchase: { price, paid }, target, pieces: [5, 10, 20, 50],
+        question: `${a.Name} kostet ${fmtMoney(price)}. Gib das Rückgeld heraus.`,
+        hint: `Zähle vom Preis ${price} ct weiter. Mit welchen Münzen kommst du auf ${paid} ct?`,
+        solution: `${price} ct + ${target} ct = ${paid} ct. Das Rückgeld beträgt ${target} ct.` };
+    }
     let b = item();
     while (b.name === a.name) b = item();
     if (level === 1 || level === 3) {

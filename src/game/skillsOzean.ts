@@ -94,15 +94,17 @@ const spiegeln: Skill = {
     const all: [number, number][] = [];
     for (let r = 0; r < rows; r++) for (let c = 0; c < half; c++) all.push([r, c]);
     const cells = shuffle(all).slice(0, n);
+    const horizontal = level >= 3 && chance(0.5);
     return {
       format: "mirror",
-      question: "Spiegle das Muster! Tippe rechts die Kästchen an.",
+      axis: horizontal ? "horizontal" : undefined,
+      question: horizontal ? "Spiegle das Muster nach unten. Tippe die Kästchen unter der Linie an." : "Spiegle das Muster! Tippe rechts die Kästchen an.",
       rows,
       half,
       cells,
       color: pick(COLORS),
-      hint: "Schau dir jedes Kästchen an: Wie weit ist es vom Spiegel weg? Drüben muss es genauso weit weg sein — in derselben Reihe.",
-      solution: "Das Spiegelbild ist wie zugeklappt: jedes Kästchen landet in derselben Reihe, gleich weit vom Spiegel.",
+      hint: horizontal ? "Bleib in derselben Spalte. Zähle die Kästchen von der Linie aus nach oben und dann genauso weit nach unten." : "Schau dir jedes Kästchen an: Wie weit ist es vom Spiegel weg? Drüben muss es genauso weit weg sein — in derselben Reihe.",
+      solution: horizontal ? "Klappe die obere Hälfte nach unten. Die farbigen Kästchen treffen ihr Spiegelbild in derselben Spalte." : "Das Spiegelbild ist wie zugeklappt: jedes Kästchen landet in derselben Reihe, gleich weit vom Spiegel.",
     };
   },
 };
