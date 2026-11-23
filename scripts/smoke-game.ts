@@ -88,6 +88,14 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "two-step": {
+      const first = t.intermediate;
+      if (new Set(first.choices).size !== 2 || !first.choices.includes(first.question) ||
+          calc(first.calculation) !== first.answer || calc(t.calculation) !== t.answer ||
+          !t.calculation.split(" ").includes(String(first.answer)) || t.answer < 0 || first.answer > 100)
+        fail(skill, level, "Zwischenfrage und Schlussrechnung passen nicht zusammen", t);
+      break;
+    }
     case "story-math":
       if (!t.options.includes(t.calculation) || calc(t.calculation) !== t.answer ||
           t.options.filter(option => calc(option) === t.answer).length !== 1)

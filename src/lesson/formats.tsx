@@ -25,6 +25,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "two-step":
+      return <TwoStepView {...props} task={task} />;
     case "story-math":
       return <StoryMathView {...props} task={task} />;
     case "ten-jump":
@@ -63,6 +65,39 @@ export function TaskView(props: FormatProps<Task>) {
 }
 
 const card = "rounded-[28px] bg-white shadow-[0_6px_0_#E4E0F5]";
+
+function TwoStepView({ task, status, onAnswer }: FormatProps<Extract<Task, { format: "two-step" }>>) {
+  const [step, setStep] = useState<"choose" | "first" | "last">("choose");
+  const [value, setValue] = useState("");
+  const locked = status !== "ask";
+  const first = task.intermediate;
+  if (step === "choose") return <div className="grid gap-3">
+    <p className="text-center text-lg font-bold">Was musst du zuerst herausfinden?</p>
+    {first.choices.map(choice => <Button key={choice} tone="white" className="h-auto min-h-16 py-3" disabled={locked} onClick={() => {
+      if (choice === first.question) setStep("first");
+      else onAnswer(false, task.hint);
+    }}>{choice}</Button>)}
+  </div>;
+  const intermediate = step === "first";
+  function submit() {
+    if (Number(value) !== (intermediate ? first.answer : task.answer)) {
+      onAnswer(false, intermediate ? `Für die Zwischenfrage hilft dir diese Rechnung: ${first.calculation}.` :
+        `Dein Zwischenergebnis stimmt. Rechne damit weiter: ${task.calculation}.`);
+    } else if (intermediate) {
+      setValue("");
+      setStep("last");
+    } else onAnswer(true);
+  }
+  return <div className="grid gap-4">
+    <div className={`${card} grid gap-3 p-5 text-center`}>
+      <p className="font-bold">{first.question}</p>
+      {!intermediate && <p className="rounded-xl bg-grape/10 p-2">{first.calculation} = {first.answer} {task.unit}</p>}
+      {!intermediate && <p className="font-bold">Beantworte jetzt die Frage aus der Geschichte.</p>}
+      <output className="font-display text-3xl">{value || "?"} {task.unit}</output>
+    </div>
+    <NumPad value={value} onChange={setValue} disabled={locked} onOk={submit} />
+  </div>;
+}
 
 function StoryMathView({ task, status, onAnswer }: FormatProps<Extract<Task, { format: "story-math" }>>) {
   const [calculation, setCalculation] = useState("");

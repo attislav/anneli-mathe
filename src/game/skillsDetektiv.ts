@@ -268,24 +268,49 @@ const sachaufgaben: Skill = {
       if (form === "teilen") return story(ctx, `${a * b} Kekse werden gerecht an ${a} Kinder verteilt. Wie viele Kekse bekommt jedes Kind?`, b, "Kekse", `Gerecht verteilen heißt: geteilt. ${a * b} : ${a}. Welche Zahl mal ${a} gibt ${a * b}?`, `${a * b} : ${a} = ${b}, weil ${b} · ${a} = ${a * b}.`);
       return story(ctx, `Im Saal stehen ${a} Reihen mit je ${b} Stühlen. Wie viele Stühle sind das?`, a * b, "Stühle", `${a} Reihen mit je ${b} — also ${a} · ${b}.`, `${a} · ${b} = ${a * b}.`);
     }
-    // Stufe 5: zwei Schritte
-    const form = pick(["geld", "kisten", "hin-her"] as const);
+    function twoSteps(question: string, firstQuestion: string, otherQuestion: string, first: string,
+      subtotal: number, last: string, answer: number, unit: string, hint: string): TaskDraft {
+      const solution = `${first} = ${subtotal}. ${last} = ${answer}. Antwort: ${answer} ${unit}.`;
+      if (ctx.avoid.includes("two-step") || chance(0.35)) return story(ctx, question, answer, unit, hint, solution);
+      return { format: "two-step", question, unit, hint, solution, calculation: last, answer,
+        intermediate: { question: firstQuestion, choices: shuffle([firstQuestion, otherQuestion]), calculation: first, answer: subtotal } };
+    }
+    const form = pick(["geld", "kisten", "hin-her", "verteilen"] as const);
+    if (form === "verteilen") {
+      const children = randInt(2, 5);
+      const perChild = randInt(3, 10);
+      const total = children * perChild;
+      const red = randInt(2, total - 2);
+      const blue = total - red;
+      return twoSteps(`In einer Dose liegen ${red} rote und ${blue} blaue Perlen. ${children} Kinder teilen alle Perlen gerecht. Wie viele Perlen bekommt jedes Kind?`,
+        "Wie viele Perlen sind insgesamt in der Dose?", "Wie viele Kinder teilen die Perlen?", `${red} + ${blue}`, total,
+        `${total} : ${children}`, perChild, "Perlen", "Wie viele Kinder mitmachen, steht schon im Text. Finde heraus, wie viele Perlen sie verteilen können.");
+    }
     if (form === "geld") {
-      const k = randInt(2, 5);
-      const p = randInt(2, 9);
-      const have = pick([20, 30, 50, 100].filter((x) => x > k * p));
-      return story(ctx, `${n1} hat ${have} €. ${n1} kauft ${k} Hefte für je ${p} €. Wie viel Geld bleibt übrig?`, have - k * p, "€", `Zwei Schritte! Erst: Was kosten die Hefte? ${k} · ${p}. Dann: ${have} minus das Ergebnis.`, `${k} · ${p} = ${k * p}, ${have} − ${k * p} = ${have - k * p}.`);
+      const count = randInt(2, 5);
+      const price = randInt(2, 9);
+      const cost = count * price;
+      const budget = pick([20, 30, 50, 100].filter(x => x > cost));
+      return twoSteps(`${n1} hat ${budget} €. Ein Heft kostet ${price} €. ${n1} kauft ${count} Hefte. Wie viel Geld bleibt übrig?`,
+        "Was kosten alle Hefte zusammen?", "Was kostet ein einzelnes Heft?", `${count} · ${price}`, cost,
+        `${budget} − ${cost}`, budget - cost, "€", "Der Preis für ein Heft ist bekannt. Finde zuerst heraus, wie viel an der Kasse bezahlt wird.");
     }
     if (form === "kisten") {
-      const k = randInt(2, 6);
-      const j = randInt(4, 9);
-      const e = randInt(2, k * j - 2);
-      return story(ctx, `In ${k} Kisten sind je ${j} Äpfel. ${e} Äpfel werden gegessen. Wie viele Äpfel sind noch da?`, k * j - e, "Äpfel", `Zwei Schritte! Erst: Wie viele Äpfel sind es? ${k} · ${j}. Dann ${e} weg.`, `${k} · ${j} = ${k * j}, ${k * j} − ${e} = ${k * j - e}.`);
+      const boxes = randInt(2, 6);
+      const each = randInt(4, 9);
+      const total = boxes * each;
+      const eaten = randInt(2, total - 2);
+      return twoSteps(`In ${boxes} Kisten liegen je ${each} Äpfel. Die Klasse isst ${eaten} Äpfel. Wie viele bleiben übrig?`,
+        "Wie viele Äpfel waren am Anfang in allen Kisten?", "Wie viele Äpfel wurden gegessen?", `${boxes} · ${each}`, total,
+        `${total} − ${eaten}`, total - eaten, "Äpfel", "Die gegessenen Äpfel kennst du schon. Welche Menge brauchst du noch, um sie abzuziehen?");
     }
-    const a = randInt(20, 60);
-    const b = randInt(8, 30);
-    const c = randInt(5, Math.min(40, a + b - 1));
-    return story(ctx, `${n1} hat ${a} ${thing}. ${n1} bekommt ${b} dazu und schenkt dann ${c} an ${n2}. Wie viele ${thing} hat ${n1} jetzt?`, a + b - c, thing, `Zwei Schritte! Erst ${a} + ${b}, dann ${c} weg.`, `${a} + ${b} = ${a + b}, ${a + b} − ${c} = ${a + b - c}.`);
+    const start = randInt(20, 60);
+    const gift = randInt(8, 30);
+    const total = start + gift;
+    const shared = randInt(5, Math.min(40, total - 2));
+    return twoSteps(`${n1} hat ${start} ${thing} und bekommt ${gift} dazu. Danach verschenkt ${n1} ${shared} an ${n2}. Wie viele ${thing} bleiben übrig?`,
+      `Wie viele ${thing} hatte ${n1} direkt vor dem Verschenken?`, `Wie viele ${thing} hat ${n2} bekommen?`, `${start} + ${gift}`, total,
+      `${total} − ${shared}`, total - shared, thing, "Stell dir den Moment vor dem Verschenken vor. Welche beiden Mengen liegen da zusammen?");
   },
 };
 
