@@ -74,6 +74,15 @@ const geldLegen: Skill = {
     const { level } = ctx;
     let pieces: number[];
     let target: number;
+    if (level >= 2 && chance(0.45)) {
+      const pieces = [...COINS_CT];
+      const target = randInt(12, level === 2 ? 49 : 99);
+      const coins = breakDown(target, pieces);
+      return { format: "money-build", target, pieces, minimumCoins: coins.length,
+        question: `Lege ${target} ct mit möglichst wenigen Münzen.`,
+        hint: "Suche kleine Münzen, die du zusammen gegen eine größere tauschen kannst.",
+        solution: `${coins.map(fmtMoney).join(" + ")} = ${target} ct. Das geht mit ${coins.length} ${coins.length === 1 ? "Münze" : "Münzen"}.` };
+    }
     if (level === 1) [pieces, target] = [[1, 2, 5, 10], randInt(3, 20)];
     else if (level === 2) [pieces, target] = [COINS_CT, randInt(11, 99)];
     else if (level === 3) [pieces, target] = [[...COINS_CT, ...COINS_EURO], randInt(101, 399)];

@@ -40,6 +40,16 @@ const verteilen: Skill = {
     const plates = level === 1 ? 2 : level === 2 ? randInt(2, 3) : level === 3 ? randInt(3, 4) : level === 4 ? randInt(2, 5) : randInt(3, 6);
     const per = level <= 2 ? randInt(2, 5) : level === 3 ? randInt(2, 5) : level === 4 ? randInt(3, 6) : randInt(4, 8);
     const total = plates * per;
+    if (level >= 3 && !ctx.avoid.includes("share") && chance(0.45)) {
+      const count = randInt(3, 5);
+      const each = randInt(2, 3);
+      const rest = randInt(1, count - 1);
+      const cookies = count * each + rest;
+      return { format: "share", total: cookies, plates: count, item: "keks", withRemainder: true,
+        question: `Verteile ${cookies} ganze Kekse auf ${count} Teller. Alle sollen gleich viele und möglichst viele bekommen.`,
+        hint: "Lege auf jeden Teller einen Keks pro Runde. Reicht der Vorrat noch für eine ganze Runde?",
+        solution: `${each} Kekse je Teller, Rest ${rest}. Denn ${count} · ${each} + ${rest} = ${cookies}.` };
+    }
     return shareTask(ctx, total, plates, plates <= 5 && total <= 24);
   },
 };

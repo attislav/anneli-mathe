@@ -299,6 +299,8 @@ Im Formen-Ozean wird die räumliche Orientierung als eigene Kompetenz erfasst. B
 
 Die Rechenmaschine im Zahlenwald führt vom Anwenden einer vorgegebenen Regel zum Entdecken und Umkehren. Im Formen-Ozean werden Würfel nach Drauf- und Vorderansicht gestapelt. Im Detektivbüro prüfen Kinder Längenangaben mit einer Begründung und rechnen nach. Im Piratenhafen suchen sie alle passenden Einkaufskörbe zu einem Budget. Das Uhrenschloss enthält die eigene Kompetenz „Kalender lesen“ mit Ausflügen innerhalb eines Monats und über Monatsgrenzen hinweg.
 
+In der Bäckerei verteilen Kinder ganze Kekse gerecht und bestimmen den Rest. Im Piratenhafen legen sie einen Betrag mit möglichst wenigen Münzen. In der Mess-Werkstatt setzen sie Streifen nach einem festen Maßstab zusammen. Anschließend ergänzen sie im Kopf eine neue Länge bis zum selben Ziel.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.

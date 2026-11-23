@@ -7,6 +7,7 @@ import { useState } from "react";
 import { NumPad } from "./NumPad";
 import { DigitBuildView, PairView, RuleView } from "./NumberPuzzles";
 import { GridRoute } from "./GridRoute";
+import { LengthStrips } from "./LengthStrips";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -16,7 +17,7 @@ import { ClockFace, HOUR_COLOR, MINUTE_COLOR } from "@/ui/Clock";
 import { ShapeGroup, ShapeIcon, SolidArt } from "@/ui/Shapes";
 import { cmWidth, RULER_PAD, RulerItemArt, RulerScale } from "@/ui/Ruler";
 import { MoneyPiece, MoneyRow } from "@/ui/Money";
-import { fmtMoney } from "@/game/money";
+import { breakDown, fmtMoney } from "@/game/money";
 import { BarChart, TallyTable } from "@/ui/Detective";
 import { sfx } from "@/game/sound";
 import { Button } from "@/ui/Button";
@@ -28,6 +29,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "length-strips":
+      return <LengthStrips {...props} task={task} />;
     case "machine":
       return <MachineView {...props} task={task}/>;
     case "cube-model":
@@ -458,13 +461,14 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
         </p>
       </div>}
       <div className={`${card} flex min-h-[170px] flex-wrap content-center items-center justify-center gap-2 p-4`}>
-        {laid.length === 0 && <span className="font-extrabold text-ink-soft">Tippe unten auf Münzen und Scheine.</span>}
+        {laid.length === 0 && <span className="font-extrabold text-ink-soft">{task.minimumCoins ? "Wähle deine Münzen aus." : "Tippe unten auf Münzen und Scheine."}</span>}
         {laid.map((p) => (
           <button key={p.id} disabled={locked} onClick={() => setLaid((l) => l.filter((x) => x.id !== p.id))} aria-label="wieder wegnehmen" className="anim-pop">
             <MoneyPiece value={p.v} size={48} />
           </button>
         ))}
       </div>
+      {task.minimumCoins && <p aria-live="polite" className="text-center font-bold">{fmtMoney(sum)} · {laid.length} {laid.length === 1 ? "Münze" : "Münzen"}</p>}
       <div className="flex flex-wrap items-center justify-center gap-2 rounded-[24px] bg-white/60 p-3">
         {[...task.pieces].sort((a, b) => b - a).map((v) => (
           <button key={v} disabled={locked} onClick={() => add(v)} className="chunky rounded-2xl bg-white p-1.5" style={{ ["--shade" as string]: "#DCD6F5", ["--depth" as string]: "4px" }}>
@@ -474,7 +478,15 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
       </div>
       <Button tone="grape" disabled={locked || laid.length === 0} onClick={() => {
         const hint = task.purchase ? `Preis und Münzen ergeben ${fmtMoney(task.purchase.price + sum)}. Bezahlt wurde mit ${fmtMoney(task.purchase.paid)}. ${sum > task.target ? "Nimm Geld zurück." : "Lege noch Geld dazu."}` : undefined;
-        onAnswer(sum === task.target, hint);
+        const tooMany = task.minimumCoins !== undefined && laid.length > task.minimumCoins;
+        if (sum === task.target && tooMany) {
+          const [largest] = breakDown(task.target, task.pieces);
+          const rest = task.target - largest;
+          onAnswer(false, rest === 0 ? `Der Betrag stimmt. Du kannst alle Münzen durch eine Münze zu ${fmtMoney(largest)} ersetzen.` :
+            `Der Betrag stimmt. Lege neu: Beginne mit ${fmtMoney(largest)} und ergänze noch ${fmtMoney(rest)}.`);
+        } else {
+          onAnswer(sum === task.target, hint);
+        }
       }}>
         Prüfen
       </Button>
@@ -486,6 +498,8 @@ function MoneyBuildView({ task, status, onAnswer }: FormatProps<MoneyBuildTask>)
 
 function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
   const [onPlate, setOnPlate] = useState<number[]>(() => Array.from({ length: task.plates }, () => 0));
+  const [countRest, setCountRest] = useState(false);
+  const [entry, setEntry] = useState("");
   const locked = status !== "ask";
   const pile = task.total - onPlate.reduce((a, b) => a + b, 0);
   const put = (i: number) => {
@@ -505,7 +519,7 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
   };
   return (
     <div className="flex flex-col gap-3">
-      <div className={`${card} flex min-h-[92px] flex-wrap content-center items-center justify-center gap-1 p-3`}>
+      <div role="group" aria-label={`Vorrat: ${pile} Stück`} className={`${card} flex min-h-[92px] flex-wrap content-center items-center justify-center gap-1 p-3`}>
         {pile === 0 ? (
           <span className="font-extrabold text-ink-soft">Alles verteilt!</span>
         ) : (
@@ -521,7 +535,7 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
           <div key={i} className="flex w-[104px] flex-col items-center">
             <button
               aria-label={`Teller ${i + 1}: ${n}`}
-              disabled={locked}
+              disabled={locked || countRest}
               onClick={() => put(i)}
               className="chunky flex min-h-[86px] w-full flex-wrap content-end items-end justify-center gap-0.5 rounded-[22px] bg-white/70 px-1.5 pb-1 pt-2"
               style={{ ["--shade" as string]: "#E4D3C0", ["--depth" as string]: "4px" }}
@@ -536,7 +550,7 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
             <div className="mt-1.5 flex items-center gap-2">
               <button
                 aria-label={`Von Teller ${i + 1} zurücklegen`}
-                disabled={locked || n === 0}
+                disabled={locked || countRest || n === 0}
                 onClick={() => takeBack(i)}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white font-display text-xl font-semibold leading-none text-ink-soft shadow-[0_3px_0_#E4D3C0] disabled:opacity-30"
               >
@@ -547,14 +561,23 @@ function ShareView({ task, status, onAnswer }: FormatProps<ShareTask>) {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-2.5">
+      {countRest ? <div className="grid gap-3">
+        <p className="text-center font-bold">Wie viele Kekse bleiben übrig? <output>{entry || "?"}</output></p>
+        <NumPad value={entry} onChange={setEntry} disabled={locked} onOk={() => onAnswer(Number(entry) === pile, "Zähle die Kekse, die oben noch auf einen Teller warten.")}/>
+      </div> : <div className="grid grid-cols-2 gap-2.5">
         <Button tone="sky" disabled={locked || pile < task.plates} onClick={round}>
           Reihum
         </Button>
-        <Button tone="grape" disabled={locked || pile > 0} onClick={() => onAnswer(onPlate.every((n) => n === onPlate[0]))}>
+        <Button tone="grape" disabled={locked || (task.withRemainder ? pile === task.total : pile > 0)} onClick={() => {
+          const equal = onPlate.every(n => n === onPlate[0]);
+          if (!task.withRemainder) return onAnswer(equal);
+          if (!equal) return onAnswer(false, "Vergleiche die Teller. Auf jedem sollen gleich viele Kekse liegen.");
+          if (pile >= task.plates) return onAnswer(false, "Es reicht noch für eine weitere ganze Runde.");
+          setCountRest(true);
+        }}>
           Prüfen
         </Button>
-      </div>
+      </div>}
     </div>
   );
 }

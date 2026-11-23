@@ -8,6 +8,7 @@ import { getSkill } from "@/game/skills";
 import type { Format, Task } from "@/game/types";
 import type { PathNode } from "@/game/worlds";
 import { pick, uid } from "@/game/random";
+import { fmtLength } from "@/game/skillsWerkstatt";
 
 export const BOSS_HP = 7;
 
@@ -52,6 +53,17 @@ export function startRun(node: PathNode, tier: Tier, mastery: Record<string, num
 /** Gleiche Strategie mit neuen Zahlen, diesmal ohne Material. */
 export function transferTask(previous: Task): Task | undefined {
   const base = { id: uid(), skillId: previous.skillId, level: previous.level, format: "input" as const };
+  if (previous.format === "length-strips") {
+    const target = previous.target;
+    const step = previous.level <= 2 ? 1 : 5;
+    const candidates = Array.from({ length: Math.floor((target - 1) / step) }, (_, i) => (i + 1) * step);
+    const start = pick(candidates.filter(n => !previous.lengths.includes(n)));
+    const answer = target - start;
+    return { ...base, question: `Ein Band soll ${fmtLength(target)} lang sein. Du hast schon ${start} cm. Wie viele Zentimeter fehlen?`,
+      term: `${start} + ? = ${target}`, answer,
+      hint: `${target === 100 ? "Ein Meter sind 100 cm. " : ""}Zähle von ${start} cm weiter bis ${target} cm.`,
+      solution: `${start} cm + ${answer} cm = ${target} cm${target === 100 ? " = 1 m" : ""}.` };
+  }
   if (previous.format === "turn-array") {
     const groups = previous.cols;
     const each = pick([2, 3, 4, 5, 6].filter(n => n !== previous.rows));

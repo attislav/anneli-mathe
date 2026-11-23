@@ -134,6 +134,17 @@ const laengenRechnen: Skill = {
   world: "werkstatt",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("length-strips") && chance(0.45)) {
+      const scale = level <= 2 ? 1 : 5;
+      const units = level >= 4 ? 20 : randInt(9, 15);
+      const target = units * scale;
+      const starts = shuffle(Array.from({length: Math.floor((units - 1) / 2)}, (_, i) => i + 1)).slice(0, level <= 2 ? 2 : 3);
+      const lengths = shuffle(starts.flatMap(n => [n * scale, target - n * scale]));
+      return { format: "length-strips", lengths, target,
+        question: `Lege Papierstreifen aneinander, bis sie zusammen genau ${target === 100 ? "1 m" : target + " cm"} lang sind.`,
+        hint: `${target === 100 ? "Ein Meter sind 100 cm. " : ""}Wähle einen Streifen und überlege, wie viele Zentimeter noch fehlen.`,
+        solution: `Zum Beispiel: ${starts[0] * scale} cm + ${target - starts[0] * scale} cm = ${target} cm.` };
+    }
     if (level <= 2) {
       const a = randInt(10, level === 1 ? 40 : 80);
       const b = randInt(5, Math.min(40, 99 - a));

@@ -89,6 +89,12 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "length-strips": {
+      const pairs = t.lengths.flatMap((n,i) => t.lengths.slice(i+1).filter(m => m+n === t.target));
+      if (pairs.length < 2 || new Set(t.lengths).size !== t.lengths.length || t.lengths.some(n => n <= 0 || n >= t.target))
+        fail(skill, level, "Strecke braucht zwei verschiedene passende Streifenpaare", t);
+      break;
+    }
     case "machine":
       if (new Set([...t.inputs,t.probe]).size !== 4 || new Set(t.rules).size !== 3 || !t.rules.includes(t.change)
           || [...t.inputs,t.probe].some(n=>n+t.change<0 || n+t.change>100)) fail(skill,level,"Maschinenregel oder Zahlenbereich ungültig",t);
@@ -223,6 +229,13 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (t.purchase && (t.purchase.price + t.target !== t.purchase.paid || t.purchase.price <= 0))
         fail(skill, level, "Rückgeld passt nicht zum Kauf", t);
       if (t.target <= 0) fail(skill, level, "Betrag ≤ 0", t);
+      if (t.minimumCoins !== undefined) {
+        const minimum = [0];
+        for (let amount = 1; amount <= t.target; amount++) {
+          minimum.push(1 + Math.min(...t.pieces.filter(v => v <= amount).map(v => minimum[amount-v])));
+        }
+        if (t.minimumCoins !== minimum[t.target]) fail(skill, level, "Münzanzahl ist nicht minimal", t);
+      }
       if (breakDown(t.target, t.pieces).reduce((a, b) => a + b, 0) !== t.target) fail(skill, level, "Betrag nicht legbar", t);
       break;
     case "bar-build":
@@ -258,7 +271,7 @@ function check(skill: string, level: Level, t: TaskDraft) {
       if (t.hour < 1 || t.hour > 12 || t.minute < 0 || t.minute > 55 || t.minute % t.step !== 0) fail(skill, level, "Uhrzeit nicht stellbar", t);
       break;
     case "share":
-      if (t.total % t.plates !== 0) fail(skill, level, "nicht gerecht teilbar", t);
+      if ((t.total % t.plates !== 0) !== Boolean(t.withRemainder)) fail(skill, level, "Rest passt nicht zum Auftrag", t);
       if (t.plates < 2 || t.plates > 5 || t.total > 24 || t.total < t.plates) fail(skill, level, "zu viele Teller/Teile zum Legen", t);
       break;
   }
@@ -295,14 +308,20 @@ for (const skill of Object.values(SKILLS)) {
       formats.get(skill.id)!.add(t.format);
       check(skill.id, level, t);
       checkTricks(skill.id, level, t);
-      if (t.format === "turn-array" || t.format === "exchange" || t.format === "ten-jump") {
+      if (t.format === "turn-array" || t.format === "exchange" || t.format === "ten-jump" || t.format === "length-strips") {
         const next = transferTask({ ...t, id: "material", skillId: skill.id, level });
         if (!next || next.format !== "input" || next.skillId !== skill.id) {
           fail(skill.id, level, "passende Kopfrechenaufgabe fehlt", t);
         } else {
           check(skill.id, level, next);
-          const previousAnswer = t.format === "turn-array" ? t.rows : t.format === "exchange" ? t.start - t.take : t.start + t.delta;
-          if (next.answer === previousAnswer) fail(skill.id, level, "Transfer wiederholt das Ergebnis", next);
+          if (t.format === "length-strips") {
+            const start = t.target - next.answer;
+            if (start <= 0 || start >= t.target || t.lengths.includes(start) || next.term !== `${start} + ? = ${t.target}`)
+              fail(skill.id, level, "Längentransfer braucht einen neuen Start und dasselbe Ziel", next);
+          } else {
+            const previousAnswer = t.format === "turn-array" ? t.rows : t.format === "exchange" ? t.start - t.take : t.start + t.delta;
+            if (next.answer === previousAnswer) fail(skill.id, level, "Transfer wiederholt das Ergebnis", next);
+          }
         }
       }
     }
