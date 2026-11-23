@@ -301,6 +301,8 @@ Die Rechenmaschine im Zahlenwald führt vom Anwenden einer vorgegebenen Regel zu
 
 In der Bäckerei verteilen Kinder ganze Kekse gerecht und bestimmen den Rest. Im Piratenhafen legen sie einen Betrag mit möglichst wenigen Münzen. In der Mess-Werkstatt setzen sie Streifen nach einem festen Maßstab zusammen. Anschließend ergänzen sie im Kopf eine neue Länge bis zum selben Ziel.
 
+Im Eltern-Lernbericht erhalten Themen unter 60 % richtigen Erstversuchen ab fünf Antworten eine passende freigeschaltete Lektion, sofern es eine gibt. Eine Lektion mit nur diesem Thema hat Vorrang. Beim aktiven Kind lässt sie sich direkt starten. Bei Geschwistern zeigt der Bericht die Empfehlung für deren eigenen Pfad.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.

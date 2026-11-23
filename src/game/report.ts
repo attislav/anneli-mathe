@@ -1,7 +1,7 @@
 // Lernbericht: wertet das Antwort-Protokoll aus (nur auf diesem Gerät).
 
 import { getSkill, SKILLS } from "./skills";
-import { todayKey, type SaveState } from "./state";
+import { isNodeOpen, todayKey, type SaveState } from "./state";
 import { WORLDS } from "./worlds";
 
 export type SkillReport = {
@@ -62,6 +62,18 @@ export function skillReports(s: SaveState): SkillReport[] {
   }
   const order = new Map(WORLDS.map((w, i) => [w.id as string, i]));
   return out.sort((a, b) => (order.get(a.world) ?? 99) - (order.get(b.world) ?? 99));
+}
+
+/** Bei gleichem Themenumfang die frühere Lektion auf dem Pfad bevorzugen. */
+export function suggestedLesson(save: SaveState, report: SkillReport, activeProfile: boolean) {
+  if (report.status !== "hakt") return null;
+  const world = WORLDS.find(w => w.id === report.world);
+  if (!world) return null;
+  const [node] = world.nodes.filter((n, index) =>
+    n.kind === "lesson" && n.skills.includes(report.id) && isNodeOpen(save, world, index)
+  ).sort((a, b) => a.skills.length - b.skills.length);
+  if (!node) return null;
+  return { world: world.name, node, href: activeProfile ? `/lektion?n=${node.id}&t=0` : null };
 }
 
 /** Übezeit und Aufgaben pro Tag, die letzten `days` Tage (ältester zuerst). */

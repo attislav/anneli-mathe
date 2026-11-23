@@ -3,11 +3,11 @@
 // Lernbericht für Eltern: Was klappt, wo hakt es, wie viel wird geübt.
 // Alle Daten stammen aus diesem Gerät.
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronLeft } from "lucide-react";
 import { randInt } from "@/game/random";
-import { dailyActivity, mistakesFor, overview, skillGrowth, skillReports, weeklyProgress, type SkillReport } from "@/game/report";
+import { dailyActivity, mistakesFor, overview, skillGrowth, skillReports, suggestedLesson, weeklyProgress, type SkillReport } from "@/game/report";
 import { AccuracyChart, LevelChart } from "@/ui/ProgressCharts";
 import { profileList, readProfileSave, type SaveState } from "@/game/state";
 import { WORLDS } from "@/game/worlds";
@@ -52,13 +52,31 @@ function Trend({ t }: { t: number | null }) {
 
 const barColor = (r: SkillReport) => (r.status === "stark" ? "#2BB673" : r.status === "hakt" ? "#FF9F1C" : "#7B4DFF");
 
+function WeakTopic({ save, report, activeProfile }: { save: SaveState; report: SkillReport; activeProfile: boolean }) {
+  const lesson = suggestedLesson(save, report, activeProfile);
+  return (
+    <li className="rounded-xl bg-white p-2.5 text-sm">
+      <div className="font-extrabold">{report.title} · {pct(report.acc)} gleich richtig</div>
+      {mistakesFor(save, report.id).map((m, i) => <div key={i} className="mt-0.5 text-ink-soft">• {m}</div>)}
+      {lesson && <div className="mt-2 border-t border-mist pt-2">
+        <p>In „{lesson.node.title}“ ({lesson.world}) übt {save.profile?.name ?? "dein Kind"} {lesson.node.skills.length === 1 ? "gezielt dieses Thema" : "dieses Thema zusammen mit weiteren Aufgaben"}.</p>
+        {lesson.href && <Link href={lesson.href} aria-label={`Lektion „${lesson.node.title}“ starten`}
+          className="mt-1 inline-flex min-h-11 items-center gap-1 font-bold text-grape">
+          Lektion starten <ArrowRight size={16} aria-hidden="true"/>
+        </Link>}
+      </div>}
+    </li>
+  );
+}
+
 export function ReportScreen({ save: own }: { save: SaveState }) {
   useBackdrop("#F4F1FF");
   const [open, setOpen] = useState(false);
   // Mehrere Kinder: Bericht umschalten, ohne das spielende Kind zu wechseln.
-  const kids = useMemo(() => profileList(), []);
+  const kids = profileList();
   const [viewId, setViewId] = useState<string | null>(null);
-  const save = (viewId && readProfileSave(viewId)) || own;
+  const other = viewId && kids.some(k => k.id === viewId && !k.active) ? readProfileSave(viewId) : null;
+  const save = other ?? own;
   if (!open) return <Gate onOpen={() => setOpen(true)} />;
 
   const name = save.profile?.name ?? "Dein Kind";
@@ -85,7 +103,7 @@ export function ReportScreen({ save: own }: { save: SaveState }) {
       {kids.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-2">
           {kids.map((k) => {
-            const on = viewId ? viewId === k.id : k.active;
+            const on = other ? viewId === k.id : k.active;
             return (
               <button key={k.id} onClick={() => setViewId(k.id)} className={`h-10 rounded-full px-4 font-extrabold ${on ? "bg-grape text-white" : "bg-white"}`}>
                 {k.profile.name}
@@ -170,21 +188,10 @@ export function ReportScreen({ save: own }: { save: SaveState }) {
             <section className="rounded-[22px] bg-coin-light p-4">
               <h2 className="font-display text-xl font-semibold text-coin-dark">Hier hakt es noch</h2>
               {weak.length === 0 ? (
-                <p className="mt-1 text-sm text-ink-soft">Aktuell kein Thema unter 60 % — prima!</p>
+                <p className="mt-1 text-sm text-ink-soft">Ein Thema erscheint hier ab fünf Aufgaben, wenn weniger als 60 % der letzten Antworten gleich richtig waren.</p>
               ) : (
                 <ul className="mt-2 flex flex-col gap-2">
-                  {weak.map((r) => (
-                    <li key={r.id} className="rounded-xl bg-white p-2.5 text-sm">
-                      <div className="font-extrabold">
-                        {r.title} · {pct(r.acc)} gleich richtig
-                      </div>
-                      {mistakesFor(save, r.id).map((m, i) => (
-                        <div key={i} className="mt-0.5 text-ink-soft">
-                          • {m}
-                        </div>
-                      ))}
-                    </li>
-                  ))}
+                  {weak.map(r => <WeakTopic key={r.id} save={save} report={r} activeProfile={other === null}/>)}
                 </ul>
               )}
             </section>
