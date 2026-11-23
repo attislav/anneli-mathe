@@ -25,6 +25,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "story-math":
+      return <StoryMathView {...props} task={task} />;
     case "ten-jump":
       return <JumpView {...props} task={task} />;
     case "exchange":
@@ -61,6 +63,28 @@ export function TaskView(props: FormatProps<Task>) {
 }
 
 const card = "rounded-[28px] bg-white shadow-[0_6px_0_#E4E0F5]";
+
+function StoryMathView({ task, status, onAnswer }: FormatProps<Extract<Task, { format: "story-math" }>>) {
+  const [calculation, setCalculation] = useState("");
+  const [value, setValue] = useState("");
+  const locked = status !== "ask";
+  if (!calculation) return <div className="grid gap-3">
+    <p className="text-center text-lg font-bold">Welche Rechnung passt zur Frage?</p>
+    {task.options.map(option => <Button key={option} tone="white" disabled={locked} onClick={() => {
+      if (option === task.calculation) setCalculation(option);
+      else onAnswer(false, task.hint);
+    }}>{option}</Button>)}
+  </div>;
+  return <div className="grid gap-4">
+    <div className={`${card} p-5 text-center`}>
+      <p className="text-lg font-semibold">Die Rechnung passt. Rechne aus.</p>
+      <p className="mt-2 font-display text-3xl">{calculation} = <output>{value || "?"}</output></p>
+      <p className="mt-2">{value || "?"} {task.unit}</p>
+    </div>
+    <NumPad value={value} onChange={setValue} disabled={locked} onOk={() => onAnswer(Number(value) === task.answer,
+      `Deine Rechnung passt zur Geschichte. Prüfe noch einmal, wie viel ${calculation} ergibt.`)} />
+  </div>;
+}
 
 function pickedColors(status: Status): { bg: string; shade: string; fg: string } {
   if (status === "right") return { bg: "#2BB673", shade: "#1E8F57", fg: "#fff" };

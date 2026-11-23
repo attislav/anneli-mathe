@@ -12,6 +12,13 @@ export type Format = Task["format"];
 type JumpTask = TaskBase & { format: "ten-jump"; start: number; delta: number };
 type ExchangeTask = TaskBase & { format: "exchange"; start: number; take: number };
 type ArrayTask = TaskBase & { format: "turn-array"; rows: number; cols: number };
+export type StoryMathTask = TaskBase & {
+  format: "story-math";
+  options: string[];
+  calculation: string;
+  answer: number;
+  unit: string;
+};
 
 type TaskBase = {
   id: string;
@@ -162,7 +169,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

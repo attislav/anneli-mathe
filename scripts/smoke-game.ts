@@ -88,6 +88,11 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "story-math":
+      if (!t.options.includes(t.calculation) || calc(t.calculation) !== t.answer ||
+          t.options.filter(option => calc(option) === t.answer).length !== 1)
+        fail(skill, level, "Rechengeschichte hat keine eindeutige passende Rechnung", t);
+      break;
     case "ten-jump": {
       const end = t.start + t.delta;
       const ten = t.delta > 0 ? Math.ceil(t.start / 10) * 10 : Math.floor(t.start / 10) * 10;

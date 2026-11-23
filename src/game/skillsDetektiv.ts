@@ -170,6 +170,34 @@ const diagramm: Skill = {
 const NAMES = ["Mia", "Ben", "Lea", "Tom", "Emma", "Noah", "Ida", "Paul", "Lina", "Finn"];
 const THINGS = ["Murmeln", "Sticker", "Muscheln", "Bonbons", "Karten", "Perlen"];
 
+function storyMath(level: Level, name: string, friend: string, thing: string): TaskDraft {
+  function task(question: string, calculation: string, other: string, answer: number, unit: string, hint: string): TaskDraft {
+    return { format: "story-math", question, calculation, options: shuffle([calculation, other]),
+      answer, unit, hint, solution: `${calculation} = ${answer}. Die Antwort ist ${answer} ${unit}.` };
+  }
+  if (level === 4) {
+    const bags = randInt(2, 6);
+    const each = randInt(3, 9);
+    const total = bags * each;
+    if (chance(0.5)) return task(`${name} packt ${bags} Tüten mit je ${each} Murmeln. Wie viele Murmeln sind es insgesamt?`,
+      `${bags} · ${each}`, `${bags} + ${each}`, total, "Murmeln", `Jede Tüte enthält gleich viele Murmeln. Du brauchst die ${each} insgesamt ${bags}-mal.`);
+    return task(`${name} verteilt ${total} Murmeln gleichmäßig auf ${bags} Tüten. Wie viele Murmeln kommen in jede Tüte?`,
+      `${total} : ${bags}`, `${total} − ${bags}`, each, "Murmeln", "Alle Murmeln werden auf gleich große Gruppen verteilt. Gesucht ist die Menge in einer Gruppe.");
+  }
+  const small = randInt(3, level === 1 ? 8 : 19);
+  const big = randInt(small + 2, level === 1 ? 20 - small : 65);
+  if (level === 3) {
+    const total = big + small;
+    return task(`Im Bus sitzen nach dem Halt ${total} Kinder. Gerade sind ${small} eingestiegen. Wie viele waren vorher im Bus?`,
+      `${total} − ${small}`, `${total} + ${small}`, big, "Kinder", "Gesucht ist die Anzahl vor dem Halt. Denke dir die gerade eingestiegenen Kinder wieder weg.");
+  }
+  const facts = `${name} hat ${big} ${thing}. ${friend} hat ${small} ${thing}.`;
+  if (level === 2 && chance(0.5)) return task(`${facts} Wie viele ${thing} hat ${name} mehr als ${friend}?`,
+    `${big} − ${small}`, `${big} + ${small}`, big - small, thing, "Lege zwei Reihen nebeneinander. Gesucht ist nur der Teil der längeren Reihe, der übersteht.");
+  return task(`${facts} Wie viele ${thing} haben beide zusammen?`,
+    `${big} + ${small}`, `${big} − ${small}`, big + small, thing, "Stell dir vor, beide legen ihre Sachen auf einen Haufen. Gesucht ist die ganze Menge.");
+}
+
 function story(ctx: GenCtx, question: string, answer: number, unit: string, hint: string, solution: string): TaskDraft {
   return numeric(ctx, `? ${unit}`, answer, { question, hint, solution });
 }
@@ -187,6 +215,7 @@ const sachaufgaben: Skill = {
     const { level } = ctx;
     const [n1, n2] = shuffle(NAMES);
     const thing = pick(THINGS);
+    if (level < 5 && !ctx.avoid.includes("story-math") && chance(0.45)) return storyMath(level, n1, n2, thing);
     if (level === 1) {
       if (chance(0.5)) {
         const a = randInt(3, 12);

@@ -287,6 +287,8 @@ Diese drei Aufgabenpakete haben Vorrang vor den offenen Paketen in der bisherige
 
 Im Formen-Ozean kommen ab Stufe 3 waagerechte Spiegelachsen hinzu. In der Mess-Werkstatt zeichnet das Kind ab Stufe 3 auch Strecken mit versetztem Anfang, etwa 5 cm vom Strich bei 3 cm aus.
 
+Im Detektivbüro wählen Kinder bei Sachaufgaben auf den Stufen 1–4 zuerst die passende Rechnung und lösen sie anschließend selbst. Dazu gehören Gesamtmenge, Unterschied, Rückwärtsrechnen und gleich große Gruppen. Als nächster Ausbau sind zweischrittige Geschichten vorgesehen, bei denen das Kind selbst die Zwischenfrage findet.
+
 **Beim Spieltest mit Anneli beobachten:** Findet sie nach dem Legen bei neuen Zahlen selbst einen Rechenweg? Versteht sie am Punktefeld, warum beim Drehen die Gesamtzahl gleich bleibt? Gelingt nach einem Tipp ein zweiter Versuch ohne Hilfe?
 
 ### Bisherige Arbeitspakete
