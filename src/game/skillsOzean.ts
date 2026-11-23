@@ -1,5 +1,6 @@
 // Welt 8 · Formen-Ozean — Formen, Körper, Spiegeln, Muster.
 
+import { cubeModel } from "./discovery";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
@@ -156,6 +157,7 @@ const koerper: Skill = {
   world: "ozean",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("cube-model") && chance(0.4)) return cubeModel(level);
     const pool: SolidId[] = level <= 2 ? ["wuerfel", "kugel", "zylinder", "pyramide"] : ["wuerfel", "quader", "kugel", "zylinder", "kegel", "pyramide"];
     const solid = pick(pool);
     const visual = { kind: "solid" as const, solid };

@@ -3,6 +3,7 @@
 // Uhrzeiten schreiben wir wie im Schulbuch „3:30 Uhr“, gesprochen „halb 4“.
 // Stundenzahlen bleiben Ziffern — Zahlwörter lesen ist eine zweite Hürde.
 
+import { calendar } from "./discovery";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
 
@@ -231,4 +232,6 @@ const zeitEinheiten: Skill = {
   },
 };
 
-export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten];
+const kalender: Skill = { id: "kalender", title: "Kalender lesen", world: "schloss", gen: ({level}) => calendar(level) };
+
+export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten, kalender];

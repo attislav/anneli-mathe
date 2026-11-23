@@ -8,6 +8,11 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type MachineTask = TaskBase & { format: "machine"; inputs: number[]; change: number; rules: number[]; probe: number; reverse: boolean };
+export type CubeTask = TaskBase & { format: "cube-model"; footprint: boolean[]; front: number[] };
+export type EstimateTask = TaskBase & { format: "plausible"; reasons: string[]; reason: string; calculation: string; answer: number; unit: string };
+export type BasketTask = TaskBase & { format: "baskets"; prices: number[]; budget: number };
+export type CalendarTask = TaskBase & { format: "calendar"; year: number; month: number; day: number; nights: number };
 export type PairTask = TaskBase & { format: "number-pairs"; operation: "+" | "·"; target: number; cards: number[] };
 export type RuleTask = TaskBase & { format: "sequence-rule"; numbers: number[]; missing: number; rule: string; options: string[] };
 export type DigitBuildTask = TaskBase & { format: "digit-build"; digits: number[] };
@@ -182,7 +187,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

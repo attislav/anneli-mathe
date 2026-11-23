@@ -7,6 +7,7 @@ import { useState } from "react";
 import { NumPad } from "./NumPad";
 import { DigitBuildView, PairView, RuleView } from "./NumberPuzzles";
 import { GridRoute } from "./GridRoute";
+import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
 import type { BarBuildTask, ChoiceTask, ClockSetTask, CompareTask, MirrorTask, PatternTask, RulerTask, InputTask, MoneyBuildTask, NumberLineTask, ShareTask, Task, TensOnesTask, Visual, WallTask } from "@/game/types";
@@ -27,6 +28,16 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "machine":
+      return <MachineView {...props} task={task}/>;
+    case "cube-model":
+      return <CubeView {...props} task={task}/>;
+    case "plausible":
+      return <EstimateView {...props} task={task}/>;
+    case "baskets":
+      return <BasketView {...props} task={task}/>;
+    case "calendar":
+      return <CalendarView {...props} task={task}/>;
     case "grid-route":
       return <GridRoute {...props} task={task} />;
     case "digit-build":

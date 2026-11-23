@@ -5,6 +5,7 @@
 //   npm run smoke:game
 
 import { SKILLS } from "../src/game/skills";
+import { basketSolutions, calendarDates, fitsViews } from "../src/game/discovery";
 import { transferTask } from "../src/lesson/engine";
 import type { Format, Level, TaskDraft } from "../src/game/types";
 import { breakDown } from "../src/game/money";
@@ -88,6 +89,28 @@ function check(skill: string, level: Level, t: TaskDraft) {
     if (vis.kind === "bars" && vals.some((v) => v > vis.max || v % vis.step !== 0)) fail(skill, level, "Säule passt nicht ins Raster", t);
   }
   switch (t.format) {
+    case "machine":
+      if (new Set([...t.inputs,t.probe]).size !== 4 || new Set(t.rules).size !== 3 || !t.rules.includes(t.change)
+          || [...t.inputs,t.probe].some(n=>n+t.change<0 || n+t.change>100)) fail(skill,level,"Maschinenregel oder Zahlenbereich ungültig",t);
+      break;
+    case "cube-model":
+      if (t.footprint.length !== 4 || !fitsViews(t,t.footprint.map((on,i)=>on?t.front[i%2]:0))) fail(skill,level,"Würfelansichten nicht baubar",t);
+      break;
+    case "plausible":
+      if (calc(t.calculation) !== t.answer || new Set(t.reasons).size !== 2 || !t.reasons.includes(t.reason)) fail(skill,level,"Begründung oder Rechnung ungültig",t);
+      break;
+    case "baskets": {
+      const combinations = basketSolutions(t);
+      if (combinations.length < 2 || combinations.some(b=>b.reduce((sum,n,i)=>sum+n*t.prices[i],0)!==t.budget))
+        fail(skill,level,"Einkaufskörbe passen nicht zum Budget",t);
+      break;
+    }
+    case "calendar": {
+      const {start,end}=calendarDates(t);
+      if (start.getUTCMonth()!==t.month || start.getUTCDate()!==t.day || end.getTime()-start.getTime()!==t.nights*86400000 || t.nights<1 || t.nights>7)
+        fail(skill,level,"Kalenderweg ungültig",t);
+      break;
+    }
     case "grid-route":
       if (t.stops.length < 3 || t.stops[0] === t.stops[t.stops.length - 1] ||
           t.stops.some(n => n < 0 || n >= t.size * t.size) ||

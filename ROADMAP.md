@@ -297,6 +297,8 @@ Auf der Startinsel und am Plus-Minus-Strand finden Kinder zwei verschiedene Zahl
 
 Im Formen-Ozean wird die räumliche Orientierung als eigene Kompetenz erfasst. Beim Knoten „Wege, Spiegel & Muster“ sowie in den Wiederholungen führen Pfeile über ein Kästchenfeld. Auf höheren Stufen kann auch der Startpunkt gesucht sein.
 
+Die Rechenmaschine im Zahlenwald führt vom Anwenden einer vorgegebenen Regel zum Entdecken und Umkehren. Im Formen-Ozean werden Würfel nach Drauf- und Vorderansicht gestapelt. Im Detektivbüro prüfen Kinder Längenangaben mit einer Begründung und rechnen nach. Im Piratenhafen suchen sie alle passenden Einkaufskörbe zu einem Budget. Das Uhrenschloss enthält die eigene Kompetenz „Kalender lesen“ mit Ausflügen innerhalb eines Monats und über Monatsgrenzen hinweg.
+
 ### Bisherige Arbeitspakete
 
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.

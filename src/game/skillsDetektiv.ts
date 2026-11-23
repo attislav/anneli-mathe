@@ -1,6 +1,7 @@
 // Welt 10 · Detektivbüro — Daten und Sachaufgaben: Strichlisten,
 // Säulendiagramme, Rechengeschichten, Möglichkeiten zählen, Fehler finden.
 
+import { plausible } from "./discovery";
 import type { DataIcon, DataRow, Level, TaskDraft } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
@@ -462,6 +463,7 @@ const fehlerDetektiv: Skill = {
   world: "detektiv",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("plausible") && chance(0.4)) return plausible(level);
     const n = level <= 2 ? 3 : 4;
     const findRight = level >= 3 && chance(0.3);
     for (;;) {

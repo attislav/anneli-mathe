@@ -27,6 +27,10 @@ function strip(task: Task): TaskDraftWithSkill {
 }
 
 function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "cube-model") return JSON.stringify([t.format,t.footprint,t.front]);
+  if (t.format === "baskets") return JSON.stringify([t.format,t.budget,t.prices]);
+  if (t.format === "machine") return JSON.stringify([t.format,t.inputs,t.change,t.probe,t.reverse]);
+  if (t.format === "calendar") return JSON.stringify([t.format,t.year,t.month,t.day,t.nights]);
   if (t.format === "grid-route") return JSON.stringify([t.skillId, t.format, t.size, t.stops, t.findStart]);
   if (t.format === "digit-build") return JSON.stringify([t.skillId, t.format, [...t.digits].sort()]);
   if (t.format === "number-pairs") return JSON.stringify([t.skillId, t.operation, t.target, [...t.cards].sort((a, b) => a - b)]);

@@ -9,6 +9,7 @@
 //   - Rechenweg zeigt den Weg, nicht nur das Ergebnis.
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
+import { machine } from "./discovery";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numberPairs, sequenceRule } from "./numberPuzzles";
 import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genkit";
@@ -321,6 +322,7 @@ const reihen: Skill = {
   world: "wald",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("machine") && chance(0.4)) return machine(level);
     let step: number, start: number;
     if (!ctx.avoid.includes("sequence-rule") && chance(0.45)) return sequenceRule(level);
     if (level === 1) [step, start] = [1, randInt(1, 15)];
