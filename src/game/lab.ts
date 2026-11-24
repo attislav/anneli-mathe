@@ -22,6 +22,7 @@ import { weekly } from "./weekly";
 import { symbolCode } from "./symbolCode";
 import { contentHash } from "./labNotes";
 import { taskContentKey } from "./practice";
+import { foldLines } from "./foldLines";
 import { drawBag } from "./drawBag";
 import { digitSwap } from "./digitSwap";
 import { parcelMass } from "./parcelMass";
@@ -68,6 +69,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  folds: { title: "Faltwerkstatt", prompt: "Vermute Faltlinien und prüfe die Kästchen im Spiegelbild.", skillId: "spiegeln", generate: foldLines },
   bag: { title: "Was kannst du ziehen?", prompt: "Untersuche den Beutel und vergleiche deine Ziehspur.", skillId: "zufallBeutel", generate: drawBag },
   swap: { title: "Zifferntausch", prompt: "Tausche zwei Karten und untersuche ihre Stellenwerte.", skillId: "zehnerEiner", generate: digitSwap },
   parcels: { title: "Was wiegt das Päckchen?", prompt: "Wiege ein Päckchen und prüfe die Versandgrenze.", skillId: "paeckchenWiegen", generate: parcelMass },

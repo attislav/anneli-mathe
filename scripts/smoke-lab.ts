@@ -35,6 +35,7 @@ import "./smoke-error-trail";
 import "./smoke-parcel-mass";
 import "./smoke-digit-swap";
 import "./smoke-draw-bag";
+import "./smoke-fold-lines";
 import { testChangeRoute } from "./smoke-change-route";
 import { testThinkFurther } from "./smoke-think-further";
 import { testVoteDecision } from "./smoke-vote-decision";
@@ -59,7 +60,7 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { bag: "draw-bag", swap: "digit-swap", parcels: "parcel-mass", code: "symbol-code", fence: "garden-fence", wheels: "wheel-orders", recipe: "group-recipe", pictures: "pictogram", weekly: "weekly", balance: "balance", rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { folds: "fold-lines", bag: "draw-bag", swap: "digit-swap", parcels: "parcel-mass", code: "symbol-code", fence: "garden-fence", wheels: "wheel-orders", recipe: "group-recipe", pictures: "pictogram", weekly: "weekly", balance: "balance", rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
 
 assert.equal(balanceHint(5,[5],[2,2,1]),null);

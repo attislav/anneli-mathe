@@ -6,6 +6,7 @@ import { tableView } from "./tableView";
 import { siteMap } from "./siteMap";
 import { tower } from "./tower";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
+import { foldLines } from "./foldLines";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
 
@@ -96,6 +97,7 @@ const spiegeln: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("fold-lines") && chance(0.3)) return foldLines(level);
     const [rows, half, n] = level === 1 ? [3, 2, randInt(2, 3)] : level === 2 ? [4, 3, randInt(3, 4)] : level === 3 ? [5, 3, 5] : level === 4 ? [5, 4, randInt(6, 7)] : [6, 4, 8];
     const all: [number, number][] = [];
     for (let r = 0; r < rows; r++) for (let c = 0; c < half; c++) all.push([r, c]);

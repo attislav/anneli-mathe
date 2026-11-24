@@ -391,6 +391,8 @@ In der Partnerwerkstatt bauen Kinder eine Fehlerspur bis 100. Ein Kind rechnet z
 
 Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema und Stufe behalten. Später lösen sie eine neue Einzelaufgabe und entscheiden selbst, ob das Thema bleibt oder abgehakt wird.
 
+In der Faltwerkstatt vermuten Kinder die passenden Faltlinien einer Kästchenfigur. Die Probe überlagert Figur und Spiegelbild und kennzeichnet jede Fehlstelle. Die Aufgabe ergänzt Spiegeln im Formen-Ozean, im Labor, im Schulauftrag und auf dem Merkzettel.
+
 Bei „Was kannst du ziehen?“ begründen Kinder aus dem Beutelinhalt, ob ein Zeichen sicher, möglich oder unmöglich ist. Sie ziehen dreimal mit Zurücklegen, zählen ihre Beobachtungen und prüfen den nächsten Zug. Erreichbar im Detektivbüro, im Labor und im Schulauftrag.
 
 Beim „Zifferntausch“ legen Kinder eine eigene zweistellige Zahl, sagen die Wirkung eines Kartentauschs voraus und bestimmen die Veränderung der beiden Stellenwerte. Die Aufgabe ergänzt Zehner und Einer im Zahlenwald, im Labor und im Schulauftrag.
