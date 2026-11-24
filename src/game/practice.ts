@@ -27,6 +27,7 @@ function strip(task: Task): TaskDraftWithSkill {
 }
 
 function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "bus-table") return JSON.stringify([t.skillId, t.format, t.stops, t.trips, t.from, t.to, t.earliest]);
   if (t.format === "hundred-window") return JSON.stringify([t.skillId, t.format, t.start, t.size, t.gaps]);
   if (t.format === "length-strips") return JSON.stringify([t.skillId, t.format, t.target, [...t.lengths].sort((a,b) => a-b)]);
   if (t.format === "cube-model") return JSON.stringify([t.format,t.footprint,t.front]);

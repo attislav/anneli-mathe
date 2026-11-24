@@ -313,6 +313,8 @@ Das Mathe-Labor ist über „Labor“ in der festen Navigation erreichbar. Kinde
 
 Als siebtes Laborthema ergänzt das Zahlenfenster die Nachbarzahlen im Zahlenwald. Kinder füllen Lücken in einem Ausschnitt der Hundertertafel. Sie gehen von einer sichtbaren Nachbarzahl nach links oder rechts in Einerschritten, nach oben oder unten in Zehnerschritten.
 
+Im achten Laborthema lesen Kinder einen Busfahrplan. Sie wählen Abfahrt und Ankunft derselben Fahrt und berechnen die Dauer. In der Uhrenschloss-Lektion zu Zeitspannen steigt die Anforderung von einer Fahrt in Viertelstundenschritten bis zu drei Fahrten mit Stundenwechsel.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

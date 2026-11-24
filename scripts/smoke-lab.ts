@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { mock } from "node:test";
 import { firstIncorrectGap, hundredWindow, windowHint, windowValue } from "../src/game/hundredWindow";
+import { busJourney, busTable, checkBus } from "../src/game/busTable";
 import type { Level } from "../src/game/types";
 import { LAB_COUNT, LAB_TOPICS, LabRound, type LabTopic } from "../src/game/lab";
 import { updateMastery } from "../src/game/adaptive";
@@ -14,8 +15,49 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const exactBus = { stops: ["Park", "Schule", "Markt"], from: 1, to: 2, earliest: 9 * 60 + 55,
+  trips: [[560, 580, 595], [575, 595, 610], [600, 620, 635]] };
+assert.deepEqual(busJourney(exactBus), { column: 1, departure: 595, arrival: 610, duration: 15 });
+assert.equal(busJourney({ ...exactBus, earliest: 596 }).column, 2);
+assert.equal(checkBus(exactBus, 1, 1, "15").correct, true);
+assert.match(checkBus(exactBus, 0, 1, "15").hint ?? "", /Spalte/);
+assert.match(checkBus(exactBus, 0, 0, "15").hint ?? "", /9:55/);
+assert.match(checkBus(exactBus, 1, 1, "55").hint ?? "", /10:00/);
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  let seed = level;
+  const random = mock.method(Math, "random", () => {
+    seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+    return seed / 2 ** 32;
+  });
+  const startMinutes = new Set<number>();
+  const durations = new Set<number>();
+  let hourChanges = 0;
+  for (let i = 0; i < 75; i++) {
+    const task = busTable(level);
+    const { column, departure, arrival, duration } = busJourney(task);
+    startMinutes.add(departure % 60);
+    durations.add(duration);
+    if (level === 1) assert.ok(!checkBus(task, column, column, duration === 15 ? "30" : "15").correct);
+    if (Math.floor(arrival / 60) > Math.floor(departure / 60)) hourChanges++;
+    assert.equal(task.trips.length, level <= 2 ? 1 : 3);
+    assert.ok(task.from < task.to && departure >= task.earliest && duration > 0);
+    assert.ok(task.trips.slice(0, column).every(trip => trip[task.from] < task.earliest));
+    assert.ok(task.trips.every(trip => trip.every((time, j) =>
+      time >= 0 && time < 1440 && time % (level <= 2 ? 15 : 5) === 0 && (j === 0 || time > trip[j - 1]))));
+    assert.equal(arrival - departure, duration);
+    assert.ok(checkBus(task, column, column, String(duration)).correct);
+    assert.ok(!checkBus(task, column, column, "").correct);
+  }
+  random.mock.restore();
+  if (level === 1) assert.deepEqual(durations, new Set([15, 30]));
+  if (level >= 4) {
+    assert.ok(startMinutes.size >= 5);
+    assert.ok(hourChanges > 40 && hourChanges < 75);
+  }
+}
 
 const corners = new Set<number>();
 for (const level of [1, 2, 3, 4, 5] as Level[]) {
@@ -107,4 +149,4 @@ switchProfile(owner);
 assert.equal(siblingRound.advance(siblingRound.state.task.id).status, "right");
 assert.deepEqual(readSave(), after);
 assert.equal(readProfileSave(sibling)?.log.length, 1);
-console.log("Sieben Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.");
+console.log("Acht Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.");

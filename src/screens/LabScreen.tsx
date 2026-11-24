@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Blocks, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
+import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_COUNT, LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
 import { activeProfileId, needsProfilePick, useSave } from "@/game/state";
 import { TaskView } from "@/lesson/formats";
@@ -11,6 +11,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 
 const cards = {
+  bus: { Icon: BusFront, color: "bg-sun-light" },
   window: { Icon: Grid3X3, color: "bg-sky-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },

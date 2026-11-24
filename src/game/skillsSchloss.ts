@@ -4,6 +4,7 @@
 // Stundenzahlen bleiben Ziffern — Zahlwörter lesen ist eine zweite Hürde.
 
 import { calendar } from "./discovery";
+import { busTable } from "./busTable";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
 
@@ -156,6 +157,7 @@ const zeitspanne: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("bus-table") && chance(0.4)) return busTable(level);
     if (level === 1) {
       const a = randInt(1, 9);
       const d = randInt(1, 3);
