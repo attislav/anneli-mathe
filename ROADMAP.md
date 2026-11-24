@@ -391,6 +391,8 @@ In der Partnerwerkstatt bauen Kinder eine Fehlerspur bis 100. Ein Kind rechnet z
 
 Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema und Stufe behalten. Später lösen sie eine neue Einzelaufgabe und entscheiden selbst, ob das Thema bleibt oder abgehakt wird.
 
+In der Mathe-Sprechstunde untersuchen Kinder mit denselben zwölf Plättchen zwei Bedeutungen der Division: gleich verteilen oder gleich große Gruppen bilden. Auf das freie Modell folgt eine neue Aufgabe, bei der Zahl und Bedeutung gemeinsam zählen.
+
 Bei „Wo ungefähr liegt die Zahl?“ schätzen Kinder eine Position auf dem Zahlenstrahl. Sie vergleichen ihre Marke mit der exakten Stelle und entscheiden, welcher Anker am nächsten liegt. Die Schätzung bleibt unbewertet. Im Zahlenwald sowie im Labor, Schulauftrag und Merkzettel verfügbar.
 
 In der Faltwerkstatt vermuten Kinder die passenden Faltlinien einer Kästchenfigur. Die Probe überlagert Figur und Spiegelbild und kennzeichnet jede Fehlstelle. Die Aufgabe ergänzt Spiegeln im Formen-Ozean, im Labor, im Schulauftrag und auf dem Merkzettel.

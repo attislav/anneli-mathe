@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { DivisionModel } from "@/lesson/DivisionClinic";
+import { DivisionClinicRound, divisionTransfer } from "@/game/divisionClinic";
 import { CLINIC_CASES, checkModel, clinicTransfer, ClinicRound, initialModel, modelPicture, moveCounter, type ClinicCase } from "@/game/clinic";
 import { activeProfileId, needsProfilePick, useSave } from "@/game/state";
 import { Button } from "@/ui/Button";
@@ -20,16 +22,20 @@ export function ClinicScreen() {
 }
 
 function Clinic({ owner }: { owner: string }) {
-  const [topic, setTopic] = useState<ClinicCase | null>(null);
-  const [round, setRound] = useState<ClinicRound | null>(null);
+  const [topic, setTopic] = useState<ClinicCase | "division" | null>(null);
+  const [round, setRound] = useState<ClinicRound | DivisionClinicRound | null>(null);
   function back() { setRound(null); setTopic(null); }
+  if (round instanceof DivisionClinicRound) return <LabActivity key={round.id} round={round} onBack={back}
+    onReplay={()=>setRound(new DivisionClinicRound(owner,divisionTransfer(round.exercise)))} />;
   if (round) return <LabActivity key={round.id} round={round} onBack={back}
     onReplay={() => setRound(new ClinicRound(owner, round.topic, clinicTransfer(round.topic, round.exercise)))} />;
+  if (topic==="division") return <DivisionModel onBack={back} onNext={()=>setRound(new DivisionClinicRound(owner))}/>;
   if (topic) return <ClinicModel key={topic} topic={topic} onBack={back} onNext={() => setRound(new ClinicRound(owner, topic))} />;
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-5">
     <Link href="/labor/" className="w-fit rounded-xl bg-white px-4 py-2">← Zum Labor</Link>
     <h1 className="font-display text-3xl">Mathe-Sprechstunde</h1>
-    <p>Welche Rechnung möchtest du mit Plättchen ausprobieren?</p>
+    <p>Welche Frage möchtest du mit Plättchen untersuchen?</p>
+    <button type="button" onClick={()=>setTopic("division")} className="rounded-2xl bg-white px-4 py-5 text-left font-display text-xl">Was zählt die Geteilt-Aufgabe?</button>
     {(["plus", "minus"] as const).map(key => <button key={key} type="button" onClick={() => setTopic(key)}
       className="rounded-2xl bg-white px-4 py-5 text-left font-display text-xl">{CLINIC_CASES[key].title}</button>)}
   </main>;

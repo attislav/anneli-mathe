@@ -5,6 +5,7 @@
 // aus dem Zirkus, darum führen alle Tipps über das Malnehmen.
 
 import { groupRecipe } from "./groupRecipe";
+import { divisionDivisors, maxQuotient, shareRanges } from "./divisionLevels";
 import type { TaskDraft, Treat } from "./types";
 import { chocolate } from "./chocolate";
 import { remainders } from "./remainders";
@@ -40,8 +41,9 @@ const verteilen: Skill = {
   world: "baeckerei",
   gen: (ctx) => {
     const { level } = ctx;
-    const plates = level === 1 ? 2 : level === 2 ? randInt(2, 3) : level === 3 ? randInt(3, 4) : level === 4 ? randInt(2, 5) : randInt(3, 6);
-    const per = level <= 2 ? randInt(2, 5) : level === 3 ? randInt(2, 5) : level === 4 ? randInt(3, 6) : randInt(4, 8);
+    const ranges=shareRanges[level];
+    const plates = randInt(...ranges.plates);
+    const per = randInt(...ranges.per);
     const total = plates * per;
     if (level >= 3 && !ctx.avoid.includes("share") && chance(0.45)) {
       const count = randInt(3, 5);
@@ -80,8 +82,6 @@ const halbieren: Skill = {
   },
 };
 
-const DIVISORS: Record<number, number[]> = { 1: [2, 10], 2: [2, 5, 10], 3: [3, 4], 4: [6, 7, 8, 9], 5: [2, 3, 4, 5, 6, 7, 8, 9, 10] };
-
 const geteilt: Skill = {
   id: "geteilt",
   title: "Geteilt rechnen",
@@ -93,8 +93,8 @@ const geteilt: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
-    const d = pick(DIVISORS[level]);
-    const q = randInt(1, level === 1 ? 5 : 10);
+    const d = pick(divisionDivisors[level]);
+    const q = randInt(1, maxQuotient(level));
     const p = q * d;
     if (level === 5 && chance(0.4)) {
       return numeric(ctx, `${p} : ? = ${q}`, d, { question: "Welche Zahl fehlt?", hint: `Welche Zahl mal ${q} ergibt ${p}?`, solution: `${q} · ${d} = ${p}, also ist ${p} : ${d} = ${q}.` });

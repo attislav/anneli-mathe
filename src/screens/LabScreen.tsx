@@ -7,6 +7,7 @@ import { LAB_GROUPS } from "@/game/schoolSelection";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
 import { TripRound } from "@/game/classTrip";
+import { DivisionClinicRound } from "@/game/divisionClinic";
 import { ClinicRound } from "@/game/clinic";
 import { StrategyRound } from "@/game/strategyPractice";
 import { busTime } from "@/game/busTable";
@@ -170,13 +171,13 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void }) {
   const [state, setState] = useState(round.state);
   const [remembered,setRemembered]=useState("");
   const { task, number, status, firstRight } = state;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
-  const clinic = round instanceof ClinicRound;
+  const clinic = round instanceof ClinicRound || round instanceof DivisionClinicRound;
   const savedStrategy = round instanceof StrategyRound;
   const title = round instanceof LabNoteRound ? LAB_TOPICS[round.note.topic].title : round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
     school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";

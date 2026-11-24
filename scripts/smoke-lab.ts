@@ -37,6 +37,7 @@ import "./smoke-digit-swap";
 import "./smoke-draw-bag";
 import "./smoke-fold-lines";
 import "./smoke-line-estimate";
+import { testDivisionClinic } from "./smoke-division-clinic";
 import { testChangeRoute } from "./smoke-change-route";
 import { testThinkFurther } from "./smoke-think-further";
 import { testVoteDecision } from "./smoke-vote-decision";
@@ -809,4 +810,5 @@ assert.deepEqual({...afterGoals,mastery:beforeGoals.mastery,log:beforeGoals.log}
 testVoteDecision(owner);
 testChangeRoute(owner);
 testThinkFurther(owner);
+testDivisionClinic(owner);
 console.log(`${Object.keys(LAB_TOPICS).length} Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.`);

@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { DivisionMeaning } from "./DivisionClinic";
 import { LineEstimate } from "./LineEstimate";
 import { FoldLines } from "./FoldLines";
 import { DrawBag } from "./DrawBag";
@@ -76,6 +77,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "division-meaning":
+      return <DivisionMeaning {...props} task={task} />;
     case "line-estimate":
       return <LineEstimate {...props} task={task} />;
     case "fold-lines":
