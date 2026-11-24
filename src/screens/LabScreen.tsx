@@ -7,6 +7,8 @@ import { ReportPracticeRound } from "@/game/reportPractice";
 import { LAB_GROUPS } from "@/game/schoolSelection";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
+import { TheaterRound } from "@/game/classTheater";
+import { TheaterNote, TheaterWork } from "@/lesson/ClassTheater";
 import { MarbleRound } from "@/game/marbleTest";
 import { MarbleWork, MarbleNote } from "@/lesson/MarbleTest";
 import { ReadingRound } from "@/game/readingCorner";
@@ -118,12 +120,13 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
   const [size,setSize]=useState<1|5>(5);
   const [area, setArea] = useState(() => lastLabArea(owner));
   const group = LAB_GROUPS[area];
-  const [round, setRound] = useState<LabRound | MarbleRound | ReadingRound | TripRound | LearningRound | LabNoteRound | null>(null);
+  const [round, setRound] = useState<LabRound | TheaterRound | MarbleRound | ReadingRound | TripRound | LearningRound | LabNoteRound | null>(null);
   const chooseArea = (i: number) => { setArea(i); rememberLabArea(owner,i); };
   const start = (topic: LabTopic, length:1|5) => {
     chooseArea(LAB_GROUPS.findIndex(g => (g.topics as readonly LabTopic[]).includes(topic)));
     setRound(new LabRound(topic, owner,length));
   };
+  const startTheater = () => setRound(new TheaterRound(owner));
   const startMarbles = () => setRound(new MarbleRound(owner));
   const startCorner = () => setRound(new ReadingRound(owner));
   const startTrip = () => setRound(new TripRound(owner));
@@ -143,7 +146,7 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
     <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
   if (round) return <LabActivity key={round.id} round={round} backLabel={searchQuery === null ? undefined : "Zurück zu den Suchergebnissen"}
-    onBack={() => {if(round instanceof ReadingRound || round instanceof MarbleRound)round.close();setRound(null);}} onReplay={round instanceof MarbleRound ? startMarbles : round instanceof ReadingRound ? startCorner : round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => setRound(round.replay())} />;
+    onBack={() => {if(round instanceof TheaterRound || round instanceof ReadingRound || round instanceof MarbleRound)round.close();setRound(null);}} onReplay={round instanceof TheaterRound ? startTheater : round instanceof MarbleRound ? startMarbles : round instanceof ReadingRound ? startCorner : round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => setRound(round.replay())} />;
   if (searchQuery !== null) return <LabSearch query={searchQuery} setQuery={setSearchQuery} size={size}
     setSize={setSize} start={start} back={()=>setSearchQuery(null)}/>;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
@@ -169,6 +172,7 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
     </Link>
     <details className="mb-4 rounded-xl bg-white px-3"><summary className="cursor-pointer py-3">Projekte und Hilfen</summary>
       <div className="grid grid-cols-2 gap-1 pb-3">
+        <button className="min-h-11 rounded-xl bg-sun-light px-2" onClick={startTheater}>Sitzplan fürs Klassentheater</button>
         <button className="min-h-11 rounded-xl bg-sky-light px-2" onClick={startMarbles}>Unsere Murmelbahn im Test</button>
         <button className="min-h-11 rounded-xl bg-leaf-light px-2" onClick={startCorner}>Wir richten eine Leseecke ein</button>
         <button className="min-h-11 rounded-xl bg-sun-light px-2" onClick={startTrip}>Unser Klassenausflug</button>
@@ -213,17 +217,18 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay, backLabel }: { round: LabRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void; backLabel?: string }) {
+export function LabActivity({ round, onBack, onReplay, backLabel }: { round: LabRound | TheaterRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void; backLabel?: string }) {
   const [state, setState] = useState(round.state);
   const [remembered,setRemembered]=useState("");
   const { task, number, status, firstRight } = state;
+  const theater = round instanceof TheaterRound ? round : null;
   const marbles = round instanceof MarbleRound ? round : null;
   const corner = round instanceof ReadingRound ? round : null;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
   const clinic = round instanceof ClinicRound || round instanceof DivisionClinicRound;
   const savedStrategy = round instanceof StrategyRound;
-  const title = marbles ? "Unsere Murmelbahn im Test" : corner ? "Wir richten eine Leseecke ein" : round instanceof LabNoteRound ? LAB_TOPICS[round.note.topic].title : round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
+  const title = theater ? "Sitzplan fürs Klassentheater" : marbles ? "Unsere Murmelbahn im Test" : corner ? "Wir richten eine Leseecke ein" : round instanceof LabNoteRound ? LAB_TOPICS[round.note.topic].title : round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
     school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";
   const heading = useRef<HTMLHeadingElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
@@ -234,7 +239,8 @@ export function LabActivity({ round, onBack, onReplay, backLabel }: { round: Lab
 
   if (status === "done") return <main className="mx-auto flex min-h-dvh max-w-xl flex-col justify-center gap-4 bg-leaf-light p-6 text-center">
     <Check aria-hidden className="mx-auto rounded-full bg-white p-3 text-leaf-dark" size={64} />
-    <h1 tabIndex={-1} ref={heading} className="font-display text-3xl">{marbles ? "Euer Versuch ist ausgewertet!" : corner ? "Eure Leseecke ist geplant!" : trip ? "Euer Ausflug ist geplant!" : "Runde beendet!"}</h1>
+    <h1 tabIndex={-1} ref={heading} className="font-display text-3xl">{theater ? "Die Eintrittskarten sind fertig!" : marbles ? "Euer Versuch ist ausgewertet!" : corner ? "Eure Leseecke ist geplant!" : trip ? "Euer Ausflug ist geplant!" : "Runde beendet!"}</h1>
+    {theater && <TheaterNote round={theater}/>}
     {marbles && <MarbleNote round={marbles} completed={3}/>}
     {corner && <CornerNote round={corner} completed={3}/>}
     {trip && <TripNote round={trip} completed={round.count} />}
@@ -246,8 +252,8 @@ export function LabActivity({ round, onBack, onReplay, backLabel }: { round: Lab
     {round instanceof ReportPracticeRound ? <Button onClick={onBack}>Zum Mathe-Labor</Button> :
       round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
       <Button tone="white" onClick={()=>{round.finish(false);onBack();}}>Abhaken und vom Merkzettel nehmen</Button></> :
-      <><Button onClick={onReplay}>{round instanceof LabRound && round.size===1 ? "Noch eine neue Aufgabe zu diesem Thema" : marbles ? "Neuen Versuch starten" : corner ? "Neue Leseecke planen" : trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
-    <Button tone="white" onClick={onBack}>{backLabel ?? (school ? "Auftrag ansehen und ändern" : trip || corner || marbles ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen")}</Button></>}
+      <><Button onClick={onReplay}>{round instanceof LabRound && round.size===1 ? "Noch eine neue Aufgabe zu diesem Thema" : theater ? "Neu buchen" : marbles ? "Neuen Versuch starten" : corner ? "Neue Leseecke planen" : trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
+    <Button tone="white" onClick={onBack}>{backLabel ?? (school ? "Auftrag ansehen und ändern" : trip || corner || marbles || theater ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen")}</Button></>}
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">
@@ -266,7 +272,7 @@ export function LabActivity({ round, onBack, onReplay, backLabel }: { round: Lab
       <thead><tr><th scope="col">Bus</th><th scope="col">Abfahrt Schule</th><th scope="col">Ankunft Museum</th></tr></thead>
       <tbody>{trip.plan.timetable.map(bus => <tr key={bus.name}><th scope="row">{bus.name}</th><td>{busTime(bus.departure)}</td><td>{busTime(bus.arrival)}</td></tr>)}</tbody>
     </table>}
-    {marbles ? <MarbleWork key={task.id} round={marbles} refresh={()=>setState(marbles.state)}/> :
+    {theater ? <TheaterWork key={task.id} round={theater} refresh={()=>setState(theater.state)}/> : marbles ? <MarbleWork key={task.id} round={marbles} refresh={()=>setState(marbles.state)}/> :
       corner ? <ReadingWork key={task.id} round={corner} refresh={()=>setState(corner.state)}/> :
       round instanceof LearningRound && round.goal === "numbers" && number === 1 ?
       <GoalParts key={task.id} status={status} onCheck={(left,right) => setState(round.submitParts(task.id,left,right))} /> :
@@ -281,7 +287,7 @@ export function LabActivity({ round, onBack, onReplay, backLabel }: { round: Lab
         <button type="button" className="min-h-11 rounded-xl border-2 px-2" disabled={remembered===task.id}
           onClick={()=>{if(round.remember(task.id))setRemembered(task.id);}}>{remembered===task.id?"Auf deinem Merkzettel":"Das möchte ich nochmal üben"}</button>}
       <Button size="md" onClick={() => setState(round.advance(task.id))}>
-        {status === "wrong" ? "Noch einmal versuchen" : number === round.count ? (marbles ? "Protokoll ansehen" : corner ? "Leseeckenplan ansehen" : trip ? "Ausflugsplan ansehen" : "Runde abschließen") : "Nächste Aufgabe"}
+        {status === "wrong" ? "Noch einmal versuchen" : number === round.count ? (theater ? "Eintrittskarten ansehen" : marbles ? "Protokoll ansehen" : corner ? "Leseeckenplan ansehen" : trip ? "Ausflugsplan ansehen" : "Runde abschließen") : "Nächste Aufgabe"}
       </Button>
     </div>}
   </main>;
