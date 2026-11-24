@@ -1,3 +1,4 @@
+import { voteTasks } from "./voteDecision";
 import { busJourney, busTable, busTime } from "./busTable";
 import { familyLines, familyText } from "./factFamily";
 import { LabSession } from "./lab";
@@ -8,6 +9,7 @@ import type { Task } from "./types";
 
 export const learningGoals = {
   numbers: { area: 0, title: "Zahlen zerlegen und nutzen" },
+  votes: { area: 3, title: "Von Stimmen zur Entscheidung" },
   times: { area: 2, title: "Zeiten lesen und planen" },
 };
 export type LearningGoal = keyof typeof learningGoals;
@@ -50,7 +52,7 @@ function timeTasks(): [Task, Task, Task] {
   ];
 }
 export class LearningRound extends LabSession {
-  constructor(owner: string, readonly goal: LearningGoal, readonly tasks = goal === "numbers" ? numberTasks() : timeTasks()) {
+  constructor(owner: string, readonly goal: LearningGoal, readonly tasks = goal === "numbers" ? numberTasks() : goal === "votes" ? voteTasks() : timeTasks()) {
     super(owner, 3, number => tasks[number-1]);
   }
   submitParts(taskId: string, left: number, answer: string) {

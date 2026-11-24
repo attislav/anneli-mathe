@@ -31,6 +31,7 @@ import "./smoke-group-recipe";
 import "./smoke-wheel-orders";
 import "./smoke-garden-fence";
 import "./smoke-symbol-code";
+import { testVoteDecision } from "./smoke-vote-decision";
 import "./smoke-partner-survey";
 import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
@@ -797,4 +798,5 @@ assert.deepEqual(afterGoals.log.slice(beforeGoals.log.length).map(row => row.s),
   ...Array.from({length:5}).flatMap(() => ["zeitspanne","zeitPlanen","uhrStellen"]),
 ]);
 assert.deepEqual({...afterGoals,mastery:beforeGoals.mastery,log:beforeGoals.log},beforeGoals);
+testVoteDecision(owner);
 console.log(`${Object.keys(LAB_TOPICS).length} Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.`);
