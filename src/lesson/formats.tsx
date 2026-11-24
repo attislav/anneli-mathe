@@ -61,6 +61,7 @@ import { ParcelMass } from "./ParcelMass";
 import { EqualFence } from "./EqualFence";
 import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
+import { OpenVotes } from "./OpenVotes";
 import { Repack } from "./Repack";
 import { GroupRecipe } from "./GroupRecipe";
 import { Pictogram } from "./Pictogram";
@@ -145,6 +146,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <GardenFence {...props} task={task} />;
     case "wheel-orders":
       return <WheelOrders {...props} task={task} />;
+    case "open-votes":
+      return <OpenVotes {...props} task={task} />;
     case "repack":
       return <Repack {...props} task={task} />;
     case "group-recipe":

@@ -14,6 +14,7 @@ import { storyStrips } from "./storyStrips";
 import { drawBag } from "./drawBag";
 import { symbolCode } from "./symbolCode";
 import { wheelOrders } from "./wheelOrders";
+import { openVotes } from "./openVotes";
 import { pictogram } from "./pictogram";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
@@ -540,4 +541,6 @@ const zufallBeutel: Skill = { id:"zufallBeutel", title:"Zufall beim Ziehen unter
 const merkmaleSortieren:Skill={ id:"merkmaleSortieren", title:"Nach zwei Eigenschaften sortieren", world:"detektiv", gen:({level})=>attributeSort(level) };
 const bestandBuchen:Skill={ id:"bestandBuchen", title:"Bestände und Buchungen nachvollziehen", world:"detektiv", gen:({level})=>libraryDuty(level) };
 const faireChancen:Skill={ id:"faireChancen", title:"Gleiche Chancen begründen", world:"detektiv", gen:({level})=>fairWheel(level) };
-export const DETEKTIV_SKILLS: Skill[] = [faireChancen, bestandBuchen, merkmaleSortieren, zufallBeutel, zeichencodes, bilddiagramme, strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];
+const offeneStimmen: Skill = { id: "offeneStimmen", title: "Mögliche Abstimmungsergebnisse begründen", world: "detektiv", gen: ({ level }) => openVotes(level) };
+
+export const DETEKTIV_SKILLS: Skill[] = [offeneStimmen, faireChancen, bestandBuchen, merkmaleSortieren, zufallBeutel, zeichencodes, bilddiagramme, strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];

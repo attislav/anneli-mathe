@@ -47,6 +47,7 @@ import { gardenFence } from "./gardenFence";
 import { wheelOrders } from "./wheelOrders";
 import { repack } from "./repack";
 import { groupRecipe } from "./groupRecipe";
+import { openVotes } from "./openVotes";
 import { pictogram } from "./pictogram";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
@@ -113,6 +114,7 @@ export const LAB_TOPICS = {
   wheels: { title: "Räderwerkstatt", prompt: "Finde alle passenden Fahrrad- und Dreiradbestellungen.", skillId: "kombinatorik", generate: wheelOrders },
   repack: { title: "Anders gepackt, gleich viele", prompt: "Teile gleich volle Schachteln oder packe sie paarweise zusammen.", skillId: "gleichUmpacken", generate: repack },
   recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
+  openVotes: { title: "Was wissen wir über die ganze Klasse?", prompt: "Verteile offene Stimmen und belege, welche Ergebnisse möglich oder sicher sind.", skillId: "offeneStimmen", generate: openVotes },
   pictures: { title: "Bilddiagramm entschlüsseln", prompt: "Lies die Legende, lege Kreise und vergleiche Stimmen.", skillId: "bilddiagramme", generate: pictogram },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
@@ -184,16 +186,26 @@ export class LabRound extends LabSession {
   constructor(readonly topic: LabTopic, owner: string, readonly size:1|5=LAB_COUNT, previous?:number) {
     const usedBeds: import("./equalFence").BedInvestigation[]=[];
     const usedPacks: import("./repack").Packing[]=[];
-    super(owner, size, () => topic==="repack"&&size===5 ? makeLabTask(topic,undefined,level=>{
-      const job=repack(level,usedPacks);
-      usedPacks.push(job.first);
-      return job;
-    }) : topic==="equalFence"&&size===5 ? makeLabTask(topic,undefined,level=>{
-      const job=equalFence(level,usedBeds);
-      usedBeds.push(job);
-      return job;
-    }) : size===1 && previous!==undefined
-      ? freshLabMaterial(()=>makeLabTask(topic),previous) : makeLabTask(topic));
+    const usedVotes: import("./openVotes").VoteSituation[]=[];
+    super(owner, size, () => {
+      if(size===1 && previous!==undefined) return freshLabMaterial(()=>makeLabTask(topic),previous);
+      if(size===5 && topic==="openVotes") return makeLabTask(topic,undefined,level=>{
+        const job=openVotes(level,usedVotes);
+        usedVotes.push(job);
+        return job;
+      });
+      if(size===5 && topic==="repack") return makeLabTask(topic,undefined,level=>{
+        const job=repack(level,usedPacks);
+        usedPacks.push(job.first);
+        return job;
+      });
+      if(size===5 && topic==="equalFence") return makeLabTask(topic,undefined,level=>{
+        const job=equalFence(level,usedBeds);
+        usedBeds.push(job);
+        return job;
+      });
+      return makeLabTask(topic);
+    });
   }
   replay() {
     return new LabRound(this.topic,this.owner,this.size,this.size===1?materialHash(this.state.task):undefined);

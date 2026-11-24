@@ -90,6 +90,7 @@ const cards = {
   wheels: { Icon: ListChecks, color: "bg-sky-light" },
   repack: { Icon: Blocks, color: "bg-leaf-light" },
   recipe: { Icon: ShoppingBasket, color: "bg-leaf-light" },
+  openVotes: { Icon: ListChecks, color: "bg-grape-light" },
   pictures: { Icon: ListChecks, color: "bg-grape-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },

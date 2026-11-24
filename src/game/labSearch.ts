@@ -2,6 +2,7 @@ import { LAB_TOPICS } from "./lab";
 import { LAB_TOPIC_IDS, type LabTopic } from "./schoolSelection";
 
 const keywords: Record<LabTopic, string> = {
+  openVotes:"Abstimmung Umfrage Stimmen Gleichstand gewinnen sicher möglich",
   repack:"Schachteln Umpacken halbieren verdoppeln Einmaleins mal Gruppen",
   equalFence:"Beet Garten Zaun Umfang Fläche Rechteck",
   sharedTime:"Treffen verabreden Uhr Uhrzeit Freizeit", morning:"Uhr Uhrzeit Tagesplan Pause", bus:"Uhr Uhrzeit Fahrzeit Abfahrt",
