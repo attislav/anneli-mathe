@@ -10,6 +10,7 @@
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
 import { machine } from "./discovery";
+import { sumPacket } from "./sumPacket";
 import { hundredWindow } from "./hundredWindow";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numberPairs, sequenceRule } from "./numberPuzzles";
@@ -581,8 +582,10 @@ const uebergang100: Skill = {
   },
 };
 
+const rechenpaeckchen: Skill = { id: "rechenpaeckchen", title: "Rechenpäckchen", world: "strand", gen: ({ level }) => sumPacket(level) };
+
 export const SKILLS: Record<string, Skill> = Object.fromEntries(
-  [freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
+  [rechenpaeckchen, freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
 );
 
 export function getSkill(id: string): Skill {

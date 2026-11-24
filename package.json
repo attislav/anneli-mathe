@@ -15,6 +15,7 @@
     "smoke:lab": "tsx scripts/smoke-lab.ts",
     "smoke:tiles": "tsx scripts/smoke-tiles.ts",
     "smoke:school": "tsx scripts/smoke-school.ts",
+    "smoke:packets": "tsx scripts/smoke-packets.ts",
     "smoke:report": "tsx scripts/smoke-report.ts",
     "art:fetch": "node scripts/fetch-art.mjs",
     "gen:malvorlagen": "node --env-file-if-exists=.env.local scripts/gen-malvorlagen.mjs",

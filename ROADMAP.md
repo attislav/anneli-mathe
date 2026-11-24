@@ -323,6 +323,8 @@ Im Fliesenatelier legen Kinder kleine Flächen mit drehbaren Dominos und L-Stein
 
 Unter „Mein Schulauftrag“ wählen Kinder oder Eltern pro Profil zwei oder drei Laborthemen. Jede Runde mischt sie zweimal und zeigt beim Abschluss für jedes Thema die Zahl der richtigen Erstversuche. Der Pfad verlinkt die erste passende freigeschaltete Lektion oder startet den Auftrag im Labor. Der Spielstand-Code nimmt die Themenauswahl mit.
 
+„Päckchen erforschen“ verbindet das Labor, den Schulauftrag und die Kompetenz Rechenpäckchen am Rechenstrand. Kinder verändern einen oder zwei Summanden, sagen die Wirkung auf die Summe voraus und prüfen sie an der neuen Rechnung. Nach der Auswertung zeigen Zehnerstreifen und Einer beide Rechnungen.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

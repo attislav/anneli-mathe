@@ -112,7 +112,7 @@ export const WORLDS: World[] = [
     boss: { name: "Pirat Plumps", color: "#7A4E2D", shade: "#55341C" },
     nodes: [
       { id: "strand-1", kind: "lesson", title: "Mit Zehnern", skills: ["zehnerPlus"] },
-      { id: "strand-2", kind: "lesson", title: "Einer dazu", skills: ["einerPlus"] },
+      { id: "strand-2", kind: "lesson", title: "Einer und Rechenpäckchen", skills: ["einerPlus", "rechenpaeckchen"] },
       { id: "strand-3", kind: "chest", title: "Schatzkiste", skills: [], coloring: "rakete" },
       { id: "strand-4", kind: "lesson", title: "Ergänzen", skills: ["ergaenzen"] },
       { id: "strand-5", kind: "lesson", title: "Zahlenmauern", skills: ["mauern"] },
@@ -120,7 +120,7 @@ export const WORLDS: World[] = [
       { id: "strand-7", kind: "lesson", title: "Über den Zehner", skills: ["uebergang100"] },
       { id: "strand-8", kind: "review", title: "Gemischt", skills: ["zehnerPlus", "einerPlus", "ergaenzen", "mauern", "uebergang100"] },
       round2("strand-9", "Mit Zehnern 2", ["zehnerPlus"]),
-      round2("strand-10", "Einer dazu 2", ["einerPlus"]),
+      round2("strand-10", "Einer und Rechenpäckchen 2", ["einerPlus", "rechenpaeckchen"]),
       chest("strand-11"),
       round2("strand-12", "Ergänzen 2", ["ergaenzen"]),
       round2("strand-13", "Zahlenmauern 2", ["mauern"]),
