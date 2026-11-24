@@ -208,7 +208,7 @@ export const WORLDS: World[] = [
       chest("baeckerei-11"),
       round2("baeckerei-12", "Geteilt rechnen 2", ["geteilt"]),
       round2("baeckerei-13", "Mal und Geteilt 2", ["umkehr"]),
-      round2("baeckerei-14", "Bäckerei-Geschichten 2", ["backSach"]),
+      round2("baeckerei-14", "Rezepte und Bäckerei-Geschichten", ["backSach", "gruppenrezepte"]),
       chest("baeckerei-15"),
       mix2("baeckerei-16", ["verteilen", "halbieren", "geteilt", "umkehr", "backSach"]),
       { id: "baeckerei-boss", kind: "boss", title: "Teigmonster Knetbert", skills: ["geteilt", "umkehr", "halbieren", "backSach"], coloring: "cupcake" },

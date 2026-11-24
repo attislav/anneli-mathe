@@ -51,6 +51,7 @@ function keyOf(t: TaskDraftWithSkill) {
   if (t.format === "remainders") return JSON.stringify([t.format,t.scene,t.total,t.size]);
   if (t.format === "balance") return JSON.stringify([t.format,t.base,t.start,t.change]);
   if (t.format === "weekly") return JSON.stringify([t.format,t.start,t.weeks,t.weekdays,t.cancel,t.move,t.query,t.anchor,t.activity]);
+  if (t.format === "group-recipe") return JSON.stringify([t.format,t.title,t.children,t.ingredients]);
   if (t.format === "pictogram") return JSON.stringify([t.format,t.title,t.names,t.keyValue,t.first,t.second]);
   if (t.format === "chocolate-share") return JSON.stringify([t.format, t.rows, t.cols, t.children]);
   if (t.format === "morning-plan") return JSON.stringify([t.format, t.start, t.duration, t.step, t.fixed, t.activities, t.target, t.follow]);

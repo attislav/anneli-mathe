@@ -379,6 +379,8 @@ Im Wochenkalender markieren Kinder wiederkehrende Freizeitangebote über zwei od
 
 Bei „Bilddiagramm entschlüsseln“ lesen Kinder Stimmen mithilfe einer Legende und legen eine zweite Reihe aus ganzen und später halben Bildzeichen. Danach bestimmen sie, wie viele zusätzliche Stimmen die schwächere Reihe bis zum Gleichstand braucht. Die Aufgabe ist im Detektivbüro, im Labor und im Schulauftrag erreichbar.
 
+Beim „Rezept für unsere Tischgruppe“ stellen Kinder Zweiergruppen für vier oder sechs Kinder zusammen. Sie berechnen die Mengen für Obstquark, Knäckebrot-Gesichter oder Beerenmüsli und prüfen für jede Zutat, wie viel im Vorrat fehlt. Die Aufgabe ist in der Bäckerei, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

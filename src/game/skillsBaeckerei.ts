@@ -4,6 +4,7 @@
 // Aufgabe hat eine Mal-Schwester (Umkehraufgabe) — die kennt das Kind schon
 // aus dem Zirkus, darum führen alle Tipps über das Malnehmen.
 
+import { groupRecipe } from "./groupRecipe";
 import type { TaskDraft, Treat } from "./types";
 import { chocolate } from "./chocolate";
 import { remainders } from "./remainders";
@@ -196,4 +197,5 @@ const backSach: Skill = {
 
 const anteile: Skill = { id: "anteile", title: "Hälften und Viertel", world: "baeckerei", gen: ({ level }) => chocolate(level) };
 const restDeuten: Skill = { id: "restDeuten", title: "Reste in Sachaufgaben deuten", world: "baeckerei", gen: ({level}) => remainders(level) };
-export const BAECKEREI_SKILLS: Skill[] = [verteilen, halbieren, anteile, geteilt, umkehr, backSach, restDeuten];
+const gruppenrezepte: Skill = { id: "gruppenrezepte", title: "Rezepte für Gruppen umrechnen", world: "baeckerei", gen: ({level}) => groupRecipe(level) };
+export const BAECKEREI_SKILLS: Skill[] = [gruppenrezepte, verteilen, halbieren, anteile, geteilt, umkehr, backSach, restDeuten];

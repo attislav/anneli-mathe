@@ -19,6 +19,7 @@ import { clarifyStory } from "./clarifyStory";
 import { remainders } from "./remainders";
 import { balance } from "./balance";
 import { weekly } from "./weekly";
+import { groupRecipe } from "./groupRecipe";
 import { pictogram } from "./pictogram";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
@@ -58,6 +59,7 @@ export const LAB_TOPICS = {
   rest: { title: "Was machen wir mit dem Rest?", prompt: "Bilde Gruppen und entscheide, wie der Rest zählt.", skillId: "restDeuten", generate: remainders },
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
+  recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
   pictures: { title: "Bilddiagramm entschlüsseln", prompt: "Lies die Legende, lege Kreise und vergleiche Stimmen.", skillId: "bilddiagramme", generate: pictogram },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },

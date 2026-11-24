@@ -8,6 +8,8 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type RecipeIngredient = { name: string; unit: "Stück" | "Esslöffel"; base: number; stock: number };
+export type GroupRecipeTask = TaskBase & { format: "group-recipe"; title: string; children: number; ingredients: RecipeIngredient[] };
 export type PictogramTask = TaskBase & { format: "pictogram"; names:string[]; title:string; keyValue:number; first:number; second:number };
 export type WeeklyTask = TaskBase & { format: "weekly"; start: number; weeks: number; weekdays: number[]; activity: string;
   cancel: number | null; move: {from:number;to:number}|null; query: "count"|"from"|"after"; anchor: number };
@@ -231,7 +233,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = PictogramTask | WeeklyTask | BalanceTask | RemainderTask | ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = GroupRecipeTask | PictogramTask | WeeklyTask | BalanceTask | RemainderTask | ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

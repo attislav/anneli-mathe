@@ -27,6 +27,7 @@ import { balance, balanceHint, stonePile, stoneSum, tilt } from "../src/game/bal
 import { Scale } from "../src/lesson/Balance";
 import "./smoke-weekly";
 import "./smoke-pictogram";
+import "./smoke-group-recipe";
 import "./smoke-partner-survey";
 import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
@@ -48,7 +49,7 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { pictures: "pictogram", weekly: "weekly", balance: "balance", rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { recipe: "group-recipe", pictures: "pictogram", weekly: "weekly", balance: "balance", rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
 
 assert.equal(balanceHint(5,[5],[2,2,1]),null);
