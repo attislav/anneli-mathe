@@ -337,6 +337,8 @@ Der Lernbericht führt das Schätzlabor unter „Schätzungen durch Messen prüf
 
 In der Fragenwerkstatt bauen Kinder zu drei Mengen im Obstkorb oder Tierheim eine eigene Summen- oder Unterschiedsfrage. Sie wählen die passenden Gruppen und das Rechenzeichen und lösen ihre Rechnung. Der Lernbericht erfasst den Erstversuch unter „Sachaufgaben“. Die Werkstatt ist im Detektivbüro, Labor und Schulauftrag verfügbar.
 
+Unter „Meine Rechenwege“ können Kinder nach einer eigenen Mal-Feld-Zerlegung oder Frage freiwillig ihren Weg merken. Das Labor verwendet dieselbe Trennlinie oder dieselben gewählten Gruppen für Aufgaben mit neuen Zahlen. Die Merkliste gehört zum jeweiligen Profil und reist im Spielstand-Code mit.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

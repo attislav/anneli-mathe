@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { activeProfileId } from "@/game/state";
+import { questionCard } from "@/game/strategyCards";
+import { RememberStrategy } from "./RememberStrategy";
 import { checkQuestion, composeQuestion, startQuestion, type Question } from "@/game/writeQuestion";
 import type { WriteQuestionTask } from "@/game/types";
 import { DataIconArt } from "@/ui/Detective";
@@ -6,10 +9,12 @@ import { Button } from "@/ui/Button";
 import type { FormatProps } from "./formats";
 
 export function WriteQuestion({ task, status, onAnswer }: FormatProps<WriteQuestionTask>) {
-  const [entry, setEntry] = useState(() => startQuestion({ a: null, b: null, kind: null }));
+  const [owner] = useState(activeProfileId);
+  const [entry, setEntry] = useState(() => startQuestion(task.preset ?? { a: null, b: null, kind: null }));
   const locked = status !== "ask";
   const solved = status === "right" || status === "reveal";
   const model = composeQuestion(task, entry.question);
+  const card = solved && !task.preset ? questionCard(task, entry.question) : null;
   const options = (skip: number | null = null) => task.groups.map((group, i) =>
     <option key={group.icon} value={i} disabled={skip === i}>{group.value} {group.label}</option>);
   const select = "min-h-11 w-full rounded-xl border-2 border-grape-light bg-white px-2";
@@ -28,7 +33,7 @@ export function WriteQuestion({ task, status, onAnswer }: FormatProps<WriteQuest
         <div key={group.icon} className="grid justify-items-center rounded-xl bg-sun-light py-2 text-sm">
           <DataIconArt icon={group.icon} /><span>{group.value} {group.label}</span></div>)}</div>
     </section>
-    {!solved && <fieldset disabled={locked} className="grid grid-cols-2 gap-2">
+    {!solved && !task.preset && <fieldset disabled={locked} className="grid grid-cols-2 gap-2">
       <legend>Baue deine Frage</legend>
       {(["a", "b"] as const).map((key, i) => <label key={key}>{i === 0 ? "Erste Gruppe" : "Zweite Gruppe"}
         <select className={select} value={entry.question[key] ?? ""} onChange={e =>
@@ -61,5 +66,6 @@ export function WriteQuestion({ task, status, onAnswer }: FormatProps<WriteQuest
         <Button type="submit" disabled={locked || entry.left === null || entry.right === null || !entry.sign || !entry.answer}>Antwort prüfen</Button>
       </>}
     </>}
+    {card && <RememberStrategy owner={owner} card={card} />}
   </form>;
 }

@@ -25,9 +25,15 @@ export function checkSplit(task: Field, entry: SplitEntry) {
   return { correct: true };
 }
 
+export function splitLimits(level: Level) {
+  return { minRows: level < 3 ? 3 : 4, maxRows: [4, 5, 6, 8, 10][level - 1],
+    minCols: level === 1 ? 2 : level === 2 ? 3 : 4, maxCols: [4, 5, 7, 8, 10][level - 1] };
+}
+
 export function splitArray(level: Level): Omit<SplitTask, "id" | "level" | "skillId"> {
-  const rows = randInt(level < 3 ? 3 : 4, [4, 5, 6, 8, 10][level - 1]);
-  const cols = randInt(level === 1 ? 2 : level === 2 ? 3 : 4, [4, 5, 7, 8, 10][level - 1]);
+  const limits = splitLimits(level);
+  const rows = randInt(limits.minRows, limits.maxRows);
+  const cols = randInt(limits.minCols, limits.maxCols);
   return { rows, cols, axis: level === 1 ? "rows" : level === 2 ? "cols" : "either", format: "split-array",
     question: "Wie kannst du das Mal-Feld zerlegen?", hint: "Teile das Feld so, dass du die beiden kleinen Malaufgaben gut rechnen kannst.",
     solution: `Alle Punkte zusammen: ${rows} · ${cols} = ${rows * cols}.` };

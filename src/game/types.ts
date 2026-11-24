@@ -8,9 +8,9 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
-export type WriteQuestionTask = TaskBase & { format: "write-question"; scene: "fruit" | "pets"; groups: DataRow[] };
+export type WriteQuestionTask = TaskBase & { format: "write-question"; scene: "fruit" | "pets"; groups: DataRow[]; preset?: { a: number; b: number; kind: "sum" | "difference" } };
 export type SplitAxis = "rows" | "cols";
-export type SplitTask = TaskBase & { format: "split-array"; rows: number; cols: number; axis: SplitAxis | "either" };
+export type SplitTask = TaskBase & { format: "split-array"; rows: number; cols: number; axis: SplitAxis | "either"; presetLine?: number };
 export type RopeTask = TaskBase & { format: "estimate-rope"; length: number; unit: 1 | 2; extent: number };
 export type TableSide = "unten" | "oben" | "links" | "rechts";
 export type TableItem = "Tasse" | "Buch" | "Schlüssel" | "Apfel" | "Stift" | "Uhr";

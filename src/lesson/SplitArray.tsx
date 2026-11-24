@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { activeProfileId } from "@/game/state";
+import { splitCard } from "@/game/strategyCards";
+import { RememberStrategy } from "./RememberStrategy";
 import { checkSplit, newSplit, parts, type SplitEntry } from "@/game/splitArray";
 import type { SplitAxis, SplitTask } from "@/game/types";
 import { Button } from "@/ui/Button";
 import type { FormatProps } from "./formats";
 
 export function SplitArray({ task, status, onAnswer }: FormatProps<SplitTask>) {
-  const [entry, setEntry] = useState(() => newSplit(task.axis === "either" ? "rows" : task.axis));
+  const [owner] = useState(activeProfileId);
+  const [entry, setEntry] = useState(() => newSplit(task.axis === "either" ? "rows" : task.axis, task.presetLine));
   const solved = status === "right" || status === "reveal";
   const locked = status !== "ask";
   const { axis } = entry;
@@ -41,7 +45,7 @@ export function SplitArray({ task, status, onAnswer }: FormatProps<SplitTask>) {
         })}
       </div>
     </div>
-    {!solved && <>
+    {!solved && !task.presetLine && <>
       {task.axis === "either" && <fieldset disabled={locked} className="flex flex-wrap gap-2">
         <legend>Wie möchtest du teilen?</legend>
         {(["rows", "cols"] as const).map(a => <button key={a} type="button" className={option} aria-pressed={axis === a}
@@ -66,5 +70,6 @@ export function SplitArray({ task, status, onAnswer }: FormatProps<SplitTask>) {
           <input type="text" inputMode="numeric" disabled={locked} className={box} value={entry.total} onChange={e => input("total", e.target.value)} /></label>
           <Button type="submit" disabled={locked || !ready}>Zerlegung prüfen</Button></>}
     </>}
+    {solved && entry.line !== null && !task.presetLine && <RememberStrategy owner={owner} card={splitCard(task, axis, entry.line)} />}
   </form>;
 }

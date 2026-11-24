@@ -13,6 +13,7 @@ import { WORLDS, starNodes, type PathNode, type World } from "./worlds";
 import { pick } from "./random";
 import { activeSeason } from "./season";
 import { schoolTopics, type LabTopic } from "./schoolSelection";
+import { normalizeCards, type StrategyCard } from "./strategyCards";
 import { isComplete, PIECE_DUPLICATE_COINS, PIECES, puzzleOfWorld } from "./puzzles";
 import type { WorldId } from "./skills";
 import type { Level, TaskDraft } from "./types";
@@ -53,6 +54,7 @@ export type SaveState = {
   /** Übungskiste: falsch gelöste Aufgaben, die später wiederkommen. */
   practice: PracticeItem[];
   schoolTopics: LabTopic[];
+  strategies: StrategyCard[];
   /** Adventskalender: geöffnete Türchen im Jahr `year`. */
   advent: { year: number; opened: number[] };
   /** Antwort-Protokoll für den Lernbericht (nur erste Versuche, die neuesten zuletzt). */
@@ -104,6 +106,7 @@ export function emptyState(): SaveState {
     dailyChests: 0,
     practice: [],
     schoolTopics: [],
+    strategies: [],
     advent: { year: 0, opened: [] },
     log: [],
     puzzles: {},
@@ -168,7 +171,7 @@ function parseSave(raw: string | null): SaveState | null {
   if (!raw) return null;
   const parsed = JSON.parse(raw) as Partial<SaveState>;
   if (parsed.v !== 1) return null;
-  return { ...emptyState(), ...parsed, schoolTopics: schoolTopics(parsed.schoolTopics), settings: { ...emptyState().settings, ...parsed.settings } };
+  return { ...emptyState(), ...parsed, schoolTopics: schoolTopics(parsed.schoolTopics), strategies: normalizeCards(parsed.strategies), settings: { ...emptyState().settings, ...parsed.settings } };
 }
 
 function load(): SaveState {
@@ -526,7 +529,7 @@ export function updateSettings(patch: Partial<SaveState["settings"]>): void {
 
 /** Spielstand von einem anderen Gerät übernehmen (ersetzt den aktuellen). */
 export function replaceSave(incoming: Partial<SaveState>): void {
-  update(() => ({ ...emptyState(), ...incoming, v: 1, schoolTopics: schoolTopics(incoming.schoolTopics), settings: { ...emptyState().settings, ...incoming.settings } }));
+  update(() => ({ ...emptyState(), ...incoming, v: 1, schoolTopics: schoolTopics(incoming.schoolTopics), strategies: normalizeCards(incoming.strategies), settings: { ...emptyState().settings, ...incoming.settings } }));
 }
 
 export function savePaint(puzzleId: string, ops: PaintOp[]): void {

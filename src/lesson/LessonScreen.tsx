@@ -187,12 +187,12 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   };
 
   useEffect(() => {
-    if (status !== "right") return;
+    if (status !== "right" || task.format === "split-array" || task.format === "write-question") return;
     autoNext.current = setTimeout(advance, 1300);
     return () => {
       if (autoNext.current) clearTimeout(autoNext.current);
     };
-  }, [status, advance]);
+  }, [status, advance, task.format]);
 
   const onAnswer = (correct: boolean, hint?: string) => {
     if (status !== "ask") return;

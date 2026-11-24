@@ -1,4 +1,11 @@
-import type { WriteQuestionTask } from "./types";
+import type { DataIcon, Level, WriteQuestionTask } from "./types";
+
+export function questionLimit(level: Level) { return [6, 9, 15, 25, 45][level - 1]; }
+
+export const sceneCategories: Record<WriteQuestionTask["scene"], [DataIcon, string][]> = {
+  fruit: [["apfel", "Äpfel"], ["banane", "Bananen"], ["birne", "Birnen"], ["kirsche", "Kirschen"], ["traube", "Trauben"]],
+  pets: [["hund", "Hunde"], ["katze", "Katzen"], ["hase", "Hasen"], ["vogel", "Vögel"]],
+};
 
 type Scene = Pick<WriteQuestionTask, "groups" | "scene">;
 export type Question = { a: number | null; b: number | null; kind: "sum" | "difference" | null };

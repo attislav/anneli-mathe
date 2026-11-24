@@ -4,6 +4,7 @@
 import { plausible } from "./discovery";
 import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft, WriteQuestionTask } from "./types";
 import { surveyAnswer, surveyRows } from "./survey";
+import { questionLimit, sceneCategories } from "./writeQuestion";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -22,7 +23,7 @@ type Theme = {
 
 const THEMES: Theme[] = [
   {
-    rows: [["apfel", "Äpfel"], ["banane", "Bananen"], ["birne", "Birnen"], ["kirsche", "Kirschen"], ["traube", "Trauben"]],
+    rows: sceneCategories.fruit,
     count: (l) => `Wie viele Kinder mögen ${l} am liebsten?`,
     more: (a, b) => `Wie viele Kinder mehr mögen ${a} als ${b}?`,
     total: "Wie viele Kinder wurden insgesamt gefragt?",
@@ -31,7 +32,7 @@ const THEMES: Theme[] = [
     unit: "Kinder",
   },
   {
-    rows: [["hund", "Hunde"], ["katze", "Katzen"], ["hase", "Hasen"], ["vogel", "Vögel"]],
+    rows: sceneCategories.pets,
     count: (l) => `Wie viele ${l} haben die Kinder?`,
     more: (a, b) => `Wie viele ${a} mehr als ${b} gibt es?`,
     total: "Wie viele Haustiere sind es insgesamt?",
@@ -241,7 +242,7 @@ function story(ctx: GenCtx, question: string, answer: number, unit: string, hint
 export function writeQuestion(level: Level): Omit<WriteQuestionTask, "id" | "skillId" | "level"> {
   const scene = chance(0.5) ? "fruit" : "pets";
   const groups = shuffle(THEMES[scene === "fruit" ? 0 : 1].rows).slice(0, 3).map(([icon, label]) =>
-    ({ icon, label, value: randInt(2, [6, 9, 15, 25, 45][level - 1]) }));
+    ({ icon, label, value: randInt(2, questionLimit(level)) }));
   return { format: "write-question", scene, groups, question: "Welche Frage möchtest du stellen?",
     hint: "Wähle zwei Gruppen. Möchtest du sie zusammenzählen oder miteinander vergleichen?",
     solution: "Die beiden gewählten Gruppen bestimmen die Zahlen. Für die Gesamtzahl addierst du, für den Unterschied ziehst du die kleinere Anzahl von der größeren ab." };
