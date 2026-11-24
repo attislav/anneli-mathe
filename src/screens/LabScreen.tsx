@@ -6,6 +6,7 @@ import { SCHOOL_PATH, SchoolRound } from "@/game/schoolAssignment";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
 import { TripRound } from "@/game/classTrip";
+import { ClinicRound } from "@/game/clinic";
 import { busTime } from "@/game/busTable";
 import { fmtMoney } from "@/game/money";
 import { activeProfileId, needsProfilePick, useSave } from "@/game/state";
@@ -51,6 +52,10 @@ function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
       <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
         <p>Wähle ein Projekt oder übe ein Thema mit fünf Aufgaben.</p></div>
     </header>
+    <Link href="/labor/sprechstunde/" className="mb-3 block rounded-2xl bg-sky-light px-4 py-3">
+      <span className="font-display text-xl">Mathe-Sprechstunde</span>
+      <span className="ml-2 text-sm">Gemeinsam über den Zehner rechnen</span>
+    </Link>
     <Link href={SCHOOL_PATH} className="mb-3 block rounded-2xl bg-grape-light px-4 py-3">
       <span className="font-display text-xl">Mein Schulauftrag</span>
       <span className="ml-2 text-sm">{topics.length ? topics.map(t => LAB_TOPICS[t].title).join(" · ") : "Themen auswählen"}</span>
@@ -85,12 +90,13 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound; onBack: () => void; onReplay: () => void }) {
   const [state, setState] = useState(round.state);
   const { task, number, status, firstRight } = state;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
-  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : school ? "Mein Schulauftrag" : "Unser Klassenausflug";
+  const clinic = round instanceof ClinicRound;
+  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : "Unser Klassenausflug";
   const heading = useRef<HTMLHeadingElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -106,8 +112,8 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
       {[...school.results].map(([topic, right]) => <li key={topic}>{LAB_TOPICS[topic].title}: {right} von 2 beim ersten Versuch</li>)}
     </ul>}
     <p>{title} · {firstRight} von {round.count} gleich beim ersten Versuch gelöst.</p>
-    <Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : "Noch eine Runde"}</Button>
-    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : "Anderes Thema wählen"}</Button>
+    <Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : clinic ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
+    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : "Anderes Thema wählen"}</Button>
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">

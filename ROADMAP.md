@@ -327,6 +327,8 @@ Unter „Mein Schulauftrag“ wählen Kinder oder Eltern pro Profil zwei oder dr
 
 „Wer sieht was?“ trainiert im Formen-Ozean, Labor und Schulauftrag die Kompetenz „Standpunkte wechseln“. Kinder bestimmen, was von einer Tischseite aus links und rechts steht. Später suchen sie anhand einer beschriebenen Ansicht den Standort. Die Auflösung zeigt den Tisch aus Milas Blickrichtung.
 
+In der Mathe-Sprechstunde legen Kinder bei 8 + 5 zuerst bis zur 10 auf und bei 32 − 7 zuerst bis zur 30 ab. Sie verändern und korrigieren die Plättchen selbst. Danach lösen sie eine neue Rechnung derselben Art ohne Material. Nur die selbstständigen Aufgaben fließen in den Lernbericht ein.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.
