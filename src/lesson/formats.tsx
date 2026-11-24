@@ -8,6 +8,7 @@ import { NumPad } from "./NumPad";
 import { DigitBuildView, PairView, RuleView } from "./NumberPuzzles";
 import { GridRoute } from "./GridRoute";
 import { LengthStrips } from "./LengthStrips";
+import { HundredWindow } from "./HundredWindow";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -29,6 +30,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "hundred-window":
+      return <HundredWindow {...props} task={task} />;
     case "length-strips":
       return <LengthStrips {...props} task={task} />;
     case "machine":

@@ -311,6 +311,8 @@ Attis Priorität für die nächsten Runden: Jede Runde liefert eine neue, für K
 
 Das Mathe-Labor ist über „Labor“ in der festen Navigation erreichbar. Kinder können Rechenmaschinen, Würfelbau, Einkaufskörbe, Kalender, Zahlenpaare und Rasterwege ab dem ersten Tag frei wählen. Jede Runde umfasst fünf Aufgaben. Erstversuche aktualisieren den Lernbericht und die Schwierigkeit des aktiven Kindes. Pfadfortschritt und Belohnungen werden weiterhin in den Lektionen vergeben.
 
+Als siebtes Laborthema ergänzt das Zahlenfenster die Nachbarzahlen im Zahlenwald. Kinder füllen Lücken in einem Ausschnitt der Hundertertafel. Sie gehen von einer sichtbaren Nachbarzahl nach links oder rechts in Einerschritten, nach oben oder unten in Zehnerschritten.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

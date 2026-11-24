@@ -10,6 +10,7 @@
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
 import { machine } from "./discovery";
+import { hundredWindow } from "./hundredWindow";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numberPairs, sequenceRule } from "./numberPuzzles";
 import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genkit";
@@ -288,6 +289,7 @@ const nachbarn: Skill = {
   world: "wald",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("hundred-window") && chance(0.4)) return hundredWindow(level);
     if (level === 3) {
       let n = randInt(11, 98);
       if (n % 10 === 0) n += 3;

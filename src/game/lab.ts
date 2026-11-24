@@ -1,6 +1,7 @@
 import { updateMastery } from "./adaptive";
 import { baskets, calendar, cubeModel, machine } from "./discovery";
 import { numberPairs } from "./numberPuzzles";
+import { hundredWindow } from "./hundredWindow";
 import { uid } from "./random";
 import { getSkill } from "./skills";
 import { activeProfileId, LOG_MAX, masteryOf, readSave, update } from "./state";
@@ -9,6 +10,7 @@ import type { Level, Task, TaskDraft } from "./types";
 export const LAB_COUNT = 5;
 type Topic = { title: string; prompt: string; skillId: string; generate: (level: Level) => TaskDraft };
 export const LAB_TOPICS = {
+  window: { title: "Zahlenfenster", prompt: "Ergänze die Hundertertafel.", skillId: "nachbarn", generate: hundredWindow },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },
