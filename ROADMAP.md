@@ -371,6 +371,8 @@ Im Labor wählen Kinder einen von vier Lernbereichen. Zwei Lernfolgen mit je dre
 
 In „Was machen wir mit dem Rest?“ legen Kinder volle Gruppen und bestimmen den Rest. Dieselben Zahlen verwenden sie anschließend für zwei Entscheidungen: Wie viele Fahrzeuge brauchen alle Kinder, und wie viele vollständige Packungen entstehen? Fälle mit Rest null und mit weniger als einer vollen Gruppe sind enthalten. Die Aufgabe ist in der Bäckerei, im Labor und im Schulauftrag verfügbar.
 
+Auf der Rechenwaage stellen Kinder zunächst mit frei gewählten Zahlensteinen Gleichgewicht her. Danach erhöhen oder verringern sie beide Seiten um einen vorgegebenen Wert. Die Neigung und ein Text zeigen, welche Seite schwerer ist. Die Kompetenz „Gleichheit verstehen“ ist auf der Startinsel, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

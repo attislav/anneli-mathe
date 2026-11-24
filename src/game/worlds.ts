@@ -66,7 +66,7 @@ export const WORLDS: World[] = [
       { id: "start-7", kind: "review", title: "Gemischt", skills: ["freunde10", "plus20", "uebergang20", "doppelt"] },
       round2("start-8", "Zahlenfreunde 2", ["freunde10"]),
       chest("start-9"),
-      round2("start-10", "Plus & Minus 2", ["plus20"]),
+      round2("start-10", "Plus, Minus und Gleichheit", ["plus20", "gleichheit"]),
       round2("start-11", "Über die 10 2", ["uebergang20"]),
       round2("start-12", "Verdoppeln 2", ["doppelt"]),
       chest("start-13"),

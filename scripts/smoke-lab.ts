@@ -23,6 +23,8 @@ import { checkStory, clarifyStory, storyAmount, storyUnit, type Scenario } from 
 import { lastLabArea, LearningRound, numberTasks, rememberLabArea } from "../src/game/learningGoals";
 import { LabMenu } from "../src/screens/LabScreen";
 import { groupHint, remainders, restAnswer, restValues } from "../src/game/remainders";
+import { balance, balanceHint, stonePile, stoneSum, tilt } from "../src/game/balance";
+import { Scale } from "../src/lesson/Balance";
 import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
@@ -43,8 +45,27 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { balance: "balance", rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+assert.equal(balanceHint(5,[5],[2,2,1]),null);
+assert.equal(balanceHint(0,[],[]),null);
+assert.equal(balanceHint(5,[5,2],[2,2,2,1],2),null);
+assert.equal(balanceHint(5,[],[],-5),null);
+assert.ok(balanceHint(5,[2],[1,1],2));
+assert.ok(balanceHint(5,[5,2],[5],2));
+assert.ok(balanceHint(5,[5],[5,2],2));
+for (const [left,right,word,description] of [[0,0,"balanced","gleich schwer"],[2,1,"left","linke Seite"],[1,2,"right","rechte Seite"]] as const) {
+  assert.equal(tilt(left,right),word);
+  assert.ok(renderToStaticMarkup(createElement(Scale,{left,right})).includes(description));
+}
+for (const level of [1,2,3,4,5] as Level[]) for (let i=0;i<160;i++) {
+  const t=balance(level), initial=stoneSum(t.base), changed=initial+t.change;
+  assert.notEqual(stoneSum(t.start),initial);
+  assert.ok(changed>=0 && changed<=t.limit);
+  assert.notEqual(t.change,0);
+  assert.equal(balanceHint(initial,stonePile(changed,t.stones),Array(changed).fill(1),t.change),null);
+}
 
 for (const [total,size,full,rest,rides] of [[2,4,0,2,1],[8,4,2,0,2],[9,4,2,1,3],[7,4,1,3,2]]) {
   const problem = {total,size};
