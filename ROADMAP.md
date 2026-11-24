@@ -381,6 +381,8 @@ Bei „Bilddiagramm entschlüsseln“ lesen Kinder Stimmen mithilfe einer Legend
 
 Im Bereich Raum und Formen planen Kinder einen eigenen Weg über den Brunnen. Sie bestimmen die nächste Richtung aus Sicht der ankommenden Person und zeichnen einen Umweg, nachdem die ursprüngliche Verbindung gesperrt wurde.
 
+Nach jeder der vier Lernverbindungen können Kinder freiwillig eine Veränderung vorhersagen. Ein Plättchen wechselt die Seite, der Blick am Brunnen dreht sich, ein Bus fährt fünf Minuten später oder ein weiterer Stimmzettel wechselt die Gruppe. Nach der Vermutung erklärt ein Vorher-Nachher-Vergleich die Auswirkung anhand derselben Runde.
+
 Die Lernverbindung „Von Stimmen zur Entscheidung“ im Datenbereich führt dieselben Stimmzettel durch drei Aufgaben. Kinder sortieren sie, legen beide Reihen des Bilddiagramms und prüfen nach einer geänderten Stimme, welches Obst vorn liegt. Im Lernbericht zählen Strichliste, Bilddiagramm und das Auswerten der Veränderung jeweils einmal.
 
 Im Zeichencode erschließen Kinder die Werte von Sonne und Mond und rechnen mit beiden Zeichen. Auf höheren Stufen belegen sie zuerst mit zwei eigenen Zahlenpaaren, warum der erste Hinweis mehrere Lösungen zulässt. Erreichbar im Detektivbüro, Labor und Schulauftrag.

@@ -54,6 +54,14 @@ function timeTasks(): [Task, Task, Task] {
   ];
 }
 export class LearningRound extends LabSession {
+  readonly furtherOrder=shuffle([0,1,2]);
+  readonly preferredVoteSource=pick([0,1]);
+  readonly revealed = new Set<string>();
+  override answer(taskId:string, correct:boolean, hint?:string) {
+    const result=super.answer(taskId,correct,hint);
+    if(result.task.id===taskId && result.status==="reveal") this.revealed.add(taskId);
+    return result;
+  }
   constructor(owner: string, readonly goal: LearningGoal, readonly tasks = goal === "numbers" ? numberTasks() : goal === "votes" ? voteTasks() : goal === "routes" ? routeTasks() : timeTasks()) {
     super(owner, 3, number => tasks[number-1]);
   }

@@ -24,6 +24,8 @@ import { PartnerSurvey } from "./PartnerSurvey";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
 import { DrawRoute } from "@/lesson/ChangeRoute";
 import { GoalParts } from "@/lesson/GoalParts";
+import { ThinkFurther } from "@/lesson/ThinkFurther";
+import { thinkFurther } from "@/game/thinkFurther";
 
 const cards = {
   questions: { Icon: ListChecks, color: "bg-grape-light" },
@@ -173,6 +175,7 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
       {[...school.results].map(([topic, right]) => <li key={topic}>{LAB_TOPICS[topic].title}: {right} von 2 beim ersten Versuch</li>)}
     </ul>}
     <p>{title} · {firstRight} von {round.count} gleich beim ersten Versuch gelöst.</p>
+    {round instanceof LearningRound && <ThinkFurther key={round.id} item={thinkFurther(round)}/>}
     <Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
     <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button>
   </main>;
