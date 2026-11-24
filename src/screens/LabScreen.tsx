@@ -57,6 +57,7 @@ const cards = {
   balance: { Icon: SquarePlus, color: "bg-sky-light" },
   weekly: { Icon: CalendarDays, color: "bg-sky-light" },
   code: { Icon: Cpu, color: "bg-grape-light" },
+  attributes: { Icon: Grid3X3, color: "bg-grape-light" },
   targetSteps: { Icon: SquarePlus, color: "bg-sky-light" },
   pegs: { Icon: Grid3X3, color: "bg-sun-light" },
   strips: { Icon: Blocks, color: "bg-grape-light" },

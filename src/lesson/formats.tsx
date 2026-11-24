@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { AttributeSort } from "./AttributeSort";
 import { TargetSteps } from "./TargetSteps";
 import { GeoBoard } from "./GeoBoard";
 import { StoryStrips } from "./StoryStrips";
@@ -80,6 +81,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "attribute-sort":
+      return <AttributeSort {...props} task={task} />;
     case "target-steps":
       return <TargetSteps {...props} task={task} />;
     case "geo-board":

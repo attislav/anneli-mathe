@@ -13,6 +13,8 @@ export type RouteTurnTask = TaskBase & { format:"route-turn"; route:number[] };
 export type VoteChartTask = TaskBase & { format: "vote-chart"; names:string[]; amounts:number[] };
 export type DecisionTask = TaskBase & { format: "vote-change"; names:string[]; icons:DataIcon[]; votes:number[]; ticket:number };
 export type CodeTask = TaskBase & { format: "symbol-code"; sun:number; moon:number; clue:"given"|"double"|"gap"; focus:"sun"|"moon"; repeat:"sun"|"moon"; explore:boolean };
+export type AttributeCard = { id:number; shape:"Kreis"|"Quadrat"|"Dreieck"; pattern:"plain"|"dots"|"stripes" };
+export type AttributeTask = TaskBase & { format:"attribute-sort"; cards:AttributeCard[]; shape:AttributeCard["shape"]; pattern:"dots"|"stripes"; countBy:"shape"|"pattern" };
 export type TargetStepsTask = TaskBase & { format:"target-steps"; cards:number[]; target:number; limit:number };
 export type GeoBoardTask = TaskBase & { format:"geo-board"; width:number; height:number; side:number };
 export type StripStoryTask = TaskBase & { format:"strip-story"; parts:[number,number]; names:string[]; unit:[string,string]; missing:import("./storyStrips").StoryRole; order:import("./storyStrips").StoryRole[] };
@@ -249,7 +251,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = DrawRouteTask | RouteTurnTask | VoteChartTask | DecisionTask | CodeTask | TargetStepsTask | GeoBoardTask | StripStoryTask | DivisionMeaningTask | LineEstimateTask | FoldTask | BagTask | SwapTask | ParcelTask | FenceTask | WheelTask | GroupRecipeTask | PictogramTask | WeeklyTask | BalanceTask | RemainderTask | ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = DrawRouteTask | RouteTurnTask | VoteChartTask | DecisionTask | CodeTask | AttributeTask | TargetStepsTask | GeoBoardTask | StripStoryTask | DivisionMeaningTask | LineEstimateTask | FoldTask | BagTask | SwapTask | ParcelTask | FenceTask | WheelTask | GroupRecipeTask | PictogramTask | WeeklyTask | BalanceTask | RemainderTask | ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

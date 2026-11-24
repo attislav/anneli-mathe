@@ -1,3 +1,4 @@
+import { attributeSort } from "./attributeSort";
 import { updateMastery } from "./adaptive";
 import { baskets, calendar, cubeModel, machine } from "./discovery";
 import { numberPairs } from "./numberPuzzles";
@@ -72,6 +73,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  attributes: { title:"Welche Eigenschaften passen?", prompt:"Sortiere Karten nach Form und Muster und zähle über zwei Felder.", skillId:"merkmaleSortieren", generate:attributeSort },
   targetSteps: { title: "Zielzahl in zwei Schritten", prompt: "Lege drei Karten und finde deinen Weg zur Zielzahl.", skillId: "zielzahlWege", generate: targetSteps },
   pegs: { title: "Geobrett", prompt: "Spanne ein Rechteck und ein Quadrat mit passenden Seitenlängen.", skillId: "figurenSpannen", generate: geoBoard },
   strips: { title: "Eine Geschichte mit Streifen legen", prompt: "Lege die Angaben in einen Streifenplan und baue eine passende Rechnung.", skillId: "sachaufgaben", generate: storyStrips },

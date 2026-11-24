@@ -315,7 +315,7 @@ export const WORLDS: World[] = [
       { id: "detektiv-6", kind: "lesson", title: "Möglichkeiten und Zufall", skills: ["kombinatorik", "zufallBeutel"] },
       { id: "detektiv-7", kind: "lesson", title: "Strichliste & Diagramm", skills: ["strichliste", "diagramm"] },
       { id: "detektiv-8", kind: "review", title: "Gemischt", skills: ["strichliste", "diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"] },
-      round2("detektiv-9", "Strichlisten 2", ["strichliste"]),
+      round2("detektiv-9", "Sortieren und Strichlisten führen", ["merkmaleSortieren", "strichliste"]),
       round2("detektiv-10", "Diagramme 2", ["diagramm"]),
       chest("detektiv-11"),
       round2("detektiv-12", "Sachaufgaben 2", ["sachaufgaben"]),
