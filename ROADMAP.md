@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+In der Partnerwerkstatt bauen Kinder Zahlenrätsel mit eigenen Hinweisen. Sie prüfen die Eindeutigkeit, geben das Gerät verdeckt weiter und begründen die Lösung an einer zweiten Zahl.
+
 Bei „Reichen unsere Plättchen?“ entscheiden Kinder mit der kleinsten und größten möglichen Menge. Nur bei offenem Ausgang wählen sie einen Deckel und prüfen danach neu. Im Zahlenwald und Labor erreichbar.
 
 Im Projekt „Unsere Murmelbahn im Test“ wählen Kinder zwei Unterlagen und messen vier Rollweiten. Sie belegen den weitesten Einzellauf und prüfen anhand des Protokolls, wo beide Läufe die Mindestweite erreichen.
