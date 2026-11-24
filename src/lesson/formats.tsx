@@ -20,6 +20,7 @@ import { SplitArray } from "./SplitArray";
 import { WriteQuestion } from "./WriteQuestion";
 import { ShopList } from "./ShopList";
 import { NumberDetective } from "./NumberDetective";
+import { ChocolateShare } from "./ChocolateShare";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -41,6 +42,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "chocolate-share":
+      return <ChocolateShare {...props} task={task} />;
     case "number-detective":
       return <NumberDetective {...props} task={task} />;
     case "shop-list":

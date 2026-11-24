@@ -29,6 +29,7 @@ const cards = {
   bus: { Icon: BusFront, color: "bg-sun-light" },
   window: { Icon: Grid3X3, color: "bg-sky-light" },
   detective: { Icon: ListChecks, color: "bg-sky-light" },
+  chocolate: { Icon: Grid3X3, color: "bg-coin-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

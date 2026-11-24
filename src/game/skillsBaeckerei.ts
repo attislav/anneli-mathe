@@ -5,6 +5,7 @@
 // aus dem Zirkus, darum führen alle Tipps über das Malnehmen.
 
 import type { TaskDraft, Treat } from "./types";
+import { chocolate } from "./chocolate";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -192,4 +193,5 @@ const backSach: Skill = {
   },
 };
 
-export const BAECKEREI_SKILLS: Skill[] = [verteilen, halbieren, geteilt, umkehr, backSach];
+const anteile: Skill = { id: "anteile", title: "Hälften und Viertel", world: "baeckerei", gen: ({ level }) => chocolate(level) };
+export const BAECKEREI_SKILLS: Skill[] = [verteilen, halbieren, anteile, geteilt, umkehr, backSach];

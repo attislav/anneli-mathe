@@ -5,6 +5,7 @@ import { busJourney, busTable, checkBus } from "../src/game/busTable";
 import { classSurvey } from "../src/game/skillsDetektiv";
 import { checkShopList, shopList, shopSolution } from "../src/game/shopList";
 import { checkMarking, fitsClue, numberDetective } from "../src/game/numberDetective";
+import { checkPortions, checkShare, chocolate, examplePortions } from "../src/game/chocolate";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -23,8 +24,29 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const fourPortions = { rows: 3, cols: 4, children: 4 as const };
+const differentShapes = [0,0,0,1, 2,2,1,1, 2,3,3,3];
+assert.equal(checkPortions(fourPortions, differentShapes), null);
+const twoPortions = { rows: 2, cols: 3, children: 2 as const };
+const disconnected = [0,0,1, 1,1,0];
+assert.match(checkPortions(twoPortions, disconnected) ?? "", /Seiten/);
+assert.match(checkPortions(twoPortions, [0,0,1, 1,1,-1]) ?? "", /Ordne/);
+assert.match(checkPortions(twoPortions, [0,0,1, 1,1,1]) ?? "", /Kind 1 hat zu wenige.*Kind 2 hat zu viele/);
+assert.match(checkPortions(twoPortions, [1,1,0, 0,0,0]) ?? "", /Kind 2 hat zu wenige.*Kind 1 hat zu viele/);
+assert.equal(checkPortions(twoPortions, [0,0,1, 0,1,1]), null);
+assert.equal(checkShare(fourPortions, "3", "ein Viertel"), null);
+assert.ok(checkShare(fourPortions, "4", "ein Viertel"));
+assert.ok(checkShare(fourPortions, "3", "eine Hälfte"));
+assert.equal(checkShare(twoPortions, "3", "eine Hälfte"), null);
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  for (let i = 0; i < 25; i++) {
+    const task = chocolate(level);
+    assert.equal(checkPortions(task, examplePortions(task)), null);
+  }
+}
 
 for (const fraction of [0, 0.13, 0.26, 0.39, 0.52, 0.65, 0.78, 0.99999]) {
   const random = mock.method(Math, "random", () => fraction);
