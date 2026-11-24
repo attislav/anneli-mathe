@@ -5,6 +5,7 @@ import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
 import { classSurvey, writeQuestion } from "./skillsDetektiv";
 import { shopList } from "./shopList";
+import { numberDetective } from "./numberDetective";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -29,6 +30,7 @@ export const LAB_TOPICS = {
   survey: { title: "Klassenumfrage", prompt: "Sortiere Stimmen und lies die Strichliste.", skillId: "strichliste", generate: classSurvey },
   bus: { title: "Busfahrplan", prompt: "Lies ab, wie lange du fährst.", skillId: "zeitspanne", generate: busTable },
   window: { title: "Zahlenfenster", prompt: "Ergänze die Hundertertafel.", skillId: "nachbarn", generate: hundredWindow },
+  detective: { title: "Zahlendetektiv", prompt: "Nutze Hinweise und begründe deinen Fund.", skillId: "zahlHinweise", generate: numberDetective },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },

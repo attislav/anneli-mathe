@@ -341,6 +341,8 @@ Unter „Meine Rechenwege“ können Kinder nach einer eigenen Mal-Feld-Zerlegun
 
 Beim Einkaufsvergleich prüfen Kinder, welcher Laden alle Waren auf dem Zettel hat. Sie addieren die vollständigen Preise, vergleichen die Summen und ermitteln die Ersparnis. Das Thema ist im Geld-Hafen, im Labor und im Schulauftrag verfügbar.
 
+Als Zahlendetektiv grenzt das Kind eine Geheimzahl auf der Hundertertafel mit zwei oder drei Hinweisen ein. Es bestimmt die Reihenfolge und begründet zum Schluss, warum eine andere Zahl ausscheidet. Im Zahlenwald, Labor und Schulauftrag übt es damit „Zahlen mit Hinweisen bestimmen“.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

@@ -28,6 +28,7 @@ const cards = {
   survey: { Icon: ListChecks, color: "bg-leaf-light" },
   bus: { Icon: BusFront, color: "bg-sun-light" },
   window: { Icon: Grid3X3, color: "bg-sky-light" },
+  detective: { Icon: ListChecks, color: "bg-sky-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

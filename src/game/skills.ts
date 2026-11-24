@@ -12,6 +12,7 @@
 import { machine } from "./discovery";
 import { sumPacket } from "./sumPacket";
 import { hundredWindow } from "./hundredWindow";
+import { numberDetective } from "./numberDetective";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numberPairs, sequenceRule } from "./numberPuzzles";
 import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genkit";
@@ -145,6 +146,11 @@ const doppelt: Skill = {
 
 // ---------------------------------------------------------------------------
 // Welt 1 · Zahlenwald
+
+const zahlHinweise: Skill = {
+  id: "zahlHinweise", title: "Zahlen mit Hinweisen bestimmen", world: "wald",
+  gen: ({ level }) => numberDetective(level),
+};
 
 const zehnerEiner: Skill = {
   id: "zehnerEiner",
@@ -585,7 +591,7 @@ const uebergang100: Skill = {
 const rechenpaeckchen: Skill = { id: "rechenpaeckchen", title: "Rechenpäckchen", world: "strand", gen: ({ level }) => sumPacket(level) };
 
 export const SKILLS: Record<string, Skill> = Object.fromEntries(
-  [rechenpaeckchen, freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
+  [zahlHinweise, rechenpaeckchen, freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
 );
 
 export function getSkill(id: string): Skill {

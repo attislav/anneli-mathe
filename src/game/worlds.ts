@@ -94,7 +94,7 @@ export const WORLDS: World[] = [
       round2("wald-9", "Zehner & Einer 2", ["zehnerEiner"]),
       chest("wald-10"),
       round2("wald-11", "Zahlenstrahl 2", ["zahlenstrahl"]),
-      round2("wald-12", "Größer, kleiner? 2", ["vergleichen"]),
+      round2("wald-12", "Zahlen vergleichen und bestimmen", ["vergleichen", "zahlHinweise"]),
       round2("wald-13", "Nachbarzahlen 2", ["nachbarn"]),
       round2("wald-14", "Zahlenreihen 2", ["reihen"]),
       chest("wald-15"),

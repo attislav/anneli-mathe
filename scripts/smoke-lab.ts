@@ -4,6 +4,7 @@ import { firstIncorrectGap, hundredWindow, windowHint, windowValue } from "../sr
 import { busJourney, busTable, checkBus } from "../src/game/busTable";
 import { classSurvey } from "../src/game/skillsDetektiv";
 import { checkShopList, shopList, shopSolution } from "../src/game/shopList";
+import { checkMarking, fitsClue, numberDetective } from "../src/game/numberDetective";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -22,8 +23,38 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+for (const fraction of [0, 0.13, 0.26, 0.39, 0.52, 0.65, 0.78, 0.99999]) {
+  const random = mock.method(Math, "random", () => fraction);
+  try {
+    for (const level of [1, 2, 3, 4, 5] as Level[]) {
+      const { numbers, clues, excluded } = numberDetective(level);
+      const answers = numbers.filter(n => clues.every(c => fitsClue(n, c)));
+      assert.equal(answers.length, 1);
+      if (fraction === 0) assert.deepEqual(answers, [1]);
+      if (fraction > 0.99) assert.deepEqual(answers, [100]);
+      assert.equal(numbers.length, level <= 2 ? 8 : 12);
+      numbers.forEach((n, i) => assert.equal(n, numbers[0] + Math.floor(i / 4) * 10 + i % 4));
+      assert.equal(clues.filter(c => !fitsClue(excluded, c)).length, level >= 4 ? 2 : 1);
+      for (const clue of clues) {
+        const others = clues.filter(c => c !== clue);
+        assert.ok(numbers.filter(n => others.every(c => fitsClue(n, c))).length >= 2);
+        const matching = numbers.filter(n => fitsClue(n, clue));
+        assert.ok(matching.length >= 2);
+        assert.equal(checkMarking(numbers, clue, matching.slice(1)), false);
+        assert.equal(checkMarking(numbers, clue, numbers), false);
+        assert.ok(checkMarking(numbers, clue, matching.toReversed()));
+        for (const order of [others, others.toReversed()]) {
+          let remaining = matching;
+          for (const c of order) remaining = remaining.filter(n => fitsClue(n, c));
+          assert.deepEqual(remaining, answers);
+        }
+      }
+    }
+  } finally { random.mock.restore(); }
+}
 
 const goods = ["Apfel", "Birne"];
 const offers = [{ name: "Mond", prices: [5, 40] }, { name: "Sonne", prices: [15, 20] }, { name: "Stern", prices: [1, null] }];
