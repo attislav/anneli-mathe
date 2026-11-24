@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { DotWays } from "./DotWays";
 import { PortionCompare } from "./PortionCompare";
 import { GrowingFigure } from "./GrowingFigure";
 import { PatternRibbon } from "./PatternRibbon";
@@ -85,6 +86,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "dot-ways":
+      return <DotWays {...props} task={task} />;
     case "portion-compare":
       return <PortionCompare {...props} task={task} />;
     case "growing-figure":

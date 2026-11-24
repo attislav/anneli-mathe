@@ -64,7 +64,7 @@ export const WORLDS: World[] = [
       { id: "start-5", kind: "lesson", title: "Über die 10", skills: ["uebergang20"] },
       { id: "start-6", kind: "lesson", title: "Verdoppeln", skills: ["doppelt"] },
       { id: "start-7", kind: "review", title: "Gemischt", skills: ["freunde10", "plus20", "uebergang20", "doppelt"] },
-      round2("start-8", "Zahlenfreunde 2", ["freunde10"]),
+      round2("start-8", "Zahlenfreunde und Punktebilder", ["freunde10", "punktZerlegen"]),
       chest("start-9"),
       round2("start-10", "Plus, Minus und Gleichheit", ["plus20", "gleichheit"]),
       round2("start-11", "Über die 10 2", ["uebergang20"]),
