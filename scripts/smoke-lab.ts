@@ -14,6 +14,8 @@ import { addHeading, checkWays, wayCards, wayTable } from "../src/game/wayTable"
 import { calculation, checkWay, freshWay, twoWays } from "../src/game/twoWays";
 import { checkSite, directNeighbor, landmarks, mapCoordinate, siteMap, siteMatches } from "../src/game/siteMap";
 import { SiteMap } from "../src/lesson/SiteMap";
+import { freshWall, wallMove, wallProblem } from "../src/game/partnerWall";
+import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -34,6 +36,41 @@ const owner = activeProfileId();
 const before = structuredClone(readSave());
 const formats = { map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const wallsBefore = new Map(values);
+const wallWriteSpy = mock.method(storage, "setItem");
+const draft = ["11", "13", "17", "24", "30", "54"];
+let authored = freshWall();
+draft.forEach((value, at) => { authored = wallMove(authored, { type: "stone", at, value }); });
+const badDraft = wallMove(authored, { type: "stone", at: 4, value: "31" });
+assert.match(wallMove(badDraft, { type: "check" }).message, /Mitte rechts/);
+assert.equal(wallMove(badDraft, { type: "pass" }), badDraft);
+assert.equal(wallProblem(["1","1","1","2","2","4"]), null);
+assert.equal(wallProblem(["20","20","20","40","40","80"]), null);
+for (const invalid of ["0","21","","-1","1.5"]) assert.ok(wallProblem([invalid, ...draft.slice(1)]));
+assert.ok(wallProblem([...draft.slice(0,5), "55"]));
+authored = wallMove(authored, { type: "check" });
+assert.equal(wallMove(authored, { type: "edit" }).phase, "write");
+const wallHtml = (state: ReturnType<typeof freshWall>) => renderToStaticMarkup(createElement(PartnerWallView, { state, act() {}, onBack() {} }));
+for (let at = 0; at < 6; at++) {
+  const chosen = wallMove(authored, { type: "hide", at });
+  const covered = wallMove(chosen, { type: "pass" });
+  const neutral = wallHtml(covered).replace(/<[^>]+>/g, "");
+  assert.ok(!/\d/.test(neutral));
+  const puzzle = wallMove(covered, { type: "open" });
+  const markup = wallHtml(puzzle);
+  assert.ok(!new RegExp(`>\\s*${draft[at]}\\s*<|aria-label="[^"]*\\b${draft[at]}\\b`).test(markup));
+  for (const other of draft.filter(n => n !== draft[at])) assert.ok(markup.includes(">" + other + "<"));
+  const retry = wallMove(wallMove(puzzle, { type: "guess", value: "99" }), { type: "solve" });
+  assert.ok(retry.message && retry.phase === "solve");
+  const solved = wallMove(wallMove(retry, { type: "guess", value: draft[at] }), { type: "solve" });
+  assert.equal(solved.phase, "done");
+  assert.deepEqual(wallMove(solved, { type: "swap" }), freshWall());
+}
+assert.equal(wallWriteSpy.mock.callCount(), 0);
+wallWriteSpy.mock.restore();
+assert.deepEqual(values, wallsBefore);
+assert.equal(activeProfileId(), owner);
 
 assert.equal(mapCoordinate(4, 0), "A1");
 assert.equal(mapCoordinate(4, 15), "D4");

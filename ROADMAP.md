@@ -357,6 +357,8 @@ Bei „Zwei Rechenwege“ lösen Kinder dieselbe Plus- oder Minusaufgabe schritt
 
 Beim Lageplan lesen Kinder Koordinaten und deuten Ortszeichen mit einer Bildlegende. Später unterscheiden sie zwei gleiche Zeichen über den direkten Nachbarn und berücksichtigen eine gesperrte Feldseite. Das Thema ist im Formen-Ozean, im Labor und im Schulauftrag verfügbar.
 
+Die Partnerwerkstatt im Labor lässt zwei Kinder am selben Gerät eine Zahlenmauer erfinden und lösen. Das erste Kind prüft seine Rechnungen und verdeckt einen Stein. Nach der Übergabe sucht das zweite Kind die fehlende Zahl. Beim Rollentausch beginnt eine leere Mauer. Das gemeinsame Rätsel wird nicht gespeichert oder bewertet.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

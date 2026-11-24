@@ -19,6 +19,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 import { SampleVisit } from "@/game/labSamples";
 import { LabSamples } from "./LabSamples";
+import { PartnerWall } from "./PartnerWall";
 
 const cards = {
   questions: { Icon: ListChecks, color: "bg-grape-light" },
@@ -56,10 +57,12 @@ export function LabScreen() {
 }
 
 function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
+  const [partner, setPartner] = useState(false);
   const [visit] = useState(() => new SampleVisit());
   const [round, setRound] = useState<LabRound | TripRound | null>(null);
   const start = (topic: LabTopic) => setRound(new LabRound(topic, owner));
   const startTrip = () => setRound(new TripRound(owner));
+  if (partner) return <PartnerWall onBack={() => setPartner(false)} />;
   if (round) return <LabActivity key={round.id} round={round}
     onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : () => start(round.topic)} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
@@ -70,6 +73,8 @@ function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
       <LabSamples visit={visit} onStart={start} />
     </header>
     <Link href="/labor/rechenwege/" className="mb-3 block rounded-2xl bg-white px-4 py-3 font-display text-xl">Meine Rechenwege</Link>
+    <button type="button" className="mb-3 block w-full rounded-2xl bg-white px-4 py-3 text-left" onClick={() => setPartner(true)}>
+      <span className="font-display text-xl">Partnerwerkstatt</span> · Meine Zahlenmauer</button>
     <Link href="/labor/sprechstunde/" className="mb-3 block rounded-2xl bg-sky-light px-4 py-3">
       <span className="font-display text-xl">Mathe-Sprechstunde</span>
       <span className="ml-2 text-sm">Gemeinsam über den Zehner rechnen</span>
