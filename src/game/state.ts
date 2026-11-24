@@ -214,6 +214,10 @@ export function readSave(): SaveState {
   return get();
 }
 
+export function activeProfileId(): string {
+  return getIndex().active;
+}
+
 // ---------------------------------------------------------------------------
 // Ableitungen
 

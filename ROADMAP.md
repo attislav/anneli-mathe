@@ -307,6 +307,10 @@ Sieht ein Kind nach zwei Versuchen die Lösung, übt es in normalen Lektionen un
 
 ### Bisherige Arbeitspakete
 
+Attis Priorität für die nächsten Runden: Jede Runde liefert eine neue, für Kinder sichtbare Funktion. Im anschließenden Review wird sie geprüft und verbessert.
+
+Das Mathe-Labor ist über „Labor“ in der festen Navigation erreichbar. Kinder können Rechenmaschinen, Würfelbau, Einkaufskörbe, Kalender, Zahlenpaare und Rasterwege ab dem ersten Tag frei wählen. Jede Runde umfasst fünf Aufgaben. Erstversuche aktualisieren den Lernbericht und die Schwierigkeit des aktiven Kindes. Pfadfortschritt und Belohnungen werden weiterhin in den Lektionen vergeben.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

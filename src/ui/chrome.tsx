@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Gamepad2, Map as MapIcon, Smile } from "lucide-react";
+import { BookOpen, FlaskConical, Gamepad2, Map as MapIcon, Smile } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { levelInfo, streak, totalStars, type SaveState } from "@/game/state";
 import { petStage } from "@/game/collection";
@@ -46,6 +46,7 @@ export function TopBar({ save }: { save: SaveState }) {
 
 const NAV = [
   { href: "/", label: "Pfad", Icon: MapIcon, tint: "text-grape", bg: "bg-grape-light" },
+  { href: "/labor", label: "Labor", Icon: FlaskConical, tint: "text-leaf-dark", bg: "bg-leaf-light" },
   { href: "/sammeln", label: "Sammeln", Icon: BookOpen, tint: "text-coin-dark", bg: "bg-coin-light" },
   { href: "/spielen", label: "Spielen", Icon: Gamepad2, tint: "text-night", bg: "bg-[#E1E3FA]" },
   { href: "/ich", label: "Ich", Icon: Smile, tint: "text-rose-dark", bg: "bg-rose-light" },
@@ -54,7 +55,7 @@ const NAV = [
 export function BottomNav() {
   const path = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto grid h-[78px] max-w-xl grid-cols-4 items-center rounded-t-[26px] bg-white px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_0_rgba(31,35,71,0.06)]">
+    <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto grid h-[78px] max-w-xl grid-cols-5 items-center rounded-t-[26px] bg-white px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_0_rgba(31,35,71,0.06)]">
       {NAV.map(({ href, label, Icon, tint, bg }) => {
         const active = href === "/" ? path === "/" : path.startsWith(href);
         return (
