@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { GrowingFigure } from "./GrowingFigure";
 import { PatternRibbon } from "./PatternRibbon";
 import { Receipt } from "./Receipt";
 import { AttributeSort } from "./AttributeSort";
@@ -83,6 +84,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "growing-figure":
+      return <GrowingFigure {...props} task={task} />;
     case "pattern-ribbon":
       return <PatternRibbon {...props} task={task} />;
     case "receipt":

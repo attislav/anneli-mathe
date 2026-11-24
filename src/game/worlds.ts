@@ -263,7 +263,7 @@ export const WORLDS: World[] = [
       round2("ozean-10", "Spiegeln 2", ["spiegeln"]),
       chest("ozean-11"),
       round2("ozean-12", "Formen zählen und legen 2", ["formenZaehlen", "flaechenLegen"]),
-      round2("ozean-13", "Muster und ihre Bausteine", ["muster", "musterbausteine"]),
+      round2("ozean-13", "Muster und wachsende Figuren", ["muster", "musterbausteine", "figurenWachstum"]),
       round2("ozean-14", "Körper und Baupläne", ["koerper", "umbauplan"]),
       chest("ozean-15"),
       mix2("ozean-16", ["formen", "formenZaehlen", "spiegeln", "muster", "koerper", "rasterwege", "standpunkte"]),
