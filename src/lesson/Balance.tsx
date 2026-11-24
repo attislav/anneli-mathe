@@ -4,7 +4,7 @@ import type { BalanceTask } from "@/game/types";
 import { Button } from "@/ui/Button";
 import type { FormatProps } from "./formats";
 
-export function Scale({left,right}: {left:number;right:number}) {
+export function Scale({left,right,labels}: {left:number;right:number;labels?:[string,string]}) {
   const position = tilt(left,right);
   const d = position==="balanced" ? 0 : position==="left" ? 12 : -12;
   const text = position==="balanced" ? "Beide Seiten sind gleich schwer." : position==="left" ? "Die linke Seite ist schwerer und hängt tiefer." : "Die rechte Seite ist schwerer und hängt tiefer.";
@@ -15,9 +15,9 @@ export function Scale({left,right}: {left:number;right:number}) {
       {[[51,34+d],[189,34-d]].map(([x,y],i)=><g key={i}>
         <path d={`M${x-36} ${y+24} L${x} ${y} L${x+36} ${y+24}`} fill="none" stroke="#49376d" strokeWidth="2"/>
         <path d={`M${x-36} ${y+24} h72 q-4 18 -36 18 t-36 -18`} fill={i?"#ffd46e":"#9ecdf7"}/>
-        <text x={x} y={y+37} textAnchor="middle" fontSize="12" fill="#302747">{i ? right : left}</text></g>)}
+        <text x={x} y={y+37} textAnchor="middle" fontSize="12" fill="#302747">{labels ? labels[i] : i ? right : left}</text></g>)}
       <circle cx="120" cy="34" r="5" fill="#49376d"/>
-    </svg><figcaption aria-live="polite">Links {left}, rechts {right}. {text}</figcaption>
+    </svg><figcaption aria-live="polite">Links {labels?.[0]??left}, rechts {labels?.[1]??right}. {text}</figcaption>
   </figure>;
 }
 export function Balance({task,status,onAnswer}: FormatProps<BalanceTask>) {

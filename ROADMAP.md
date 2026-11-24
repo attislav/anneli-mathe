@@ -389,6 +389,8 @@ Im Zeichencode erschließen Kinder die Werte von Sonne und Mond und rechnen mit 
 
 In der Partnerwerkstatt bauen Kinder eine Fehlerspur bis 100. Ein Kind rechnet zuerst beide Schritte richtig und ändert ein Ergebnis. Das andere findet die erste falsche Zeile und korrigiert den Rechenweg bis zum Ende. Die Rollen wechseln am selben Gerät.
 
+Bei „Was wiegt das Päckchen?“ bringen Kinder eine Waage mit Gewichtsstücken ins Gleichgewicht. Sie bestimmen die Masse in Gramm und prüfen, ob zwei Päckchen zusammen höchstens ein Kilogramm wiegen. Die Übung ist in der Mess-Werkstatt, im Labor und im Schulauftrag verfügbar.
+
 Bei „Zaun ums Beet“ legen Kinder ein Meter lange Zaunstücke an die Außenkanten eines Beets. Sie vergleichen seinen Umfang mit dem eines anders angeordneten Beets mit gleich vielen Feldern. Das Thema ist in der Mess-Werkstatt, im Labor und im Schulauftrag erreichbar.
 
 In der Räderwerkstatt sammeln Kinder alle Bestellungen aus Fahr- und Dreirädern, die den Rädervorrat genau verbrauchen. Sie prüfen der Reihe nach für jede Dreiradzahl, ob die übrigen Räder paarweise aufgehen. Die Werkstatt ergänzt „Wie viele Möglichkeiten?“ im Detektivbüro, im Labor und im Schulauftrag.

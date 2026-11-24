@@ -1,7 +1,7 @@
 export const LAB_GROUPS = [
   { title: "Zahlen und Rechnen", topics: ["pairs", "window", "detective", "machine", "packets", "split", "chocolate", "claims", "methods", "family", "rest", "balance", "code"] },
   { title: "Raum und Formen", topics: ["viewpoint", "tiles", "cubes", "tower", "route", "map"] },
-  { title: "Messen, Zeit und Geld", topics: ["rope", "fence", "juice", "bus", "morning", "calendar", "weekly", "shopping", "shops"] },
+  { title: "Messen, Zeit und Geld", topics: ["rope", "parcels", "fence", "juice", "bus", "morning", "calendar", "weekly", "shopping", "shops"] },
   { title: "Daten und Sachsituationen", topics: ["survey", "wheels", "recipe", "pictures", "questions", "ways", "clarify"] },
 ] as const;
 export type LabTopic = typeof LAB_GROUPS[number]["topics"][number];

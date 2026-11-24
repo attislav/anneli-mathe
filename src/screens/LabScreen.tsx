@@ -53,6 +53,7 @@ const cards = {
   balance: { Icon: SquarePlus, color: "bg-sky-light" },
   weekly: { Icon: CalendarDays, color: "bg-sky-light" },
   code: { Icon: Cpu, color: "bg-grape-light" },
+  parcels: { Icon: ShoppingBasket, color: "bg-coin-light" },
   fence: { Icon: Grid3X3, color: "bg-leaf-light" },
   wheels: { Icon: ListChecks, color: "bg-sky-light" },
   recipe: { Icon: ShoppingBasket, color: "bg-leaf-light" },

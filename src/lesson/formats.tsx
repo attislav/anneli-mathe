@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { ParcelMass } from "./ParcelMass";
 import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
 import { GroupRecipe } from "./GroupRecipe";
@@ -71,6 +72,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "parcel-mass":
+      return <ParcelMass {...props} task={task} />;
     case "garden-fence":
       return <GardenFence {...props} task={task} />;
     case "wheel-orders":
