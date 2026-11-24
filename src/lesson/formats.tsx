@@ -30,6 +30,7 @@ import { Juice } from "./Juice";
 import { Tower } from "./Tower";
 import { FactFamily } from "./FactFamily";
 import { ClarifyStory } from "./ClarifyStory";
+import { Remainders } from "./Remainders";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -51,6 +52,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "remainders":
+      return <Remainders {...props} task={task} />;
     case "clarify-story":
       return <ClarifyStory {...props} task={task} />;
     case "fact-family":

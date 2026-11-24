@@ -22,6 +22,7 @@ import { factFamily, familyHint, familyLines, familyText, type FamilyLine } from
 import { checkStory, clarifyStory, storyAmount, storyUnit, type Scenario } from "../src/game/clarifyStory";
 import { lastLabArea, LearningRound, numberTasks, rememberLabArea } from "../src/game/learningGoals";
 import { LabMenu } from "../src/screens/LabScreen";
+import { groupHint, remainders, restAnswer, restValues } from "../src/game/remainders";
 import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
@@ -42,8 +43,34 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { rest: "remainders", clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+for (const [total,size,full,rest,rides] of [[2,4,0,2,1],[8,4,2,0,2],[9,4,2,1,3],[7,4,1,3,2]]) {
+  const problem = {total,size};
+  assert.deepEqual(restValues(problem),{ full,rest,rides });
+  const groups = Array.from({length:full},(_,i)=>Array.from({length:size},(_,j)=>total-i*size-j-1));
+  assert.equal(groupHint(problem,groups,String(rest)),null);
+  assert.ok(groupHint(problem,groups,String(rest+1)));
+  assert.equal(restAnswer(problem,String(rides),String(full),"all","full"),null);
+  assert.ok(restAnswer(problem,String(rides),String(full),"full","all"));
+  if (rest>0) assert.ok(restAnswer(problem,String(full),String(rides),"all","full"));
+}
+assert.ok(groupHint({total:8,size:4},[[0,1,2,3],[0,4,5,6]],"0"));
+assert.ok(groupHint({total:6,size:4},[[0,1,2]],"2"));
+for (const level of [1,2,3,4,5] as Level[]) {
+  const outcomes = new Set<string>();
+  for (const fraction of [0,0.5,0.9999]) {
+    const random = mock.method(Math,"random",()=>fraction);
+    const task = remainders(level);
+    random.mock.restore();
+    assert.ok(task.solution.includes("Alle Kinder fahren gleichzeitig. Jedes Fahrzeug fährt nur einmal."));
+    const expected = restValues(task);
+    outcomes.add(expected.full === 0 ? "small" : expected.rest===0 ? "exact" : "extra");
+    assert.equal(task.total,expected.full*task.size+expected.rest);
+  }
+  assert.equal(outcomes.size,3);
+}
 
 const sceneUnits = { ride: ["−","Plätze"], fruit: ["+","Cent"], ribbon: ["−","cm"], walk: ["+","Minuten"] };
 for (const [plural, one] of [["Plätze","Platz"],["Minuten","Minute"]]) {

@@ -203,7 +203,7 @@ export const WORLDS: World[] = [
       { id: "baeckerei-6", kind: "lesson", title: "Geteilt rechnen", skills: ["geteilt"] },
       { id: "baeckerei-7", kind: "lesson", title: "Bäckerei-Geschichten", skills: ["backSach"] },
       { id: "baeckerei-8", kind: "review", title: "Gemischt", skills: ["verteilen", "halbieren", "geteilt", "umkehr", "backSach"] },
-      round2("baeckerei-9", "Verteilen 2", ["verteilen"]),
+      round2("baeckerei-9", "Verteilen und Reste deuten", ["verteilen", "restDeuten"]),
       round2("baeckerei-10", "Halbieren und vierteln", ["halbieren", "anteile"]),
       chest("baeckerei-11"),
       round2("baeckerei-12", "Geteilt rechnen 2", ["geteilt"]),

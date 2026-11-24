@@ -6,6 +6,7 @@
 
 import type { TaskDraft, Treat } from "./types";
 import { chocolate } from "./chocolate";
+import { remainders } from "./remainders";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -194,4 +195,5 @@ const backSach: Skill = {
 };
 
 const anteile: Skill = { id: "anteile", title: "Hälften und Viertel", world: "baeckerei", gen: ({ level }) => chocolate(level) };
-export const BAECKEREI_SKILLS: Skill[] = [verteilen, halbieren, anteile, geteilt, umkehr, backSach];
+const restDeuten: Skill = { id: "restDeuten", title: "Reste in Sachaufgaben deuten", world: "baeckerei", gen: ({level}) => remainders(level) };
+export const BAECKEREI_SKILLS: Skill[] = [verteilen, halbieren, anteile, geteilt, umkehr, backSach, restDeuten];

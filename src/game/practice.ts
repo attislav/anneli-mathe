@@ -48,6 +48,7 @@ function keyOf(t: TaskDraftWithSkill) {
   if (t.format === "tower") return JSON.stringify([t.format, t.initial, t.changes, t.reserve, t.side]);
   if (t.format === "fact-family") return JSON.stringify([t.format, t.parts]);
   if (t.format === "clarify-story") return JSON.stringify([t.format, t.scene, t.facts]);
+  if (t.format === "remainders") return JSON.stringify([t.format,t.scene,t.total,t.size]);
   if (t.format === "chocolate-share") return JSON.stringify([t.format, t.rows, t.cols, t.children]);
   if (t.format === "morning-plan") return JSON.stringify([t.format, t.start, t.duration, t.step, t.fixed, t.activities, t.target, t.follow]);
   if (t.format === "baskets") return JSON.stringify([t.format,t.budget,t.prices]);

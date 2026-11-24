@@ -8,6 +8,7 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type RemainderTask = TaskBase & { format: "remainders"; scene: "lake" | "mountain" | "park"; total: number; size: number; reasons: ("all" | "full")[] };
 export type ClarifyTask = TaskBase & { format: "clarify-story"; scene: string; facts: { what: string; label: string; value: number; unit: string }[]; order: number[]; op: "+" | "−" };
 export type FamilyTask = TaskBase & { format: "fact-family"; parts: [number,number]; cards: number[] };
 export type TowerTask = TaskBase & { format: "tower"; initial: number[]; changes: { cell: number; delta: -1 | 1 }[];
@@ -226,7 +227,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = RemainderTask | ClarifyTask | FamilyTask | TowerTask | JuiceTask | SiteMapTask | TwoWaysTask | WayTableTask | ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

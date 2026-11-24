@@ -44,6 +44,7 @@ const cards = {
   tower: { Icon: Blocks, color: "bg-sky-light" },
   family: { Icon: SquarePlus, color: "bg-sky-light" },
   clarify: { Icon: ListChecks, color: "bg-grape-light" },
+  rest: { Icon: Blocks, color: "bg-coin-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },
