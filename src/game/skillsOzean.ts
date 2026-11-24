@@ -1,5 +1,6 @@
 // Welt 8 · Formen-Ozean — Formen, Körper, Spiegeln, Muster.
 
+import { rollCube } from "./rollCube";
 import { growingFigure } from "./growingFigure";
 import { patternRibbon } from "./patternRibbon";
 import { cubeModel } from "./discovery";
@@ -223,4 +224,5 @@ const umbauplan: Skill = { id: "umbauplan", title: "Baupläne und Seitenansichte
 const figurenSpannen: Skill = { id:"figurenSpannen", title:"Figuren mit vorgegebenen Seiten spannen", world:"ozean", gen:({level})=>geoBoard(level) };
 const musterbausteine:Skill={ id:"musterbausteine", title:"Musterbausteine erkennen", world:"ozean", gen:({level})=>patternRibbon(level) };
 const figurenWachstum:Skill={ id:"figurenWachstum", title:"Wachsende Figuren untersuchen", world:"ozean", gen:({level})=>growingFigure(level) };
-export const OZEAN_SKILLS: Skill[] = [figurenWachstum, musterbausteine, figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];
+const wuerfelKippen:Skill={ id:"wuerfelKippen", title:"Würfeldrehungen vorstellen", world:"ozean", gen:({level})=>rollCube(level) };
+export const OZEAN_SKILLS: Skill[] = [wuerfelKippen, figurenWachstum, musterbausteine, figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];

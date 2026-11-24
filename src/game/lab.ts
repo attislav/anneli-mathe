@@ -1,3 +1,4 @@
+import { rollCube } from "./rollCube";
 import { dotWays } from "./dotWays";
 import { portionCompare } from "./portionCompare";
 import { growingFigure } from "./growingFigure";
@@ -78,6 +79,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  rollCube: { title:"Würfel kippen", prompt:"Verfolge den Stern und bestimme seine Endlage.", skillId:"wuerfelKippen", generate:rollCube },
   dotWays: { title:"Wie hast du die Punkte gesehen?", prompt:"Zeige zwei verschiedene Zerlegungen derselben Punktmenge.", skillId:"punktZerlegen", generate:dotWays },
   portions: { title:"Ist eine Hälfte immer gleich groß?", prompt:"Markiere Anteile auf zwei Tafeln und vergleiche sie.", skillId:"anteileVergleichen", generate:portionCompare },
   growth: { title:"Wie wächst die Figur?", prompt:"Baue die nächste Figur und berechne eine spätere.", skillId:"figurenWachstum", generate:growingFigure },

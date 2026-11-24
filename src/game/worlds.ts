@@ -264,7 +264,7 @@ export const WORLDS: World[] = [
       chest("ozean-11"),
       round2("ozean-12", "Formen zählen und legen 2", ["formenZaehlen", "flaechenLegen"]),
       round2("ozean-13", "Muster und wachsende Figuren", ["muster", "musterbausteine", "figurenWachstum"]),
-      round2("ozean-14", "Körper und Baupläne", ["koerper", "umbauplan"]),
+      round2("ozean-14", "Körper kippen und umbauen", ["koerper", "umbauplan", "wuerfelKippen"]),
       chest("ozean-15"),
       mix2("ozean-16", ["formen", "formenZaehlen", "spiegeln", "muster", "koerper", "rasterwege", "standpunkte"]),
       { id: "ozean-boss", kind: "boss", title: "Krake Kringel", skills: ["formen", "spiegeln", "muster", "koerper"], coloring: "seestern" },
