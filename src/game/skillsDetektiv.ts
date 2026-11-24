@@ -7,6 +7,7 @@ import { surveyAnswer, surveyRows } from "./survey";
 import { questionLimit, sceneCategories } from "./writeQuestion";
 import { wayTable } from "./wayTable";
 import { clarifyStory } from "./clarifyStory";
+import { storyStrips } from "./storyStrips";
 import { drawBag } from "./drawBag";
 import { symbolCode } from "./symbolCode";
 import { wheelOrders } from "./wheelOrders";
@@ -266,6 +267,7 @@ const sachaufgaben: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const [n1, n2] = shuffle(NAMES);
+    if (!ctx.avoid.includes("strip-story") && chance(0.25)) return storyStrips(level);
     if (!ctx.avoid.includes("write-question") && chance(0.35)) return writeQuestion(level);
     const thing = pick(THINGS);
     if (level < 5 && !ctx.avoid.includes("story-math") && chance(0.45)) return storyMath(level, n1, n2, thing);

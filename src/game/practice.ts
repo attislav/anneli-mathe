@@ -52,6 +52,7 @@ export function taskContentKey(t: TaskDraftWithSkill) {
   if (t.format === "balance") return JSON.stringify([t.format,t.base,t.start,t.change]);
   if (t.format === "weekly") return JSON.stringify([t.format,t.start,t.weeks,t.weekdays,t.cancel,t.move,t.query,t.anchor,t.activity]);
   if (t.format === "symbol-code") return JSON.stringify([t.format,t.sun,t.moon,t.clue,t.focus,t.repeat,t.explore]);
+  if (t.format === "strip-story") return JSON.stringify([t.format,t.parts,t.missing,t.names,t.unit]);
   if (t.format === "line-estimate") return JSON.stringify([t.format,t.low,t.high,t.target]);
   if (t.format === "fold-lines") return JSON.stringify([t.format,t.filled,t.lines]);
   if (t.format === "draw-bag") return JSON.stringify([t.format,[...t.bag].sort(),t.first,t.next]);
