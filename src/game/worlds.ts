@@ -320,7 +320,7 @@ export const WORLDS: World[] = [
       chest("detektiv-11"),
       round2("detektiv-12", "Sachaufgaben 2", ["sachaufgaben"]),
       round2("detektiv-13", "Fehler-Detektiv 2", ["fehlerDetektiv"]),
-      round2("detektiv-14", "Möglichkeiten 2", ["kombinatorik"]),
+      round2("detektiv-14", "Möglichkeiten und Zeichencodes", ["kombinatorik", "zeichencodes"]),
       chest("detektiv-15"),
       mix2("detektiv-16", ["strichliste", "diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"]),
       { id: "detektiv-boss", kind: "boss", title: "Elster Klauzi", skills: ["diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"], coloring: "detektiv" },

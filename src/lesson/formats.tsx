@@ -33,6 +33,7 @@ import { ClarifyStory } from "./ClarifyStory";
 import { Remainders } from "./Remainders";
 import { Balance } from "./Balance";
 import { Weekly } from "./Weekly";
+import { SymbolCode } from "./SymbolCode";
 import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
 import { GroupRecipe } from "./GroupRecipe";
@@ -58,6 +59,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "symbol-code":
+      return <SymbolCode {...props} task={task} />;
     case "garden-fence":
       return <GardenFence {...props} task={task} />;
     case "wheel-orders":
