@@ -22,7 +22,7 @@
     "smoke:split": "tsx scripts/smoke-split.ts",
     "smoke:questions": "tsx scripts/smoke-questions.ts",
     "smoke:strategies": "tsx scripts/smoke-strategies.ts",
-    "smoke:report": "tsx scripts/smoke-report.ts",
+    "smoke:report": "tsx scripts/smoke-report.ts && tsx scripts/smoke-report-practice.ts",
     "art:fetch": "node scripts/fetch-art.mjs",
     "gen:malvorlagen": "node --env-file-if-exists=.env.local scripts/gen-malvorlagen.mjs",
     "gen:voice": "node --env-file-if-exists=.env.local scripts/gen-voice.mjs",

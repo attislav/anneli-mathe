@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SCHOOL_PATH, SchoolRound } from "@/game/schoolAssignment";
+import { ReportPracticeRound } from "@/game/reportPractice";
 import { LAB_GROUPS } from "@/game/schoolSelection";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
@@ -205,7 +206,8 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
     </ul>}
     <p>{title} · {firstRight} von {round.count} {round.count===1?"Aufgabe":"Aufgaben"} gleich beim ersten Versuch gelöst.</p>
     {round instanceof LearningRound && <ThinkFurther key={round.id} item={thinkFurther(round)}/>}
-    {round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
+    {round instanceof ReportPracticeRound ? <Button onClick={onBack}>Zum Mathe-Labor</Button> :
+      round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
       <Button tone="white" onClick={()=>{round.finish(false);onBack();}}>Abhaken und vom Merkzettel nehmen</Button></> :
       <><Button onClick={onReplay}>{round instanceof LabRound && round.size===1 ? "Noch eine neue Aufgabe zu diesem Thema" : trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
     <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button></>}

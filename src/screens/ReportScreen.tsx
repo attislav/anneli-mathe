@@ -9,7 +9,8 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronLeft } from "lucide-re
 import { randInt } from "@/game/random";
 import { dailyActivity, mistakesFor, overview, skillGrowth, skillReports, suggestedLesson, weeklyProgress, type SkillReport } from "@/game/report";
 import { AccuracyChart, LevelChart } from "@/ui/ProgressCharts";
-import { profileList, readProfileSave, type SaveState } from "@/game/state";
+import { ReportPracticeChoice } from "./ReportPracticeChoice";
+import { activeProfileId, profileList, readProfileSave, type SaveState } from "@/game/state";
 import { WORLDS } from "@/game/worlds";
 import { useBackdrop } from "@/ui/chrome";
 
@@ -199,7 +200,7 @@ export function ReportScreen({ save: own }: { save: SaveState }) {
 
           <section className="mt-4 rounded-[22px] bg-white p-4">
             <h2 className="font-display text-xl font-semibold">Alle Themen</h2>
-            <p className="text-sm text-ink-soft">Trefferquote beim ersten Versuch (letzte 20 Aufgaben), Entwicklung, typische Antwortzeit, Stufe 1–5.</p>
+            <p className="text-sm text-ink-soft">Trefferquote beim ersten Versuch (letzte 20 Aufgaben), Entwicklung, typische Antwortzeit, Stufe 1–5. Wähle ein Thema, um die passende Einzelübung zu sehen.</p>
             {WORLDS.map((w) => {
               const list = reports.filter((r) => r.world === w.id);
               if (list.length === 0) return null;
@@ -207,17 +208,20 @@ export function ReportScreen({ save: own }: { save: SaveState }) {
                 <div key={w.id} className="mt-3">
                   <div className="text-sm font-extrabold tracking-wider text-ink-soft">{w.name.toUpperCase()}</div>
                   {list.map((r) => (
-                    <div key={r.id} className="flex items-center gap-2 border-b border-mist py-1.5 text-sm">
+                    <details key={r.id} className="border-b border-mist"><summary className="cursor-pointer py-1.5 text-sm">
+                      <span className="inline-flex w-[94%] items-center gap-2 align-middle">
                       <span className="w-32 shrink-0 font-extrabold sm:w-48">{r.title}</span>
-                      <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-mist">
-                        <div className="h-full rounded-full" style={{ width: pct(r.acc), background: barColor(r) }} />
-                      </div>
+                      <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-mist">
+                        <span className="block h-full rounded-full" style={{ width: pct(r.acc), background: barColor(r) }} />
+                      </span>
                       <span className="w-12 shrink-0 whitespace-nowrap text-right font-extrabold">{pct(r.acc)}</span>
                       <Trend t={r.trend} />
                       <span className="hidden w-12 text-right text-ink-soft sm:inline">{r.seconds}s</span>
                       <span className="hidden w-10 text-right text-ink-soft sm:inline">St. {r.level.toFixed(1)}</span>
                       <span className="w-10 text-right text-ink-soft">{r.count}×</span>
-                    </div>
+                      </span></summary>
+                      <ReportPracticeChoice owner={other===null?activeProfileId():null} skill={r.id}/>
+                    </details>
                   ))}
                 </div>
               );

@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Im Lernbericht öffnet jede geübte Kompetenz ihre passenden Einzelthemen. Das aktive Kind kann direkt eine adaptive Laboraufgabe starten. Bei mehreren passenden Themen stehen Name und Tätigkeit zur Wahl.
+
 Bei „Zielzahl in zwei Schritten“ legen Kinder drei Zahlenkarten, rechnen den Zwischenstand aus und sagen die Wirkung ihrer letzten Karte voraus. Nach dem Erfolg können sie freiwillig einen Weg mit anderer Zwischenzahl finden. Im Lernpfad am Strand und im Labor verfügbar.
 
 Auf dem Geobrett spannen Kinder ein Rechteck und ein Quadrat mit vorgegebenen Seitenlängen. Die Auswertung zeigt die eigenen Figuren, Eckpunkte und Seitenlängen. Erreichbar im Formen-Ozean, Labor, Schulauftrag und Merkzettel.

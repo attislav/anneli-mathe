@@ -1,0 +1,93 @@
+import assert from "node:assert/strict";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AppRouterContext, type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { clearReportHandoff, pendingReportPractice, prepareReportPractice, reportTopics } from "../src/game/reportPractice";
+import { activeProfileId, addProfile, createProfile, readSave, switchProfile, update } from "../src/game/state";
+import { skillReports } from "../src/game/report";
+import { LabActivity } from "../src/screens/LabScreen";
+import { ReportPracticeChoice } from "../src/screens/ReportPracticeChoice";
+
+const data=new Map<string,string>();
+const storage={getItem:(k:string)=>data.get(k)??null,setItem:(k:string,v:string)=>data.set(k,v)};
+Object.defineProperty(globalThis,"window",{value:{localStorage:storage,sessionStorage:storage}});
+const choice=(owner:string|null,skill:string)=>renderToStaticMarkup(createElement(AppRouterContext.Provider,{value:{} as AppRouterInstance},
+  createElement(ReportPracticeChoice,{owner,skill})));
+createProfile({name:"Anne",pet:"funkel",petName:"Stern"},[],{kombinatorik:3.8});
+const owner=activeProfileId();
+assert.equal(prepareReportPractice(owner,"kombinatorik","ways"),null);
+assert.deepEqual(reportTopics("kombinatorik").sort(),["ways","wheels"]);
+assert.deepEqual(reportTopics("kalender"),["calendar"]);
+assert.deepEqual(reportTopics("no-match"),[]);
+assert.ok(choice(owner,"kombinatorik").includes("Wege-Tabelle starten") && choice(owner,"kombinatorik").includes("Räderwerkstatt starten"));
+const siblingChoice=choice(null,"kombinatorik");
+assert.ok(!siblingChoice.includes("<button") && siblingChoice.includes("Wege-Tabelle") && siblingChoice.includes("Finde alle passenden Fahrrad- und Dreiradbestellungen."));
+assert.ok(choice(owner,"plus20").includes("keine einzelne Laborübung"));
+update(s=>({...s,schoolTopics:["swap","fence"],log:Array.from({length:8},()=>({s:"kombinatorik",ok:1 as const,l:3,ms:3000,t:1810000000}))}));
+assert.equal(skillReports(readSave())[0].status,"stark");
+const before=structuredClone(readSave());
+assert.equal(prepareReportPractice(owner,"kombinatorik","calendar"),null);
+const start=()=>{
+  const path=prepareReportPractice(owner,"kombinatorik","wheels");
+  assert.ok(path && !path.includes(owner+"="));
+  const url=new URL(path,"https://local.invalid");
+  assert.equal(url.pathname,"/labor/berichtsaufgabe/");
+  const key=url.searchParams.get("start");
+  const round=pendingReportPractice(key,owner);
+  assert.ok(round);return {round,key};
+};
+const {round:abort,key}=start();
+assert.equal(pendingReportPractice(null,owner),null);
+assert.equal(pendingReportPractice("used-start",owner),null);
+clearReportHandoff(key);
+assert.equal(pendingReportPractice(key,owner),null);
+abort.close();abort.answer(abort.state.task.id,true);
+assert.deepEqual(readSave(),before);
+
+for(const solved of [false,true]){
+  const old=start();
+  clearReportHandoff(old.key);
+  const oldId=old.round.state.task.id;
+  if(solved)old.round.answer(oldId,true);
+  const replacement=start();
+  const saved=structuredClone(readSave());
+  for(const accepted of [false,true]){
+    if(accepted)clearReportHandoff(replacement.key);
+    assert.equal(old.round.remember(oldId),false);
+    old.round.answer(oldId,true);old.round.advance(oldId);old.round.close();
+    assert.deepEqual(readSave(),saved);
+  }
+  assert.equal(prepareReportPractice(owner,"kombinatorik","calendar"),null);
+  const newId=replacement.round.state.task.id;
+  replacement.round.answer(newId,true);
+  assert.equal(readSave().log.length,saved.log.length+1);
+  assert.equal(replacement.round.state.status,"right");
+  replacement.round.close();
+}
+const beforeGrading=structuredClone(readSave());
+const {round,key:used}=start();
+clearReportHandoff(used);
+assert.equal(round.count,1);
+assert.equal(round.state.task.level,4);
+assert.equal(round.state.task.format,"wheel-orders");
+const id=round.state.task.id;
+round.answer(id,false);round.answer(id,false);round.advance(id);round.answer(id,true);round.advance(id);
+assert.equal(round.state.status,"done");
+assert.equal(readSave().log.length,beforeGrading.log.length+1);
+assert.deepEqual(readSave().schoolTopics,before.schoolTopics);assert.deepEqual(readSave().labNotes,before.labNotes);
+assert.deepEqual(readSave().nodes,before.nodes);
+assert.equal(readSave().log.at(-1)?.ok,0);
+const end=renderToStaticMarkup(createElement(LabActivity,{round,onBack(){},onReplay(){}}));
+assert.ok(end.includes("Zum Mathe-Labor")&&!end.includes("Noch eine neue Aufgabe"));
+const {round:stale,key:oldKey}=start();
+const anne=structuredClone(readSave());
+addProfile();createProfile({name:"Ben",pet:"funkel",petName:"Licht"});
+const sibling=activeProfileId(),ben=structuredClone(readSave());
+assert.equal(prepareReportPractice(owner,"kombinatorik","wheels"),null);
+assert.equal(pendingReportPractice(oldKey,owner),null);
+assert.equal(pendingReportPractice(oldKey,sibling),null);
+stale.answer(stale.state.task.id,true);
+assert.deepEqual(readSave(),ben);
+clearReportHandoff(oldKey);switchProfile(owner);
+assert.equal(pendingReportPractice(oldKey,owner),null);assert.deepEqual(readSave(),anne);
+console.log("Einzelübung aus dem Bericht: exakte Zuordnung, Wahl, Übergabe, Abbruch, Profilgrenze und Erstwertung geprüft.");
