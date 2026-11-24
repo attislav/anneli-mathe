@@ -27,6 +27,7 @@ function strip(task: Task): TaskDraftWithSkill {
 }
 
 function keyOf(t: TaskDraftWithSkill) {
+  if (t.format === "table-view") return JSON.stringify([t.skillId, t.format, t.items, t.side, t.reverse]);
   if (t.format === "sum-packet") return JSON.stringify([t.skillId, t.format, t.before, t.changes, t.exact]);
   if (t.format === "tile-floor") return JSON.stringify([t.skillId, t.format, t.width, t.height, t.example]);
   if (t.format === "class-survey") return JSON.stringify([t.skillId, t.format, t.categories, t.votes, t.target, t.compare]);

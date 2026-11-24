@@ -1,4 +1,4 @@
-export const LAB_TOPIC_IDS = ["packets", "tiles", "survey", "bus", "window", "machine", "cubes", "shopping", "calendar", "pairs", "route"] as const;
+export const LAB_TOPIC_IDS = ["viewpoint", "packets", "tiles", "survey", "bus", "window", "machine", "cubes", "shopping", "calendar", "pairs", "route"] as const;
 export type LabTopic = typeof LAB_TOPIC_IDS[number];
 
 export function schoolTopics(value: unknown): LabTopic[] {

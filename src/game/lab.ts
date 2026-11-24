@@ -5,6 +5,7 @@ import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
 import { classSurvey } from "./skillsDetektiv";
 import { tileFloor } from "./tileFloor";
+import { tableView } from "./tableView";
 import { sumPacket } from "./sumPacket";
 import { uid } from "./random";
 import type { LabTopic } from "./schoolSelection";
@@ -16,6 +17,7 @@ import type { Level, Task, TaskDraft } from "./types";
 export const LAB_COUNT = 5;
 type Topic = { title: string; prompt: string; skillId: string; generate: (level: Level) => TaskDraft };
 export const LAB_TOPICS = {
+  viewpoint: { title: "Wer sieht was?", prompt: "Schau von verschiedenen Seiten auf den Tisch.", skillId: "standpunkte", generate: tableView },
   packets: { title: "Päckchen erforschen", prompt: "Verändere Zahlen und sage die Wirkung voraus.", skillId: "rechenpaeckchen", generate: sumPacket },
   tiles: { title: "Fliesenatelier", prompt: "Drehe die Steine und fülle die Fläche.", skillId: "flaechenLegen", generate: tileFloor },
   survey: { title: "Klassenumfrage", prompt: "Sortiere Stimmen und lies die Strichliste.", skillId: "strichliste", generate: classSurvey },

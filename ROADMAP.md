@@ -325,6 +325,8 @@ Unter „Mein Schulauftrag“ wählen Kinder oder Eltern pro Profil zwei oder dr
 
 „Päckchen erforschen“ verbindet das Labor, den Schulauftrag und die Kompetenz Rechenpäckchen am Rechenstrand. Kinder verändern einen oder zwei Summanden, sagen die Wirkung auf die Summe voraus und prüfen sie an der neuen Rechnung. Nach der Auswertung zeigen Zehnerstreifen und Einer beide Rechnungen.
 
+„Wer sieht was?“ trainiert im Formen-Ozean, Labor und Schulauftrag die Kompetenz „Standpunkte wechseln“. Kinder bestimmen, was von einer Tischseite aus links und rechts steht. Später suchen sie anhand einer beschriebenen Ansicht den Standort. Die Auflösung zeigt den Tisch aus Milas Blickrichtung.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.
