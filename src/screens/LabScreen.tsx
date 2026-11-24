@@ -21,6 +21,7 @@ import { SampleVisit } from "@/game/labSamples";
 import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
 import { PartnerSurvey } from "./PartnerSurvey";
+import { PartnerTrail } from "./PartnerTrail";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
 import { DrawRoute } from "@/lesson/ChangeRoute";
 import { GoalParts } from "@/lesson/GoalParts";
@@ -75,7 +76,7 @@ export function LabScreen() {
 }
 
 export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
-  const [partner, setPartner] = useState<"menu"|"wall"|"survey"|null>(null);
+  const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|null>(null);
   const [visit] = useState(() => new SampleVisit());
   const [area, setArea] = useState(() => lastLabArea(owner));
   const group = LAB_GROUPS[area];
@@ -89,11 +90,13 @@ export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }
   const startGoal = (goal: LearningGoal) => setRound(new LearningRound(owner,goal));
   if (partner === "wall") return <PartnerWall onBack={() => setPartner("menu")} />;
   if (partner === "survey") return <PartnerSurvey onBack={() => setPartner("menu")} />;
+  if (partner === "trail") return <PartnerTrail onBack={() => setPartner("menu")} />;
   if (partner === "menu") return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-3 bg-mist p-5">
     <button className="min-h-11 justify-self-start underline" onClick={()=>setPartner(null)}>← Zum Labor</button>
     <h1 className="font-display text-3xl">Partnerwerkstatt</h1><p>Ein Kind bereitet vor, das andere löst. Danach könnt ihr tauschen.</p>
     <Button onClick={()=>setPartner("wall")}>Meine Zahlenmauer</Button>
     <Button tone="sky" onClick={()=>setPartner("survey")}>Unsere Umfrage</Button>
+    <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
   if (round) return <LabActivity key={round.id} round={round}
     onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;

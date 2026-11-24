@@ -31,6 +31,7 @@ import "./smoke-group-recipe";
 import "./smoke-wheel-orders";
 import "./smoke-garden-fence";
 import "./smoke-symbol-code";
+import "./smoke-error-trail";
 import { testChangeRoute } from "./smoke-change-route";
 import { testThinkFurther } from "./smoke-think-further";
 import { testVoteDecision } from "./smoke-vote-decision";

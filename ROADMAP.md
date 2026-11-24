@@ -387,6 +387,8 @@ Die Lernverbindung „Von Stimmen zur Entscheidung“ im Datenbereich führt die
 
 Im Zeichencode erschließen Kinder die Werte von Sonne und Mond und rechnen mit beiden Zeichen. Auf höheren Stufen belegen sie zuerst mit zwei eigenen Zahlenpaaren, warum der erste Hinweis mehrere Lösungen zulässt. Erreichbar im Detektivbüro, Labor und Schulauftrag.
 
+In der Partnerwerkstatt bauen Kinder eine Fehlerspur bis 100. Ein Kind rechnet zuerst beide Schritte richtig und ändert ein Ergebnis. Das andere findet die erste falsche Zeile und korrigiert den Rechenweg bis zum Ende. Die Rollen wechseln am selben Gerät.
+
 Bei „Zaun ums Beet“ legen Kinder ein Meter lange Zaunstücke an die Außenkanten eines Beets. Sie vergleichen seinen Umfang mit dem eines anders angeordneten Beets mit gleich vielen Feldern. Das Thema ist in der Mess-Werkstatt, im Labor und im Schulauftrag erreichbar.
 
 In der Räderwerkstatt sammeln Kinder alle Bestellungen aus Fahr- und Dreirädern, die den Rädervorrat genau verbrauchen. Sie prüfen der Reihe nach für jede Dreiradzahl, ob die übrigen Räder paarweise aufgehen. Die Werkstatt ergänzt „Wie viele Möglichkeiten?“ im Detektivbüro, im Labor und im Schulauftrag.
