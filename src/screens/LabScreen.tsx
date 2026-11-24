@@ -50,6 +50,7 @@ const cards = {
   window: { Icon: Grid3X3, color: "bg-sky-light" },
   detective: { Icon: ListChecks, color: "bg-sky-light" },
   chocolate: { Icon: Grid3X3, color: "bg-coin-light" },
+  sharedTime: { Icon: CalendarDays, color: "bg-sky-light" },
   morning: { Icon: ListChecks, color: "bg-sky-light" },
   claims: { Icon: ListChecks, color: "bg-grape-light" },
   ways: { Icon: Route, color: "bg-leaf-light" },

@@ -19,6 +19,7 @@ import { receipt } from "./receipt";
 import { shopList } from "./shopList";
 import { numberDetective } from "./numberDetective";
 import { chocolate } from "./chocolate";
+import { sharedTime } from "./sharedTime";
 import { morningPlan } from "./morningPlan";
 import { parityClaim } from "./parityClaim";
 import { wayTable } from "./wayTable";
@@ -71,6 +72,7 @@ export const LAB_TOPICS = {
   window: { title: "Zahlenfenster", prompt: "Ergänze die Hundertertafel.", skillId: "nachbarn", generate: hundredWindow },
   detective: { title: "Zahlendetektiv", prompt: "Nutze Hinweise und begründe deinen Fund.", skillId: "zahlHinweise", generate: numberDetective },
   chocolate: { title: "Gerecht geteilt", prompt: "Teile Schokolade in Hälften und Viertel.", skillId: "anteile", generate: chocolate },
+  sharedTime: { title: "Wann haben wir beide Zeit?", prompt: "Vergleiche zwei Pläne und vereinbare einen Lesetermin.", skillId: "gemeinsameZeit", generate: sharedTime },
   morning: { title: "Plane deinen Vormittag", prompt: "Ordne Tätigkeiten um einen festen Termin an.", skillId: "zeitPlanen", generate: morningPlan },
   claims: { title: "Stimmt das immer?", prompt: "Prüfe Zahlenaussagen mit Plättchenpaaren.", skillId: "zahlAussagen", generate: parityClaim },
   ways: { title: "Wege-Tabelle", prompt: "Finde alle Wege über die Bibliothek zum Park.", skillId: "kombinatorik", generate: wayTable },

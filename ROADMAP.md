@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Im Uhrenschloss und Labor vergleichen Kinder zwei Nachmittagspläne, markieren gemeinsame freie Viertelstunden und vereinbaren einen Lesetermin. Nach einer Verschiebung prüfen sie ihren eigenen Termin und suchen bei Bedarf einen neuen.
+
 In der Befehlswerkstatt bauen Kinder eine Treppenlinie aus wiederholten Pfeilbefehlen, prüfen sie Schritt für Schritt und verbessern Abweichungen. Anschließend sagen sie den Zielpunkt für einen weiteren Durchlauf ihres eigenen Bausteins voraus. Im Formen-Ozean und Labor erreichbar.
 
 In „Unsere Rechenkonferenz“ bearbeiten zwei Kinder dieselbe Addition zunächst verdeckt. Auf ihren beiden Rechenstrichen markieren sie dann einen gemeinsamen Abschnitt und bestimmen seine Länge. Erreichbar in der Partnerwerkstatt.

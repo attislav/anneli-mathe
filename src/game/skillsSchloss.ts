@@ -5,6 +5,7 @@
 
 import { calendar } from "./discovery";
 import { busTable } from "./busTable";
+import { sharedTime } from "./sharedTime";
 import { morningPlan } from "./morningPlan";
 import { weekly } from "./weekly";
 import { chance, pick, randInt, shuffle } from "./random";
@@ -240,4 +241,6 @@ const kalender: Skill = { id: "kalender", title: "Kalender lesen", world: "schlo
 
 const zeitPlanen: Skill = { id: "zeitPlanen", title: "Zeitabläufe planen", world: "schloss", gen: ({ level }) => morningPlan(level) };
 const wochenTermine: Skill = { id: "wochenTermine", title: "Wiederkehrende Termine planen", world: "schloss", gen: ({level}) => weekly(level) };
-export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten, kalender, zeitPlanen, wochenTermine];
+const gemeinsameZeit: Skill = { id: "gemeinsameZeit", title: "Gemeinsame freie Zeiten finden", world: "schloss", gen: ({ level }) => sharedTime(level) };
+
+export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten, kalender, gemeinsameZeit, zeitPlanen, wochenTermine];
