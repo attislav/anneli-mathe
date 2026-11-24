@@ -12,7 +12,7 @@
     "smoke:training": "tsx scripts/smoke-training.ts",
     "smoke:game": "tsx scripts/smoke-game.ts",
     "smoke:lesson": "tsx scripts/smoke-lesson.ts",
-    "smoke:lab": "tsx scripts/smoke-lab.ts && tsx scripts/smoke-lab-notes.ts",
+    "smoke:lab": "tsx scripts/smoke-lab.ts && tsx scripts/smoke-lab-notes.ts && tsx scripts/smoke-reading-corner.ts",
     "smoke:tiles": "tsx scripts/smoke-tiles.ts",
     "smoke:school": "tsx scripts/smoke-school.ts",
     "smoke:packets": "tsx scripts/smoke-packets.ts",

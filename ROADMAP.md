@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Im Laborprojekt „Wir richten eine Leseecke ein“ tragen Kinder ihren eigenen Grundriss über Bedarfsrechnung und Einkauf bis zum fertigen Leseeckenplan. Überschüssiges Material und Restgeld bleiben sichtbar.
+
 Im Musterband erfinden Kinder eine eigene Zeichenfolge, prüfen den kürzesten Baustein und seine Wiederholungen und ergänzen ein verdecktes Zeichen. Im Formen-Ozean und Labor erreichbar.
 
 Im Klassenladen prüfen Kinder einen Kassenbon anhand von Warenkorb und Preisschildern, berichtigen eine falsche Angabe und berechnen den tatsächlichen Betrag. Als eigene Kompetenz im Hafen und Labor erreichbar.
