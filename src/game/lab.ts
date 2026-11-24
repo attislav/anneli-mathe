@@ -6,6 +6,8 @@ import { busTable } from "./busTable";
 import { classSurvey } from "./skillsDetektiv";
 import { tileFloor } from "./tileFloor";
 import { uid } from "./random";
+import type { LabTopic } from "./schoolSelection";
+export type { LabTopic } from "./schoolSelection";
 import { getSkill } from "./skills";
 import { activeProfileId, LOG_MAX, masteryOf, readSave, update } from "./state";
 import type { Level, Task, TaskDraft } from "./types";
@@ -23,10 +25,9 @@ export const LAB_TOPICS = {
   calendar: { title: "Kalender", prompt: "Springe von Tag zu Tag.", skillId: "kalender", generate: calendar },
   pairs: { title: "Zahlenpaare", prompt: "Welche Karten gehören zusammen?", skillId: "freunde10", generate: (level) => numberPairs(level >= 4 ? 20 : 10, "+") },
   route: { title: "Rasterwege", prompt: "Folge den Pfeilen auf der Karte.", skillId: "rasterwege", generate: (level) => getSkill("rasterwege").gen({ level, avoid: [] }) },
-} satisfies Record<string, Topic>;
+} satisfies Record<LabTopic, Topic>;
 
-export type LabTopic = keyof typeof LAB_TOPICS;
-function makeTask(topic: LabTopic): Task {
+export function makeLabTask(topic: LabTopic): Task {
   const { skillId, generate } = LAB_TOPICS[topic];
   const level = Math.min(5, Math.max(1, Math.round(masteryOf(readSave(), skillId)))) as Level;
   return { ...generate(level), skillId, level, id: uid() };
@@ -78,6 +79,6 @@ export class LabSession {
 
 export class LabRound extends LabSession {
   constructor(readonly topic: LabTopic, owner: string) {
-    super(owner, LAB_COUNT, () => makeTask(topic));
+    super(owner, LAB_COUNT, () => makeLabTask(topic));
   }
 }

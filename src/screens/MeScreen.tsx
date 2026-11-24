@@ -148,6 +148,10 @@ function ParentCorner({ save, onClose }: { save: SaveState; onClose: () => void 
       ) : (
         <div className="flex max-h-[75dvh] flex-col gap-4 overflow-y-auto">
           <h2 className="font-display text-2xl font-semibold">Eltern-Ecke</h2>
+          <Link href="/labor/schulauftrag/" className="rounded-2xl bg-grape-light p-4">
+            <span className="block font-display text-xl">Schulauftrag für {save.profile?.name}</span>
+            Zwei oder drei Übethemen auswählen oder ändern
+          </Link>
           <p className="text-sm text-ink-soft">Können-Wert pro Thema (1 = neu, 5 = sicher). Die App stellt Aufgaben so, dass etwa 80 % beim ersten Versuch klappen.</p>
           {WORLDS.map((world) => (
             <div key={world.id}>

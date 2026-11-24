@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { SCHOOL_PATH, SchoolRound } from "@/game/schoolAssignment";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
 import { TripRound } from "@/game/classTrip";
@@ -32,10 +34,10 @@ export function LabScreen() {
   if (needsProfilePick()) return <ProfilePicker />;
   if (!save.profile) return <Onboarding />;
   const owner = activeProfileId();
-  return <LabMenu key={owner} owner={owner} />;
+  return <LabMenu key={owner} owner={owner} topics={save.schoolTopics} />;
 }
 
-function LabMenu({ owner }: { owner: string }) {
+function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
   const [round, setRound] = useState<LabRound | TripRound | null>(null);
   const start = (topic: LabTopic) => setRound(new LabRound(topic, owner));
   const startTrip = () => setRound(new TripRound(owner));
@@ -47,6 +49,10 @@ function LabMenu({ owner }: { owner: string }) {
       <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
         <p>Wähle ein Projekt oder übe ein Thema mit fünf Aufgaben.</p></div>
     </header>
+    <Link href={SCHOOL_PATH} className="mb-3 block rounded-2xl bg-grape-light px-4 py-3">
+      <span className="font-display text-xl">Mein Schulauftrag</span>
+      <span className="ml-2 text-sm">{topics.length ? topics.map(t => LAB_TOPICS[t].title).join(" · ") : "Themen auswählen"}</span>
+    </Link>
     <button onClick={startTrip} className="mb-4 flex w-full items-center gap-3 rounded-3xl bg-sun-light p-4 text-left">
       <BusFront aria-hidden size={36} className="shrink-0" />
       <span><span className="block font-display text-2xl">Unser Klassenausflug</span>Plane Bus, Wartezeit und Picknick.</span>
@@ -77,11 +83,12 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound; onBack: () => void; onReplay: () => void }) {
   const [state, setState] = useState(round.state);
   const { task, number, status, firstRight } = state;
   const trip = round instanceof TripRound ? round : null;
-  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : "Unser Klassenausflug";
+  const school = round instanceof SchoolRound ? round : null;
+  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : school ? "Mein Schulauftrag" : "Unser Klassenausflug";
   const heading = useRef<HTMLHeadingElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -93,9 +100,12 @@ function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound;
     <Check aria-hidden className="mx-auto rounded-full bg-white p-3 text-leaf-dark" size={64} />
     <h1 tabIndex={-1} ref={heading} className="font-display text-3xl">{trip ? "Euer Ausflug ist geplant!" : "Runde beendet!"}</h1>
     {trip && <TripNote round={trip} completed={round.count} />}
+    {school && <ul className="grid gap-1 rounded-2xl bg-white p-4 text-left">
+      {[...school.results].map(([topic, right]) => <li key={topic}>{LAB_TOPICS[topic].title}: {right} von 2 beim ersten Versuch</li>)}
+    </ul>}
     <p>{title} · {firstRight} von {round.count} gleich beim ersten Versuch gelöst.</p>
     <Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : "Noch eine Runde"}</Button>
-    <Button tone="white" onClick={onBack}>{trip ? "Zurück zum Labor" : "Anderes Thema wählen"}</Button>
+    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : "Anderes Thema wählen"}</Button>
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">

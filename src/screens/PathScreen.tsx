@@ -3,6 +3,7 @@
 // Die Weltkarte: alle Welten untereinander, jede mit ihrem gewundenen Pfad.
 
 import { greet } from "@/game/voice";
+import { schoolRecommendation } from "@/game/schoolAssignment";
 import { activeSeason, adventDay } from "@/game/season";
 import { duePractice, PRACTICE_ID } from "@/game/practice";
 import { claimBadges } from "@/game/badges";
@@ -76,11 +77,15 @@ export function PathScreen({ save }: { save: SaveState }) {
 
   const dailyWaiting = dailyChestWaiting(save);
   const practiceDue = duePractice(save).length;
+  const school = schoolRecommendation(save);
   const lessonsToday = dailyWaiting ? 0 : save.today.lessons;
 
   return (
     <div className="min-h-dvh pb-28">
       <TopBar save={save} />
+      {school && <Link href={school.href} className="sticky top-[68px] z-20 mx-auto flex max-w-xl items-center justify-between gap-2 rounded-b-2xl bg-grape-light px-4 py-2">
+        <span><strong>Mein Schulauftrag</strong> · {school.title}</span><ChevronRight aria-hidden size={20} />
+      </Link>}
 
       <div className="mx-3.5 mt-3 flex items-center gap-3 rounded-[20px] bg-white px-4 py-2.5 sm:mx-auto sm:max-w-[548px]">
         <div className={`relative shrink-0 ${dailyWaiting ? "anim-wiggle" : "opacity-60"}`} title={dailyWaiting ? "Tagesschatz wartet" : "Tagesschatz geöffnet"}>
