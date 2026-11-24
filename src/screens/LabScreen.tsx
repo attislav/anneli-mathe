@@ -40,6 +40,7 @@ const cards = {
   map: { Icon: Grid3X3, color: "bg-sky-light" },
   juice: { Icon: FlaskConical, color: "bg-coin-light" },
   tower: { Icon: Blocks, color: "bg-sky-light" },
+  family: { Icon: SquarePlus, color: "bg-sky-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

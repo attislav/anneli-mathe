@@ -18,6 +18,7 @@ import { freshWall, wallMove, wallProblem } from "../src/game/partnerWall";
 import { addMeasure, checkTransfer, juice, litres, poured, vesselSize } from "../src/game/juice";
 import { JuiceVessels } from "../src/lesson/Juice";
 import { buildHint, checkTowerAnswer, leftInBox, moveCube, silhouette, targetTower, tower, towerTotal } from "../src/game/tower";
+import { factFamily, familyHint, familyLines, familyText, type FamilyLine } from "../src/game/factFamily";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
@@ -37,8 +38,42 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const commonFamily = { parts: [2,5] as [number,number] };
+const symmetricFamily = { parts: [3,3] as [number,number] };
+assert.deepEqual(familyLines(commonFamily).map(familyText).sort(), ["2 + 5 = 7","5 + 2 = 7","7 − 2 = 5","7 − 5 = 2"].sort());
+assert.deepEqual(familyLines(symmetricFamily).map(familyText).sort(), ["3 + 3 = 6","6 − 3 = 3"].sort());
+assert.ok(familyHint(commonFamily,{a:2,b:5,c:7,op:"−"},[]));
+assert.ok(familyHint(symmetricFamily,{a:3,b:3,c:0,op:"−"},[]));
+assert.ok(familyHint(commonFamily,{a:2,b:2,c:4,op:"+"},[]));
+function collectInEveryOrder(task: typeof commonFamily, remaining: FamilyLine[], seen: FamilyLine[] = []) {
+  for (const line of remaining) {
+    assert.equal(familyHint(task,line,seen), null);
+    const next = [...seen,line];
+    assert.match(familyHint(task,line,next) ?? "", /schon/);
+    collectInEveryOrder(task,remaining.filter(other => other !== line),next);
+  }
+}
+collectInEveryOrder(commonFamily,familyLines(commonFamily));
+collectInEveryOrder(symmetricFamily,familyLines(symmetricFamily));
+for (const level of [1,2,3,4,5] as Level[]) {
+  for (let i = 0; i < 80; i++) {
+    const task = factFamily(level), [a,b] = task.parts;
+    assert.ok(a >= 1 && b >= 1 && a+b <= [10,20,30,60,100][level-1]);
+    if (level <= 3) assert.notEqual(a,b);
+    assert.deepEqual(new Set(task.cards), new Set([a,b,a+b]));
+    assert.equal(new Set(familyLines(task).map(familyText)).size, a===b ? 2 : 4);
+  }
+  for (const fraction of [0, 0.9999]) {
+    const random = mock.method(Math, "random", () => fraction);
+    try {
+      const { parts: [a,b] } = factFamily(level);
+      assert.equal(a === b, level >= 4 && fraction === 0);
+    } finally { random.mock.restore(); }
+  }
+}
 
 const exampleTower = [4,1,2,3];
 assert.deepEqual(silhouette(exampleTower, "south"), [4,3]);

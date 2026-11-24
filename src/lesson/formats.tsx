@@ -28,6 +28,7 @@ import { TwoWays } from "./TwoWays";
 import { SiteMap } from "./SiteMap";
 import { Juice } from "./Juice";
 import { Tower } from "./Tower";
+import { FactFamily } from "./FactFamily";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -49,6 +50,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "fact-family":
+      return <FactFamily {...props} task={task} />;
     case "tower":
       return <Tower {...props} task={task} />;
     case "juice":

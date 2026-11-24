@@ -58,7 +58,7 @@ export const WORLDS: World[] = [
     boss: { name: "Krabbe Knacks", color: "#FF5D5D", shade: "#C93B3B" },
     nodes: [
       { id: "start-1", kind: "lesson", title: "Zahlenfreunde", skills: ["freunde10"] },
-      { id: "start-2", kind: "lesson", title: "Plus & Minus", skills: ["plus20"] },
+      { id: "start-2", kind: "lesson", title: "Plus & Minus", skills: ["plus20", "rechenfamilien"] },
       { id: "start-3", kind: "chest", title: "Schatzkiste", skills: [], coloring: "fisch" },
       { id: "start-4", kind: "trick", title: "Erst zur 10", skills: ["uebergang20"] },
       { id: "start-5", kind: "lesson", title: "Über die 10", skills: ["uebergang20"] },

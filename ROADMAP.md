@@ -363,6 +363,8 @@ An der Saftstation füllen Kinder Saft mit ganzen und halben Litern ab und könn
 
 Im Bauauftrag „Aussichtsturm umbauen“ verändern Kinder einen Höhenplan mit vier Feldern. Sie verwalten den Würfelvorrat, legen die Seitenansicht aus einer angegebenen Blickrichtung und zählen auch die verdeckten Würfel. Das Thema „Baupläne und Seitenansichten“ ist im Formen-Ozean, Labor und Schulauftrag erreichbar.
 
+Bei den Rechenfamilien bestimmen Kinder das Ganze in einem Teil-Ganzes-Bild. Mit Zahlen- und Zeichenkarten bauen sie die zugehörigen Plus- und Minusrechnungen in beliebiger Reihenfolge. Bei gleich großen Teilen genügen zwei verschiedene Rechnungen. Die Aufgabe ist auf der Startinsel, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.
