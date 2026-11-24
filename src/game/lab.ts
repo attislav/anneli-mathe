@@ -11,6 +11,7 @@ import { morningPlan } from "./morningPlan";
 import { parityClaim } from "./parityClaim";
 import { wayTable } from "./wayTable";
 import { twoWays } from "./twoWays";
+import { siteMap } from "./siteMap";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -41,6 +42,7 @@ export const LAB_TOPICS = {
   claims: { title: "Stimmt das immer?", prompt: "Prüfe Zahlenaussagen mit Plättchenpaaren.", skillId: "zahlAussagen", generate: parityClaim },
   ways: { title: "Wege-Tabelle", prompt: "Finde alle Wege über die Bibliothek zum Park.", skillId: "kombinatorik", generate: wayTable },
   methods: { title: "Zwei Rechenwege", prompt: "Rechne schrittweise oder mit einer runden Hilfsaufgabe.", skillId: "rechenwege", generate: twoWays },
+  map: { title: "Lageplan lesen", prompt: "Finde Orte mit Legende und Koordinaten.", skillId: "lageplan", generate: siteMap },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },

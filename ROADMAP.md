@@ -355,6 +355,8 @@ Die Wege-Tabelle im Detektivbüro, Labor und Schulauftrag verbindet die Abschnit
 
 Bei „Zwei Rechenwege“ lösen Kinder dieselbe Plus- oder Minusaufgabe schrittweise oder mit einer runden Hilfsaufgabe. Sie geben Zwischenwert, nächsten Rechenschritt und Ergebnis an. Nach der Lösung lassen sich beide Wege vergleichen und der andere freiwillig ausprobieren. Nur der Erstversuch zählt im Lernbericht. Das Thema ist am Rechenstrand, im Labor und im Schulauftrag verfügbar.
 
+Beim Lageplan lesen Kinder Koordinaten und deuten Ortszeichen mit einer Bildlegende. Später unterscheiden sie zwei gleiche Zeichen über den direkten Nachbarn und berücksichtigen eine gesperrte Feldseite. Das Thema ist im Formen-Ozean, im Labor und im Schulauftrag verfügbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

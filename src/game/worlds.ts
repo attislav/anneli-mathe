@@ -257,7 +257,7 @@ export const WORLDS: World[] = [
       chest("ozean-4", "qualle"),
       { id: "ozean-5", kind: "lesson", title: "Muster", skills: ["muster"] },
       { id: "ozean-6", kind: "lesson", title: "Körper", skills: ["koerper"] },
-      { id: "ozean-7", kind: "lesson", title: "Wege und Blickrichtungen", skills: ["rasterwege", "spiegeln", "muster", "standpunkte"] },
+      { id: "ozean-7", kind: "lesson", title: "Wege und Blickrichtungen", skills: ["rasterwege", "spiegeln", "muster", "standpunkte", "lageplan"] },
       { id: "ozean-8", kind: "review", title: "Gemischt", skills: ["formen", "formenZaehlen", "spiegeln", "muster", "koerper", "rasterwege", "flaechenLegen"] },
       round2("ozean-9", "Formen erkennen 2", ["formen"]),
       round2("ozean-10", "Spiegeln 2", ["spiegeln"]),

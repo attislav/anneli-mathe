@@ -12,6 +12,8 @@ import { areaSamples, sampleAction, SampleVisit, samples, sampleFeedback } from 
 import { LAB_GROUPS } from "../src/game/schoolSelection";
 import { addHeading, checkWays, wayCards, wayTable } from "../src/game/wayTable";
 import { calculation, checkWay, freshWay, twoWays } from "../src/game/twoWays";
+import { checkSite, directNeighbor, landmarks, mapCoordinate, siteMap, siteMatches } from "../src/game/siteMap";
+import { SiteMap } from "../src/lesson/SiteMap";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -30,8 +32,42 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+assert.equal(mapCoordinate(4, 0), "A1");
+assert.equal(mapCoordinate(4, 15), "D4");
+assert.ok(!directNeighbor(4, 0, 5, null) && !directNeighbor(4, 3, 4, null));
+assert.ok(!directNeighbor(4, 6, 10, [10, 6]) && !directNeighbor(4, 10, 6, [10, 6]));
+assert.ok(directNeighbor(4, 14, 15, null));
+for (const level of [1,2,3,4,5] as Level[]) {
+  for (let i = 0; i < 100; i++) {
+    const map = siteMap(level);
+    const matches = siteMatches(map);
+    assert.equal(matches.length, 1);
+    const cell = matches[0];
+    assert.equal(map.cells[cell], map.target);
+    assert.ok(checkSite(map, map.mode === "place" ? map.target : mapCoordinate(map.size, cell)));
+    assert.ok(!checkSite(map, "X0"));
+    if (map.mode === "neighbor") {
+      const anchor = map.cells.indexOf(map.anchor);
+      assert.equal(map.cells.filter(p => p === map.target).length, 2);
+      assert.equal(Math.abs(Math.floor(cell / map.size) - Math.floor(anchor / map.size)) + Math.abs(cell % map.size - anchor % map.size), 1);
+      if (map.closed) {
+        const blocked = map.closed.find(n => n !== anchor)!;
+        assert.equal(map.cells[blocked], map.target);
+        assert.ok(!checkSite(map, mapCoordinate(map.size, blocked)));
+      }
+    }
+    if (i === 0) {
+      const task = { ...map, id: "check", level, skillId: "lageplan" };
+      const markup = (status: "ask" | "reveal") => renderToStaticMarkup(createElement(SiteMap, { task, status, onAnswer() {} }));
+      assert.ok(!markup("ask").includes(task.solution));
+      assert.ok(markup("reveal").includes(task.solution));
+      assert.ok(task.solution.includes(landmarks[task.target].symbol));
+    }
+  }
+}
 
 const plusWay = { a: 49, b: 26, minus: false, roundFirst: true };
 const minusWay = { a: 62, b: 29, minus: true, roundFirst: false };
