@@ -24,6 +24,7 @@ import { ChocolateShare } from "./ChocolateShare";
 import { MorningPlan } from "./MorningPlan";
 import { ParityClaim } from "./ParityClaim";
 import { WayTable } from "./WayTable";
+import { TwoWays } from "./TwoWays";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -45,6 +46,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "two-ways":
+      return <TwoWays {...props} task={task} />;
     case "way-table":
       return <WayTable {...props} task={task} />;
     case "parity-claim":

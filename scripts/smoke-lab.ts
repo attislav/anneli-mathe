@@ -11,6 +11,7 @@ import { allowedPair, checkClaim, verdict, type Pair } from "../src/game/parityC
 import { areaSamples, sampleAction, SampleVisit, samples, sampleFeedback } from "../src/game/labSamples";
 import { LAB_GROUPS } from "../src/game/schoolSelection";
 import { addHeading, checkWays, wayCards, wayTable } from "../src/game/wayTable";
+import { calculation, checkWay, freshWay, twoWays } from "../src/game/twoWays";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -29,8 +30,33 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const plusWay = { a: 49, b: 26, minus: false, roundFirst: true };
+const minusWay = { a: 62, b: 29, minus: true, roundFirst: false };
+assert.deepEqual(calculation(plusWay, "steps"), { term: "49 + 20", middle: 69, result: 75, sign: "+", amount: 6 });
+assert.deepEqual(calculation(plusWay, "round"), { term: "50 + 26", middle: 76, result: 75, sign: "−", amount: 1 });
+assert.deepEqual(calculation(minusWay, "round"), { term: "62 − 30", middle: 32, result: 33, sign: "+", amount: 1 });
+for (const level of [1,2,3,4,5] as Level[]) {
+  for (let i = 0; i < 150; i++) {
+    const problem = twoWays(level);
+    const result = problem.a + (problem.minus ? -problem.b : problem.b);
+    assert.notEqual(calculation(problem, "round").term, calculation(problem, "steps").term);
+    for (const method of ["steps", "round"] as const) {
+      const path = calculation(problem, method);
+      assert.ok(path.middle >= 0 && path.middle <= 100 && result >= 0 && result <= 100);
+      assert.ok(path.amount > 0 && path.amount < 10);
+      assert.equal(path.middle + path.amount * (path.sign === "+" ? 1 : -1), result);
+      const correct = { method, middle: String(path.middle), sign: path.sign, amount: String(path.amount), result: String(result) };
+      assert.equal(checkWay(problem, correct), null);
+      assert.ok(checkWay(problem, { ...correct, middle: String(path.middle + 1) }));
+      assert.ok(checkWay(problem, { ...correct, sign: path.sign === "+" ? "−" : "+" }));
+      assert.ok(checkWay(problem, { ...correct, amount: String(path.amount + 1) }));
+      assert.deepEqual(freshWay(method), { method, middle: "", sign: "", amount: "", result: "" });
+    }
+  }
+}
 
 for (const level of [1, 2, 3, 4, 5] as Level[]) {
   const task = wayTable(level), keys = wayCards(task);

@@ -187,7 +187,7 @@ function Lesson({ save, node, world, tier, easier, onReplay }: { save: SaveState
   };
 
   useEffect(() => {
-    if (status !== "right" || task.format === "split-array" || task.format === "write-question") return;
+    if (status !== "right" || task.format === "split-array" || task.format === "write-question" || task.format === "two-ways") return;
     autoNext.current = setTimeout(advance, 1300);
     return () => {
       if (autoNext.current) clearTimeout(autoNext.current);

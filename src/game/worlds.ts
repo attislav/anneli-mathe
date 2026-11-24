@@ -124,7 +124,7 @@ export const WORLDS: World[] = [
       chest("strand-11"),
       round2("strand-12", "Ergänzen 2", ["ergaenzen"]),
       round2("strand-13", "Zahlenmauern 2", ["mauern"]),
-      round2("strand-14", "Über den Zehner 2", ["uebergang100"]),
+      round2("strand-14", "Über den Zehner auf zwei Wegen", ["uebergang100", "rechenwege"]),
       chest("strand-15"),
       mix2("strand-16", ["zehnerPlus", "einerPlus", "ergaenzen", "mauern", "uebergang100"]),
       { id: "strand-boss", kind: "boss", title: "Pirat Plumps", skills: ["zehnerPlus", "einerPlus", "ergaenzen", "uebergang100"], coloring: "pilzhaus" },

@@ -1,5 +1,5 @@
 export const LAB_GROUPS = [
-  { title: "Zahlen und Rechnen", topics: ["pairs", "window", "detective", "machine", "packets", "split", "chocolate", "claims"] },
+  { title: "Zahlen und Rechnen", topics: ["pairs", "window", "detective", "machine", "packets", "split", "chocolate", "claims", "methods"] },
   { title: "Raum und Formen", topics: ["viewpoint", "tiles", "cubes", "route"] },
   { title: "Messen, Zeit und Geld", topics: ["rope", "bus", "morning", "calendar", "shopping", "shops"] },
   { title: "Daten und Sachsituationen", topics: ["survey", "questions", "ways"] },

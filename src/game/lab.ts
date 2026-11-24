@@ -10,6 +10,7 @@ import { chocolate } from "./chocolate";
 import { morningPlan } from "./morningPlan";
 import { parityClaim } from "./parityClaim";
 import { wayTable } from "./wayTable";
+import { twoWays } from "./twoWays";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -39,6 +40,7 @@ export const LAB_TOPICS = {
   morning: { title: "Plane deinen Vormittag", prompt: "Ordne Tätigkeiten um einen festen Termin an.", skillId: "zeitPlanen", generate: morningPlan },
   claims: { title: "Stimmt das immer?", prompt: "Prüfe Zahlenaussagen mit Plättchenpaaren.", skillId: "zahlAussagen", generate: parityClaim },
   ways: { title: "Wege-Tabelle", prompt: "Finde alle Wege über die Bibliothek zum Park.", skillId: "kombinatorik", generate: wayTable },
+  methods: { title: "Zwei Rechenwege", prompt: "Rechne schrittweise oder mit einer runden Hilfsaufgabe.", skillId: "rechenwege", generate: twoWays },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },

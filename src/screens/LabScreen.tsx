@@ -35,6 +35,7 @@ const cards = {
   morning: { Icon: ListChecks, color: "bg-sky-light" },
   claims: { Icon: ListChecks, color: "bg-grape-light" },
   ways: { Icon: Route, color: "bg-leaf-light" },
+  methods: { Icon: SquarePlus, color: "bg-coin-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },
