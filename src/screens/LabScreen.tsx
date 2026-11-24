@@ -41,6 +41,7 @@ const cards = {
   juice: { Icon: FlaskConical, color: "bg-coin-light" },
   tower: { Icon: Blocks, color: "bg-sky-light" },
   family: { Icon: SquarePlus, color: "bg-sky-light" },
+  clarify: { Icon: ListChecks, color: "bg-grape-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

@@ -311,7 +311,7 @@ export const WORLDS: World[] = [
       { id: "detektiv-2", kind: "lesson", title: "Diagramme lesen", skills: ["diagramm"] },
       { id: "detektiv-3", kind: "lesson", title: "Fehler-Detektiv", skills: ["fehlerDetektiv"] },
       chest("detektiv-4", "lupe"),
-      { id: "detektiv-5", kind: "lesson", title: "Sachaufgaben", skills: ["sachaufgaben"] },
+      { id: "detektiv-5", kind: "lesson", title: "Sachaufgaben", skills: ["sachaufgaben", "sachfragenKlaeren"] },
       { id: "detektiv-6", kind: "lesson", title: "Wie viele Möglichkeiten?", skills: ["kombinatorik"] },
       { id: "detektiv-7", kind: "lesson", title: "Strichliste & Diagramm", skills: ["strichliste", "diagramm"] },
       { id: "detektiv-8", kind: "review", title: "Gemischt", skills: ["strichliste", "diagramm", "sachaufgaben", "kombinatorik", "fehlerDetektiv"] },

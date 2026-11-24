@@ -365,6 +365,8 @@ Im Bauauftrag „Aussichtsturm umbauen“ verändern Kinder einen Höhenplan mit
 
 Bei den Rechenfamilien bestimmen Kinder das Ganze in einem Teil-Ganzes-Bild. Mit Zahlen- und Zeichenkarten bauen sie die zugehörigen Plus- und Minusrechnungen in beliebiger Reihenfolge. Bei gleich großen Teilen genügen zwei verschiedene Rechnungen. Die Aufgabe ist auf der Startinsel, im Labor und im Schulauftrag erreichbar.
 
+In „Was muss ich noch wissen?“ klären Kinder eine Sachaufgabe zu einer Busfahrt, einem Einkauf, einem Band oder einem Schulweg. Sie dürfen alle Rückfragen stellen, wählen dann die beiden benötigten Angaben und rechnen selbst. Das Thema ist im Detektivbüro, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

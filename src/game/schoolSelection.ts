@@ -2,7 +2,7 @@ export const LAB_GROUPS = [
   { title: "Zahlen und Rechnen", topics: ["pairs", "window", "detective", "machine", "packets", "split", "chocolate", "claims", "methods", "family"] },
   { title: "Raum und Formen", topics: ["viewpoint", "tiles", "cubes", "tower", "route", "map"] },
   { title: "Messen, Zeit und Geld", topics: ["rope", "juice", "bus", "morning", "calendar", "shopping", "shops"] },
-  { title: "Daten und Sachsituationen", topics: ["survey", "questions", "ways"] },
+  { title: "Daten und Sachsituationen", topics: ["survey", "questions", "ways", "clarify"] },
 ] as const;
 export type LabTopic = typeof LAB_GROUPS[number]["topics"][number];
 export const LAB_TOPIC_IDS = LAB_GROUPS.flatMap<LabTopic>(group => group.topics);

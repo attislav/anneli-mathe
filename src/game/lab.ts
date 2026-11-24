@@ -15,6 +15,7 @@ import { siteMap } from "./siteMap";
 import { juice } from "./juice";
 import { tower } from "./tower";
 import { factFamily } from "./factFamily";
+import { clarifyStory } from "./clarifyStory";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -49,6 +50,7 @@ export const LAB_TOPICS = {
   juice: { title: "Saftstation", prompt: "Fülle ganze und halbe Liter ab und gieße den Saft um.", skillId: "fuellmengen", generate: juice },
   tower: { title: "Aussichtsturm umbauen", prompt: "Baue nach Auftrag und lege die Seitenansicht.", skillId: "umbauplan", generate: tower },
   family: { title: "Rechenfamilien", prompt: "Baue aus zwei Teilen und einem Ganzen Plus- und Minusrechnungen.", skillId: "rechenfamilien", generate: factFamily },
+  clarify: { title: "Was muss ich noch wissen?", prompt: "Stelle Rückfragen und löse die Sachaufgabe.", skillId: "sachfragenKlaeren", generate: clarifyStory },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },

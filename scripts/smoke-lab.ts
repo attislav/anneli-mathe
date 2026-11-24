@@ -19,6 +19,7 @@ import { addMeasure, checkTransfer, juice, litres, poured, vesselSize } from "..
 import { JuiceVessels } from "../src/lesson/Juice";
 import { buildHint, checkTowerAnswer, leftInBox, moveCube, silhouette, targetTower, tower, towerTotal } from "../src/game/tower";
 import { factFamily, familyHint, familyLines, familyText, type FamilyLine } from "../src/game/factFamily";
+import { checkStory, clarifyStory, storyAmount, storyUnit, type Scenario } from "../src/game/clarifyStory";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
@@ -38,8 +39,47 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { clarify: "clarify-story", family: "fact-family", tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const sceneUnits = { ride: ["−","Plätze"], fruit: ["+","Cent"], ribbon: ["−","cm"], walk: ["+","Minuten"] };
+for (const [plural, one] of [["Plätze","Platz"],["Minuten","Minute"]]) {
+  assert.equal(storyAmount(1,plural), "1 "+one);
+  assert.equal(storyAmount(2,plural), "2 "+plural);
+  assert.equal(storyUnit(plural,"1"), one);
+  assert.equal(storyUnit(plural,"0"), plural);
+}
+const lowRandom = mock.method(Math,"random",() => 0);
+try {
+  const seats = clarifyStory(1,"ride"), walk = clarifyStory(1,"walk");
+  assert.match(seats.solution,/Besetzte Plätze: 1 Platz\. 2 − 1 = 1 Platz\./);
+  assert.match(walk.solution,/1 Minute\. 2 \+ 1 = 3 Minuten\./);
+  assert.match(seats.question,/Sitzgruppe/);
+  assert.match(clarifyStory(5,"ride").question,/ganzen Bus/);
+  assert.match(clarifyStory(1,"fruit").question,/Kaufladen.*Spielgeld/);
+} finally { lowRandom.mock.restore(); }
+for (const scene of Object.keys(sceneUnits) as Scenario[]) {
+  for (const level of [1,2,3,4,5] as Level[]) {
+    const random = mock.method(Math, "random", () => 0.9999);
+    const task = clarifyStory(level,scene);
+    random.mock.restore();
+    const [a,b] = task.facts, [op,unit] = sceneUnits[scene];
+    assert.equal(task.op, op);
+    assert.equal(a.unit, unit); assert.equal(b.unit, unit);
+    assert.equal(new Set(task.order).size, task.facts.length-1);
+    assert.ok(task.order.includes(1) && !task.order.includes(0));
+    const result = String(op === "+" ? a.value+b.value : a.value-b.value);
+    assert.equal(checkStory(task,[1],[0,1],op,result), null);
+    assert.equal(checkStory(task,task.order,[0,1],op,result), null);
+    if (op === "+") assert.equal(checkStory(task,[1],[1,0],op,result), null);
+    else { assert.equal(result,"0"); assert.ok(checkStory(task,[1],[1,0],op,result)); }
+    assert.ok(checkStory(task,[],[0,1],op,result));
+    assert.ok(checkStory(task,task.order,[0,2],op,result));
+    assert.ok(checkStory(task,task.order,[1,1],op,result));
+    assert.ok(checkStory(task,[1],[0,1],op === "+" ? "−" : "+",result));
+    assert.ok(checkStory(task,[1],[0,1],op,String(Number(result)+1)));
+  }
+}
 
 const commonFamily = { parts: [2,5] as [number,number] };
 const symmetricFamily = { parts: [3,3] as [number,number] };
