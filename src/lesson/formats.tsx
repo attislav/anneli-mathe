@@ -58,6 +58,7 @@ import { FoldLines } from "./FoldLines";
 import { DrawBag } from "./DrawBag";
 import { DigitSwap } from "./DigitSwap";
 import { ParcelMass } from "./ParcelMass";
+import { EqualFence } from "./EqualFence";
 import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
 import { GroupRecipe } from "./GroupRecipe";
@@ -137,6 +138,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <DigitSwap {...props} task={task} />;
     case "parcel-mass":
       return <ParcelMass {...props} task={task} />;
+    case "equal-fence":
+      return <EqualFence {...props} task={task} />;
     case "garden-fence":
       return <GardenFence {...props} task={task} />;
     case "wheel-orders":

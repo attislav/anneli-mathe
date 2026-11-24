@@ -2,6 +2,7 @@
 
 import { boxOrder } from "./boxOrder";
 import { parcelMass } from "./parcelMass";
+import { equalFence } from "./equalFence";
 import { gardenFence } from "./gardenFence";
 import type { RulerItem, TaskDraft } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
@@ -199,4 +200,6 @@ const fuellmengen: Skill = { id: "fuellmengen", title: "Füllmengen vergleichen"
 const zaunlaengen: Skill = { id: "zaunlaengen", title: "Umfänge bestimmen", world: "werkstatt", gen: ({level}) => gardenFence(level) };
 const paeckchenWiegen: Skill = { id: "paeckchenWiegen", title: "Massen wiegen und vergleichen", world: "werkstatt", gen: ({level}) => parcelMass(level) };
 const gewichteOrdnen:Skill={ id:"gewichteOrdnen", title:"Gewichte durch Vergleichen ordnen", world:"werkstatt", gen:({level})=>boxOrder(level) };
-export const WERKSTATT_SKILLS: Skill[] = [gewichteOrdnen, paeckchenWiegen, zaunlaengen, lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];
+const beetflaechen: Skill = { id: "beetflaechen", title: "Flächen bei gleichem Umfang vergleichen", world: "werkstatt", gen: ({ level }) => equalFence(level) };
+
+export const WERKSTATT_SKILLS: Skill[] = [beetflaechen, gewichteOrdnen, paeckchenWiegen, zaunlaengen, lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];

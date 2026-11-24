@@ -42,6 +42,7 @@ import { foldLines } from "./foldLines";
 import { drawBag } from "./drawBag";
 import { digitSwap } from "./digitSwap";
 import { parcelMass } from "./parcelMass";
+import { equalFence } from "./equalFence";
 import { gardenFence } from "./gardenFence";
 import { wheelOrders } from "./wheelOrders";
 import { groupRecipe } from "./groupRecipe";
@@ -106,6 +107,7 @@ export const LAB_TOPICS = {
   bag: { title: "Was kannst du ziehen?", prompt: "Untersuche den Beutel und vergleiche deine Ziehspur.", skillId: "zufallBeutel", generate: drawBag },
   swap: { title: "Zifferntausch", prompt: "Tausche zwei Karten und untersuche ihre Stellenwerte.", skillId: "zehnerEiner", generate: digitSwap },
   parcels: { title: "Was wiegt das Päckchen?", prompt: "Wiege ein Päckchen und prüfe die Versandgrenze.", skillId: "paeckchenWiegen", generate: parcelMass },
+  equalFence: { title: "Gleicher Zaun, wie viel Platz?", prompt: "Baue verschiedene Rechtecke mit demselben Zaun und vergleiche ihren Platz.", skillId: "beetflaechen", generate: equalFence },
   fence: { title: "Zaun ums Beet", prompt: "Lege Zaunstücke und vergleiche zwei Beete.", skillId: "zaunlaengen", generate: gardenFence },
   wheels: { title: "Räderwerkstatt", prompt: "Finde alle passenden Fahrrad- und Dreiradbestellungen.", skillId: "kombinatorik", generate: wheelOrders },
   recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
@@ -119,10 +121,10 @@ export const LAB_TOPICS = {
   route: { title: "Rasterwege", prompt: "Folge den Pfeilen auf der Karte.", skillId: "rasterwege", generate: (level) => getSkill("rasterwege").gen({ level, avoid: [] }) },
 } satisfies Record<LabTopic, Topic>;
 
-export function makeLabTask(topic: LabTopic, requestedLevel?:Level): Task {
+export function makeLabTask(topic: LabTopic, requestedLevel?:Level, generateOverride?:Topic["generate"]): Task {
   const { skillId, generate } = LAB_TOPICS[topic];
   const level = requestedLevel ?? Math.min(5, Math.max(1, Math.round(masteryOf(readSave(), skillId)))) as Level;
-  return { ...generate(level), skillId, level, id: uid() };
+  return { ...(generateOverride??generate)(level), skillId, level, id: uid() };
 }
 
 type LabState = {
@@ -178,7 +180,12 @@ export class LabRound extends LabSession {
     return true;
   }
   constructor(readonly topic: LabTopic, owner: string, readonly size:1|5=LAB_COUNT, previous?:number) {
-    super(owner, size, () => size===1 && previous!==undefined
+    const usedBeds: import("./equalFence").BedInvestigation[]=[];
+    super(owner, size, () => topic==="equalFence"&&size===5 ? makeLabTask(topic,undefined,level=>{
+      const job=equalFence(level,usedBeds);
+      usedBeds.push(job);
+      return job;
+    }) : size===1 && previous!==undefined
       ? freshLabMaterial(()=>makeLabTask(topic),previous) : makeLabTask(topic));
   }
   replay() {

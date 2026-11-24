@@ -2,6 +2,7 @@ import { LAB_TOPICS } from "./lab";
 import { LAB_TOPIC_IDS, type LabTopic } from "./schoolSelection";
 
 const keywords: Record<LabTopic, string> = {
+  equalFence:"Beet Garten Zaun Umfang Fläche Rechteck",
   sharedTime:"Treffen verabreden Uhr Uhrzeit Freizeit", morning:"Uhr Uhrzeit Tagesplan Pause", bus:"Uhr Uhrzeit Fahrzeit Abfahrt",
   weekly:"Woche Termin Datum", calendar:"Datum Monate Tage", shopping:"Geld einkaufen Cent bezahlen",
   shops:"Geld Einkauf Preise sparen", receipt:"Geld Bon Kasse bezahlen", rope:"Länge Zentimeter messen",

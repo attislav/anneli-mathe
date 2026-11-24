@@ -85,6 +85,7 @@ const cards = {
   bag: { Icon: ListChecks, color: "bg-sun-light" },
   swap: { Icon: SquarePlus, color: "bg-sky-light" },
   parcels: { Icon: ShoppingBasket, color: "bg-coin-light" },
+  equalFence: { Icon: Grid3X3, color: "bg-leaf-light" },
   fence: { Icon: Grid3X3, color: "bg-leaf-light" },
   wheels: { Icon: ListChecks, color: "bg-sky-light" },
   recipe: { Icon: ShoppingBasket, color: "bg-leaf-light" },

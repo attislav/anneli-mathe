@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Bei „Gleicher Zaun, wie viel Platz?“ bauen Kinder auf Karopapier Rechtecke aus 10, 12 oder 14 Zaunstücken. Sie finden das größte aller möglichen Beete, bestimmen den Platzunterschied zweier eigener Beete oder prüfen, wo ihre Pflanzen Platz haben. Eine Fünferrunde wechselt den Auftrag und bietet fünf verschiedene Untersuchungen. Im Labor und in der Mess-Werkstatt erreichbar.
+
 Mit „Aufgabe finden“ suchen Kinder im Labor nach einer Tätigkeit oder wählen ein Suchwort. Ein Treffer startet die gewählte Einzel- oder Fünferrunde. Nach der Runde steht die Trefferliste wieder bereit.
 
 Im Uhrenschloss und Labor vergleichen Kinder zwei Nachmittagspläne, markieren gemeinsame freie Viertelstunden und vereinbaren einen Lesetermin. Nach einer Verschiebung prüfen sie ihren eigenen Termin und suchen bei Bedarf einen neuen.

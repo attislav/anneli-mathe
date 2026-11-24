@@ -73,6 +73,7 @@ export function taskContentKey(t: TaskDraftWithSkill) {
   if (t.format === "draw-bag") return JSON.stringify([t.format,[...t.bag].sort(),t.first,t.next]);
   if (t.format === "digit-swap") return JSON.stringify([t.format,t.min,t.max,[...t.digits].sort()]);
   if (t.format === "parcel-mass") return JSON.stringify([t.format,t.mass,t.other]);
+  if (t.format === "equal-fence") return JSON.stringify([t.format, t.fence,t.mode,t.mode==="plants"?t.plants:null]);
   if (t.format === "garden-fence") return JSON.stringify([t.format,t.first,t.second]);
   if (t.format === "wheel-orders") return JSON.stringify([t.format,t.wheels]);
   if (t.format === "group-recipe") return JSON.stringify([t.format,t.title,t.children,t.ingredients]);
