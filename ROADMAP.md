@@ -389,6 +389,8 @@ Im Zeichencode erschließen Kinder die Werte von Sonne und Mond und rechnen mit 
 
 In der Partnerwerkstatt bauen Kinder eine Fehlerspur bis 100. Ein Kind rechnet zuerst beide Schritte richtig und ändert ein Ergebnis. Das andere findet die erste falsche Zeile und korrigiert den Rechenweg bis zum Ende. Die Rollen wechseln am selben Gerät.
 
+Bei „Was kannst du ziehen?“ begründen Kinder aus dem Beutelinhalt, ob ein Zeichen sicher, möglich oder unmöglich ist. Sie ziehen dreimal mit Zurücklegen, zählen ihre Beobachtungen und prüfen den nächsten Zug. Erreichbar im Detektivbüro, im Labor und im Schulauftrag.
+
 Beim „Zifferntausch“ legen Kinder eine eigene zweistellige Zahl, sagen die Wirkung eines Kartentauschs voraus und bestimmen die Veränderung der beiden Stellenwerte. Die Aufgabe ergänzt Zehner und Einer im Zahlenwald, im Labor und im Schulauftrag.
 
 Bei „Was wiegt das Päckchen?“ bringen Kinder eine Waage mit Gewichtsstücken ins Gleichgewicht. Sie bestimmen die Masse in Gramm und prüfen, ob zwei Päckchen zusammen höchstens ein Kilogramm wiegen. Die Übung ist in der Mess-Werkstatt, im Labor und im Schulauftrag verfügbar.
