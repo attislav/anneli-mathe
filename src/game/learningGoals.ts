@@ -1,3 +1,4 @@
+import { routeTasks, routeFollowUps, routeProblem } from "./changeRoute";
 import { voteTasks } from "./voteDecision";
 import { busJourney, busTable, busTime } from "./busTable";
 import { familyLines, familyText } from "./factFamily";
@@ -9,6 +10,7 @@ import type { Task } from "./types";
 
 export const learningGoals = {
   numbers: { area: 0, title: "Zahlen zerlegen und nutzen" },
+  routes: { area: 1, title: "Einen Weg planen und ändern" },
   votes: { area: 3, title: "Von Stimmen zur Entscheidung" },
   times: { area: 2, title: "Zeiten lesen und planen" },
 };
@@ -52,8 +54,20 @@ function timeTasks(): [Task, Task, Task] {
   ];
 }
 export class LearningRound extends LabSession {
-  constructor(owner: string, readonly goal: LearningGoal, readonly tasks = goal === "numbers" ? numberTasks() : goal === "votes" ? voteTasks() : timeTasks()) {
+  constructor(owner: string, readonly goal: LearningGoal, readonly tasks = goal === "numbers" ? numberTasks() : goal === "votes" ? voteTasks() : goal === "routes" ? routeTasks() : timeTasks()) {
     super(owner, 3, number => tasks[number-1]);
+  }
+  submitRoute(taskId: string, route: number[]) {
+    const {task,status,number}=this.state;
+    if (this.goal!=="routes" || number!==1 || task.format!=="draw-route" || task.id!==taskId || status!=="ask") return this.state;
+    const hint=routeProblem(task,route);
+    const state=this.answer(taskId,hint===null,hint??undefined);
+    if(state.status==="right") {
+      const [turn,detour]=routeFollowUps([...route]);
+      this.tasks[1]=turn;
+      this.tasks[2]=detour;
+    }
+    return state;
   }
   submitParts(taskId: string, left: number, answer: string) {
     if (this.goal !== "numbers" || this.state.number !== 1 || this.state.status !== "ask" || this.state.task.id !== taskId) return this.state;

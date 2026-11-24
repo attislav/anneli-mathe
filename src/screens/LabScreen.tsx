@@ -22,6 +22,7 @@ import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
 import { PartnerSurvey } from "./PartnerSurvey";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
+import { DrawRoute } from "@/lesson/ChangeRoute";
 import { GoalParts } from "@/lesson/GoalParts";
 
 const cards = {
@@ -191,6 +192,9 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
     </table>}
     {round instanceof LearningRound && round.goal === "numbers" && number === 1 ?
       <GoalParts key={task.id} status={status} onCheck={(left,right) => setState(round.submitParts(task.id,left,right))} /> :
+      round instanceof LearningRound && round.goal === "routes" && number === 1 && task.format === "draw-route" ?
+      <DrawRoute key={task.id} task={task} status={status} onRoute={route => setState(round.submitRoute(task.id,route))}
+        onAnswer={(correct,hint) => setState(round.answer(task.id,correct,hint))}/> :
       <TaskView key={task.id} task={task} status={status} onAnswer={(correct, hint) => setState(round.answer(task.id, correct, hint))} />}
     {status !== "ask" && <div ref={feedback} tabIndex={-1} className="grid gap-3 rounded-3xl bg-white p-4">
       <h2 className="font-display text-xl">{status === "right" ? "Richtig!" : status === "wrong" ? "Ein Tipp für dich" : "So geht es"}</h2>
