@@ -45,6 +45,7 @@ import { parcelMass } from "./parcelMass";
 import { equalFence } from "./equalFence";
 import { gardenFence } from "./gardenFence";
 import { wheelOrders } from "./wheelOrders";
+import { repack } from "./repack";
 import { groupRecipe } from "./groupRecipe";
 import { pictogram } from "./pictogram";
 import { tileFloor } from "./tileFloor";
@@ -110,6 +111,7 @@ export const LAB_TOPICS = {
   equalFence: { title: "Gleicher Zaun, wie viel Platz?", prompt: "Baue verschiedene Rechtecke mit demselben Zaun und vergleiche ihren Platz.", skillId: "beetflaechen", generate: equalFence },
   fence: { title: "Zaun ums Beet", prompt: "Lege Zaunstücke und vergleiche zwei Beete.", skillId: "zaunlaengen", generate: gardenFence },
   wheels: { title: "Räderwerkstatt", prompt: "Finde alle passenden Fahrrad- und Dreiradbestellungen.", skillId: "kombinatorik", generate: wheelOrders },
+  repack: { title: "Anders gepackt, gleich viele", prompt: "Teile gleich volle Schachteln oder packe sie paarweise zusammen.", skillId: "gleichUmpacken", generate: repack },
   recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
   pictures: { title: "Bilddiagramm entschlüsseln", prompt: "Lies die Legende, lege Kreise und vergleiche Stimmen.", skillId: "bilddiagramme", generate: pictogram },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
@@ -181,7 +183,12 @@ export class LabRound extends LabSession {
   }
   constructor(readonly topic: LabTopic, owner: string, readonly size:1|5=LAB_COUNT, previous?:number) {
     const usedBeds: import("./equalFence").BedInvestigation[]=[];
-    super(owner, size, () => topic==="equalFence"&&size===5 ? makeLabTask(topic,undefined,level=>{
+    const usedPacks: import("./repack").Packing[]=[];
+    super(owner, size, () => topic==="repack"&&size===5 ? makeLabTask(topic,undefined,level=>{
+      const job=repack(level,usedPacks);
+      usedPacks.push(job.first);
+      return job;
+    }) : topic==="equalFence"&&size===5 ? makeLabTask(topic,undefined,level=>{
       const job=equalFence(level,usedBeds);
       usedBeds.push(job);
       return job;

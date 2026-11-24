@@ -88,6 +88,7 @@ const cards = {
   equalFence: { Icon: Grid3X3, color: "bg-leaf-light" },
   fence: { Icon: Grid3X3, color: "bg-leaf-light" },
   wheels: { Icon: ListChecks, color: "bg-sky-light" },
+  repack: { Icon: Blocks, color: "bg-leaf-light" },
   recipe: { Icon: ShoppingBasket, color: "bg-leaf-light" },
   pictures: { Icon: ListChecks, color: "bg-grape-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },

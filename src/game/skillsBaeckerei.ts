@@ -5,6 +5,7 @@
 // aus dem Zirkus, darum führen alle Tipps über das Malnehmen.
 
 import { portionCompare } from "./portionCompare";
+import { repack } from "./repack";
 import { groupRecipe } from "./groupRecipe";
 import { divisionDivisors, maxQuotient, shareRanges } from "./divisionLevels";
 import type { TaskDraft, Treat } from "./types";
@@ -200,4 +201,6 @@ const anteile: Skill = { id: "anteile", title: "Hälften und Viertel", world: "b
 const restDeuten: Skill = { id: "restDeuten", title: "Reste in Sachaufgaben deuten", world: "baeckerei", gen: ({level}) => remainders(level) };
 const gruppenrezepte: Skill = { id: "gruppenrezepte", title: "Rezepte für Gruppen umrechnen", world: "baeckerei", gen: ({level}) => groupRecipe(level) };
 const anteileVergleichen:Skill={ id:"anteileVergleichen", title:"Anteile verschiedener Ganzer vergleichen", world:"baeckerei", gen:({level})=>portionCompare(level) };
-export const BAECKEREI_SKILLS: Skill[] = [anteileVergleichen, gruppenrezepte, verteilen, halbieren, anteile, geteilt, umkehr, backSach, restDeuten];
+const gleichUmpacken: Skill = { id: "gleichUmpacken", title: "Malaufgaben durch Umpacken verändern", world: "baeckerei", gen: ({ level }) => repack(level) };
+
+export const BAECKEREI_SKILLS: Skill[] = [gleichUmpacken, anteileVergleichen, gruppenrezepte, verteilen, halbieren, anteile, geteilt, umkehr, backSach, restDeuten];
