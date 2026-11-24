@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Im Stiftelager packen Kinder aus einem gemeinsamen Vorrat zwei Bestellungen, öffnen bei Bedarf Zehnerpäckchen und bestätigen ihre Lieferscheine. Später vergleichen sie ihre Lieferung mit einer, für die möglichst wenige Päckchen geöffnet werden müssen.
+
 Bei „Was wissen wir über die ganze Klasse?“ untersuchen Kinder eine angefangene Stimmenauszählung. Mit Beispielen, Gegenbeispielen und den äußersten möglichen Endständen belegen sie einen möglichen Sieg, sicheren Sieg oder Gleichstand. Im Detektivbüro und Labor erreichbar.
 
 Bei „Anders gepackt, gleich viele“ teilen Kinder gleich volle Schachteln oder legen selbst gewählte Paare zusammen. Vor einem zweiten Auftrag sagen sie voraus, ob die gleiche Anzahl ganzer Steine wieder gleichmäßig passt, und überprüfen ihre Begründung am Material. In der Bäckerei und im Labor erreichbar.

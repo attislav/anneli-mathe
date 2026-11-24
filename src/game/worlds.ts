@@ -91,7 +91,7 @@ export const WORLDS: World[] = [
       { id: "wald-6", kind: "lesson", title: "Zahlenreihen", skills: ["reihen"] },
       { id: "wald-7", kind: "lesson", title: "Gerade & ungerade", skills: ["geradeUngerade", "zahlAussagen"] },
       { id: "wald-8", kind: "review", title: "Gemischt", skills: ["zehnerEiner", "zahlenstrahl", "vergleichen", "nachbarn", "reihen", "geradeUngerade"] },
-      round2("wald-9", "Zehner, Einer und Mengengrenzen", ["zehnerEiner", "mengengrenzen"]),
+      round2("wald-9", "Zehner, Einer und Mengengrenzen", ["zehnerEiner", "mengengrenzen", "stifteBuendeln"]),
       chest("wald-10"),
       round2("wald-11", "Zahlenstrahl 2", ["zahlenstrahl"]),
       round2("wald-12", "Zahlen vergleichen und bestimmen", ["vergleichen", "zahlHinweise"]),

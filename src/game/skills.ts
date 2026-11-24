@@ -28,6 +28,7 @@ import { chooseFormat, nextTen, numeric, tensOf, wall, type Skill } from "./genk
 import { HAFEN_SKILLS } from "./skillsHafen";
 import { ZIRKUS_SKILLS } from "./skillsZirkus";
 import { BAECKEREI_SKILLS } from "./skillsBaeckerei";
+import { pencilOrders } from "./pencilOrders";
 import { SCHLOSS_SKILLS } from "./skillsSchloss";
 import { OZEAN_SKILLS } from "./skillsOzean";
 import { WERKSTATT_SKILLS } from "./skillsWerkstatt";
@@ -161,6 +162,8 @@ const zahlHinweise: Skill = {
   gen: ({ level }) => numberDetective(level),
 };
 const zahlAussagen: Skill = { id: "zahlAussagen", title: "Zahlenaussagen begründen", world: "wald", gen: ({ level }) => parityClaim(level) };
+
+const stifteBuendeln: Skill = { id: "stifteBuendeln", title: "Zehnerpäckchen bedarfsgerecht entbündeln", world: "wald", gen: ({ level }) => pencilOrders(level) };
 
 const zehnerEiner: Skill = {
   id: "zehnerEiner",
@@ -609,7 +612,7 @@ const rechenfamilien: Skill = { id: "rechenfamilien", title: "Rechenfamilien bil
 const gleichheit: Skill = { id: "gleichheit", title: "Gleichheit verstehen", world: "start", gen: ({level}) => balance(level) };
 
 export const SKILLS: Record<string, Skill> = Object.fromEntries(
-  [mengengrenzen, punktZerlegen, zielzahlWege, gleichheit, rechenfamilien, rechenwege, zahlAussagen, zahlHinweise, rechenpaeckchen, freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
+  [stifteBuendeln, mengengrenzen, punktZerlegen, zielzahlWege, gleichheit, rechenfamilien, rechenwege, zahlAussagen, zahlHinweise, rechenpaeckchen, freunde10, plus20, uebergang20, doppelt, zehnerEiner, zahlenstrahl, vergleichen, nachbarn, reihen, geradeUngerade, zehnerPlus, einerPlus, ergaenzen, mauern, uebergang100, ...HAFEN_SKILLS, ...ZIRKUS_SKILLS, ...BAECKEREI_SKILLS, ...SCHLOSS_SKILLS, ...OZEAN_SKILLS, ...WERKSTATT_SKILLS, ...DETEKTIV_SKILLS, ...EXPEDITION_SKILLS].map((s) => [s.id, s]),
 );
 
 export function getSkill(id: string): Skill {

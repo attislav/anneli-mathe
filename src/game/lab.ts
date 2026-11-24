@@ -47,6 +47,7 @@ import { gardenFence } from "./gardenFence";
 import { wheelOrders } from "./wheelOrders";
 import { repack } from "./repack";
 import { groupRecipe } from "./groupRecipe";
+import { pencilOrders } from "./pencilOrders";
 import { openVotes } from "./openVotes";
 import { pictogram } from "./pictogram";
 import { tileFloor } from "./tileFloor";
@@ -114,6 +115,7 @@ export const LAB_TOPICS = {
   wheels: { title: "Räderwerkstatt", prompt: "Finde alle passenden Fahrrad- und Dreiradbestellungen.", skillId: "kombinatorik", generate: wheelOrders },
   repack: { title: "Anders gepackt, gleich viele", prompt: "Teile gleich volle Schachteln oder packe sie paarweise zusammen.", skillId: "gleichUmpacken", generate: repack },
   recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
+  pencils: { title: "Bestellungen aus dem Stiftelager", prompt: "Packe zwei Bestellungen mit Zehnerpäckchen und losen Stiften.", skillId: "stifteBuendeln", generate: pencilOrders },
   openVotes: { title: "Was wissen wir über die ganze Klasse?", prompt: "Verteile offene Stimmen und belege, welche Ergebnisse möglich oder sicher sind.", skillId: "offeneStimmen", generate: openVotes },
   pictures: { title: "Bilddiagramm entschlüsseln", prompt: "Lies die Legende, lege Kreise und vergleiche Stimmen.", skillId: "bilddiagramme", generate: pictogram },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
@@ -186,9 +188,15 @@ export class LabRound extends LabSession {
   constructor(readonly topic: LabTopic, owner: string, readonly size:1|5=LAB_COUNT, previous?:number) {
     const usedBeds: import("./equalFence").BedInvestigation[]=[];
     const usedPacks: import("./repack").Packing[]=[];
+    const usedOrders: import("./pencilOrders").PencilOrder[]=[];
     const usedVotes: import("./openVotes").VoteSituation[]=[];
     super(owner, size, () => {
       if(size===1 && previous!==undefined) return freshLabMaterial(()=>makeLabTask(topic),previous);
+      if(size===5 && topic==="pencils") return makeLabTask(topic,undefined,level=>{
+        const job=pencilOrders(level,usedOrders);
+        usedOrders.push(job);
+        return job;
+      });
       if(size===5 && topic==="openVotes") return makeLabTask(topic,undefined,level=>{
         const job=openVotes(level,usedVotes);
         usedVotes.push(job);

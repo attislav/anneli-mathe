@@ -2,6 +2,7 @@ import { LAB_TOPICS } from "./lab";
 import { LAB_TOPIC_IDS, type LabTopic } from "./schoolSelection";
 
 const keywords: Record<LabTopic, string> = {
+  pencils:"Stifte Lager Bestellung Zehner Einer bündeln entbündeln",
   openVotes:"Abstimmung Umfrage Stimmen Gleichstand gewinnen sicher möglich",
   repack:"Schachteln Umpacken halbieren verdoppeln Einmaleins mal Gruppen",
   equalFence:"Beet Garten Zaun Umfang Fläche Rechteck",
