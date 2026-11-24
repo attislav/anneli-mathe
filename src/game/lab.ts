@@ -5,6 +5,7 @@ import { numberPairs } from "./numberPuzzles";
 import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
 import { classSurvey, writeQuestion } from "./skillsDetektiv";
+import { receipt } from "./receipt";
 import { shopList } from "./shopList";
 import { numberDetective } from "./numberDetective";
 import { chocolate } from "./chocolate";
@@ -73,6 +74,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  receipt: { title:"Stimmt der Kassenbon?", prompt:"Vergleiche Warenkorb, Preisschilder und Kassenbon.", skillId:"kassenbon", generate:receipt },
   attributes: { title:"Welche Eigenschaften passen?", prompt:"Sortiere Karten nach Form und Muster und zähle über zwei Felder.", skillId:"merkmaleSortieren", generate:attributeSort },
   targetSteps: { title: "Zielzahl in zwei Schritten", prompt: "Lege drei Karten und finde deinen Weg zur Zielzahl.", skillId: "zielzahlWege", generate: targetSteps },
   pegs: { title: "Geobrett", prompt: "Spanne ein Rechteck und ein Quadrat mit passenden Seitenlängen.", skillId: "figurenSpannen", generate: geoBoard },

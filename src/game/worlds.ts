@@ -152,7 +152,7 @@ export const WORLDS: World[] = [
       chest("hafen-11"),
       round2("hafen-12", "Euro und Cent 2", ["euroCent"]),
       round2("hafen-13", "Was ist mehr? 2", ["geldVergleichen"]),
-      round2("hafen-14", "Einkaufen 2", ["einkaufen"]),
+      round2("hafen-14", "Einkaufen und den Bon prüfen", ["einkaufen", "kassenbon"]),
       chest("hafen-15"),
       mix2("hafen-16", ["geldZaehlen", "geldLegen", "euroCent", "geldVergleichen", "einkaufen"]),
       { id: "hafen-boss", kind: "boss", title: "Papagei Polly", skills: ["geldZaehlen", "euroCent", "geldVergleichen", "einkaufen"], coloring: "papagei" },

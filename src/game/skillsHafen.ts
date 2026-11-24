@@ -5,6 +5,7 @@
 // ganze Euro, damit die Zahlentastatur reicht.
 
 import { baskets } from "./discovery";
+import { receipt } from "./receipt";
 import { shopList } from "./shopList";
 import type { CompareTask, TaskDraft } from "./types";
 import { chance, numberOptions, pick, randInt, shuffle } from "./random";
@@ -245,4 +246,5 @@ const geldVergleichen: Skill = {
   },
 };
 
-export const HAFEN_SKILLS: Skill[] = [geldZaehlen, geldLegen, euroCent, einkaufen, geldVergleichen];
+const kassenbon:Skill={ id:"kassenbon", title:"Einen Kassenbon prüfen", world:"hafen", gen:({level})=>receipt(level) };
+export const HAFEN_SKILLS: Skill[] = [kassenbon, geldZaehlen, geldLegen, euroCent, einkaufen, geldVergleichen];

@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Im Klassenladen prüfen Kinder einen Kassenbon anhand von Warenkorb und Preisschildern, berichtigen eine falsche Angabe und berechnen den tatsächlichen Betrag. Als eigene Kompetenz im Hafen und Labor erreichbar.
+
 Bei „Welche Eigenschaften passen?“ sortieren Kinder Karten nach Form und Muster in vier Felder. Danach zählen sie alle Karten mit einer ausgewählten Eigenschaft. Im Detektivbüro und Labor erreichbar.
 
 Im Lernbericht öffnet jede geübte Kompetenz ihre passenden Einzelthemen. Das aktive Kind kann direkt eine adaptive Laboraufgabe starten. Bei mehreren passenden Themen stehen Name und Tätigkeit zur Wahl.
