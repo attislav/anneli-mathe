@@ -4,6 +4,7 @@ import { cubeModel } from "./discovery";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { siteMap } from "./siteMap";
+import { tower } from "./tower";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
@@ -213,4 +214,5 @@ const flaechenLegen: Skill = {
 
 const standpunkte: Skill = { id: "standpunkte", title: "Standpunkte wechseln", world: "ozean", gen: ({ level }) => tableView(level) };
 const lageplan: Skill = { id: "lageplan", title: "Lageplan lesen", world: "ozean", gen: ({ level }) => siteMap(level) };
-export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan];
+const umbauplan: Skill = { id: "umbauplan", title: "Baupläne und Seitenansichten", world: "ozean", gen: ({ level }) => tower(level) };
+export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];

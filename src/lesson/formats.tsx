@@ -27,6 +27,7 @@ import { WayTable } from "./WayTable";
 import { TwoWays } from "./TwoWays";
 import { SiteMap } from "./SiteMap";
 import { Juice } from "./Juice";
+import { Tower } from "./Tower";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -48,6 +49,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "tower":
+      return <Tower {...props} task={task} />;
     case "juice":
       return <Juice {...props} task={task} />;
     case "site-map":

@@ -17,6 +17,7 @@ import { SiteMap } from "../src/lesson/SiteMap";
 import { freshWall, wallMove, wallProblem } from "../src/game/partnerWall";
 import { addMeasure, checkTransfer, juice, litres, poured, vesselSize } from "../src/game/juice";
 import { JuiceVessels } from "../src/lesson/Juice";
+import { buildHint, checkTowerAnswer, leftInBox, moveCube, silhouette, targetTower, tower, towerTotal } from "../src/game/tower";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
@@ -36,8 +37,38 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { tower: "tower", juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const exampleTower = [4,1,2,3];
+assert.deepEqual(silhouette(exampleTower, "south"), [4,3]);
+assert.deepEqual(silhouette(exampleTower, "north"), [3,4]);
+assert.deepEqual(silhouette(exampleTower, "west"), [4,3]);
+assert.deepEqual(silhouette(exampleTower, "east"), [3,4]);
+assert.deepEqual(silhouette([4,3,2,1], "south"), [4,3]);
+assert.deepEqual(silhouette([4,3,2,1], "west"), [4,2]);
+const emptyBox = { initial: [0,4,1,2], reserve: 0, changes: [] };
+assert.equal(moveCube(emptyBox, emptyBox.initial, 0, -1), emptyBox.initial);
+assert.equal(moveCube(emptyBox, emptyBox.initial, 2, 1), emptyBox.initial);
+const removed = moveCube(emptyBox, emptyBox.initial, 2, -1);
+assert.equal(leftInBox(emptyBox, removed), 1);
+assert.equal(moveCube(emptyBox, removed, 1, 1), removed);
+assert.deepEqual(moveCube(emptyBox, removed, 2, 1), emptyBox.initial);
+for (const level of [1,2,3,4,5] as Level[]) {
+  for (let i = 0; i < 150; i++) {
+    const task = tower(level), built = targetTower(task);
+    const viaMoves = task.changes.reduce((h, c) => moveCube(task, h, c.cell, c.delta), task.initial);
+    assert.deepEqual(viaMoves, built);
+    assert.ok(buildHint(task, task.initial));
+    assert.equal(buildHint(task, built), null);
+    assert.ok(built.every(h => h >= 0 && h <= 4));
+    const view = silhouette(built, task.side);
+    assert.ok(towerTotal(built) > towerTotal(view));
+    assert.equal(checkTowerAnswer(built, task.side, view, String(towerTotal(built))), null);
+    assert.ok(checkTowerAnswer(built, task.side, view, String(towerTotal(view))));
+    assert.ok(checkTowerAnswer(built, task.side, [view[0]+1,view[1]], String(towerTotal(built))));
+  }
+}
 
 const { narrow, wide } = vesselSize;
 assert.equal(narrow.stepHeight * narrow.width, wide.stepHeight * wide.width);
