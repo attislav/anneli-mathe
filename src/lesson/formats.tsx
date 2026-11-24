@@ -52,6 +52,7 @@ import { AttributeSort } from "./AttributeSort";
 import { TargetSteps } from "./TargetSteps";
 import { GeoBoard } from "./GeoBoard";
 import { StoryStrips } from "./StoryStrips";
+import { ComparisonStory } from "./ComparisonClinic";
 import { DivisionMeaning } from "./DivisionClinic";
 import { LineEstimate } from "./LineEstimate";
 import { FoldLines } from "./FoldLines";
@@ -129,6 +130,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <GeoBoard {...props} task={task} />;
     case "strip-story":
       return <StoryStrips {...props} task={task} />;
+    case "comparison-story":
+      return <ComparisonStory {...props} task={task} />;
     case "division-meaning":
       return <DivisionMeaning {...props} task={task} />;
     case "line-estimate":

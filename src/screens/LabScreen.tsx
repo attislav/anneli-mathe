@@ -14,6 +14,7 @@ import { MarbleWork, MarbleNote } from "@/lesson/MarbleTest";
 import { ReadingRound } from "@/game/readingCorner";
 import { ReadingWork, CornerNote } from "@/lesson/ReadingCorner";
 import { TripRound } from "@/game/classTrip";
+import { ComparisonRound } from "@/game/comparisonClinic";
 import { DivisionClinicRound } from "@/game/divisionClinic";
 import { ClinicRound } from "@/game/clinic";
 import { StrategyRound } from "@/game/strategyPractice";
@@ -217,7 +218,7 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay, backLabel }: { round: LabRound | TheaterRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void; backLabel?: string }) {
+export function LabActivity({ round, onBack, onReplay, backLabel }: { round: LabRound | TheaterRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | ComparisonRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void; backLabel?: string }) {
   const [state, setState] = useState(round.state);
   const [remembered,setRemembered]=useState("");
   const { task, number, status, firstRight } = state;
@@ -226,7 +227,7 @@ export function LabActivity({ round, onBack, onReplay, backLabel }: { round: Lab
   const corner = round instanceof ReadingRound ? round : null;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
-  const clinic = round instanceof ClinicRound || round instanceof DivisionClinicRound;
+  const clinic = round instanceof ComparisonRound || round instanceof ClinicRound || round instanceof DivisionClinicRound;
   const savedStrategy = round instanceof StrategyRound;
   const title = theater ? "Sitzplan fürs Klassentheater" : marbles ? "Unsere Murmelbahn im Test" : corner ? "Wir richten eine Leseecke ein" : round instanceof LabNoteRound ? LAB_TOPICS[round.note.topic].title : round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
     school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";

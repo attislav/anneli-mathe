@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ComparisonModel } from "@/lesson/ComparisonClinic";
+import { ComparisonRound, comparisonTransfer } from "@/game/comparisonClinic";
 import { DivisionModel } from "@/lesson/DivisionClinic";
 import { DivisionClinicRound, divisionTransfer } from "@/game/divisionClinic";
 import { CLINIC_CASES, checkModel, clinicTransfer, ClinicRound, initialModel, modelPicture, moveCounter, type ClinicCase } from "@/game/clinic";
@@ -22,9 +24,12 @@ export function ClinicScreen() {
 }
 
 function Clinic({ owner }: { owner: string }) {
-  const [topic, setTopic] = useState<ClinicCase | "division" | null>(null);
-  const [round, setRound] = useState<ClinicRound | DivisionClinicRound | null>(null);
-  function back() { setRound(null); setTopic(null); }
+  const [topic, setTopic] = useState<ClinicCase | "comparison" | "division" | null>(null);
+  const [round, setRound] = useState<ClinicRound | ComparisonRound | DivisionClinicRound | null>(null);
+  function back() { if(round instanceof ComparisonRound)round.close();setRound(null); setTopic(null); }
+  if (round instanceof ComparisonRound) return <LabActivity key={round.id} round={round} onBack={back}
+    onReplay={()=>{round.close();setRound(new ComparisonRound(owner,comparisonTransfer(round.exercise)));}} />;
+  if (topic==="comparison") return <ComparisonModel back={back} next={model=>setRound(new ComparisonRound(owner,comparisonTransfer(model)))}/>;
   if (round instanceof DivisionClinicRound) return <LabActivity key={round.id} round={round} onBack={back}
     onReplay={()=>setRound(new DivisionClinicRound(owner,divisionTransfer(round.exercise)))} />;
   if (round) return <LabActivity key={round.id} round={round} onBack={back}
@@ -35,6 +40,7 @@ function Clinic({ owner }: { owner: string }) {
     <Link href="/labor/" className="w-fit rounded-xl bg-white px-4 py-2">← Zum Labor</Link>
     <h1 className="font-display text-3xl">Mathe-Sprechstunde</h1>
     <p>Welche Frage möchtest du mit Plättchen untersuchen?</p>
+    <button type="button" onClick={()=>setTopic("comparison")} className="rounded-2xl bg-white px-4 py-5 text-left font-display text-xl">Mehr als, weniger als – wer hat wie viele?</button>
     <button type="button" onClick={()=>setTopic("division")} className="rounded-2xl bg-white px-4 py-5 text-left font-display text-xl">Was zählt die Geteilt-Aufgabe?</button>
     {(["plus", "minus"] as const).map(key => <button key={key} type="button" onClick={() => setTopic(key)}
       className="rounded-2xl bg-white px-4 py-5 text-left font-display text-xl">{CLINIC_CASES[key].title}</button>)}

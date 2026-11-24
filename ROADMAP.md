@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Die Mathe-Sprechstunde bietet „Mehr als, weniger als“: Kinder ordnen Namen den Vergleichsreihen zu, markieren die Differenz und bestimmen die fehlende Anzahl. In einer neuen Geschichte belegen sie ihr Ergebnis mit dem gleichbedeutenden Umkehrsatz. Nur der selbstständige Transfer zählt als Sachaufgabe im Zahlenraum bis 20.
+
 Im Laborprojekt „Sitzplan fürs Klassentheater“ buchen Kinder für drei Personen, lesen ihre Sitzplätze für eigene Eintrittskarten ab und reagieren auf eine Sitzsperrung. Im Abschluss sehen sie, welche Karten geblieben sind oder geändert wurden.
 
 Im Stiftelager packen Kinder aus einem gemeinsamen Vorrat zwei Bestellungen, öffnen bei Bedarf Zehnerpäckchen und bestätigen ihre Lieferscheine. Später vergleichen sie ihre Lieferung mit einer, für die möglichst wenige Päckchen geöffnet werden müssen.
