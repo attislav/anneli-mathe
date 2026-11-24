@@ -1,6 +1,7 @@
 // Welt 10 · Detektivbüro — Daten und Sachaufgaben: Strichlisten,
 // Säulendiagramme, Rechengeschichten, Möglichkeiten zählen, Fehler finden.
 
+import { libraryDuty } from "./libraryDuty";
 import { attributeSort } from "./attributeSort";
 import { plausible } from "./discovery";
 import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft, WriteQuestionTask } from "./types";
@@ -536,4 +537,5 @@ const bilddiagramme: Skill = { id: "bilddiagramme", title: "Bilddiagramme lesen 
 const zeichencodes: Skill = { id: "zeichencodes", title: "Zeichenwerte erschließen", world: "detektiv", gen: ({level}) => symbolCode(level) };
 const zufallBeutel: Skill = { id:"zufallBeutel", title:"Zufall beim Ziehen untersuchen", world:"detektiv", gen:({level})=>drawBag(level) };
 const merkmaleSortieren:Skill={ id:"merkmaleSortieren", title:"Nach zwei Eigenschaften sortieren", world:"detektiv", gen:({level})=>attributeSort(level) };
-export const DETEKTIV_SKILLS: Skill[] = [merkmaleSortieren, zufallBeutel, zeichencodes, bilddiagramme, strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];
+const bestandBuchen:Skill={ id:"bestandBuchen", title:"Bestände und Buchungen nachvollziehen", world:"detektiv", gen:({level})=>libraryDuty(level) };
+export const DETEKTIV_SKILLS: Skill[] = [bestandBuchen, merkmaleSortieren, zufallBeutel, zeichencodes, bilddiagramme, strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];

@@ -318,7 +318,7 @@ export const WORLDS: World[] = [
       round2("detektiv-9", "Sortieren und Strichlisten führen", ["merkmaleSortieren", "strichliste"]),
       round2("detektiv-10", "Diagramme 2", ["diagramm"]),
       chest("detektiv-11"),
-      round2("detektiv-12", "Sachaufgaben 2", ["sachaufgaben"]),
+      round2("detektiv-12", "Sachaufgaben und Buchungen", ["sachaufgaben", "bestandBuchen"]),
       round2("detektiv-13", "Fehler-Detektiv 2", ["fehlerDetektiv"]),
       round2("detektiv-14", "Möglichkeiten und Zeichencodes", ["kombinatorik", "zeichencodes"]),
       chest("detektiv-15"),

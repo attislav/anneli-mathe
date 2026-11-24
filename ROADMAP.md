@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Beim „Dienst in der Klassenbücherei“ führen Kinder Ausleihen und Rückgaben durch. Sie bestätigen die Zwischenbestände, rekonstruieren einen fehlenden Beleg und begründen die unveränderte Gesamtzahl. Im Detektivbüro und Labor erreichbar.
+
 In der Partnerwerkstatt bauen Kinder Zahlenrätsel mit eigenen Hinweisen. Sie prüfen die Eindeutigkeit, geben das Gerät verdeckt weiter und begründen die Lösung an einer zweiten Zahl.
 
 Bei „Reichen unsere Plättchen?“ entscheiden Kinder mit der kleinsten und größten möglichen Menge. Nur bei offenem Ausgang wählen sie einen Deckel und prüfen danach neu. Im Zahlenwald und Labor erreichbar.

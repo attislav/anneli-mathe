@@ -1,3 +1,4 @@
+import { libraryDuty } from "./libraryDuty";
 import { coveredCounters } from "./coveredCounters";
 import { boxOrder } from "./boxOrder";
 import { rollCube } from "./rollCube";
@@ -81,6 +82,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  library: { title:"Dienst in der Klassenbücherei", prompt:"Buche Bücher um und finde den fehlenden Beleg.", skillId:"bestandBuchen", generate:libraryDuty },
   covered: { title:"Reichen unsere Plättchen?", prompt:"Bestimme die kleinste und größte mögliche Menge.", skillId:"mengengrenzen", generate:coveredCounters },
   boxes: { title:"Welche Kiste ist leichter?", prompt:"Wiege Kisten und begründe ihre Reihenfolge.", skillId:"gewichteOrdnen", generate:boxOrder },
   rollCube: { title:"Würfel kippen", prompt:"Verfolge den Stern und bestimme seine Endlage.", skillId:"wuerfelKippen", generate:rollCube },
