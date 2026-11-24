@@ -8,6 +8,8 @@ import { checkMarking, fitsClue, numberDetective } from "../src/game/numberDetec
 import { checkPortions, checkShare, chocolate, examplePortions } from "../src/game/chocolate";
 import { checkPlan, examplePlan, followValue, morningPlan, planSlots } from "../src/game/morningPlan";
 import { allowedPair, checkClaim, verdict, type Pair } from "../src/game/parityClaim";
+import { areaSamples, sampleAction, SampleVisit, samples, sampleFeedback } from "../src/game/labSamples";
+import { LAB_GROUPS } from "../src/game/schoolSelection";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -28,6 +30,39 @@ const owner = activeProfileId();
 const before = structuredClone(readSave());
 const formats = { claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const sampleVisit = new SampleVisit();
+const sampleWrites = mock.method(storage, "setItem");
+for (const group of LAB_GROUPS) {
+  const pool = samples.filter(s => (group.topics as readonly LabTopic[]).includes(s.topic));
+  assert.ok(pool.length >= 2 && pool.length <= 3);
+  assert.equal(new Set(pool.map(s => s.topic)).size, pool.length);
+  assert.deepEqual(pool, areaSamples(group.title));
+  for (const item of pool) {
+    const choice = new SampleVisit();
+    assert.ok(sampleAction[item.topic]);
+    assert.equal(choice.choose(group.title, item), item);
+    assert.notEqual(choice.next(group.title), item);
+  }
+  const seen = pool.map(() => sampleVisit.next(group.title));
+  assert.deepEqual(new Set(seen), new Set(pool));
+  assert.notEqual(sampleVisit.next(group.title), seen.at(-1));
+  for (const s of seen) {
+    assert.equal(s.options.filter(o => o === s.answer).length, 1);
+    assert.match(sampleFeedback(s, s.answer), /^Richtig!/);
+    assert.ok(sampleFeedback(s, s.options.find(o => o !== s.answer)!).includes(s.answer));
+    assert.ok(sampleFeedback(s, null).includes(s.explanation));
+    const next = new LabRound(s.topic, owner);
+    assert.equal(next.state.task.format, formats[s.topic]);
+    assert.equal(next.state.task.skillId, LAB_TOPICS[s.topic].skillId);
+    assert.notEqual(next.state.task.question, s.question);
+    assert.equal(next.count, 5);
+    assert.equal(next.state.number, 1);
+  }
+}
+assert.equal(sampleWrites.mock.callCount(), 0);
+sampleWrites.mock.restore();
+assert.deepEqual(readSave(), before);
 
 for (const rule of ["even", "odd", "mixed", "any", "one-even", "one-odd"] as const) {
   for (const evenSum of [false, true]) for (const limit of [4, 6, 10]) {

@@ -17,6 +17,8 @@ import { Button } from "@/ui/Button";
 import { BottomNav, Splash } from "@/ui/chrome";
 import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
+import { SampleVisit } from "@/game/labSamples";
+import { LabSamples } from "./LabSamples";
 
 const cards = {
   questions: { Icon: ListChecks, color: "bg-grape-light" },
@@ -51,16 +53,18 @@ export function LabScreen() {
 }
 
 function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
+  const [visit] = useState(() => new SampleVisit());
   const [round, setRound] = useState<LabRound | TripRound | null>(null);
   const start = (topic: LabTopic) => setRound(new LabRound(topic, owner));
   const startTrip = () => setRound(new TripRound(owner));
   if (round) return <LabActivity key={round.id} round={round}
     onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : () => start(round.topic)} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
-    <header className="mb-5 flex items-center gap-4 rounded-3xl bg-leaf-light p-5">
-      <FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
-      <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
-        <p>Wähle ein Projekt oder übe ein Thema mit fünf Aufgaben.</p></div>
+    <header className="mb-5 rounded-3xl bg-leaf-light p-5">
+      <div className="flex items-center gap-4"><FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
+        <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
+          <p>Wähle ein Projekt oder übe ein Thema mit fünf Aufgaben.</p></div></div>
+      <LabSamples visit={visit} onStart={start} />
     </header>
     <Link href="/labor/rechenwege/" className="mb-3 block rounded-2xl bg-white px-4 py-3 font-display text-xl">Meine Rechenwege</Link>
     <Link href="/labor/sprechstunde/" className="mb-3 block rounded-2xl bg-sky-light px-4 py-3">
