@@ -33,6 +33,7 @@ import { ClarifyStory } from "./ClarifyStory";
 import { Remainders } from "./Remainders";
 import { Balance } from "./Balance";
 import { Weekly } from "./Weekly";
+import { Pictogram } from "./Pictogram";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -54,6 +55,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "pictogram":
+      return <Pictogram {...props} task={task} />;
     case "weekly":
       return <Weekly {...props} task={task} />;
     case "balance":

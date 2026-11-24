@@ -7,6 +7,7 @@ import { surveyAnswer, surveyRows } from "./survey";
 import { questionLimit, sceneCategories } from "./writeQuestion";
 import { wayTable } from "./wayTable";
 import { clarifyStory } from "./clarifyStory";
+import { pictogram } from "./pictogram";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -524,4 +525,5 @@ const fehlerDetektiv: Skill = {
 };
 
 const sachfragenKlaeren: Skill = { id: "sachfragenKlaeren", title: "Sachaufgaben klären", world: "detektiv", gen: ({ level }) => clarifyStory(level) };
-export const DETEKTIV_SKILLS: Skill[] = [strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];
+const bilddiagramme: Skill = { id: "bilddiagramme", title: "Bilddiagramme lesen und legen", world: "detektiv", gen: ({level}) => pictogram(level) };
+export const DETEKTIV_SKILLS: Skill[] = [bilddiagramme, strichliste, diagramm, sachaufgaben, sachfragenKlaeren, kombinatorik, fehlerDetektiv];

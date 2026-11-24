@@ -375,6 +375,8 @@ Auf der Rechenwaage stellen Kinder zunächst mit frei gewählten Zahlensteinen G
 
 Im Wochenkalender markieren Kinder wiederkehrende Freizeitangebote über zwei oder drei Wochen. Sie berücksichtigen Ausfälle und Verschiebungen und bestimmen die Anzahl oder den nächsten tatsächlichen Termin. Das Thema ist im Uhrenschloss, im Labor und im Schulauftrag erreichbar.
 
+Bei „Bilddiagramm entschlüsseln“ lesen Kinder Stimmen mithilfe einer Legende und legen eine zweite Reihe aus ganzen und später halben Bildzeichen. Danach bestimmen sie, wie viele zusätzliche Stimmen die schwächere Reihe bis zum Gleichstand braucht. Die Aufgabe ist im Detektivbüro, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

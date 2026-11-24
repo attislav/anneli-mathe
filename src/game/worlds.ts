@@ -308,7 +308,7 @@ export const WORLDS: World[] = [
     boss: { name: "Elster Klauzi", color: "#3A3E85", shade: "#262A63" },
     nodes: [
       { id: "detektiv-1", kind: "trick", title: "Strichlisten", skills: ["strichliste"] },
-      { id: "detektiv-2", kind: "lesson", title: "Diagramme lesen", skills: ["diagramm"] },
+      { id: "detektiv-2", kind: "lesson", title: "Diagramme lesen", skills: ["diagramm", "bilddiagramme"] },
       { id: "detektiv-3", kind: "lesson", title: "Fehler-Detektiv", skills: ["fehlerDetektiv"] },
       chest("detektiv-4", "lupe"),
       { id: "detektiv-5", kind: "lesson", title: "Sachaufgaben", skills: ["sachaufgaben", "sachfragenKlaeren"] },
