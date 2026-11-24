@@ -20,6 +20,9 @@ import { JuiceVessels } from "../src/lesson/Juice";
 import { buildHint, checkTowerAnswer, leftInBox, moveCube, silhouette, targetTower, tower, towerTotal } from "../src/game/tower";
 import { factFamily, familyHint, familyLines, familyText, type FamilyLine } from "../src/game/factFamily";
 import { checkStory, clarifyStory, storyAmount, storyUnit, type Scenario } from "../src/game/clarifyStory";
+import { lastLabArea, LearningRound, numberTasks, rememberLabArea } from "../src/game/learningGoals";
+import { LabMenu } from "../src/screens/LabScreen";
+import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
@@ -680,4 +683,63 @@ switchProfile(owner);
 assert.equal(siblingRound.advance(siblingRound.state.task.id).status, "right");
 assert.deepEqual(readSave(), after);
 assert.equal(readProfileSave(sibling)?.log.length, 1);
+const exposed = new Set<LabTopic>();
+for (const [i, group] of LAB_GROUPS.entries()) {
+  rememberLabArea(owner,i);
+  assert.equal(lastLabArea(owner),i);
+  const html = renderToStaticMarkup(createElement(PathnameContext.Provider,{value:"/labor/"},createElement(LabMenu,{owner,topics:[]})));
+  assert.ok(html.includes("Was möchte ich üben?") && html.includes("Mein Schulauftrag"));
+  for (const g of LAB_GROUPS) for (const topic of g.topics) {
+    assert.equal(html.includes(`>${LAB_TOPICS[topic].title.replaceAll("&","&amp;")}<`), g === group);
+    if (g === group) exposed.add(topic);
+  }
+}
+assert.equal(exposed.size,Object.keys(LAB_TOPICS).length);
+assert.equal(lastLabArea(sibling),0);
+rememberLabArea(owner,150);
+assert.equal(lastLabArea(owner),3);
+const beforeGoals = structuredClone(readSave());
+for (const left of [2,3,4]) {
+  const total = left + 12;
+  const round = new LearningRound(owner,"numbers",numberTasks(total));
+  assert.equal(round.count,3);
+  round.submitParts(round.state.task.id,left,String(10-left));
+  round.submitParts(round.state.task.id,3,"7");
+  round.advance(round.state.task.id);
+  const family = round.state.task;
+  assert.equal(family.format,"fact-family");
+  if (family.format === "fact-family") assert.deepEqual(family.parts,[left,10-left]);
+  round.answer(family.id,true); round.advance(family.id);
+  const transfer = round.state.task;
+  assert.equal(transfer.format,"input");
+  if (transfer.format === "input") assert.ok(transfer.term.endsWith("− 5") && transfer.answer+5>10);
+  round.answer(transfer.id,true); round.advance(transfer.id);
+  const entry = readSave().log.at(-1)!;
+  assert.deepEqual([entry.s,entry.l], total === 14 ? ["uebergang20",3] : ["plus20",4]);
+  assert.equal(round.state.status,"done");
+}
+const recovered = new LearningRound(owner,"numbers");
+const firstParts = recovered.state.task.id;
+for (let i = 0; i < 2; i++) { recovered.submitParts(firstParts,0,"0"); recovered.advance(firstParts); }
+const fixedFamily = recovered.state.task;
+assert.equal(fixedFamily.format,"fact-family");
+if (fixedFamily.format === "fact-family") assert.deepEqual(fixedFamily.parts,[3,7]);
+for (let i = 0; i < 5; i++) {
+  const time = new LearningRound(owner,"times");
+  const [bus,plan,transfer] = time.tasks;
+  assert.ok(bus.format === "bus-table" && plan.format === "morning-plan" && transfer.format === "clock-set");
+  assert.equal(plan.activities[0].duration,busJourney(bus).duration);
+  assert.equal(checkPlan(plan,examplePlan(plan)),null);
+  const match = /um (\d+):(\d+) Uhr und dauert (\d+) Minuten/.exec(transfer.question)!;
+  assert.notEqual(Number(match[3]), busJourney(bus).duration);
+  assert.equal(60*transfer.hour + transfer.minute, 60*Number(match[1]) + Number(match[2]) + Number(match[3]));
+  for (const step of time.tasks) { time.answer(step.id,true); time.answer(step.id,true); time.advance(step.id); }
+  assert.equal(time.state.status,"done");
+}
+const afterGoals = readSave();
+assert.deepEqual(afterGoals.log.slice(beforeGoals.log.length).map(row => row.s), [
+  ...["uebergang20","plus20","plus20"].flatMap(skill => ["freunde10","rechenfamilien",skill]), "freunde10",
+  ...Array.from({length:5}).flatMap(() => ["zeitspanne","zeitPlanen","uhrStellen"]),
+]);
+assert.deepEqual({...afterGoals,mastery:beforeGoals.mastery,log:beforeGoals.log},beforeGoals);
 console.log(`${Object.keys(LAB_TOPICS).length} Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.`);

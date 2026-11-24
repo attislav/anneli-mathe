@@ -20,6 +20,8 @@ import { ProfilePicker } from "./ProfilePicker";
 import { SampleVisit } from "@/game/labSamples";
 import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
+import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
+import { GoalParts } from "@/lesson/GoalParts";
 
 const cards = {
   questions: { Icon: ListChecks, color: "bg-grape-light" },
@@ -60,39 +62,49 @@ export function LabScreen() {
   return <LabMenu key={owner} owner={owner} topics={save.schoolTopics} />;
 }
 
-function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
+export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
   const [partner, setPartner] = useState(false);
   const [visit] = useState(() => new SampleVisit());
-  const [round, setRound] = useState<LabRound | TripRound | null>(null);
-  const start = (topic: LabTopic) => setRound(new LabRound(topic, owner));
+  const [area, setArea] = useState(() => lastLabArea(owner));
+  const group = LAB_GROUPS[area];
+  const [round, setRound] = useState<LabRound | TripRound | LearningRound | null>(null);
+  const chooseArea = (i: number) => { setArea(i); rememberLabArea(owner,i); };
+  const start = (topic: LabTopic) => {
+    chooseArea(LAB_GROUPS.findIndex(g => (g.topics as readonly LabTopic[]).includes(topic)));
+    setRound(new LabRound(topic, owner));
+  };
   const startTrip = () => setRound(new TripRound(owner));
+  const startGoal = (goal: LearningGoal) => setRound(new LearningRound(owner,goal));
   if (partner) return <PartnerWall onBack={() => setPartner(false)} />;
   if (round) return <LabActivity key={round.id} round={round}
-    onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : () => start(round.topic)} />;
+    onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
     <header className="mb-5 rounded-3xl bg-leaf-light p-5">
       <div className="flex items-center gap-4"><FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
         <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
-          <p>Wähle ein Projekt oder übe ein Thema mit fünf Aufgaben.</p></div></div>
+          <p>Wähle einen Lernbereich und probiere eine Aufgabe aus.</p></div></div>
       <LabSamples visit={visit} onStart={start} />
     </header>
-    <Link href="/labor/rechenwege/" className="mb-3 block rounded-2xl bg-white px-4 py-3 font-display text-xl">Meine Rechenwege</Link>
-    <button type="button" className="mb-3 block w-full rounded-2xl bg-white px-4 py-3 text-left" onClick={() => setPartner(true)}>
-      <span className="font-display text-xl">Partnerwerkstatt</span> · Meine Zahlenmauer</button>
-    <Link href="/labor/sprechstunde/" className="mb-3 block rounded-2xl bg-sky-light px-4 py-3">
-      <span className="font-display text-xl">Mathe-Sprechstunde</span>
-      <span className="ml-2 text-sm">Gemeinsam über den Zehner rechnen</span>
-    </Link>
-    <Link href={SCHOOL_PATH} className="mb-3 block rounded-2xl bg-grape-light px-4 py-3">
+    <Link href={SCHOOL_PATH} className="mb-2 block rounded-2xl bg-grape-light px-4 py-2">
       <span className="font-display text-xl">Mein Schulauftrag</span>
       <span className="ml-2 text-sm">{topics.length ? topics.map(t => LAB_TOPICS[t].title).join(" · ") : "Themen auswählen"}</span>
     </Link>
-    <button onClick={startTrip} className="mb-4 flex w-full items-center gap-3 rounded-3xl bg-sun-light p-4 text-left">
-      <BusFront aria-hidden size={36} className="shrink-0" />
-      <span><span className="block font-display text-2xl">Unser Klassenausflug</span>Plane Bus, Wartezeit und Picknick.</span>
-    </button>
-    {LAB_GROUPS.map(group => <section key={group.title} className="mb-5">
+    <details className="mb-4 rounded-xl bg-white px-3"><summary className="cursor-pointer py-3">Projekte und Hilfen</summary>
+      <div className="grid grid-cols-2 gap-1 pb-3">
+        <button className="min-h-11 rounded-xl bg-sun-light px-2" onClick={startTrip}>Unser Klassenausflug</button>
+        <button className="min-h-11 rounded-xl bg-sky-light px-2" onClick={() => setPartner(true)}>Partnerwerkstatt</button>
+        <Link className="rounded-xl bg-mist p-2 text-center" href="/labor/rechenwege/">Meine Rechenwege</Link>
+        <Link className="rounded-xl bg-mist p-2 text-center" href="/labor/sprechstunde/">Mathe-Sprechstunde</Link>
+      </div></details>
+    <fieldset className="mb-4 grid grid-cols-2 gap-2"><legend className="font-display text-xl">Lernbereich wählen</legend>
+      {LAB_GROUPS.map((g,i) => <button key={g.title} type="button" aria-pressed={area===i} onClick={() => chooseArea(i)}
+        className={"min-h-12 rounded-xl border-2 px-2 " + (area===i ? "border-grape bg-grape-light" : "border-transparent bg-white")}>{g.title}</button>)}
+    </fieldset>
+    <section key={group.title} className="mb-5">
       <h2 className="mb-2 font-display text-xl">{group.title}</h2>
+      {(Object.keys(learningGoals) as LearningGoal[]).filter(key => learningGoals[key].area === area).map(key =>
+        <button key={key} className="mb-3 w-full rounded-2xl bg-sun-light p-3 text-left" onClick={() => startGoal(key)}>
+          <strong>{learningGoals[key].title}</strong> · 3 Aufgaben</button>)}
       <div className="grid gap-3 min-[380px]:grid-cols-2">
       {group.topics.map(topic => {
         const { Icon, color } = cards[topic];
@@ -104,7 +116,7 @@ function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
         </button>;
       })}
       </div>
-    </section>)}
+    </section>
     <BottomNav />
   </main>;
 }
@@ -120,14 +132,15 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | StrategyRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | StrategyRound | LearningRound; onBack: () => void; onReplay: () => void }) {
   const [state, setState] = useState(round.state);
   const { task, number, status, firstRight } = state;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
   const clinic = round instanceof ClinicRound;
   const savedStrategy = round instanceof StrategyRound;
-  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";
+  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
+    school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";
   const heading = useRef<HTMLHeadingElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -160,7 +173,9 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
       <thead><tr><th scope="col">Bus</th><th scope="col">Abfahrt Schule</th><th scope="col">Ankunft Museum</th></tr></thead>
       <tbody>{trip.plan.timetable.map(bus => <tr key={bus.name}><th scope="row">{bus.name}</th><td>{busTime(bus.departure)}</td><td>{busTime(bus.arrival)}</td></tr>)}</tbody>
     </table>}
-    <TaskView key={task.id} task={task} status={status} onAnswer={(correct, hint) => setState(round.answer(task.id, correct, hint))} />
+    {round instanceof LearningRound && round.goal === "numbers" && number === 1 ?
+      <GoalParts key={task.id} status={status} onCheck={(left,right) => setState(round.submitParts(task.id,left,right))} /> :
+      <TaskView key={task.id} task={task} status={status} onAnswer={(correct, hint) => setState(round.answer(task.id, correct, hint))} />}
     {status !== "ask" && <div ref={feedback} tabIndex={-1} className="grid gap-3 rounded-3xl bg-white p-4">
       <h2 className="font-display text-xl">{status === "right" ? "Richtig!" : status === "wrong" ? "Ein Tipp für dich" : "So geht es"}</h2>
       {status !== "right" && <p>{status === "wrong" ? state.hint || task.hint : task.solution}</p>}
