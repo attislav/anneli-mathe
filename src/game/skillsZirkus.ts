@@ -5,6 +5,7 @@
 
 import type { TaskDraft } from "./types";
 import { numberPairs } from "./numberPuzzles";
+import { splitArray } from "./splitArray";
 import { chance, numberOptions, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill, type Texts } from "./genkit";
 
@@ -187,4 +188,5 @@ const malSach: Skill = {
   },
 };
 
-export const ZIRKUS_SKILLS: Skill[] = [malVerstehen, kernaufgaben, malReihen, tauschen, malSach];
+const malZerlegen: Skill = { id: "malZerlegen", title: "Mal-Felder zerlegen", world: "zirkus", gen: ({ level }) => splitArray(level) };
+export const ZIRKUS_SKILLS: Skill[] = [malVerstehen, kernaufgaben, malReihen, tauschen, malSach, malZerlegen];

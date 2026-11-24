@@ -18,6 +18,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 
 const cards = {
+  split: { Icon: Grid3X3, color: "bg-leaf-light" },
   rope: { Icon: Route, color: "bg-sun-light" },
   viewpoint: { Icon: Route, color: "bg-sky-light" },
   packets: { Icon: SquarePlus, color: "bg-grape-light" },

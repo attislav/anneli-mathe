@@ -8,6 +8,8 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type SplitAxis = "rows" | "cols";
+export type SplitTask = TaskBase & { format: "split-array"; rows: number; cols: number; axis: SplitAxis | "either" };
 export type RopeTask = TaskBase & { format: "estimate-rope"; length: number; unit: 1 | 2; extent: number };
 export type TableSide = "unten" | "oben" | "links" | "rechts";
 export type TableItem = "Tasse" | "Buch" | "Schlüssel" | "Apfel" | "Stift" | "Uhr";
@@ -201,7 +203,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | NumberLineTask | WallTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

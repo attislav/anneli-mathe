@@ -16,6 +16,7 @@ import { TileFloor } from "./TileFloor";
 import { SumPacket } from "./SumPacket";
 import { TableView } from "./TableView";
 import { EstimateRope } from "./EstimateRope";
+import { SplitArray } from "./SplitArray";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -37,6 +38,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "split-array":
+      return <SplitArray {...props} task={task} />;
     case "estimate-rope":
       return <EstimateRope {...props} task={task} />;
     case "table-view":

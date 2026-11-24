@@ -7,6 +7,7 @@ import { classSurvey } from "./skillsDetektiv";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
+import { splitArray } from "./splitArray";
 import { sumPacket } from "./sumPacket";
 import { uid } from "./random";
 import type { LabTopic } from "./schoolSelection";
@@ -18,6 +19,7 @@ import type { Level, Task, TaskDraft } from "./types";
 export const LAB_COUNT = 5;
 type Topic = { title: string; prompt: string; skillId: string; generate: (level: Level) => TaskDraft };
 export const LAB_TOPICS = {
+  split: { title: "Mal-Feld zerlegen", prompt: "Teile ein großes Punktefeld in zwei kleine.", skillId: "malZerlegen", generate: splitArray },
   rope: { title: "Schätzlabor", prompt: "Schätze eine Schnur und miss nach.", skillId: "schaetzungPruefen", generate: estimateRope },
   viewpoint: { title: "Wer sieht was?", prompt: "Schau von verschiedenen Seiten auf den Tisch.", skillId: "standpunkte", generate: tableView },
   packets: { title: "Päckchen erforschen", prompt: "Verändere Zahlen und sage die Wirkung voraus.", skillId: "rechenpaeckchen", generate: sumPacket },
