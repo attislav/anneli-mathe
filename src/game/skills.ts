@@ -9,6 +9,7 @@
 //   - Rechenweg zeigt den Weg, nicht nur das Ergebnis.
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
+import { digitSwap } from "./digitSwap";
 import { machine } from "./discovery";
 import { sumPacket } from "./sumPacket";
 import { hundredWindow } from "./hundredWindow";
@@ -168,6 +169,7 @@ const zehnerEiner: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("digit-swap") && chance(0.3)) return digitSwap(level);
     const max = level === 1 ? 39 : level === 2 ? 59 : 99;
     const format = chooseFormat(ctx, level <= 3 ? ["tens-ones", "choice", "input"] : ["tens-ones", "input", "choice"]);
     const n = randInt(11, max);
