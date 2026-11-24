@@ -1,5 +1,6 @@
 // Welt 9 · Mess-Werkstatt — Längen: Lineal, cm und m, schätzen, rechnen.
 
+import { boxOrder } from "./boxOrder";
 import { parcelMass } from "./parcelMass";
 import { gardenFence } from "./gardenFence";
 import type { RulerItem, TaskDraft } from "./types";
@@ -197,4 +198,5 @@ const schaetzungPruefen: Skill = {
 const fuellmengen: Skill = { id: "fuellmengen", title: "Füllmengen vergleichen", world: "werkstatt", gen: ({ level }) => juice(level) };
 const zaunlaengen: Skill = { id: "zaunlaengen", title: "Umfänge bestimmen", world: "werkstatt", gen: ({level}) => gardenFence(level) };
 const paeckchenWiegen: Skill = { id: "paeckchenWiegen", title: "Massen wiegen und vergleichen", world: "werkstatt", gen: ({level}) => parcelMass(level) };
-export const WERKSTATT_SKILLS: Skill[] = [paeckchenWiegen, zaunlaengen, lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];
+const gewichteOrdnen:Skill={ id:"gewichteOrdnen", title:"Gewichte durch Vergleichen ordnen", world:"werkstatt", gen:({level})=>boxOrder(level) };
+export const WERKSTATT_SKILLS: Skill[] = [gewichteOrdnen, paeckchenWiegen, zaunlaengen, lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];

@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { BoxOrder } from "./BoxOrder";
 import { RollCube } from "./RollCube";
 import { DotWays } from "./DotWays";
 import { PortionCompare } from "./PortionCompare";
@@ -87,6 +88,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "box-order":
+      return <BoxOrder {...props} task={task} />;
     case "roll-cube":
       return <RollCube {...props} task={task} />;
     case "dot-ways":

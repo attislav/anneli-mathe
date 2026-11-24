@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Bei „Welche Kiste ist leichter?“ prüfen Kinder, ob zwei Wägungen bereits die Reihenfolge von drei Kisten bestimmen. Fehlt ein Vergleich, wiegen sie das passende Paar und belegen anschließend ihre Reihenfolge. In der Mess-Werkstatt und im Labor erreichbar.
+
 Bei „Würfel kippen“ sagen Kinder die Lage einer Sternfläche voraus und verfolgen die Kippbewegungen einzeln. Auf einem neuen Weg bestimmen sie die Endlage selbst. Im Formen-Ozean und Labor erreichbar.
 
 Bei „Wie hast du die Punkte gesehen?“ zerlegen Kinder eine Punktmenge auf zwei Arten. Im zweiten Bild können sie die Punkte frei umlegen. Ihre markierten Gruppen und Rechnungen stehen am Ende nebeneinander.

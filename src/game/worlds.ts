@@ -285,7 +285,7 @@ export const WORLDS: World[] = [
       chest("werkstatt-4", "roboter"),
       { id: "werkstatt-5", kind: "lesson", title: "Mit Längen rechnen", skills: ["laengenRechnen"] },
       { id: "werkstatt-6", kind: "lesson", title: "Längen vergleichen", skills: ["laengenVergleichen"] },
-      { id: "werkstatt-7", kind: "lesson", title: "Messen & schätzen", skills: ["lineal", "schaetzen", "schaetzungPruefen", "fuellmengen", "paeckchenWiegen"] },
+      { id: "werkstatt-7", kind: "lesson", title: "Messen & schätzen", skills: ["lineal", "schaetzen", "schaetzungPruefen", "fuellmengen", "paeckchenWiegen", "gewichteOrdnen"] },
       { id: "werkstatt-8", kind: "review", title: "Gemischt", skills: ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"] },
       round2("werkstatt-9", "Lineal 2", ["lineal"]),
       round2("werkstatt-10", "Meter und Zentimeter 2", ["einheiten"]),
