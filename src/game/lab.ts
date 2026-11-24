@@ -1,3 +1,4 @@
+import { stairProgram } from "./stairProgram";
 import { fairWheel } from "./fairWheel";
 import { libraryDuty } from "./libraryDuty";
 import { coveredCounters } from "./coveredCounters";
@@ -83,6 +84,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  stairs: { title:"Befehlswerkstatt: Eine Treppe in kurzen Befehlen", prompt:"Programmiere die Treppe und sage ihr nächstes Ziel voraus.", skillId:"schleifen", generate:stairProgram },
   wheelChance: { title:"Zwei gleich gute Chancen", prompt:"Baue ein faires Rad und vergleiche Sternchancen.", skillId:"faireChancen", generate:fairWheel },
   library: { title:"Dienst in der Klassenbücherei", prompt:"Buche Bücher um und finde den fehlenden Beleg.", skillId:"bestandBuchen", generate:libraryDuty },
   covered: { title:"Reichen unsere Plättchen?", prompt:"Bestimme die kleinste und größte mögliche Menge.", skillId:"mengengrenzen", generate:coveredCounters },

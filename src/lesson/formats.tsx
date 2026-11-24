@@ -36,6 +36,7 @@ import { Weekly } from "./Weekly";
 import { DrawRoute, RouteTurn } from "./ChangeRoute";
 import { VoteChart, VoteChange } from "./VoteDecision";
 import { SymbolCode } from "./SymbolCode";
+import { StairProgram } from "./StairProgram";
 import { FairWheel } from "./FairWheel";
 import { LibraryDuty } from "./LibraryDuty";
 import { CoveredCounters } from "./CoveredCounters";
@@ -91,6 +92,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <VoteChange {...props} task={task} />;
     case "symbol-code":
       return <SymbolCode {...props} task={task} />;
+    case "stair-program":
+      return <StairProgram {...props} task={task} />;
     case "fair-wheel":
       return <FairWheel {...props} task={task} />;
     case "library-duty":
