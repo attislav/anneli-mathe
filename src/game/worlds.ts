@@ -236,7 +236,7 @@ export const WORLDS: World[] = [
       chest("schloss-11"),
       round2("schloss-12", "Viertel und halb 2", ["zeitWoerter"]),
       round2("schloss-13", "Dauer und Zeitplanung", ["zeitspanne", "zeitPlanen"]),
-      round2("schloss-14", "Uhr und Kalender 2", ["zeitEinheiten", "kalender"]),
+      round2("schloss-14", "Uhr und Kalender 2", ["zeitEinheiten", "kalender", "wochenTermine"]),
       chest("schloss-15"),
       mix2("schloss-16", ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne", "zeitEinheiten", "kalender"]),
       { id: "schloss-boss", kind: "boss", title: "Graf Tick-Tack", skills: ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne"], coloring: "schloss" },

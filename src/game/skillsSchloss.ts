@@ -6,6 +6,7 @@
 import { calendar } from "./discovery";
 import { busTable } from "./busTable";
 import { morningPlan } from "./morningPlan";
+import { weekly } from "./weekly";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
 
@@ -238,4 +239,5 @@ const zeitEinheiten: Skill = {
 const kalender: Skill = { id: "kalender", title: "Kalender lesen", world: "schloss", gen: ({level}) => calendar(level) };
 
 const zeitPlanen: Skill = { id: "zeitPlanen", title: "Zeitabläufe planen", world: "schloss", gen: ({ level }) => morningPlan(level) };
-export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten, kalender, zeitPlanen];
+const wochenTermine: Skill = { id: "wochenTermine", title: "Wiederkehrende Termine planen", world: "schloss", gen: ({level}) => weekly(level) };
+export const SCHLOSS_SKILLS: Skill[] = [uhrLesen, uhrStellen, zeitWoerter, zeitspanne, zeitEinheiten, kalender, zeitPlanen, wochenTermine];

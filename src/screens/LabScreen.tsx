@@ -46,6 +46,7 @@ const cards = {
   clarify: { Icon: ListChecks, color: "bg-grape-light" },
   rest: { Icon: Blocks, color: "bg-coin-light" },
   balance: { Icon: SquarePlus, color: "bg-sky-light" },
+  weekly: { Icon: CalendarDays, color: "bg-sky-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

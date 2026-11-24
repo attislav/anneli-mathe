@@ -18,6 +18,7 @@ import { factFamily } from "./factFamily";
 import { clarifyStory } from "./clarifyStory";
 import { remainders } from "./remainders";
 import { balance } from "./balance";
+import { weekly } from "./weekly";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -55,6 +56,7 @@ export const LAB_TOPICS = {
   clarify: { title: "Was muss ich noch wissen?", prompt: "Stelle Rückfragen und löse die Sachaufgabe.", skillId: "sachfragenKlaeren", generate: clarifyStory },
   rest: { title: "Was machen wir mit dem Rest?", prompt: "Bilde Gruppen und entscheide, wie der Rest zählt.", skillId: "restDeuten", generate: remainders },
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
+  weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },
