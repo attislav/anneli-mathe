@@ -27,6 +27,7 @@ import { SampleVisit } from "@/game/labSamples";
 import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
 import { PartnerSurvey } from "./PartnerSurvey";
+import { PartnerConference } from "./PartnerConference";
 import { PartnerRiddle } from "./PartnerRiddle";
 import { PartnerTrail } from "./PartnerTrail";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
@@ -104,7 +105,7 @@ export function LabScreen() {
 }
 
 export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: LabTopic[]; notes?:LabNote[] }) {
-  const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|"riddle"|null>(null);
+  const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|"riddle"|"conference"|null>(null);
   const [visit] = useState(() => new SampleVisit());
   const [size,setSize]=useState<1|5>(5);
   const [area, setArea] = useState(() => lastLabArea(owner));
@@ -121,6 +122,7 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
   const startGoal = (goal: LearningGoal) => setRound(new LearningRound(owner,goal));
   if (partner === "wall") return <PartnerWall onBack={() => setPartner("menu")} />;
   if (partner === "survey") return <PartnerSurvey onBack={() => setPartner("menu")} />;
+  if (partner === "conference") return <PartnerConference onBack={() => setPartner("menu")} />;
   if (partner === "riddle") return <PartnerRiddle onBack={() => setPartner("menu")} />;
   if (partner === "trail") return <PartnerTrail onBack={() => setPartner("menu")} />;
   if (partner === "menu") return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-3 bg-mist p-5">
@@ -128,6 +130,7 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
     <h1 className="font-display text-3xl">Partnerwerkstatt</h1><p>Ein Kind bereitet vor, das andere löst. Danach könnt ihr tauschen.</p>
     <Button onClick={()=>setPartner("wall")}>Meine Zahlenmauer</Button>
     <Button tone="sky" onClick={()=>setPartner("survey")}>Unsere Umfrage</Button>
+    <Button tone="white" onClick={()=>setPartner("conference")}>Unsere Rechenkonferenz</Button>
     <Button tone="sky" onClick={()=>setPartner("riddle")}>Erfinde ein eindeutiges Zahlenrätsel</Button>
     <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
