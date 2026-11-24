@@ -1,5 +1,11 @@
-export const LAB_TOPIC_IDS = ["viewpoint", "packets", "tiles", "survey", "bus", "window", "machine", "cubes", "shopping", "calendar", "pairs", "route"] as const;
-export type LabTopic = typeof LAB_TOPIC_IDS[number];
+export const LAB_GROUPS = [
+  { title: "Zahlen und Rechnen", topics: ["pairs", "window", "machine", "packets"] },
+  { title: "Raum und Formen", topics: ["viewpoint", "tiles", "cubes", "route"] },
+  { title: "Messen, Zeit und Geld", topics: ["rope", "bus", "calendar", "shopping"] },
+  { title: "Daten und Umfragen", topics: ["survey"] },
+] as const;
+export type LabTopic = typeof LAB_GROUPS[number]["topics"][number];
+export const LAB_TOPIC_IDS = LAB_GROUPS.flatMap<LabTopic>(group => group.topics);
 
 export function schoolTopics(value: unknown): LabTopic[] {
   if (!Array.isArray(value)) return [];

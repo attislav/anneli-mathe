@@ -3,6 +3,7 @@
 import type { RulerItem, TaskDraft } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type Skill } from "./genkit";
+import { estimateRope } from "./estimateRope";
 
 const RULER_ITEMS: Record<RulerItem, string> = { stift: "der Stift", band: "das Band", wurm: "der Wurm", nagel: "der Nagel" };
 
@@ -186,4 +187,8 @@ const laengenVergleichen: Skill = {
   },
 };
 
-export const WERKSTATT_SKILLS: Skill[] = [lineal, einheiten, schaetzen, laengenRechnen, laengenVergleichen];
+const schaetzungPruefen: Skill = {
+  id: "schaetzungPruefen", title: "Schätzungen durch Messen prüfen", world: "werkstatt", gen: ({ level }) => estimateRope(level),
+};
+
+export const WERKSTATT_SKILLS: Skill[] = [lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen];

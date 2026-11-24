@@ -329,6 +329,10 @@ Unter „Mein Schulauftrag“ wählen Kinder oder Eltern pro Profil zwei oder dr
 
 In der Mathe-Sprechstunde legen Kinder bei 8 + 5 zuerst bis zur 10 auf und bei 32 − 7 zuerst bis zur 30 ab. Sie verändern und korrigieren die Plättchen selbst. Danach lösen sie eine neue Rechnung derselben Art ohne Material. Nur die selbstständigen Aufgaben fließen in den Lernbericht ein.
 
+Im Schätzlabor geben Kinder zuerst einen Tipp zur Schnurlänge ab. Sie legen Vergleichsstücke zu einem oder zwei Modellzentimetern an, messen nach und bestimmen den Abstand zum Tipp. Gewertet werden die Messung und der Vergleich. Die Übung ist auch in der Mess-Werkstatt und im Schulauftrag erreichbar. Labor und Schulauftrag zeigen ihre Themen nach vier Lernbereichen geordnet.
+
+Der Lernbericht führt das Schätzlabor unter „Schätzungen durch Messen prüfen“. Fragen zur plausiblen Länge eines Alltagsgegenstands zählen weiterhin zu „Längen schätzen“.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

@@ -18,6 +18,7 @@
     "smoke:packets": "tsx scripts/smoke-packets.ts",
     "smoke:viewpoint": "tsx scripts/smoke-viewpoint.ts",
     "smoke:clinic": "tsx scripts/smoke-clinic.ts",
+    "smoke:rope": "tsx scripts/smoke-rope.ts",
     "smoke:report": "tsx scripts/smoke-report.ts",
     "art:fetch": "node scripts/fetch-art.mjs",
     "gen:malvorlagen": "node --env-file-if-exists=.env.local scripts/gen-malvorlagen.mjs",

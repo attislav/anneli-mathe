@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { LAB_TOPICS, type LabTopic } from "@/game/lab";
 import { SchoolRound, setSchoolTopics } from "@/game/schoolAssignment";
-import { LAB_TOPIC_IDS } from "@/game/schoolSelection";
+import { LAB_GROUPS } from "@/game/schoolSelection";
 import { activeProfileId, useSave, needsProfilePick } from "@/game/state";
 import { Button } from "@/ui/Button";
 import { Splash } from "@/ui/chrome";
@@ -40,10 +40,12 @@ function Assignment({ owner, topics, name, start }: { owner: string; topics: Lab
     <header><h1 className="font-display text-3xl">Mein Schulauftrag</h1><p>Für {name}</p></header>
     {choosing ? <>
       <fieldset className="grid grid-cols-2 gap-2"><legend className="mb-3">Wähle zwei oder drei Themen. Jedes kommt zweimal dran.</legend>
-        {LAB_TOPIC_IDS.map(topic => <button key={topic} type="button" aria-pressed={draft.includes(topic)}
+        {LAB_GROUPS.map(group => <div key={group.title} className="col-span-2 grid grid-cols-2 gap-2">
+          <h2 className="col-span-2 mt-2 font-display text-lg">{group.title}</h2>
+        {group.topics.map(topic => <button key={topic} type="button" aria-pressed={draft.includes(topic)}
           disabled={!draft.includes(topic) && draft.length >= 3} onClick={() => toggle(topic)}
           className="min-h-14 rounded-xl border-2 border-transparent bg-white p-2 aria-pressed:border-grape aria-pressed:bg-grape-light disabled:opacity-50">
-          {LAB_TOPICS[topic].title}</button>)}
+          {LAB_TOPICS[topic].title}</button>)}</div>)}
       </fieldset>
       <Button disabled={draft.length < 2} onClick={() => { setSchoolTopics(owner, draft); setEditing(false); }}>Auftrag speichern</Button>
       {topics.length > 0 && <Button tone="white" onClick={() => setEditing(false)}>Abbrechen</Button>}

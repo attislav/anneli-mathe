@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SCHOOL_PATH, SchoolRound } from "@/game/schoolAssignment";
+import { LAB_GROUPS } from "@/game/schoolSelection";
 import { Blocks, BusFront, CalendarDays, Check, Cpu, FlaskConical, Grid3X3, ListChecks, Route, ShoppingBasket, SquarePlus, X } from "lucide-react";
 import { LAB_TOPICS, LabRound, type LabTopic } from "@/game/lab";
 import { TripRound } from "@/game/classTrip";
@@ -17,6 +18,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 
 const cards = {
+  rope: { Icon: Route, color: "bg-sun-light" },
   viewpoint: { Icon: Route, color: "bg-sky-light" },
   packets: { Icon: SquarePlus, color: "bg-grape-light" },
   tiles: { Icon: Blocks, color: "bg-coin-light" },
@@ -64,8 +66,10 @@ function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
       <BusFront aria-hidden size={36} className="shrink-0" />
       <span><span className="block font-display text-2xl">Unser Klassenausflug</span>Plane Bus, Wartezeit und Picknick.</span>
     </button>
-    <div className="grid gap-3 min-[380px]:grid-cols-2">
-      {(Object.keys(LAB_TOPICS) as LabTopic[]).map(topic => {
+    {LAB_GROUPS.map(group => <section key={group.title} className="mb-5">
+      <h2 className="mb-2 font-display text-xl">{group.title}</h2>
+      <div className="grid gap-3 min-[380px]:grid-cols-2">
+      {group.topics.map(topic => {
         const { Icon, color } = cards[topic];
         const { title, prompt } = LAB_TOPICS[topic];
         return <button key={topic} onClick={() => start(topic)}
@@ -74,7 +78,8 @@ function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
           <span className="font-display text-xl">{title}</span><span className="text-sm text-ink-soft">{prompt}</span>
         </button>;
       })}
-    </div>
+      </div>
+    </section>)}
     <BottomNav />
   </main>;
 }
