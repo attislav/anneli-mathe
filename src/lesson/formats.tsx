@@ -33,6 +33,7 @@ import { ClarifyStory } from "./ClarifyStory";
 import { Remainders } from "./Remainders";
 import { Balance } from "./Balance";
 import { Weekly } from "./Weekly";
+import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
 import { GroupRecipe } from "./GroupRecipe";
 import { Pictogram } from "./Pictogram";
@@ -57,6 +58,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "garden-fence":
+      return <GardenFence {...props} task={task} />;
     case "wheel-orders":
       return <WheelOrders {...props} task={task} />;
     case "group-recipe":

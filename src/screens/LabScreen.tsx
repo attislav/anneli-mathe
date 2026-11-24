@@ -48,6 +48,7 @@ const cards = {
   rest: { Icon: Blocks, color: "bg-coin-light" },
   balance: { Icon: SquarePlus, color: "bg-sky-light" },
   weekly: { Icon: CalendarDays, color: "bg-sky-light" },
+  fence: { Icon: Grid3X3, color: "bg-leaf-light" },
   wheels: { Icon: ListChecks, color: "bg-sky-light" },
   recipe: { Icon: ShoppingBasket, color: "bg-leaf-light" },
   pictures: { Icon: ListChecks, color: "bg-grape-light" },

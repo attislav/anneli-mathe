@@ -292,7 +292,7 @@ export const WORLDS: World[] = [
       chest("werkstatt-11"),
       round2("werkstatt-12", "Längen schätzen und prüfen", ["schaetzen", "schaetzungPruefen"]),
       round2("werkstatt-13", "Mit Längen rechnen 2", ["laengenRechnen"]),
-      round2("werkstatt-14", "Längen vergleichen 2", ["laengenVergleichen"]),
+      round2("werkstatt-14", "Längen und Umfänge vergleichen", ["laengenVergleichen", "zaunlaengen"]),
       chest("werkstatt-15"),
       mix2("werkstatt-16", ["lineal", "einheiten", "schaetzen", "laengenRechnen", "laengenVergleichen"]),
       { id: "werkstatt-boss", kind: "boss", title: "Roboter Bolzi", skills: ["lineal", "einheiten", "laengenRechnen", "laengenVergleichen"], coloring: "werkzeugkiste" },

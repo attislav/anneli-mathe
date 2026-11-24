@@ -379,6 +379,8 @@ Im Wochenkalender markieren Kinder wiederkehrende Freizeitangebote über zwei od
 
 Bei „Bilddiagramm entschlüsseln“ lesen Kinder Stimmen mithilfe einer Legende und legen eine zweite Reihe aus ganzen und später halben Bildzeichen. Danach bestimmen sie, wie viele zusätzliche Stimmen die schwächere Reihe bis zum Gleichstand braucht. Die Aufgabe ist im Detektivbüro, im Labor und im Schulauftrag erreichbar.
 
+Bei „Zaun ums Beet“ legen Kinder ein Meter lange Zaunstücke an die Außenkanten eines Beets. Sie vergleichen seinen Umfang mit dem eines anders angeordneten Beets mit gleich vielen Feldern. Das Thema ist in der Mess-Werkstatt, im Labor und im Schulauftrag erreichbar.
+
 In der Räderwerkstatt sammeln Kinder alle Bestellungen aus Fahr- und Dreirädern, die den Rädervorrat genau verbrauchen. Sie prüfen der Reihe nach für jede Dreiradzahl, ob die übrigen Räder paarweise aufgehen. Die Werkstatt ergänzt „Wie viele Möglichkeiten?“ im Detektivbüro, im Labor und im Schulauftrag.
 
 Beim „Rezept für unsere Tischgruppe“ stellen Kinder Zweiergruppen für vier oder sechs Kinder zusammen. Sie berechnen die Mengen für Obstquark, Knäckebrot-Gesichter oder Beerenmüsli und prüfen für jede Zutat, wie viel im Vorrat fehlt. Die Aufgabe ist in der Bäckerei, im Labor und im Schulauftrag erreichbar.

@@ -19,6 +19,7 @@ import { clarifyStory } from "./clarifyStory";
 import { remainders } from "./remainders";
 import { balance } from "./balance";
 import { weekly } from "./weekly";
+import { gardenFence } from "./gardenFence";
 import { wheelOrders } from "./wheelOrders";
 import { groupRecipe } from "./groupRecipe";
 import { pictogram } from "./pictogram";
@@ -60,6 +61,7 @@ export const LAB_TOPICS = {
   rest: { title: "Was machen wir mit dem Rest?", prompt: "Bilde Gruppen und entscheide, wie der Rest zählt.", skillId: "restDeuten", generate: remainders },
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
+  fence: { title: "Zaun ums Beet", prompt: "Lege Zaunstücke und vergleiche zwei Beete.", skillId: "zaunlaengen", generate: gardenFence },
   wheels: { title: "Räderwerkstatt", prompt: "Finde alle passenden Fahrrad- und Dreiradbestellungen.", skillId: "kombinatorik", generate: wheelOrders },
   recipe: { title: "Rezept für unsere Tischgruppe", prompt: "Plane die Portionen und ergänze den Vorrat.", skillId: "gruppenrezepte", generate: groupRecipe },
   pictures: { title: "Bilddiagramm entschlüsseln", prompt: "Lies die Legende, lege Kreise und vergleiche Stimmen.", skillId: "bilddiagramme", generate: pictogram },

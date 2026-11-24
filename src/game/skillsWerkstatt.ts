@@ -1,5 +1,6 @@
 // Welt 9 · Mess-Werkstatt — Längen: Lineal, cm und m, schätzen, rechnen.
 
+import { gardenFence } from "./gardenFence";
 import type { RulerItem, TaskDraft } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type Skill } from "./genkit";
@@ -193,4 +194,5 @@ const schaetzungPruefen: Skill = {
 };
 
 const fuellmengen: Skill = { id: "fuellmengen", title: "Füllmengen vergleichen", world: "werkstatt", gen: ({ level }) => juice(level) };
-export const WERKSTATT_SKILLS: Skill[] = [lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];
+const zaunlaengen: Skill = { id: "zaunlaengen", title: "Umfänge bestimmen", world: "werkstatt", gen: ({level}) => gardenFence(level) };
+export const WERKSTATT_SKILLS: Skill[] = [zaunlaengen, lineal, einheiten, schaetzen, schaetzungPruefen, laengenRechnen, laengenVergleichen, fuellmengen];
