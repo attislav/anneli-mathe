@@ -35,13 +35,13 @@ type LabState = {
   retry: boolean; firstRight: number; hint?: string;
 };
 
-export class LabRound {
+export class LabSession {
   readonly id = uid();
   state: LabState;
   private shownAt = Date.now();
 
-  constructor(readonly topic: LabTopic, private readonly owner: string) {
-    this.state = { task: makeTask(topic), number: 1, status: "ask", retry: false, firstRight: 0 };
+  constructor(private readonly owner: string, readonly count: number, private readonly taskAt: (number: number) => Task) {
+    this.state = { task: taskAt(1), number: 1, status: "ask", retry: false, firstRight: 0 };
   }
 
   answer(taskId: string, correct: boolean, hint?: string): LabState {
@@ -64,12 +64,18 @@ export class LabRound {
     if (this.owner !== activeProfileId() || task.id !== taskId || status === "ask" || status === "done") return this.state;
     if (status === "wrong") {
       this.state = { ...this.state, status: "ask", retry: true };
-    } else if (number === LAB_COUNT) {
+    } else if (number === this.count) {
       this.state = { ...this.state, status: "done" };
     } else {
-      this.state = { ...this.state, task: makeTask(this.topic), number: number + 1, retry: false, status: "ask", hint: undefined };
+      this.state = { ...this.state, task: this.taskAt(number + 1), number: number + 1, retry: false, status: "ask", hint: undefined };
       this.shownAt = Date.now();
     }
     return this.state;
+  }
+}
+
+export class LabRound extends LabSession {
+  constructor(readonly topic: LabTopic, owner: string) {
+    super(owner, LAB_COUNT, () => makeTask(topic));
   }
 }

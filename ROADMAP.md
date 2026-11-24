@@ -317,6 +317,8 @@ Im achten Laborthema lesen Kinder einen Busfahrplan. Sie wählen Abfahrt und Ank
 
 Bei der Klassenumfrage sortieren Kinder fünf bis neun beschriftete Stimmzettel und lesen ihre eigene Strichliste ab. Sie können einzelne Zettel umsortieren und auf höheren Stufen zwei Gruppen vergleichen. Die Umfrage erscheint im Labor und bei den Strichlisten im Detektivbüro.
 
+Das Laborprojekt „Unser Klassenausflug“ verbindet drei Entscheidungen. Kinder wählen den spätesten pünktlichen Bus zur Museumsführung, ermitteln ihre Wartezeit und kaufen zwei Snacks für einen festen Betrag. Ihr Ausflugszettel übernimmt nach jedem Schritt die richtigen Angaben. Die drei Erstversuche fließen getrennt in den Lernbericht ein.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

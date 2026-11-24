@@ -3,6 +3,10 @@ import { mock } from "node:test";
 import { firstIncorrectGap, hundredWindow, windowHint, windowValue } from "../src/game/hundredWindow";
 import { busJourney, busTable, checkBus } from "../src/game/busTable";
 import { classSurvey } from "../src/game/skillsDetektiv";
+import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { SnackPair } from "../src/lesson/SnackPair";
 import { checkSurvey, surveyAnswer, surveyRows } from "../src/game/survey";
 import type { Level } from "../src/game/types";
 import { LAB_COUNT, LAB_TOPICS, LabRound, type LabTopic } from "../src/game/lab";
@@ -164,6 +168,66 @@ for (const topic of Object.keys(LAB_TOPICS) as LabTopic[]) {
   assert.equal(report?.count, 5);
   assert.equal(report?.acc, 3 / 5);
 }
+let tripSeed = 1234;
+const tripRandom = mock.method(Math, "random", () => {
+  tripSeed = (Math.imul(1664525, tripSeed) + 1013904223) >>> 0;
+  return tripSeed / 2 ** 32;
+});
+const winners = new Set<string>(), onTimeCounts = new Set<number>();
+let zeroWait = false, crossedHour = false;
+for (let i = 0; i < 100; i++) {
+  const plan = createTrip();
+  const [bus, wait, snacks] = plan.tasks;
+  const onTime = plan.timetable.filter(row => row.arrival <= plan.appointment);
+  const expected = onTime.reduce((later, row) => row.departure > later.departure ? row : later);
+  assert.equal(bus.answer, expected.name);
+  assert.deepEqual(latestOnTime([...plan.timetable].reverse(), plan.appointment), expected);
+  winners.add(expected.name);
+  onTimeCounts.add(onTime.length);
+  assert.equal(wait.answer, plan.appointment - expected.arrival);
+  zeroWait ||= wait.answer === 0;
+  crossedHour ||= Math.floor(plan.appointment / 60) > Math.floor(expected.arrival / 60);
+  const pairs = [[0, 1], [0, 2], [1, 2]].filter(pair => snackPairFits(snacks, pair));
+  assert.equal(pairs.length, 1);
+  assert.deepEqual(pairs[0].map(j => snacks.snacks[j].name).sort(), [...plan.snacks].sort());
+  if (i < 10) {
+    const renderPair = (status: "ask" | "wrong" | "reveal") => renderToStaticMarkup(createElement(SnackPair, {
+      task: snacks, status, onAnswer: () => {},
+    }));
+    const pressed = (html: string) => [...html.matchAll(/aria-pressed="(true|false)"/g)].map(m => m[1] === "true");
+    assert.deepEqual(pressed(renderPair("ask")), [false, false, false]);
+    assert.deepEqual(pressed(renderPair("wrong")), [false, false, false]);
+    assert.deepEqual(pressed(renderPair("reveal")), snacks.snacks.map((_, index) => pairs[0].includes(index)));
+  }
+  assert.equal(snackPairFits(snacks, [0, 0]), false);
+}
+tripRandom.mock.restore();
+assert.deepEqual(onTimeCounts, new Set([1, 2]));
+assert.equal(winners.size, 2);
+assert.ok(zeroWait && crossedHour);
+const project = new TripRound(owner);
+const beforeTrip = readSave();
+const first = project.state.task.id;
+project.answer(first, false);
+project.answer(first, true);
+assert.equal(project.state.status, "wrong");
+project.advance(first);
+project.answer(first, false);
+assert.equal(project.state.status, "reveal");
+project.advance(first);
+assert.deepEqual(project.state.task, project.plan.tasks[1]);
+assert.equal(project.plan.tasks[1].answer, project.plan.appointment - project.plan.chosen.arrival);
+project.advance(first);
+assert.equal(project.state.number, 2);
+for (const task of project.plan.tasks.slice(1)) {
+  project.answer(task.id, true);
+  project.answer(task.id, false);
+  project.advance(task.id);
+}
+assert.equal(project.state.status, "done");
+assert.equal(project.state.firstRight, 2);
+assert.deepEqual(readSave().log.slice(beforeTrip.log.length).map(e => [e.s, e.ok]), [["uhrLesen", 0], ["zeitspanne", 1], ["einkaufen", 1]]);
+const interruptedTrip = new TripRound(owner);
 const after = readSave();
 assert.deepEqual({ ...after, log: before.log, mastery: before.mastery }, before);
 const oldRound = new LabRound("calendar", owner);
@@ -171,6 +235,7 @@ addProfile();
 createProfile({ name: "Lino", pet: "drachi", petName: "Leo" });
 const sibling = activeProfileId();
 assert.notEqual(sibling, owner);
+assert.equal(interruptedTrip.answer(interruptedTrip.state.task.id, true).status, "ask");
 assert.equal(oldRound.answer(oldRound.state.task.id, true).status, "ask");
 assert.equal(readSave().log.length, 0);
 const siblingRound = new LabRound("calendar", sibling);
