@@ -235,7 +235,7 @@ export const WORLDS: World[] = [
       round2("schloss-10", "Uhr stellen 2", ["uhrStellen"]),
       chest("schloss-11"),
       round2("schloss-12", "Viertel und halb 2", ["zeitWoerter"]),
-      round2("schloss-13", "Wie lange? 2", ["zeitspanne"]),
+      round2("schloss-13", "Dauer und Zeitplanung", ["zeitspanne", "zeitPlanen"]),
       round2("schloss-14", "Uhr und Kalender 2", ["zeitEinheiten", "kalender"]),
       chest("schloss-15"),
       mix2("schloss-16", ["uhrLesen", "uhrStellen", "zeitWoerter", "zeitspanne", "zeitEinheiten", "kalender"]),

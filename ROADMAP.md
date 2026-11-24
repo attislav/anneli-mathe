@@ -345,6 +345,8 @@ Als Zahlendetektiv grenzt das Kind eine Geheimzahl auf der Hundertertafel mit zw
 
 In „Gerecht geteilt“ teilen Kinder eine Schokoladentafel in zwei oder vier zusammenhängende Portionen. Unterschiedliche Formen sind erlaubt. Jedes Kind bekommt gleich viele Kästchen. Die Aufgabe verbindet diese Menge mit einer Hälfte oder einem Viertel der Tafel und ist in der Bäckerei, im Labor und im Schulauftrag erreichbar.
 
+In „Plane deinen Vormittag“ ordnen Kinder Tätigkeiten um einen festen Morgenkreis an und berücksichtigen Reihenfolge und Dauer. Sie beantworten eine Frage zur Endzeit oder Pause ihres eigenen Plans. Das Thema „Zeitabläufe planen“ ist im Uhrenschloss, im Labor und im Schulauftrag erreichbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

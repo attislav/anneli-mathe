@@ -21,6 +21,7 @@ import { WriteQuestion } from "./WriteQuestion";
 import { ShopList } from "./ShopList";
 import { NumberDetective } from "./NumberDetective";
 import { ChocolateShare } from "./ChocolateShare";
+import { MorningPlan } from "./MorningPlan";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -42,6 +43,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "morning-plan":
+      return <MorningPlan {...props} task={task} />;
     case "chocolate-share":
       return <ChocolateShare {...props} task={task} />;
     case "number-detective":

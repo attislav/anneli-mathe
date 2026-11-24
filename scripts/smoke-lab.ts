@@ -6,6 +6,7 @@ import { classSurvey } from "../src/game/skillsDetektiv";
 import { checkShopList, shopList, shopSolution } from "../src/game/shopList";
 import { checkMarking, fitsClue, numberDetective } from "../src/game/numberDetective";
 import { checkPortions, checkShare, chocolate, examplePortions } from "../src/game/chocolate";
+import { checkPlan, examplePlan, followValue, morningPlan, planSlots } from "../src/game/morningPlan";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -24,8 +25,35 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const morning = { start: 540, duration: 60, step: 15, fixed: 555, activities: [{ name: "Malen", duration: 15 }, { name: "Zeigen", duration: 15 }] };
+assert.equal(checkPlan(morning, [540, 570]), null);
+assert.equal(checkPlan(morning, [540, 585]), null);
+assert.equal(followValue({ ...morning, follow: "end", target: 1 }, [540, 585]), 600);
+assert.equal(followValue({ ...morning, follow: "end", target: 1 }, [540, 570]), 585);
+assert.equal(followValue({ ...morning, follow: "pause", target: 1 }, [540, 585]), 15);
+assert.equal(followValue({ ...morning, follow: "pause", target: 1 }, [540, 570]), 0);
+for (const bad of [[540, 555], [540, 540], [580, 585], [540, 600], [525, 570], [585, 570], [540, null]]) assert.ok(checkPlan(morning, bad));
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  for (const fraction of [0, 0.5, 0.9999]) {
+    const random = mock.method(Math, "random", () => fraction);
+    const template = morningPlan(level);
+    random.mock.restore();
+    for (const fixed of planSlots(template)) {
+      const plan = { ...template, fixed };
+      const first = examplePlan(plan);
+      assert.equal(checkPlan(plan, first), null);
+      const slots = planSlots(plan);
+      const alternative = slots.some(a => slots.some(b => (first.length === 2 ? [[]] : slots.map(t => [t])).some(tail => {
+        const candidate = [a, b, ...tail];
+        return candidate.some((v, i) => v !== first[i]) && checkPlan(plan, candidate) === null;
+      })));
+      assert.ok(alternative, `Stufe ${level} mit Termin um ${fixed} braucht mehr als einen Plan.`);
+    }
+  }
+}
 
 const fourPortions = { rows: 3, cols: 4, children: 4 as const };
 const differentShapes = [0,0,0,1, 2,2,1,1, 2,3,3,3];
