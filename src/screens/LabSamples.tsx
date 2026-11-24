@@ -4,7 +4,11 @@ import { areaSamples, sampleAction, SampleVisit, sampleFeedback, type SampleArea
 import { LAB_GROUPS, type LabTopic } from "@/game/schoolSelection";
 import { Button } from "@/ui/Button";
 
-export function LabSamples({ visit, onStart }: { visit: SampleVisit; onStart: (topic: LabTopic) => void }) {
+type FollowUpProps={size:1|5;onStart:(topic:LabTopic,size:1|5)=>void};
+export function SampleContinue({topic,size,onStart}:FollowUpProps & {topic:LabTopic}) {
+  return <Button onClick={()=>onStart(topic,size)}>Damit weiterüben · {LAB_TOPICS[topic].title} · {size===1?"1 Aufgabe":"5 Aufgaben"}</Button>;
+}
+export function LabSamples({ visit, size, onStart }: FollowUpProps & { visit: SampleVisit }) {
   const [open, setOpen] = useState(false);
   const [area, setArea] = useState<SampleArea | null>(null);
   const [sample, setSample] = useState<ReturnType<SampleVisit["next"]> | null>(null);
@@ -38,8 +42,7 @@ export function LabSamples({ visit, onStart }: { visit: SampleVisit; onStart: (t
           <button type="button" className="min-h-11 justify-self-start underline" onClick={() => setAnswer(null)}>Weiß ich noch nicht</button>
         </> : <>
           <p aria-live="polite">{sampleFeedback(sample, answer)}</p>
-          <p className="text-sm">{LAB_TOPICS[sample.topic].title} · 5 Aufgaben</p>
-          <Button onClick={() => onStart(sample.topic)}>Damit weiterüben</Button>
+          <SampleContinue topic={sample.topic} size={size} onStart={onStart}/>
         </>}
         <div className="flex flex-wrap gap-2">
           <button type="button" className={option} onClick={() => next(area)}>Andere Probe</button>

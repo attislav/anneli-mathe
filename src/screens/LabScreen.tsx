@@ -87,13 +87,14 @@ export function LabScreen() {
 export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: LabTopic[]; notes?:LabNote[] }) {
   const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|null>(null);
   const [visit] = useState(() => new SampleVisit());
+  const [size,setSize]=useState<1|5>(5);
   const [area, setArea] = useState(() => lastLabArea(owner));
   const group = LAB_GROUPS[area];
   const [round, setRound] = useState<LabRound | TripRound | LearningRound | LabNoteRound | null>(null);
   const chooseArea = (i: number) => { setArea(i); rememberLabArea(owner,i); };
-  const start = (topic: LabTopic) => {
+  const start = (topic: LabTopic, length:1|5) => {
     chooseArea(LAB_GROUPS.findIndex(g => (g.topics as readonly LabTopic[]).includes(topic)));
-    setRound(new LabRound(topic, owner));
+    setRound(new LabRound(topic, owner,length));
   };
   const startTrip = () => setRound(new TripRound(owner));
   const startGoal = (goal: LearningGoal) => setRound(new LearningRound(owner,goal));
@@ -108,13 +109,13 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
     <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
   if (round) return <LabActivity key={round.id} round={round}
-    onBack={() => setRound(null)} onReplay={round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;
+    onBack={() => setRound(null)} onReplay={round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => setRound(round.replay())} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
     <header className="mb-5 rounded-3xl bg-leaf-light p-5">
       <div className="flex items-center gap-4"><FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
         <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
           <p>Wähle einen Lernbereich und probiere eine Aufgabe aus.</p></div></div>
-      <LabSamples visit={visit} onStart={start} />
+      <LabSamples visit={visit} size={size} onStart={start} />
     </header>
     {notes.length>0 && <details className="mb-3 rounded-xl bg-white px-3">
       <summary className="cursor-pointer py-3 font-bold">Mein Merkzettel ({notes.length})</summary>
@@ -145,11 +146,15 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
       {(Object.keys(learningGoals) as LearningGoal[]).filter(key => learningGoals[key].area === area).map(key =>
         <button key={key} className="mb-3 w-full rounded-2xl bg-sun-light p-3 text-left" onClick={() => startGoal(key)}>
           <strong>{learningGoals[key].title}</strong> · 3 Aufgaben</button>)}
+      <fieldset className="mb-2 flex flex-wrap gap-2"><legend className="text-sm font-bold">Umfang für die Einzelthemen</legend>
+        {([1,5] as const).map(n=><label key={n} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-3">
+          <input type="radio" name="einzelthemen-umfang" checked={size===n} onChange={()=>setSize(n)}/>
+          {n===1?"Eine Aufgabe":"Fünf Aufgaben"}</label>)}</fieldset>
       <div className="grid gap-3 min-[380px]:grid-cols-2">
       {group.topics.map(topic => {
         const { Icon, color } = cards[topic];
         const { title, prompt } = LAB_TOPICS[topic];
-        return <button key={topic} onClick={() => start(topic)}
+        return <button key={topic} onClick={() => start(topic,size)}
           className="grid content-start justify-items-start gap-1 rounded-3xl bg-white p-4 text-left shadow-[0_4px_0_#dedbed] focus-visible:outline-4">
           <span className={`mb-1 rounded-2xl p-2.5 ${color}`}><Icon aria-hidden size={28} /></span>
           <span className="font-display text-xl">{title}</span><span className="text-sm text-ink-soft">{prompt}</span>
@@ -196,18 +201,18 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
     {school && <ul className="grid gap-1 rounded-2xl bg-white p-4 text-left">
       {[...school.results].map(([topic, right]) => <li key={topic}>{LAB_TOPICS[topic].title}: {right} von 2 beim ersten Versuch</li>)}
     </ul>}
-    <p>{title} · {firstRight} von {round.count} gleich beim ersten Versuch gelöst.</p>
+    <p>{title} · {firstRight} von {round.count} {round.count===1?"Aufgabe":"Aufgaben"} gleich beim ersten Versuch gelöst.</p>
     {round instanceof LearningRound && <ThinkFurther key={round.id} item={thinkFurther(round)}/>}
     {round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
       <Button tone="white" onClick={()=>{round.finish(false);onBack();}}>Abhaken und vom Merkzettel nehmen</Button></> :
-      <><Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
+      <><Button onClick={onReplay}>{round instanceof LabRound && round.size===1 ? "Noch eine neue Aufgabe zu diesem Thema" : trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
     <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button></>}
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">
     <header className="flex items-center justify-between gap-2">
       <button onClick={onBack} aria-label="Runde beenden und Thema wählen" className="rounded-2xl bg-white p-3"><X aria-hidden /></button>
-      <span className="font-display text-xl">{title}</span><span>{number} von {round.count}</span>
+      <span className="font-display text-xl">{title}</span><span>Aufgabe {number} von {round.count}</span>
     </header>
     <progress value={number - 1} max={round.count} aria-label="Erledigte Aufgaben" className="h-3 w-full accent-green-600" />
     {trip && <TripNote round={trip} completed={number - 1 + Number(status === "right" || status === "reveal")} />}

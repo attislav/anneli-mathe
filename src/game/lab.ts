@@ -20,8 +20,7 @@ import { remainders } from "./remainders";
 import { balance } from "./balance";
 import { weekly } from "./weekly";
 import { symbolCode } from "./symbolCode";
-import { contentHash } from "./labNotes";
-import { taskContentKey } from "./practice";
+import { freshLabMaterial, materialHash } from "./freshLabMaterial";
 import { storyStrips } from "./storyStrips";
 import { lineEstimate } from "./lineEstimate";
 import { foldLines } from "./foldLines";
@@ -144,11 +143,15 @@ export class LabRound extends LabSession {
   remember(taskId:string) {
     const {task,status}=this.state;
     if(this.owner!==activeProfileId() || taskId!==task.id || (status!=="right" && status!=="reveal"))return false;
-    const note={topic:this.topic,level:task.level,source:contentHash(taskContentKey(task))};
+    const note={topic:this.topic,level:task.level,source:materialHash(task)};
     update(save=>({...save,labNotes:[...save.labNotes.filter(n=>n.topic!==this.topic),note]}));
     return true;
   }
-  constructor(readonly topic: LabTopic, owner: string) {
-    super(owner, LAB_COUNT, () => makeLabTask(topic));
+  constructor(readonly topic: LabTopic, owner: string, readonly size:1|5=LAB_COUNT, previous?:number) {
+    super(owner, size, () => size===1 && previous!==undefined
+      ? freshLabMaterial(()=>makeLabTask(topic),previous) : makeLabTask(topic));
+  }
+  replay() {
+    return new LabRound(this.topic,this.owner,this.size,this.size===1?materialHash(this.state.task):undefined);
   }
 }
