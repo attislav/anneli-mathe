@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Bei „Zielzahl in zwei Schritten“ legen Kinder drei Zahlenkarten, rechnen den Zwischenstand aus und sagen die Wirkung ihrer letzten Karte voraus. Nach dem Erfolg können sie freiwillig einen Weg mit anderer Zwischenzahl finden. Im Lernpfad am Strand und im Labor verfügbar.
+
 Auf dem Geobrett spannen Kinder ein Rechteck und ein Quadrat mit vorgegebenen Seitenlängen. Die Auswertung zeigt die eigenen Figuren, Eckpunkte und Seitenlängen. Erreichbar im Formen-Ozean, Labor, Schulauftrag und Merkzettel.
 
 Bei „Eine Geschichte mit Streifen legen“ ordnen Kinder zwei Teile und ein Ganzes einem Streifenplan zu. Sie bilden eine passende Plus- oder Minusrechnung und lösen die Frage nach dem Ganzen oder einem fehlenden Teil. Die Aufgabe ist im Detektivbüro, Labor, Schulauftrag und Merkzettel erreichbar.

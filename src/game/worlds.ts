@@ -122,7 +122,7 @@ export const WORLDS: World[] = [
       round2("strand-9", "Mit Zehnern 2", ["zehnerPlus"]),
       round2("strand-10", "Einer und Rechenpäckchen 2", ["einerPlus", "rechenpaeckchen"]),
       chest("strand-11"),
-      round2("strand-12", "Ergänzen 2", ["ergaenzen"]),
+      round2("strand-12", "Ergänzen und Zielzahlen finden", ["ergaenzen", "zielzahlWege"]),
       round2("strand-13", "Zahlenmauern 2", ["mauern"]),
       round2("strand-14", "Über den Zehner auf zwei Wegen", ["uebergang100", "rechenwege"]),
       chest("strand-15"),
