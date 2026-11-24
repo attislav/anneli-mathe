@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { mock } from "node:test";
 import { firstIncorrectGap, hundredWindow, windowHint, windowValue } from "../src/game/hundredWindow";
 import { busJourney, busTable, checkBus } from "../src/game/busTable";
+import { classSurvey } from "../src/game/skillsDetektiv";
+import { checkSurvey, surveyAnswer, surveyRows } from "../src/game/survey";
 import type { Level } from "../src/game/types";
 import { LAB_COUNT, LAB_TOPICS, LabRound, type LabTopic } from "../src/game/lab";
 import { updateMastery } from "../src/game/adaptive";
@@ -15,8 +17,36 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const survey = { categories: [{ icon: "apfel" as const, label: "Äpfel" }, { icon: "birne" as const, label: "Birnen" }],
+  votes: [0, 0, 1, 0, 0, 1, 0], target: 0, compare: null };
+const misplaced = [1, 0, 0, 0, 0, 1, 0];
+assert.deepEqual(surveyRows(survey, misplaced).map(row => row.value), [5, 2]);
+assert.equal(checkSurvey(survey, misplaced, "5").correct, false);
+assert.match(checkSurvey(survey, misplaced, "5").hint ?? "", /Zettel 1/);
+assert.equal(checkSurvey(survey, [...survey.votes, 0], "5").correct, false);
+assert.equal(checkSurvey(survey, survey.votes.slice(1), "5").correct, false);
+misplaced[0] = 0;
+assert.deepEqual(surveyRows(survey, misplaced).map(row => row.value), [6, 1]);
+misplaced[2] = 1;
+assert.equal(checkSurvey(survey, misplaced, "5").correct, true);
+assert.equal(checkSurvey(survey, misplaced, "6").correct, false);
+const tie = { ...survey, votes: [0, 1, 1, 0, 0, 1], compare: 1 };
+assert.equal(surveyAnswer(tie), 0);
+assert.equal(checkSurvey(tie, tie.votes, "0").correct, true);
+assert.equal(checkSurvey(tie, tie.votes, "").correct, false);
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  for (let i = 0; i < 80; i++) {
+    const task = classSurvey(level);
+    const rows = surveyRows(task, task.votes);
+    assert.equal(task.votes.length, 4 + level);
+    assert.ok(rows.every(row => row.value >= 1));
+    assert.equal(rows.reduce((sum, row) => sum + row.value, 0), task.votes.length);
+    assert.equal(checkSurvey(task, task.votes, String(surveyAnswer(task))).correct, true);
+  }
+}
 
 const exactBus = { stops: ["Park", "Schule", "Markt"], from: 1, to: 2, earliest: 9 * 60 + 55,
   trips: [[560, 580, 595], [575, 595, 610], [600, 620, 635]] };
@@ -149,4 +179,4 @@ switchProfile(owner);
 assert.equal(siblingRound.advance(siblingRound.state.task.id).status, "right");
 assert.deepEqual(readSave(), after);
 assert.equal(readProfileSave(sibling)?.log.length, 1);
-console.log("Acht Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.");
+console.log("Neun Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.");

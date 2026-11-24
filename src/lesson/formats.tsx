@@ -10,6 +10,7 @@ import { GridRoute } from "./GridRoute";
 import { LengthStrips } from "./LengthStrips";
 import { HundredWindow } from "./HundredWindow";
 import { BusTable } from "./BusTable";
+import { ClassSurvey } from "./ClassSurvey";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -31,6 +32,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "class-survey":
+      return <ClassSurvey {...props} task={task} />;
     case "bus-table":
       return <BusTable {...props} task={task} />;
     case "hundred-window":

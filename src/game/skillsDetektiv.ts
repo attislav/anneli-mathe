@@ -2,7 +2,8 @@
 // Säulendiagramme, Rechengeschichten, Möglichkeiten zählen, Fehler finden.
 
 import { plausible } from "./discovery";
-import type { DataIcon, DataRow, Level, TaskDraft } from "./types";
+import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft } from "./types";
+import { surveyAnswer, surveyRows } from "./survey";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -99,6 +100,29 @@ function dataQuestion(ctx: GenCtx, theme: Theme, rows: DataRow[], kind: "count" 
   return numeric(ctx, `? ${theme.unit}`, r.value, { question: theme.count(r.label), hint: read(r), solution: `${r.label}: ${r.value}.` });
 }
 
+export function classSurvey(level: Level): Omit<SurveyTask, "id" | "skillId" | "level"> {
+  const theme = pick(THEMES.slice(0, 2));
+  const categories = shuffle(theme.rows).slice(0, level <= 2 ? 2 : 3).map(([icon, label]) => ({ icon, label }));
+  const options = categories.map((_, i) => i);
+  const bag = [...options];
+  const popular = pick(options);
+  if (level >= 3 && chance(0.5)) bag.push(popular, popular, popular, popular);
+  while (bag.length < 4 + level) bag.push(pick(options));
+  const votes = shuffle(bag);
+  const [target, other] = shuffle(options);
+  const compare = level >= 3 && chance(0.65) ? other : null;
+  const data = { categories, votes, target, compare };
+  const followUp = compare === null ? `Wie viele Stimmen bekommt „${categories[target].label}“?`
+    : `Wie groß ist der Unterschied zwischen „${categories[target].label}“ und „${categories[compare].label}“ in Stimmen?`;
+  const rows = surveyRows(data, votes);
+  const answer = surveyAnswer(data);
+  const solution = compare === null ? `„${categories[target].label}“ bekommt ${answer} ${answer === 1 ? "Stimme" : "Stimmen"}.`
+    : `${Math.max(rows[target].value, rows[compare].value)} − ${Math.min(rows[target].value, rows[compare].value)} = ${answer}. So groß ist der Unterschied.`;
+  return { ...data, format: "class-survey", followUp, solution,
+    question: theme === THEMES[0] ? "Welches Obst mag eure Klasse? Sortiere die Stimmzettel." : "Welche Tiere mag eure Klasse? Sortiere die Stimmzettel.",
+    hint: "Lies den Namen auf jedem Zettel und lege ihn zur Gruppe mit demselben Namen. Jede Stimme gibt einen Strich." };
+}
+
 const strichliste: Skill = {
   id: "strichliste",
   title: "Strichlisten",
@@ -110,6 +134,7 @@ const strichliste: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("class-survey") && chance(0.4)) return classSurvey(level);
     const theme = pick(THEMES);
     const n = level >= 3 ? randInt(3, 4) : 3;
     const [min, max] = ([[1, 9], [3, 14], [4, 19], [3, 20], [5, 20]] as const)[level - 1];
