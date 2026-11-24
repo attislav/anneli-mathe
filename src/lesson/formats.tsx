@@ -12,6 +12,7 @@ import { HundredWindow } from "./HundredWindow";
 import { BusTable } from "./BusTable";
 import { ClassSurvey } from "./ClassSurvey";
 import { SnackPair } from "./SnackPair";
+import { TileFloor } from "./TileFloor";
 import { BasketView, CalendarView, CubeView, EstimateView, MachineView } from "./Discoveries";
 export { NumPad } from "./NumPad";
 import { JumpView, ExchangeView, ArrayView } from "./mathMaterials";
@@ -33,6 +34,8 @@ export type FormatProps<T extends Task> = { task: T; status: Status; onAnswer: (
 export function TaskView(props: FormatProps<Task>) {
   const { task } = props;
   switch (task.format) {
+    case "tile-floor":
+      return <TileFloor {...props} task={task} />;
     case "snack-pair":
       return <SnackPair {...props} task={task} />;
     case "class-survey":

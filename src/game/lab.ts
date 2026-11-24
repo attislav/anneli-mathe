@@ -4,6 +4,7 @@ import { numberPairs } from "./numberPuzzles";
 import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
 import { classSurvey } from "./skillsDetektiv";
+import { tileFloor } from "./tileFloor";
 import { uid } from "./random";
 import { getSkill } from "./skills";
 import { activeProfileId, LOG_MAX, masteryOf, readSave, update } from "./state";
@@ -12,6 +13,7 @@ import type { Level, Task, TaskDraft } from "./types";
 export const LAB_COUNT = 5;
 type Topic = { title: string; prompt: string; skillId: string; generate: (level: Level) => TaskDraft };
 export const LAB_TOPICS = {
+  tiles: { title: "Fliesenatelier", prompt: "Drehe die Steine und fülle die Fläche.", skillId: "flaechenLegen", generate: tileFloor },
   survey: { title: "Klassenumfrage", prompt: "Sortiere Stimmen und lies die Strichliste.", skillId: "strichliste", generate: classSurvey },
   bus: { title: "Busfahrplan", prompt: "Lies ab, wie lange du fährst.", skillId: "zeitspanne", generate: busTable },
   window: { title: "Zahlenfenster", prompt: "Ergänze die Hundertertafel.", skillId: "nachbarn", generate: hundredWindow },

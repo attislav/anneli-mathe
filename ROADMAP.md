@@ -319,6 +319,8 @@ Bei der Klassenumfrage sortieren Kinder fünf bis neun beschriftete Stimmzettel 
 
 Das Laborprojekt „Unser Klassenausflug“ verbindet drei Entscheidungen. Kinder wählen den spätesten pünktlichen Bus zur Museumsführung, ermitteln ihre Wartezeit und kaufen zwei Snacks für einen festen Betrag. Ihr Ausflugszettel übernimmt nach jedem Schritt die richtigen Angaben. Die drei Erstversuche fließen getrennt in den Lernbericht ein.
 
+Im Fliesenatelier legen Kinder kleine Flächen mit drehbaren Dominos und L-Steinen aus. Sie sehen vor dem Legen eine Vorschau, können den letzten Stein zurücknehmen und eigene Lösungen finden. Das zehnte Laborthema erfasst im Formen-Ozean die Kompetenz „Flächen auslegen“.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

@@ -14,6 +14,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 
 const cards = {
+  tiles: { Icon: Blocks, color: "bg-coin-light" },
   survey: { Icon: ListChecks, color: "bg-leaf-light" },
   bus: { Icon: BusFront, color: "bg-sun-light" },
   window: { Icon: Grid3X3, color: "bg-sky-light" },

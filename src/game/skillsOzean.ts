@@ -1,6 +1,7 @@
 // Welt 8 · Formen-Ozean — Formen, Körper, Spiegeln, Muster.
 
 import { cubeModel } from "./discovery";
+import { tileFloor } from "./tileFloor";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
@@ -204,4 +205,8 @@ const rasterwege: Skill = {
   },
 };
 
-export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege];
+const flaechenLegen: Skill = {
+  id: "flaechenLegen", title: "Flächen auslegen", world: "ozean", gen: ({ level }) => tileFloor(level),
+};
+
+export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen];
