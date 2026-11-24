@@ -24,6 +24,7 @@ import { BottomNav, Splash } from "@/ui/chrome";
 import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 import { SampleVisit } from "@/game/labSamples";
+import { LabSearch, RoundSize } from "./LabSearch";
 import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
 import { PartnerSurvey } from "./PartnerSurvey";
@@ -108,6 +109,7 @@ export function LabScreen() {
 
 export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: LabTopic[]; notes?:LabNote[] }) {
   const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|"riddle"|"conference"|null>(null);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [visit] = useState(() => new SampleVisit());
   const [size,setSize]=useState<1|5>(5);
   const [area, setArea] = useState(() => lastLabArea(owner));
@@ -136,13 +138,16 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
     <Button tone="sky" onClick={()=>setPartner("riddle")}>Erfinde ein eindeutiges Zahlenrätsel</Button>
     <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
-  if (round) return <LabActivity key={round.id} round={round}
+  if (round) return <LabActivity key={round.id} round={round} backLabel={searchQuery === null ? undefined : "Zurück zu den Suchergebnissen"}
     onBack={() => {if(round instanceof ReadingRound || round instanceof MarbleRound)round.close();setRound(null);}} onReplay={round instanceof MarbleRound ? startMarbles : round instanceof ReadingRound ? startCorner : round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => setRound(round.replay())} />;
+  if (searchQuery !== null) return <LabSearch query={searchQuery} setQuery={setSearchQuery} size={size}
+    setSize={setSize} start={start} back={()=>setSearchQuery(null)}/>;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
     <header className="mb-5 rounded-3xl bg-leaf-light p-5">
       <div className="flex items-center gap-4"><FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
         <div><h1 className="font-display text-4xl">Mathe-Labor</h1>
           <p>Wähle einen Lernbereich und probiere eine Aufgabe aus.</p></div></div>
+      <button type="button" className="mt-3 min-h-11 rounded-xl bg-white px-4 font-bold" onClick={()=>setSearchQuery("")}>Aufgabe finden</button>
       <LabSamples visit={visit} size={size} onStart={start} />
     </header>
     {notes.length>0 && <details className="mb-3 rounded-xl bg-white px-3">
@@ -176,10 +181,7 @@ export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: La
       {(Object.keys(learningGoals) as LearningGoal[]).filter(key => learningGoals[key].area === area).map(key =>
         <button key={key} className="mb-3 w-full rounded-2xl bg-sun-light p-3 text-left" onClick={() => startGoal(key)}>
           <strong>{learningGoals[key].title}</strong> · 3 Aufgaben</button>)}
-      <fieldset className="mb-2 flex flex-wrap gap-2"><legend className="text-sm font-bold">Umfang für die Einzelthemen</legend>
-        {([1,5] as const).map(n=><label key={n} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-3">
-          <input type="radio" name="einzelthemen-umfang" checked={size===n} onChange={()=>setSize(n)}/>
-          {n===1?"Eine Aufgabe":"Fünf Aufgaben"}</label>)}</fieldset>
+      <RoundSize size={size} onChange={setSize}/>
       <div className="grid gap-3 min-[380px]:grid-cols-2">
       {group.topics.map(topic => {
         const { Icon, color } = cards[topic];
@@ -207,7 +209,7 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay }: { round: LabRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay, backLabel }: { round: LabRound | MarbleRound | ReadingRound | TripRound | SchoolRound | ClinicRound | DivisionClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void; backLabel?: string }) {
   const [state, setState] = useState(round.state);
   const [remembered,setRemembered]=useState("");
   const { task, number, status, firstRight } = state;
@@ -241,12 +243,13 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Mar
       round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
       <Button tone="white" onClick={()=>{round.finish(false);onBack();}}>Abhaken und vom Merkzettel nehmen</Button></> :
       <><Button onClick={onReplay}>{round instanceof LabRound && round.size===1 ? "Noch eine neue Aufgabe zu diesem Thema" : marbles ? "Neuen Versuch starten" : corner ? "Neue Leseecke planen" : trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
-    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip || corner || marbles ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button></>}
+    <Button tone="white" onClick={onBack}>{backLabel ?? (school ? "Auftrag ansehen und ändern" : trip || corner || marbles ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen")}</Button></>}
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">
+    {backLabel && <button onClick={onBack} className="min-h-11 justify-self-start rounded-xl bg-white px-3">{backLabel}</button>}
     <header className="flex items-center justify-between gap-2">
-      <button onClick={onBack} aria-label="Runde beenden und Thema wählen" className="rounded-2xl bg-white p-3"><X aria-hidden /></button>
+      {!backLabel && <button onClick={onBack} aria-label="Runde beenden und Thema wählen" className="rounded-2xl bg-white p-3"><X aria-hidden /></button>}
       <span className="font-display text-xl">{title}</span><span>Aufgabe {number} von {round.count}</span>
     </header>
     <progress value={number - 1} max={round.count} aria-label="Erledigte Aufgaben" className="h-3 w-full accent-green-600" />
