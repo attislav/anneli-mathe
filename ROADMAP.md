@@ -335,6 +335,8 @@ Der Lernbericht führt das Schätzlabor unter „Schätzungen durch Messen prüf
 
 „Mal-Feld zerlegen“ lässt Kinder eine eigene Trennlinie im Punktefeld wählen, die beiden Teilprodukte bestimmen und sie zusammenrechnen. Später können sie zwischen einer Teilung nach Reihen oder Spalten wählen. Die Kompetenz „Mal-Felder zerlegen“ ist im Einmaleins-Zirkus, Labor und Schulauftrag verfügbar.
 
+In der Fragenwerkstatt bauen Kinder zu drei Mengen im Obstkorb oder Tierheim eine eigene Summen- oder Unterschiedsfrage. Sie wählen die passenden Gruppen und das Rechenzeichen und lösen ihre Rechnung. Der Lernbericht erfasst den Erstversuch unter „Sachaufgaben“. Die Werkstatt ist im Detektivbüro, Labor und Schulauftrag verfügbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

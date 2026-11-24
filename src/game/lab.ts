@@ -3,7 +3,7 @@ import { baskets, calendar, cubeModel, machine } from "./discovery";
 import { numberPairs } from "./numberPuzzles";
 import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
-import { classSurvey } from "./skillsDetektiv";
+import { classSurvey, writeQuestion } from "./skillsDetektiv";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -19,6 +19,7 @@ import type { Level, Task, TaskDraft } from "./types";
 export const LAB_COUNT = 5;
 type Topic = { title: string; prompt: string; skillId: string; generate: (level: Level) => TaskDraft };
 export const LAB_TOPICS = {
+  questions: { title: "Fragenwerkstatt", prompt: "Baue deine Frage und löse sie.", skillId: "sachaufgaben", generate: writeQuestion },
   split: { title: "Mal-Feld zerlegen", prompt: "Teile ein großes Punktefeld in zwei kleine.", skillId: "malZerlegen", generate: splitArray },
   rope: { title: "Schätzlabor", prompt: "Schätze eine Schnur und miss nach.", skillId: "schaetzungPruefen", generate: estimateRope },
   viewpoint: { title: "Wer sieht was?", prompt: "Schau von verschiedenen Seiten auf den Tisch.", skillId: "standpunkte", generate: tableView },

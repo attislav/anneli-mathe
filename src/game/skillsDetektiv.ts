@@ -2,7 +2,7 @@
 // Säulendiagramme, Rechengeschichten, Möglichkeiten zählen, Fehler finden.
 
 import { plausible } from "./discovery";
-import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft } from "./types";
+import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft, WriteQuestionTask } from "./types";
 import { surveyAnswer, surveyRows } from "./survey";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
@@ -238,6 +238,15 @@ function story(ctx: GenCtx, question: string, answer: number, unit: string, hint
   return numeric(ctx, `? ${unit}`, answer, { question, hint, solution });
 }
 
+export function writeQuestion(level: Level): Omit<WriteQuestionTask, "id" | "skillId" | "level"> {
+  const scene = chance(0.5) ? "fruit" : "pets";
+  const groups = shuffle(THEMES[scene === "fruit" ? 0 : 1].rows).slice(0, 3).map(([icon, label]) =>
+    ({ icon, label, value: randInt(2, [6, 9, 15, 25, 45][level - 1]) }));
+  return { format: "write-question", scene, groups, question: "Welche Frage möchtest du stellen?",
+    hint: "Wähle zwei Gruppen. Möchtest du sie zusammenzählen oder miteinander vergleichen?",
+    solution: "Die beiden gewählten Gruppen bestimmen die Zahlen. Für die Gesamtzahl addierst du, für den Unterschied ziehst du die kleinere Anzahl von der größeren ab." };
+}
+
 const sachaufgaben: Skill = {
   id: "sachaufgaben",
   title: "Sachaufgaben",
@@ -250,6 +259,7 @@ const sachaufgaben: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const [n1, n2] = shuffle(NAMES);
+    if (!ctx.avoid.includes("write-question") && chance(0.35)) return writeQuestion(level);
     const thing = pick(THINGS);
     if (level < 5 && !ctx.avoid.includes("story-math") && chance(0.45)) return storyMath(level, n1, n2, thing);
     if (level === 1) {

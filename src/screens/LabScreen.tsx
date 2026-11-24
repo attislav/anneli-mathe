@@ -18,6 +18,7 @@ import { Onboarding } from "./Onboarding";
 import { ProfilePicker } from "./ProfilePicker";
 
 const cards = {
+  questions: { Icon: ListChecks, color: "bg-grape-light" },
   split: { Icon: Grid3X3, color: "bg-leaf-light" },
   rope: { Icon: Route, color: "bg-sun-light" },
   viewpoint: { Icon: Route, color: "bg-sky-light" },
