@@ -359,6 +359,8 @@ Beim Lageplan lesen Kinder Koordinaten und deuten Ortszeichen mit einer Bildlege
 
 Die Partnerwerkstatt im Labor lässt zwei Kinder am selben Gerät eine Zahlenmauer erfinden und lösen. Das erste Kind prüft seine Rechnungen und verdeckt einen Stein. Nach der Übergabe sucht das zweite Kind die fehlende Zahl. Beim Rollentausch beginnt eine leere Mauer. Das gemeinsame Rätsel wird nicht gespeichert oder bewertet.
 
+An der Saftstation füllen Kinder Saft mit ganzen und halben Litern ab und können die letzte Portion zurücknehmen. Sie sagen voraus, wie sich Menge und Füllhöhe beim Umgießen in ein anderes Gefäß verhalten. Die Kompetenz „Füllmengen vergleichen“ ist in der Mess-Werkstatt, im Labor und im Schulauftrag verfügbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

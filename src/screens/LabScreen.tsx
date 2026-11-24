@@ -38,6 +38,7 @@ const cards = {
   ways: { Icon: Route, color: "bg-leaf-light" },
   methods: { Icon: SquarePlus, color: "bg-coin-light" },
   map: { Icon: Grid3X3, color: "bg-sky-light" },
+  juice: { Icon: FlaskConical, color: "bg-coin-light" },
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },

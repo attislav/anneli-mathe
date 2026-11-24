@@ -15,6 +15,8 @@ import { calculation, checkWay, freshWay, twoWays } from "../src/game/twoWays";
 import { checkSite, directNeighbor, landmarks, mapCoordinate, siteMap, siteMatches } from "../src/game/siteMap";
 import { SiteMap } from "../src/lesson/SiteMap";
 import { freshWall, wallMove, wallProblem } from "../src/game/partnerWall";
+import { addMeasure, checkTransfer, juice, litres, poured, vesselSize } from "../src/game/juice";
+import { JuiceVessels } from "../src/lesson/Juice";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
@@ -34,8 +36,39 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { juice: "juice", map: "site-map", methods: "two-ways", ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const { narrow, wide } = vesselSize;
+assert.equal(narrow.stepHeight * narrow.width, wide.stepHeight * wide.width);
+assert.ok(narrow.stepHeight > wide.stepHeight);
+for (const level of [1,2,3,4,5] as Level[]) {
+  for (const fraction of [0,0.3,0.6,0.999]) {
+    const random = mock.method(Math, "random", () => fraction);
+    const task = juice(level);
+    random.mock.restore();
+    const singleMeasures = Array<number>(task.target).fill(1);
+    const mixedMeasures = [2, ...singleMeasures.slice(2)];
+    for (const measures of [singleMeasures,mixedMeasures]) {
+      const steps = measures.reduce<number[]>((s, n) => addMeasure(s, n as 1 | 2, task.capacity), []);
+      assert.equal(poured(steps), task.target);
+      assert.equal(poured(steps.slice(0,-1)), task.target - measures.at(-1)!);
+    }
+    for (const source of ["narrow","wide"] as const) {
+      const correct = source === "narrow" ? "before" : "after";
+      assert.equal(checkTransfer({ ...task, source }, task.target, correct), null);
+      assert.ok(checkTransfer({ ...task, source }, task.target + 1, correct));
+      assert.ok(checkTransfer({ ...task, source }, task.target, "same"));
+      const markup = renderToStaticMarkup(createElement(JuiceVessels, { capacity: task.capacity, first: source, amounts: [0,task.target] }));
+      assert.ok(markup.includes(litres(task.target)));
+    }
+  }
+}
+const full = [2,2], almost = [2,1];
+assert.equal(addMeasure(full, 1, 4), full);
+assert.equal(addMeasure(almost, 2, 4), almost);
+assert.deepEqual(addMeasure(almost, 1, 4), [2,1,1]);
+assert.equal(litres(3), "1½ Liter");
 
 const wallsBefore = new Map(values);
 const wallWriteSpy = mock.method(storage, "setItem");
