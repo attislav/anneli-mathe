@@ -73,6 +73,7 @@ export function taskContentKey(t: TaskDraftWithSkill) {
   if (t.format === "draw-bag") return JSON.stringify([t.format,[...t.bag].sort(),t.first,t.next]);
   if (t.format === "digit-swap") return JSON.stringify([t.format,t.min,t.max,[...t.digits].sort()]);
   if (t.format === "parcel-mass") return JSON.stringify([t.format,t.mass,t.other]);
+  if (t.format === "fold-corner") return JSON.stringify([t.format,t.first,t.second]);
   if (t.format === "pencil-orders") return JSON.stringify([t.format,t.packs,t.singles,t.orders,t.optimize]);
   if (t.format === "open-votes") return JSON.stringify([t.format,t.claim,t.first,t.second,t.open]);
   if (t.format === "repack") return JSON.stringify([t.format,t.first,t.transfer]);

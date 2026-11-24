@@ -62,6 +62,7 @@ import { ParcelMass } from "./ParcelMass";
 import { EqualFence } from "./EqualFence";
 import { GardenFence } from "./GardenFence";
 import { WheelOrders } from "./WheelOrders";
+import { FoldCorner } from "./FoldCorner";
 import { PencilOrders } from "./PencilOrders";
 import { OpenVotes } from "./OpenVotes";
 import { Repack } from "./Repack";
@@ -150,6 +151,8 @@ export function TaskView(props: FormatProps<Task>) {
       return <GardenFence {...props} task={task} />;
     case "wheel-orders":
       return <WheelOrders {...props} task={task} />;
+    case "fold-corner":
+      return <FoldCorner {...props} task={task} />;
     case "pencil-orders":
       return <PencilOrders {...props} task={task} />;
     case "open-votes":

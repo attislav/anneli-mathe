@@ -10,6 +10,7 @@ import { tableView } from "./tableView";
 import { siteMap } from "./siteMap";
 import { tower } from "./tower";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
+import { foldCorner } from "./foldCorner";
 import { geoBoard } from "./geoBoard";
 import { foldLines } from "./foldLines";
 import { chance, pick, randInt, shuffle } from "./random";
@@ -227,4 +228,6 @@ const musterbausteine:Skill={ id:"musterbausteine", title:"Musterbausteine erken
 const figurenWachstum:Skill={ id:"figurenWachstum", title:"Wachsende Figuren untersuchen", world:"ozean", gen:({level})=>growingFigure(level) };
 const wuerfelKippen:Skill={ id:"wuerfelKippen", title:"Würfeldrehungen vorstellen", world:"ozean", gen:({level})=>rollCube(level) };
 const schleifen:Skill={ id:"schleifen", title:"Wege mit Wiederholungen beschreiben", world:"ozean", gen:({level})=>stairProgram(level) };
-export const OZEAN_SKILLS: Skill[] = [schleifen, wuerfelKippen, figurenWachstum, musterbausteine, figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];
+const winkelPruefen: Skill = { id: "winkelPruefen", title: "Rechte Winkel mit einer Falt-Ecke prüfen", world: "ozean", gen: ({ level }) => foldCorner(level) };
+
+export const OZEAN_SKILLS: Skill[] = [winkelPruefen, schleifen, wuerfelKippen, figurenWachstum, musterbausteine, figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];

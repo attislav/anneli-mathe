@@ -81,6 +81,7 @@ const cards = {
   receipt: { Icon: ShoppingBasket, color: "bg-coin-light" },
   attributes: { Icon: Grid3X3, color: "bg-grape-light" },
   targetSteps: { Icon: SquarePlus, color: "bg-sky-light" },
+  foldCorner: { Icon: Grid3X3, color: "bg-sky-light" },
   pegs: { Icon: Grid3X3, color: "bg-sun-light" },
   strips: { Icon: Blocks, color: "bg-grape-light" },
   estimateLine: { Icon: Route, color: "bg-sky-light" },

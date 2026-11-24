@@ -35,6 +35,7 @@ import { weekly } from "./weekly";
 import { symbolCode } from "./symbolCode";
 import { freshLabMaterial, materialHash } from "./freshLabMaterial";
 import { targetSteps } from "./targetSteps";
+import { foldCorner } from "./foldCorner";
 import { geoBoard } from "./geoBoard";
 import { storyStrips } from "./storyStrips";
 import { lineEstimate } from "./lineEstimate";
@@ -103,6 +104,7 @@ export const LAB_TOPICS = {
   receipt: { title:"Stimmt der Kassenbon?", prompt:"Vergleiche Warenkorb, Preisschilder und Kassenbon.", skillId:"kassenbon", generate:receipt },
   attributes: { title:"Welche Eigenschaften passen?", prompt:"Sortiere Karten nach Form und Muster und zähle über zwei Felder.", skillId:"merkmaleSortieren", generate:attributeSort },
   targetSteps: { title: "Zielzahl in zwei Schritten", prompt: "Lege drei Karten und finde deinen Weg zur Zielzahl.", skillId: "zielzahlWege", generate: targetSteps },
+  foldCorner: { title: "Ecken prüfen mit der Falt-Ecke", prompt: "Lege eine Papierecke an und finde rechte Winkel in einer neuen Figur.", skillId: "winkelPruefen", generate: foldCorner },
   pegs: { title: "Geobrett", prompt: "Spanne ein Rechteck und ein Quadrat mit passenden Seitenlängen.", skillId: "figurenSpannen", generate: geoBoard },
   strips: { title: "Eine Geschichte mit Streifen legen", prompt: "Lege die Angaben in einen Streifenplan und baue eine passende Rechnung.", skillId: "sachaufgaben", generate: storyStrips },
   estimateLine: { title: "Wo ungefähr liegt die Zahl?", prompt: "Schätze die Lage auf dem Zahlenstrahl und vergleiche die Abstände.", skillId: "zahlenstrahl", generate: lineEstimate },
@@ -189,12 +191,18 @@ export class LabRound extends LabSession {
     const usedBeds: import("./equalFence").BedInvestigation[]=[];
     const usedPacks: import("./repack").Packing[]=[];
     const usedOrders: import("./pencilOrders").PencilOrder[]=[];
+    const usedCorners: import("./foldCorner").CornerStudy[]=[];
     const usedVotes: import("./openVotes").VoteSituation[]=[];
     super(owner, size, () => {
       if(size===1 && previous!==undefined) return freshLabMaterial(()=>makeLabTask(topic),previous);
       if(size===5 && topic==="pencils") return makeLabTask(topic,undefined,level=>{
         const job=pencilOrders(level,usedOrders);
         usedOrders.push(job);
+        return job;
+      });
+      if(size===5 && topic==="foldCorner") return makeLabTask(topic,undefined,level=>{
+        const job=foldCorner(level,usedCorners);
+        usedCorners.push(job);
         return job;
       });
       if(size===5 && topic==="openVotes") return makeLabTask(topic,undefined,level=>{
