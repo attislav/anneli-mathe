@@ -26,7 +26,7 @@ function strip(task: Task): TaskDraftWithSkill {
   return rest as TaskDraftWithSkill;
 }
 
-function keyOf(t: TaskDraftWithSkill) {
+export function taskContentKey(t: TaskDraftWithSkill) {
   if (t.format === "write-question") return JSON.stringify([t.skillId, t.format, t.scene, t.groups]);
   if (t.format === "split-array") return JSON.stringify([t.skillId, t.format, t.rows, t.cols, t.axis]);
   if (t.format === "estimate-rope") return JSON.stringify([t.skillId, t.format, t.length, t.unit]);
@@ -79,7 +79,7 @@ function keyOf(t: TaskDraftWithSkill) {
 export function notePractice(task: Task, correct: boolean): void {
   if (correct) return;
   const draft = strip(task);
-  const key = keyOf(draft);
+  const key = taskContentKey(draft);
   update((s) => {
     if (s.practice.some((p) => p.key === key)) return s;
     const item: PracticeItem = { key, task: draft, box: 0, due: inDays(INTERVALS[0]) };
@@ -89,7 +89,7 @@ export function notePractice(task: Task, correct: boolean): void {
 
 /** Nach dem ersten Versuch einer Aufgabe IN der Übungskiste. */
 export function reviewPractice(task: Task, correct: boolean): void {
-  const key = keyOf(strip(task));
+  const key = taskContentKey(strip(task));
   update((s) => {
     const practice = s.practice.flatMap((p): PracticeItem[] => {
       if (p.key !== key) return [p];

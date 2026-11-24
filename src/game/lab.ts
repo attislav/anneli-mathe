@@ -20,6 +20,8 @@ import { remainders } from "./remainders";
 import { balance } from "./balance";
 import { weekly } from "./weekly";
 import { symbolCode } from "./symbolCode";
+import { contentHash } from "./labNotes";
+import { taskContentKey } from "./practice";
 import { drawBag } from "./drawBag";
 import { digitSwap } from "./digitSwap";
 import { parcelMass } from "./parcelMass";
@@ -82,9 +84,9 @@ export const LAB_TOPICS = {
   route: { title: "Rasterwege", prompt: "Folge den Pfeilen auf der Karte.", skillId: "rasterwege", generate: (level) => getSkill("rasterwege").gen({ level, avoid: [] }) },
 } satisfies Record<LabTopic, Topic>;
 
-export function makeLabTask(topic: LabTopic): Task {
+export function makeLabTask(topic: LabTopic, requestedLevel?:Level): Task {
   const { skillId, generate } = LAB_TOPICS[topic];
-  const level = Math.min(5, Math.max(1, Math.round(masteryOf(readSave(), skillId)))) as Level;
+  const level = requestedLevel ?? Math.min(5, Math.max(1, Math.round(masteryOf(readSave(), skillId)))) as Level;
   return { ...generate(level), skillId, level, id: uid() };
 }
 
@@ -98,7 +100,7 @@ export class LabSession {
   state: LabState;
   private shownAt = Date.now();
 
-  constructor(private readonly owner: string, readonly count: number, private readonly taskAt: (number: number) => Task) {
+  constructor(protected readonly owner: string, readonly count: number, private readonly taskAt: (number: number) => Task) {
     this.state = { task: taskAt(1), number: 1, status: "ask", retry: false, firstRight: 0 };
   }
 
@@ -133,6 +135,13 @@ export class LabSession {
 }
 
 export class LabRound extends LabSession {
+  remember(taskId:string) {
+    const {task,status}=this.state;
+    if(this.owner!==activeProfileId() || taskId!==task.id || (status!=="right" && status!=="reveal"))return false;
+    const note={topic:this.topic,level:task.level,source:contentHash(taskContentKey(task))};
+    update(save=>({...save,labNotes:[...save.labNotes.filter(n=>n.topic!==this.topic),note]}));
+    return true;
+  }
   constructor(readonly topic: LabTopic, owner: string) {
     super(owner, LAB_COUNT, () => makeLabTask(topic));
   }

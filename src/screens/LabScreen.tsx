@@ -25,6 +25,8 @@ import { PartnerTrail } from "./PartnerTrail";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
 import { DrawRoute } from "@/lesson/ChangeRoute";
 import { GoalParts } from "@/lesson/GoalParts";
+import { LabNoteRound, removeLabNote } from "@/game/labNoteRound";
+import type { LabNote } from "@/game/labNotes";
 import { ThinkFurther } from "@/lesson/ThinkFurther";
 import { thinkFurther } from "@/game/thinkFurther";
 
@@ -75,15 +77,15 @@ export function LabScreen() {
   if (needsProfilePick()) return <ProfilePicker />;
   if (!save.profile) return <Onboarding />;
   const owner = activeProfileId();
-  return <LabMenu key={owner} owner={owner} topics={save.schoolTopics} />;
+  return <LabMenu key={owner} owner={owner} topics={save.schoolTopics} notes={save.labNotes} />;
 }
 
-export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
+export function LabMenu({ owner, topics, notes=[] }: { owner: string; topics: LabTopic[]; notes?:LabNote[] }) {
   const [partner, setPartner] = useState<"menu"|"wall"|"survey"|"trail"|null>(null);
   const [visit] = useState(() => new SampleVisit());
   const [area, setArea] = useState(() => lastLabArea(owner));
   const group = LAB_GROUPS[area];
-  const [round, setRound] = useState<LabRound | TripRound | LearningRound | null>(null);
+  const [round, setRound] = useState<LabRound | TripRound | LearningRound | LabNoteRound | null>(null);
   const chooseArea = (i: number) => { setArea(i); rememberLabArea(owner,i); };
   const start = (topic: LabTopic) => {
     chooseArea(LAB_GROUPS.findIndex(g => (g.topics as readonly LabTopic[]).includes(topic)));
@@ -102,7 +104,7 @@ export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }
     <Button tone="white" onClick={()=>setPartner("trail")}>Eine Fehlerspur bauen</Button>
   </main>;
   if (round) return <LabActivity key={round.id} round={round}
-    onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;
+    onBack={() => setRound(null)} onReplay={round instanceof LabNoteRound ? () => setRound(null) : round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
     <header className="mb-5 rounded-3xl bg-leaf-light p-5">
       <div className="flex items-center gap-4"><FlaskConical aria-hidden size={46} className="shrink-0 text-leaf-dark" />
@@ -110,6 +112,15 @@ export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }
           <p>Wähle einen Lernbereich und probiere eine Aufgabe aus.</p></div></div>
       <LabSamples visit={visit} onStart={start} />
     </header>
+    {notes.length>0 && <details className="mb-3 rounded-xl bg-white px-3">
+      <summary className="cursor-pointer py-3 font-bold">Mein Merkzettel ({notes.length})</summary>
+      <ul className="grid gap-2 pb-3">{notes.map(note=><li key={note.topic} className="grid gap-1 rounded-xl border-2 p-1"><button type="button"
+        aria-label={LAB_TOPICS[note.topic].title+" auf Stufe "+note.level+" üben"}
+        className="grid min-h-11 w-full rounded-xl bg-sky-light p-2 text-left" onClick={()=>setRound(new LabNoteRound(owner,note))}>
+        <strong>{LAB_TOPICS[note.topic].title} · Stufe {note.level}</strong><span>{LAB_TOPICS[note.topic].prompt}</span></button>
+        <button type="button" className="min-h-11 justify-self-start px-2 underline" aria-label={LAB_TOPICS[note.topic].title+" vom Merkzettel nehmen"}
+          onClick={()=>removeLabNote(owner,note)}>Vom Merkzettel nehmen</button></li>)}</ul>
+    </details>}
     <Link href={SCHOOL_PATH} className="mb-2 block rounded-2xl bg-grape-light px-4 py-2">
       <span className="font-display text-xl">Mein Schulauftrag</span>
       <span className="ml-2 text-sm">{topics.length ? topics.map(t => LAB_TOPICS[t].title).join(" · ") : "Themen auswählen"}</span>
@@ -157,14 +168,15 @@ function TripNote({ round, completed }: { round: TripRound; completed: number })
   </section>;
 }
 
-export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | StrategyRound | LearningRound; onBack: () => void; onReplay: () => void }) {
+export function LabActivity({ round, onBack, onReplay }: { round: LabRound | TripRound | SchoolRound | ClinicRound | StrategyRound | LearningRound | LabNoteRound; onBack: () => void; onReplay: () => void }) {
   const [state, setState] = useState(round.state);
+  const [remembered,setRemembered]=useState("");
   const { task, number, status, firstRight } = state;
   const trip = round instanceof TripRound ? round : null;
   const school = round instanceof SchoolRound ? round : null;
   const clinic = round instanceof ClinicRound;
   const savedStrategy = round instanceof StrategyRound;
-  const title = round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
+  const title = round instanceof LabNoteRound ? LAB_TOPICS[round.note.topic].title : round instanceof LabRound ? LAB_TOPICS[round.topic].title : round instanceof LearningRound ? learningGoals[round.goal].title :
     school ? "Mein Schulauftrag" : clinic ? "Mathe-Sprechstunde" : savedStrategy ? "Mein Rechenweg" : "Unser Klassenausflug";
   const heading = useRef<HTMLHeadingElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
@@ -182,8 +194,10 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
     </ul>}
     <p>{title} · {firstRight} von {round.count} gleich beim ersten Versuch gelöst.</p>
     {round instanceof LearningRound && <ThinkFurther key={round.id} item={thinkFurther(round)}/>}
-    <Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
-    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button>
+    {round instanceof LabNoteRound ? <><Button onClick={()=>{round.finish(true);onBack();}}>Auf meinem Merkzettel behalten</Button>
+      <Button tone="white" onClick={()=>{round.finish(false);onBack();}}>Abhaken und vom Merkzettel nehmen</Button></> :
+      <><Button onClick={onReplay}>{trip ? "Neuen Ausflug planen" : clinic || savedStrategy ? "Mit anderen Zahlen üben" : "Noch eine Runde"}</Button>
+    <Button tone="white" onClick={onBack}>{school ? "Auftrag ansehen und ändern" : trip ? "Zurück zum Labor" : clinic ? "Zur Sprechstunde" : savedStrategy ? "Zu meinen Rechenwegen" : "Anderes Thema wählen"}</Button></>}
   </main>;
 
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-4 pb-10">
@@ -208,6 +222,9 @@ export function LabActivity({ round, onBack, onReplay }: { round: LabRound | Tri
     {status !== "ask" && <div ref={feedback} tabIndex={-1} className="grid gap-3 rounded-3xl bg-white p-4">
       <h2 className="font-display text-xl">{status === "right" ? "Richtig!" : status === "wrong" ? "Ein Tipp für dich" : "So geht es"}</h2>
       {status !== "right" && <p>{status === "wrong" ? state.hint || task.hint : task.solution}</p>}
+      {round instanceof LabRound && (status==="right" || status==="reveal") &&
+        <button type="button" className="min-h-11 rounded-xl border-2 px-2" disabled={remembered===task.id}
+          onClick={()=>{if(round.remember(task.id))setRemembered(task.id);}}>{remembered===task.id?"Auf deinem Merkzettel":"Das möchte ich nochmal üben"}</button>}
       <Button size="md" onClick={() => setState(round.advance(task.id))}>
         {status === "wrong" ? "Noch einmal versuchen" : number === round.count ? (trip ? "Ausflugsplan ansehen" : "Runde abschließen") : "Nächste Aufgabe"}
       </Button>
