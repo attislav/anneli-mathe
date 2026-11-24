@@ -339,6 +339,8 @@ In der Fragenwerkstatt bauen Kinder zu drei Mengen im Obstkorb oder Tierheim ein
 
 Unter „Meine Rechenwege“ können Kinder nach einer eigenen Mal-Feld-Zerlegung oder Frage freiwillig ihren Weg merken. Das Labor verwendet dieselbe Trennlinie oder dieselben gewählten Gruppen für Aufgaben mit neuen Zahlen. Die Merkliste gehört zum jeweiligen Profil und reist im Spielstand-Code mit.
 
+Beim Einkaufsvergleich prüfen Kinder, welcher Laden alle Waren auf dem Zettel hat. Sie addieren die vollständigen Preise, vergleichen die Summen und ermitteln die Ersparnis. Das Thema ist im Geld-Hafen, im Labor und im Schulauftrag verfügbar.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

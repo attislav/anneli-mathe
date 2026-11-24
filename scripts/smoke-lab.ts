@@ -3,6 +3,7 @@ import { mock } from "node:test";
 import { firstIncorrectGap, hundredWindow, windowHint, windowValue } from "../src/game/hundredWindow";
 import { busJourney, busTable, checkBus } from "../src/game/busTable";
 import { classSurvey } from "../src/game/skillsDetektiv";
+import { checkShopList, shopList, shopSolution } from "../src/game/shopList";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -21,8 +22,35 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+const goods = ["Apfel", "Birne"];
+const offers = [{ name: "Mond", prices: [5, 40] }, { name: "Sonne", prices: [15, 20] }, { name: "Stern", prices: [1, null] }];
+for (const stores of [offers, [offers[2], offers[0], offers[1]], [offers[1], offers[2], offers[0]]]) {
+  const catalog = { goods, stores };
+  const entry = { available: stores.map(s => s.name !== "Stern"), totals: stores.map(s => s.name === "Mond" ? "45" : s.name === "Sonne" ? "35" : ""),
+    winner: String(stores.indexOf(offers[1])), saving: "10" };
+  assert.ok(checkShopList(catalog, entry).correct);
+  assert.equal(checkShopList(catalog, { ...entry, available: stores.map(() => true) }).correct, false);
+  assert.equal(checkShopList(catalog, { ...entry, winner: String(stores.indexOf(offers[0])) }).correct, false);
+  assert.equal(checkShopList(catalog, { ...entry, saving: "11" }).correct, false);
+  assert.equal(checkShopList(catalog, { ...entry, totals: stores.map(() => "35") }).correct, false);
+}
+const equalStores = { goods, stores: [offers[0], { name: "Sonne", prices: [25, 20] }] };
+const equalEntry = { available: [true, true], totals: ["45", "45"], winner: "tie", saving: "0" };
+assert.ok(checkShopList(equalStores, equalEntry).correct);
+assert.equal(checkShopList(equalStores, { ...equalEntry, winner: "0" }).correct, false);
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  for (let i = 0; i < 40; i++) {
+    const catalog = shopList(level);
+    const { totals } = shopSolution(catalog);
+    assert.equal(catalog.goods.length, level <= 2 ? 2 : 3);
+    assert.equal(catalog.stores.length, level <= 2 ? 2 : 3);
+    assert.equal(totals.filter(n => n !== null).length, 2);
+    assert.ok(totals.every(n => n === null || n > 0 && n <= 100));
+  }
+}
 
 const survey = { categories: [{ icon: "apfel" as const, label: "Äpfel" }, { icon: "birne" as const, label: "Birnen" }],
   votes: [0, 0, 1, 0, 0, 1, 0], target: 0, compare: null };
@@ -137,6 +165,7 @@ for (const topic of Object.keys(LAB_TOPICS) as LabTopic[]) {
   const round = new LabRound(topic, owner);
   const startLog = readSave().log.length;
   const skill = LAB_TOPICS[topic].skillId;
+  const previousCount = skillReports(readSave()).find(r => r.id === skill)?.count ?? 0;
   let mastery = readSave().mastery[skill] ?? 2;
   for (let n = 1; n <= LAB_COUNT; n++) {
     const { task } = round.state;
@@ -165,7 +194,7 @@ for (const topic of Object.keys(LAB_TOPICS) as LabTopic[]) {
   assert.equal(round.state.firstRight, 3);
   assert.equal(round.advance(round.state.task.id).number, LAB_COUNT);
   const report = skillReports(readSave()).find(r => r.id === skill);
-  assert.equal(report?.count, 5);
+  assert.equal(report?.count, previousCount + LAB_COUNT);
   assert.equal(report?.acc, 3 / 5);
 }
 let tripSeed = 1234;
@@ -244,4 +273,4 @@ switchProfile(owner);
 assert.equal(siblingRound.advance(siblingRound.state.task.id).status, "right");
 assert.deepEqual(readSave(), after);
 assert.equal(readProfileSave(sibling)?.log.length, 1);
-console.log("Fünfzehn Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.");
+console.log(`${Object.keys(LAB_TOPICS).length} Labor-Themen, fünf Aufgaben, Erstversuche, Profile, Lernbericht und Pfadfortschritt geprüft.`);

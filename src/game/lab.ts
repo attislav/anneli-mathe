@@ -4,6 +4,7 @@ import { numberPairs } from "./numberPuzzles";
 import { hundredWindow } from "./hundredWindow";
 import { busTable } from "./busTable";
 import { classSurvey, writeQuestion } from "./skillsDetektiv";
+import { shopList } from "./shopList";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -31,6 +32,7 @@ export const LAB_TOPICS = {
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },
+  shops: { title: "Einkaufszettel vergleichen", prompt: "Vergleiche die Preise für deinen ganzen Zettel.", skillId: "einkaufen", generate: shopList },
   calendar: { title: "Kalender", prompt: "Springe von Tag zu Tag.", skillId: "kalender", generate: calendar },
   pairs: { title: "Zahlenpaare", prompt: "Welche Karten gehören zusammen?", skillId: "freunde10", generate: (level) => numberPairs(level >= 4 ? 20 : 10, "+") },
   route: { title: "Rasterwege", prompt: "Folge den Pfeilen auf der Karte.", skillId: "rasterwege", generate: (level) => getSkill("rasterwege").gen({ level, avoid: [] }) },

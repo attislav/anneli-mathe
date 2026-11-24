@@ -5,6 +5,7 @@
 // ganze Euro, damit die Zahlentastatur reicht.
 
 import { baskets } from "./discovery";
+import { shopList } from "./shopList";
 import type { CompareTask, TaskDraft } from "./types";
 import { chance, numberOptions, pick, randInt, shuffle } from "./random";
 import { chooseFormat, type GenCtx, type Skill, type Texts } from "./genkit";
@@ -149,6 +150,7 @@ const einkaufen: Skill = {
   },
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("shop-list") && chance(0.3)) return shopList(level);
     if (!ctx.avoid.includes("baskets") && chance(0.4)) return baskets(level);
     const a = item();
     if ((level === 2 || level === 5) && !ctx.avoid.includes("money-build") && chance(0.55)) {

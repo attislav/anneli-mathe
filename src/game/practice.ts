@@ -38,6 +38,7 @@ function keyOf(t: TaskDraftWithSkill) {
   if (t.format === "hundred-window") return JSON.stringify([t.skillId, t.format, t.start, t.size, t.gaps]);
   if (t.format === "length-strips") return JSON.stringify([t.skillId, t.format, t.target, [...t.lengths].sort((a,b) => a-b)]);
   if (t.format === "cube-model") return JSON.stringify([t.format,t.footprint,t.front]);
+  if (t.format === "shop-list") return JSON.stringify([t.format, t.goods, t.stores]);
   if (t.format === "baskets") return JSON.stringify([t.format,t.budget,t.prices]);
   if (t.format === "machine") return JSON.stringify([t.format,t.inputs,t.change,t.probe,t.reverse]);
   if (t.format === "calendar") return JSON.stringify([t.format,t.year,t.month,t.day,t.nights]);

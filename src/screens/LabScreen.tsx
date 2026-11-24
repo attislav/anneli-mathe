@@ -31,6 +31,7 @@ const cards = {
   machine: { Icon: Cpu, color: "bg-leaf-light" },
   cubes: { Icon: Blocks, color: "bg-grape-light" },
   shopping: { Icon: ShoppingBasket, color: "bg-coin-light" },
+  shops: { Icon: ListChecks, color: "bg-coin-light" },
   calendar: { Icon: CalendarDays, color: "bg-sky-light" },
   pairs: { Icon: SquarePlus, color: "bg-rose-light" },
   route: { Icon: Route, color: "bg-sun-light" },
