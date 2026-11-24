@@ -9,6 +9,7 @@
 //   - Rechenweg zeigt den Weg, nicht nur das Ergebnis.
 //   - Minuszeichen ist immer „−" (U+2212), nicht der Bindestrich.
 
+import { lineEstimate } from "./lineEstimate";
 import { digitSwap } from "./digitSwap";
 import { machine } from "./discovery";
 import { sumPacket } from "./sumPacket";
@@ -214,6 +215,7 @@ const zahlenstrahl: Skill = {
   world: "wald",
   gen: (ctx) => {
     const { level } = ctx;
+    if (!ctx.avoid.includes("line-estimate") && chance(0.3)) return lineEstimate(level);
     let from: number, to: number, step: number, labels: number[];
     if (level === 1) [from, to, step, labels] = [0, 10, 1, [0, 5, 10]];
     else if (level === 2) [from, to, step, labels] = [0, 100, 10, [0, 50, 100]];
