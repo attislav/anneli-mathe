@@ -359,6 +359,8 @@ Beim Lageplan lesen Kinder Koordinaten und deuten Ortszeichen mit einer Bildlege
 
 Die Partnerwerkstatt im Labor lässt zwei Kinder am selben Gerät eine Zahlenmauer erfinden und lösen. Das erste Kind prüft seine Rechnungen und verdeckt einen Stein. Nach der Übergabe sucht das zweite Kind die fehlende Zahl. Beim Rollentausch beginnt eine leere Mauer. Das gemeinsame Rätsel wird nicht gespeichert oder bewertet.
 
+Mit „Unsere Umfrage“ wählen Kinder ein Thema und zwei Möglichkeiten und sammeln anonyme Stimmen. Das erste Kind stellt eine Frage zu Stimmenzahl, Unterschied oder Gleichstand und prüft seine Antwort. Nach der verdeckten Übergabe löst das zweite Kind die Frage mit dem Diagramm. Alle Stimmen bleiben nur bis zum Verlassen oder Rollentausch im Arbeitsspeicher.
+
 An der Saftstation füllen Kinder Saft mit ganzen und halben Litern ab und können die letzte Portion zurücknehmen. Sie sagen voraus, wie sich Menge und Füllhöhe beim Umgießen in ein anderes Gefäß verhalten. Die Kompetenz „Füllmengen vergleichen“ ist in der Mess-Werkstatt, im Labor und im Schulauftrag verfügbar.
 
 Im Bauauftrag „Aussichtsturm umbauen“ verändern Kinder einen Höhenplan mit vier Feldern. Sie verwalten den Würfelvorrat, legen die Seitenansicht aus einer angegebenen Blickrichtung und zählen auch die verdeckten Würfel. Das Thema „Baupläne und Seitenansichten“ ist im Formen-Ozean, Labor und Schulauftrag erreichbar.

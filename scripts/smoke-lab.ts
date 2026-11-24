@@ -27,6 +27,7 @@ import { balance, balanceHint, stonePile, stoneSum, tilt } from "../src/game/bal
 import { Scale } from "../src/lesson/Balance";
 import "./smoke-weekly";
 import "./smoke-pictogram";
+import "./smoke-partner-survey";
 import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { PartnerWallView } from "../src/screens/PartnerWall";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";

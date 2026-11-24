@@ -20,6 +20,7 @@ import { ProfilePicker } from "./ProfilePicker";
 import { SampleVisit } from "@/game/labSamples";
 import { LabSamples } from "./LabSamples";
 import { PartnerWall } from "./PartnerWall";
+import { PartnerSurvey } from "./PartnerSurvey";
 import { lastLabArea, learningGoals, LearningRound, rememberLabArea, type LearningGoal } from "@/game/learningGoals";
 import { GoalParts } from "@/lesson/GoalParts";
 
@@ -67,7 +68,7 @@ export function LabScreen() {
 }
 
 export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }) {
-  const [partner, setPartner] = useState(false);
+  const [partner, setPartner] = useState<"menu"|"wall"|"survey"|null>(null);
   const [visit] = useState(() => new SampleVisit());
   const [area, setArea] = useState(() => lastLabArea(owner));
   const group = LAB_GROUPS[area];
@@ -79,7 +80,14 @@ export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }
   };
   const startTrip = () => setRound(new TripRound(owner));
   const startGoal = (goal: LearningGoal) => setRound(new LearningRound(owner,goal));
-  if (partner) return <PartnerWall onBack={() => setPartner(false)} />;
+  if (partner === "wall") return <PartnerWall onBack={() => setPartner("menu")} />;
+  if (partner === "survey") return <PartnerSurvey onBack={() => setPartner("menu")} />;
+  if (partner === "menu") return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-3 bg-mist p-5">
+    <button className="min-h-11 justify-self-start underline" onClick={()=>setPartner(null)}>← Zum Labor</button>
+    <h1 className="font-display text-3xl">Partnerwerkstatt</h1><p>Ein Kind bereitet vor, das andere löst. Danach könnt ihr tauschen.</p>
+    <Button onClick={()=>setPartner("wall")}>Meine Zahlenmauer</Button>
+    <Button tone="sky" onClick={()=>setPartner("survey")}>Unsere Umfrage</Button>
+  </main>;
   if (round) return <LabActivity key={round.id} round={round}
     onBack={() => setRound(null)} onReplay={round instanceof TripRound ? startTrip : round instanceof LearningRound ? () => startGoal(round.goal) : () => start(round.topic)} />;
   return <main className="mx-auto min-h-dvh max-w-xl bg-mist px-4 pb-28 pt-6">
@@ -96,7 +104,7 @@ export function LabMenu({ owner, topics }: { owner: string; topics: LabTopic[] }
     <details className="mb-4 rounded-xl bg-white px-3"><summary className="cursor-pointer py-3">Projekte und Hilfen</summary>
       <div className="grid grid-cols-2 gap-1 pb-3">
         <button className="min-h-11 rounded-xl bg-sun-light px-2" onClick={startTrip}>Unser Klassenausflug</button>
-        <button className="min-h-11 rounded-xl bg-sky-light px-2" onClick={() => setPartner(true)}>Partnerwerkstatt</button>
+        <button className="min-h-11 rounded-xl bg-sky-light px-2" onClick={() => setPartner("menu")}>Partnerwerkstatt</button>
         <Link className="rounded-xl bg-mist p-2 text-center" href="/labor/rechenwege/">Meine Rechenwege</Link>
         <Link className="rounded-xl bg-mist p-2 text-center" href="/labor/sprechstunde/">Mathe-Sprechstunde</Link>
       </div></details>

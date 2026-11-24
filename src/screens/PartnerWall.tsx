@@ -11,7 +11,7 @@ export function PartnerWallView({ state, act, onBack }: { state: PartnerState; a
   const headings = { write: "Baue deine Zahlenmauer", choose: "Welchen Stein versteckst du?", pass: "Jetzt ist dein Partner dran",
     solve: "Welche Zahl fehlt?", done: "Mauer gelöst!" };
   return <main className="mx-auto grid min-h-dvh max-w-xl content-start gap-4 bg-mist p-5">
-    <button type="button" className="min-h-11 justify-self-start rounded-xl bg-white px-3" onClick={onBack}>← Zum Labor</button>
+    <button type="button" className="min-h-11 justify-self-start rounded-xl bg-white px-3" onClick={onBack}>← Zur Partnerwerkstatt</button>
     <h1 className="font-display text-3xl">{headings[phase]}</h1>
     {phase === "pass" ? <>
       <p>Gib das Gerät weiter. Öffne die Mauer, wenn du bereit zum Rätseln bist.</p>
