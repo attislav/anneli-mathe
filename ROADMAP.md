@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Bei „Ist eine Hälfte immer gleich groß?“ vergleichen Kinder Anteile zweier Tafeln aus gleich großen Kästchen. Sie schätzen zuerst, markieren dann ihre eigenen Teilmengen und vergleichen die Stückzahlen. In der Bäckerei und im Labor erreichbar.
+
 Bei „Wie wächst die Figur?“ ergänzen Kinder die dritte Figur und rechnen in konstanten Wachstumsschritten zu einer späteren Figur. Die Schlange verlängert eine Reihe, der Stiefel nur den Fuß (+1). Beim Doppelband und den zwei Flügeln wachsen zwei Enden (+2). Der Turm erhält eine Dreierreihe (+3).
 
 Im Laborprojekt „Wir richten eine Leseecke ein“ tragen Kinder ihren eigenen Grundriss über Bedarfsrechnung und Einkauf bis zum fertigen Leseeckenplan. Überschüssiges Material und Restgeld bleiben sichtbar.

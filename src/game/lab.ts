@@ -1,3 +1,4 @@
+import { portionCompare } from "./portionCompare";
 import { growingFigure } from "./growingFigure";
 import { patternRibbon } from "./patternRibbon";
 import { attributeSort } from "./attributeSort";
@@ -76,6 +77,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  portions: { title:"Ist eine Hälfte immer gleich groß?", prompt:"Markiere Anteile auf zwei Tafeln und vergleiche sie.", skillId:"anteileVergleichen", generate:portionCompare },
   growth: { title:"Wie wächst die Figur?", prompt:"Baue die nächste Figur und berechne eine spätere.", skillId:"figurenWachstum", generate:growingFigure },
   ribbon: { title:"Musterband erfinden", prompt:"Lege ein Band und finde seinen kürzesten Baustein.", skillId:"musterbausteine", generate:patternRibbon },
   receipt: { title:"Stimmt der Kassenbon?", prompt:"Vergleiche Warenkorb, Preisschilder und Kassenbon.", skillId:"kassenbon", generate:receipt },
