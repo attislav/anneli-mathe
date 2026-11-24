@@ -1,5 +1,6 @@
 // Welt 8 · Formen-Ozean — Formen, Körper, Spiegeln, Muster.
 
+import { patternRibbon } from "./patternRibbon";
 import { cubeModel } from "./discovery";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
@@ -219,4 +220,5 @@ const standpunkte: Skill = { id: "standpunkte", title: "Standpunkte wechseln", w
 const lageplan: Skill = { id: "lageplan", title: "Lageplan lesen", world: "ozean", gen: ({ level }) => siteMap(level) };
 const umbauplan: Skill = { id: "umbauplan", title: "Baupläne und Seitenansichten", world: "ozean", gen: ({ level }) => tower(level) };
 const figurenSpannen: Skill = { id:"figurenSpannen", title:"Figuren mit vorgegebenen Seiten spannen", world:"ozean", gen:({level})=>geoBoard(level) };
-export const OZEAN_SKILLS: Skill[] = [figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];
+const musterbausteine:Skill={ id:"musterbausteine", title:"Musterbausteine erkennen", world:"ozean", gen:({level})=>patternRibbon(level) };
+export const OZEAN_SKILLS: Skill[] = [musterbausteine, figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];

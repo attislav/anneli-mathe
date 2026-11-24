@@ -1,3 +1,4 @@
+import { patternRibbon } from "./patternRibbon";
 import { attributeSort } from "./attributeSort";
 import { updateMastery } from "./adaptive";
 import { baskets, calendar, cubeModel, machine } from "./discovery";
@@ -74,6 +75,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  ribbon: { title:"Musterband erfinden", prompt:"Lege ein Band und finde seinen kürzesten Baustein.", skillId:"musterbausteine", generate:patternRibbon },
   receipt: { title:"Stimmt der Kassenbon?", prompt:"Vergleiche Warenkorb, Preisschilder und Kassenbon.", skillId:"kassenbon", generate:receipt },
   attributes: { title:"Welche Eigenschaften passen?", prompt:"Sortiere Karten nach Form und Muster und zähle über zwei Felder.", skillId:"merkmaleSortieren", generate:attributeSort },
   targetSteps: { title: "Zielzahl in zwei Schritten", prompt: "Lege drei Karten und finde deinen Weg zur Zielzahl.", skillId: "zielzahlWege", generate: targetSteps },
