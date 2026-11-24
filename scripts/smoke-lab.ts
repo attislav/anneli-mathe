@@ -10,6 +10,7 @@ import { checkPlan, examplePlan, followValue, morningPlan, planSlots } from "../
 import { allowedPair, checkClaim, verdict, type Pair } from "../src/game/parityClaim";
 import { areaSamples, sampleAction, SampleVisit, samples, sampleFeedback } from "../src/game/labSamples";
 import { LAB_GROUPS } from "../src/game/schoolSelection";
+import { addHeading, checkWays, wayCards, wayTable } from "../src/game/wayTable";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -28,8 +29,30 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { ways: "way-table", claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+for (const level of [1, 2, 3, 4, 5] as Level[]) {
+  const task = wayTable(level), keys = wayCards(task);
+  assert.deepEqual(new Set(task.cards), new Set(keys));
+  const count = String(keys.length - Number(task.blocked !== null));
+  const entries = Object.fromEntries(keys.toReversed().map(key => [key, key === task.blocked ? "closed" : key]));
+  assert.equal(checkWays(task, entries, count, "pairs"), null);
+  assert.ok(checkWays(task, entries, count, "parts"));
+  assert.ok(checkWays(task, entries, "10", "pairs"));
+  const [a, b] = keys.filter(k => k !== task.blocked);
+  assert.match(checkWays(task, { ...entries, [a]: b }, count, "pairs") ?? "", /doppelt/);
+  assert.match(checkWays(task, { ...entries, [a]: "" }, count, "pairs") ?? "", /fehlt/);
+  assert.match(checkWays(task, { ...entries, [a]: b, [b]: a }, count, "pairs") ?? "", /Überschriften/);
+  if (task.blocked) assert.match(checkWays(task, { ...entries, [task.blocked]: task.blocked }, count, "pairs") ?? "", /gesperrt/);
+}
+for (const a of [0,1,2]) for (const b of [0,1,2].filter(n => n !== a)) {
+  const first = addHeading([], a, 3);
+  assert.deepEqual(addHeading(first, a, 3), first);
+  const order = addHeading(first, b, 3);
+  assert.deepEqual(order.slice(0, 2), [a,b]);
+  assert.equal(new Set(order).size, 3);
+}
 
 const sampleVisit = new SampleVisit();
 const sampleWrites = mock.method(storage, "setItem");

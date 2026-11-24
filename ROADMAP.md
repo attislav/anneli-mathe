@@ -351,6 +351,8 @@ In „Plane deinen Vormittag“ ordnen Kinder Tätigkeiten um einen festen Morge
 
 Über „Was möchte ich üben?“ im Laborkopf probieren Kinder pro Bereich zwei konkrete Aufgaben aus. Jede Antwort und „Weiß ich noch nicht“ führen zu einer Erklärung. „Damit weiterüben“ öffnet eine neue Fünferrunde zum selben Thema. Die Proben bleiben unbewertet.
 
+Die Wege-Tabelle im Detektivbüro, Labor und Schulauftrag verbindet die Abschnitte eines Wegs von der Schule über die Bibliothek zum Park. Kinder ordnen ihre Überschriften selbst an, legen jede Kombination in das passende Feld und begründen die Anzahl der offenen Wege. Später ist eine Kombination gesperrt.
+
 **Regeln pro Paket:** `npm run smoke:game`, `npm run build`, `npm run lint` grün · Klicktest im Browser (Playwright) · Commit + Push · Häkchen hier setzen.
 
 **Bilder:** GPT Image 2.5, Variante *Sunburst*, Qualität *low* (Sticker, kleine Dinge) oder *medium* (Haustiere, Bosse, Ausmalbilder), transparenter Hintergrund, einheitlicher Stil-Prompt (siehe `src/game/art.ts`). Immer mit Vektor-Fallback, falls ein Bild nicht lädt.

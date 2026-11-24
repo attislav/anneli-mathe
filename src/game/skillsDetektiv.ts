@@ -5,6 +5,7 @@ import { plausible } from "./discovery";
 import type { DataIcon, DataRow, Level, SurveyTask, TaskDraft, WriteQuestionTask } from "./types";
 import { surveyAnswer, surveyRows } from "./survey";
 import { questionLimit, sceneCategories } from "./writeQuestion";
+import { wayTable } from "./wayTable";
 import { chance, pick, randInt, shuffle } from "./random";
 import { chooseFormat, numeric, type GenCtx, type Skill } from "./genkit";
 
@@ -383,6 +384,7 @@ const kombinatorik: Skill = {
   gen: (ctx) => {
     const { level } = ctx;
     const n = pick(NAMES);
+    if (!ctx.avoid.includes("way-table") && chance(0.4)) return wayTable(level);
     const pair = (a: number, b: number) => {
       const [x, y, q] = pick(COMBOS);
       const ans = a * b;
