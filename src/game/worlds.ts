@@ -89,7 +89,7 @@ export const WORLDS: World[] = [
       { id: "wald-4", kind: "chest", title: "Schatzkiste", skills: [], coloring: "eule" },
       { id: "wald-5", kind: "lesson", title: "Nachbarzahlen", skills: ["nachbarn"] },
       { id: "wald-6", kind: "lesson", title: "Zahlenreihen", skills: ["reihen"] },
-      { id: "wald-7", kind: "lesson", title: "Gerade & ungerade", skills: ["geradeUngerade"] },
+      { id: "wald-7", kind: "lesson", title: "Gerade & ungerade", skills: ["geradeUngerade", "zahlAussagen"] },
       { id: "wald-8", kind: "review", title: "Gemischt", skills: ["zehnerEiner", "zahlenstrahl", "vergleichen", "nachbarn", "reihen", "geradeUngerade"] },
       round2("wald-9", "Zehner & Einer 2", ["zehnerEiner"]),
       chest("wald-10"),

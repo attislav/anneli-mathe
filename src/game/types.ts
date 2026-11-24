@@ -8,6 +8,8 @@
 export type Level = 1 | 2 | 3 | 4 | 5;
 
 export type Format = Task["format"];
+export type PairRule = "even" | "odd" | "mixed" | "any" | "one-even" | "one-odd";
+export type ParityTask = TaskBase & { format: "parity-claim"; rule: PairRule; evenSum: boolean; limit: number };
 export type MorningTask = TaskBase & { format: "morning-plan"; start: number; duration: number; step: number;
   fixed: number; activities: { name: string; duration: number }[]; follow: "end" | "pause"; target: number };
 export type ChocolateTask = TaskBase & { format: "chocolate-share"; rows: number; cols: number; children: 2 | 4 };
@@ -214,7 +216,7 @@ export type ClockSetTask = TaskBase & {
   step: 5 | 15 | 30 | 60;
 };
 
-export type Task = MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
+export type Task = ParityTask | MorningTask | ChocolateTask | DetectiveTask | ShopListTask | WriteQuestionTask | SplitTask | RopeTask | ViewpointTask | PacketTask | TileTask | SnackTask | SurveyTask | BusTask | HundredWindowTask | StripTask | MachineTask | CubeTask | EstimateTask | BasketTask | CalendarTask | GridRouteTask | DigitBuildTask | PairTask | RuleTask | TwoStepTask | StoryMathTask | JumpTask | ExchangeTask | ArrayTask | ChoiceTask | InputTask | TensOnesTask | WallTask | NumberLineTask | CompareTask | MoneyBuildTask | ShareTask | ClockSetTask | MirrorTask | PatternTask | RulerTask | BarBuildTask;
 
 /** `Omit`, das über jede Variante einer Union einzeln läuft. */
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

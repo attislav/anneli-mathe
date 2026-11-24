@@ -7,6 +7,7 @@ import { checkShopList, shopList, shopSolution } from "../src/game/shopList";
 import { checkMarking, fitsClue, numberDetective } from "../src/game/numberDetective";
 import { checkPortions, checkShare, chocolate, examplePortions } from "../src/game/chocolate";
 import { checkPlan, examplePlan, followValue, morningPlan, planSlots } from "../src/game/morningPlan";
+import { allowedPair, checkClaim, verdict, type Pair } from "../src/game/parityClaim";
 import { createTrip, latestOnTime, snackPairFits, TripRound } from "../src/game/classTrip";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -25,8 +26,37 @@ Object.defineProperty(globalThis, "window", { value: { localStorage: storage, se
 createProfile({ name: "Lina", pet: "funkel", petName: "Lumi" }, [], { reihen: 5 });
 const owner = activeProfileId();
 const before = structuredClone(readSave());
-const formats = { morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
+const formats = { claims: "parity-claim", morning: "morning-plan", chocolate: "chocolate-share", detective: "number-detective", shops: "shop-list", questions: "write-question", split: "split-array", rope: "estimate-rope", viewpoint: "table-view", packets: "sum-packet", tiles: "tile-floor", survey: "class-survey", bus: "bus-table", window: "hundred-window", machine: "machine", cubes: "cube-model", shopping: "baskets", calendar: "calendar", pairs: "number-pairs", route: "grid-route" };
 assert.equal(LAB_COUNT, 5);
+
+for (const rule of ["even", "odd", "mixed", "any", "one-even", "one-odd"] as const) {
+  for (const evenSum of [false, true]) for (const limit of [4, 6, 10]) {
+    const claim = { rule, limit, evenSum };
+    const holds: Pair[] = [], fails: Pair[] = [];
+    for (let a = 1; a <= limit; a++) for (let b = 1; b <= limit; b++) {
+      const evenA = a % 2 === 0, evenB = b % 2 === 0;
+      const expected = { even: evenA && evenB, odd: !evenA && !evenB, mixed: evenA !== evenB, any: true,
+        "one-even": evenA || evenB, "one-odd": !evenA || !evenB }[rule];
+      assert.equal(allowedPair(claim, [a, b]), expected);
+      if (expected) ((a + b) % 2 === Number(!evenSum) ? holds : fails).push([a, b]);
+      else assert.ok(checkClaim(claim, verdict(claim), [a, b], [a, b], rule));
+    }
+    const result = !holds.length ? "nie" : !fails.length ? "immer" : "manchmal";
+    assert.equal(verdict(claim), result);
+    if (result === "manchmal") {
+      for (const yes of holds) for (const no of fails) {
+        assert.equal(checkClaim(claim, result, yes, no, ""), null);
+        assert.equal(checkClaim(claim, result, no, yes, ""), null);
+      }
+      assert.ok(checkClaim(claim, result, holds[0], holds[0], ""));
+    } else for (const pair of [...holds, ...fails]) {
+      assert.equal(checkClaim(claim, result, pair, [null, null], rule), null);
+      assert.ok(checkClaim(claim, result, pair, [null, null], ""));
+    }
+    assert.ok(checkClaim(claim, result, [null, null], [null, null], ""));
+    assert.equal(allowedPair(claim, [limit + 1, 2]), false);
+  }
+}
 
 const morning = { start: 540, duration: 60, step: 15, fixed: 555, activities: [{ name: "Malen", duration: 15 }, { name: "Zeigen", duration: 15 }] };
 assert.equal(checkPlan(morning, [540, 570]), null);

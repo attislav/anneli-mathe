@@ -40,6 +40,7 @@ function keyOf(t: TaskDraftWithSkill) {
   if (t.format === "cube-model") return JSON.stringify([t.format,t.footprint,t.front]);
   if (t.format === "shop-list") return JSON.stringify([t.format, t.goods, t.stores]);
   if (t.format === "number-detective") return JSON.stringify([t.format, t.numbers, t.clues, t.excluded]);
+  if (t.format === "parity-claim") return JSON.stringify([t.format, t.rule, t.evenSum, t.limit]);
   if (t.format === "chocolate-share") return JSON.stringify([t.format, t.rows, t.cols, t.children]);
   if (t.format === "morning-plan") return JSON.stringify([t.format, t.start, t.duration, t.step, t.fixed, t.activities, t.target, t.follow]);
   if (t.format === "baskets") return JSON.stringify([t.format,t.budget,t.prices]);

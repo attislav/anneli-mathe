@@ -8,6 +8,7 @@ import { shopList } from "./shopList";
 import { numberDetective } from "./numberDetective";
 import { chocolate } from "./chocolate";
 import { morningPlan } from "./morningPlan";
+import { parityClaim } from "./parityClaim";
 import { tileFloor } from "./tileFloor";
 import { tableView } from "./tableView";
 import { estimateRope } from "./estimateRope";
@@ -35,6 +36,7 @@ export const LAB_TOPICS = {
   detective: { title: "Zahlendetektiv", prompt: "Nutze Hinweise und begründe deinen Fund.", skillId: "zahlHinweise", generate: numberDetective },
   chocolate: { title: "Gerecht geteilt", prompt: "Teile Schokolade in Hälften und Viertel.", skillId: "anteile", generate: chocolate },
   morning: { title: "Plane deinen Vormittag", prompt: "Ordne Tätigkeiten um einen festen Termin an.", skillId: "zeitPlanen", generate: morningPlan },
+  claims: { title: "Stimmt das immer?", prompt: "Prüfe Zahlenaussagen mit Plättchenpaaren.", skillId: "zahlAussagen", generate: parityClaim },
   machine: { title: "Rechenmaschine", prompt: "Finde die geheime Rechenregel.", skillId: "reihen", generate: machine },
   cubes: { title: "Würfelbau", prompt: "Baue nach zwei Ansichten.", skillId: "koerper", generate: cubeModel },
   shopping: { title: "Einkaufskörbe", prompt: "Packe passend zum Geldbetrag.", skillId: "einkaufen", generate: baskets },
