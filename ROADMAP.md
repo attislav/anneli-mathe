@@ -393,6 +393,8 @@ Auf dem persönlichen Merkzettel können Kinder nach einer Laboraufgabe Thema un
 
 Für alle Einzelthemen lässt sich im Labor eine kurze Runde mit einer Aufgabe wählen. Voreingestellt sind fünf Aufgaben. Nach der kurzen Runde können Kinder direkt eine neue Aufgabe zum selben Thema starten.
 
+Auf dem Geobrett spannen Kinder ein Rechteck und ein Quadrat mit vorgegebenen Seitenlängen. Die Auswertung zeigt die eigenen Figuren, Eckpunkte und Seitenlängen. Erreichbar im Formen-Ozean, Labor, Schulauftrag und Merkzettel.
+
 Bei „Eine Geschichte mit Streifen legen“ ordnen Kinder zwei Teile und ein Ganzes einem Streifenplan zu. Sie bilden eine passende Plus- oder Minusrechnung und lösen die Frage nach dem Ganzen oder einem fehlenden Teil. Die Aufgabe ist im Detektivbüro, Labor, Schulauftrag und Merkzettel erreichbar.
 
 In der Mathe-Sprechstunde untersuchen Kinder mit denselben zwölf Plättchen zwei Bedeutungen der Division: gleich verteilen oder gleich große Gruppen bilden. Auf das freie Modell folgt eine neue Aufgabe, bei der Zahl und Bedeutung gemeinsam zählen.

@@ -252,7 +252,7 @@ export const WORLDS: World[] = [
     boss: { name: "Krake Kringel", color: "#FF5D9E", shade: "#C93B77" },
     nodes: [
       { id: "ozean-1", kind: "lesson", title: "Formen erkennen", skills: ["formen"] },
-      { id: "ozean-2", kind: "lesson", title: "Formen zählen und legen", skills: ["formenZaehlen", "flaechenLegen"] },
+      { id: "ozean-2", kind: "lesson", title: "Formen zählen und legen", skills: ["formenZaehlen", "flaechenLegen", "figurenSpannen"] },
       { id: "ozean-3", kind: "trick", title: "Spiegeln", skills: ["spiegeln"] },
       chest("ozean-4", "qualle"),
       { id: "ozean-5", kind: "lesson", title: "Muster", skills: ["muster"] },

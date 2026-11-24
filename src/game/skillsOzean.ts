@@ -6,6 +6,7 @@ import { tableView } from "./tableView";
 import { siteMap } from "./siteMap";
 import { tower } from "./tower";
 import type { ShapeId, ShapeItem, SolidId, TaskDraft, Visual } from "./types";
+import { geoBoard } from "./geoBoard";
 import { foldLines } from "./foldLines";
 import { chance, pick, randInt, shuffle } from "./random";
 import { numeric, type Skill } from "./genkit";
@@ -217,4 +218,5 @@ const flaechenLegen: Skill = {
 const standpunkte: Skill = { id: "standpunkte", title: "Standpunkte wechseln", world: "ozean", gen: ({ level }) => tableView(level) };
 const lageplan: Skill = { id: "lageplan", title: "Lageplan lesen", world: "ozean", gen: ({ level }) => siteMap(level) };
 const umbauplan: Skill = { id: "umbauplan", title: "Baupläne und Seitenansichten", world: "ozean", gen: ({ level }) => tower(level) };
-export const OZEAN_SKILLS: Skill[] = [formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];
+const figurenSpannen: Skill = { id:"figurenSpannen", title:"Figuren mit vorgegebenen Seiten spannen", world:"ozean", gen:({level})=>geoBoard(level) };
+export const OZEAN_SKILLS: Skill[] = [figurenSpannen, formen, formenZaehlen, spiegeln, muster, koerper, rasterwege, flaechenLegen, standpunkte, lageplan, umbauplan];

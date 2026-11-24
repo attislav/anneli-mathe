@@ -21,6 +21,7 @@ import { balance } from "./balance";
 import { weekly } from "./weekly";
 import { symbolCode } from "./symbolCode";
 import { freshLabMaterial, materialHash } from "./freshLabMaterial";
+import { geoBoard } from "./geoBoard";
 import { storyStrips } from "./storyStrips";
 import { lineEstimate } from "./lineEstimate";
 import { foldLines } from "./foldLines";
@@ -70,6 +71,7 @@ export const LAB_TOPICS = {
   balance: { title: "Rechenwaage", prompt: "Gleiche Zahlenwerte aus und ändere beide Seiten.", skillId: "gleichheit", generate: balance },
   weekly: { title: "Wochenkalender", prompt: "Trage echte Termine trotz Ausfall und Verschiebung ein.", skillId: "wochenTermine", generate: weekly },
   code: { title: "Zeichencode", prompt: "Entschlüssle zwei Zeichen und rechne mit ihren Werten.", skillId: "zeichencodes", generate: symbolCode },
+  pegs: { title: "Geobrett", prompt: "Spanne ein Rechteck und ein Quadrat mit passenden Seitenlängen.", skillId: "figurenSpannen", generate: geoBoard },
   strips: { title: "Eine Geschichte mit Streifen legen", prompt: "Lege die Angaben in einen Streifenplan und baue eine passende Rechnung.", skillId: "sachaufgaben", generate: storyStrips },
   estimateLine: { title: "Wo ungefähr liegt die Zahl?", prompt: "Schätze die Lage auf dem Zahlenstrahl und vergleiche die Abstände.", skillId: "zahlenstrahl", generate: lineEstimate },
   folds: { title: "Faltwerkstatt", prompt: "Vermute Faltlinien und prüfe die Kästchen im Spiegelbild.", skillId: "spiegeln", generate: foldLines },
